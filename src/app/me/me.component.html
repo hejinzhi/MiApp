@@ -1,11 +1,11 @@
 <ion-header class="head">
   <div class="nav-head" *ngIf="user" (click)="goToMyDetail()">
     <i class="iconfontyyy headicon">&#xe613;</i>
+    <div class="person">
+      <img [src]="user.avatarUrl">
+    </div>
     <div class="pagehead">
-      <ion-avatar class="person">
-        <img [src]="user.avatarUrl">
-      </ion-avatar>
-      <div class="message first">{{user.nickname}}</div>
+      <div class="message">{{user.nickname}}</div>
       <div class="message">{{user.position}}</div>
       <div class="message">{{user.department}}</div>
     </div>

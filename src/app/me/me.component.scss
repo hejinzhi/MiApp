@@ -1,124 +1,97 @@
-    $headImgSize: 100px;
-    $headImgSize1: 70px;
-    $headImgSize3: 150px;
-    sg-me {
-      .head {
-        height: 40%;
-        color: #fff;
-        font-size: 150%;
-      }
-      .nav-head {
-        height: 100%;
-        background-color: #3773F7;
-        position: relative;
-        text-align: center;
-        .headicon {
-          font-size: 220%;
-          position: absolute;
-          right: 5%;
-          top: 15%;
-        }
-        .pagehead {
-          height: 100%;
-          width: 100%;
-          position: absolute;
-          top: +15%;
-          z-index: 100;
-          .person {
-            overflow: hidden;
-            width: $headImgSize3;
-            height: $headImgSize3;
-            border-radius: 2*$headImgSize3;
-            margin-left: -$headImgSize3/2;
-            position: absolute;
-            left: 50%;
-            border: solid 2px #fff;
-            img {
-              width: 100%;
-              height: 100%;
-            }
-          }
-          .message {
-            margin-top: 1%;
-            &.first {
-              margin-top: $headImgSize3*1.1;
-            }
-          }
-        }
-      }
-      @media screen and (max-width:500px) {
-        .head {
-          font-size: 130%;
-          height: 38%;
-          .nav-head {
-            .pagehead {
-              .person {
-                width: $headImgSize;
-                height: $headImgSize;
-                border-radius: 2*$headImgSize;
-                margin-left: -$headImgSize/2;
-              }
-              .message {
-                &.first {
-                  margin-top: $headImgSize*1.1;
-                }
-              }
-            }
-          }
-        }
-      }
-      @media screen and (max-width:320px) {
-        .head {
-          font-size: 110%;
-          height: 38%;
-          .nav-head {
-            .pagehead {
-              .person {
-                width: $headImgSize1;
-                height: $headImgSize1;
-                border-radius: 2*$headImgSize1;
-                margin-left: -$headImgSize1/2;
-              }
-              .message {
-                &.first {
-                  margin-top: $headImgSize1*1.1;
-                }
-              }
-            }
-          }
-        }
-      }
-      .content1 {
-        height: 100%;
-        width: 100%;
-        ion-list {
-          height: 100%;
-          width: 100%;
-          .function {
-            height: 18%;
-          }
-          .function-message {
-            font-size: 150%;
-          }
-        }
-      }
-      // button.test{
-      //   background:url(../assets/images/head.jpg) no-repeat 0% 50%;
-      //   background-size:10%;
-      // }
-      /* 定義阿里圖庫 */
-      @font-face {
-        font-family: 'iconfontyyy';
-        /* project id 234366 */
-        src: url('http://at.alicdn.com/t/font_hipha30qqjvsfw29.eot');
-        src: url('http://at.alicdn.com/t/font_hipha30qqjvsfw29.eot?#iefix') format('embedded-opentype'), url('http://at.alicdn.com/t/font_hipha30qqjvsfw29.woff') format('woff'), url('http://at.alicdn.com/t/font_hipha30qqjvsfw29.ttf') format('truetype'), url('http://at.alicdn.com/t/font_hipha30qqjvsfw29.svg#iconfont') format('svg');
-      }
-      .iconfontyyy {
-        font-family: "iconfontyyy" !important;
-        font-size: 15px;
-        font-style: normal;
-        -webkit-font-smoothing: antialiased;
-        -webkit-text-stroke-width: 0.2px;
-        -moz-osx-font-smoothing: grayscale;
+sg-me{
+  .head{
+    height:40%;
+    color: #fff;
+    font-size: 150%;
+  }
+  .nav-head{
+    height:100%;
+    background-color: #3773F7;
+    position: relative;
+    text-align: center;
+    .headicon{
+      font-size:220%;
+      position: absolute;
+      right:5%;
+      top:15%;
+    }
+    .person{
+      overflow: hidden;
+      width:$headImgSize3;
+      height:$headImgSize3;
+      border-radius: 2*$headImgSize3;
+      margin-left: -$headImgSize3/2;
+      position: absolute;
+      top: 16%;
+      left:50%;
+      border: solid 2px #fff;
+      img{
+        width:100%;
+        height:100%;
       }
     }
+    .pagehead{
+      display: flex;
+      flex-direction:column;
+      justify-content:flex-end;
+      height:98%;
+      width:100%;
+      .message{
+        margin-top: 1%;
+      }
+    }
+  }
+  @media screen and (max-width:500px) {
+  	.head{
+      font-size: 130%;
+      .nav-head{
+        .person{
+          width:$headImgSize;
+          height:$headImgSize;
+          border-radius: 2*$headImgSize;
+          margin-left: -$headImgSize/2;
+        }
+      }
+    }
+  }
+  @media screen and (max-width:360px) {
+  	.head{
+      font-size: 130%;
+      .nav-head{
+        .person{
+          width:$headImgSize;
+          height:$headImgSize;
+          border-radius: 2*$headImgSize;
+          margin-left: -$headImgSize/2;
+        }
+      }
+    }
+  }
+  @media screen and (max-width:320px) {
+  	.head{
+      font-size: 110%;
+      .nav-head{
+        .person{
+          width:$headImgSize1;
+          height:$headImgSize1;
+          border-radius: 2*$headImgSize1;
+          margin-left: -$headImgSize1/2;
+        }
+      }
+    }
+  }
+  .content1{
+    height:100%;
+    width:100%;
+    ion-list{
+      height:100%;
+      width:100%;
+      .function{
+        height:18%;
+      }
+      .function-message{
+        font-size: 150%;
+      }
+    }
+  }
+}
