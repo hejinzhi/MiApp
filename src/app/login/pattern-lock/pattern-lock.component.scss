@@ -1,0 +1,74 @@
+sg-pattern-lock {
+  $headImgSize: 100px;
+  $headImgSize1: 70px;
+  $headImgSize3: 150px;
+  .head {
+    height: 40%;
+    color: #fff;
+    font-size: 150%;
+  }
+  .message {
+    margin-top: 1%;
+    &.first {
+      margin-top: $headImgSize3*1.1;
+    }
+  }
+  .tip {
+    color: yellow;
+    font-size: 75%;
+    margin-top: 6% !important;
+  }
+  .nav-head {
+    height: 100%;
+    background-color: #3773F7;
+    position: relative;
+    text-align: center;
+    .headicon {
+      font-size: 220%;
+      position: absolute;
+      right: 5%;
+      top: 15%;
+    }
+    .pagehead {
+      height: 100%;
+      width: 100%;
+      position: absolute;
+      top: +15%;
+      z-index: 100;
+      .person {
+        overflow: hidden;
+        width: $headImgSize3;
+        height: $headImgSize3;
+        border-radius: 2*$headImgSize3;
+        margin-left: -$headImgSize3/2;
+        position: absolute;
+        left: 50%;
+        border: solid 2px #fff;
+        img {
+          width: 100%;
+          height: 100%;
+        }
+      }
+      .message {
+        margin-top: 1%;
+        &.first {
+          margin-top: $headImgSize3*1.1;
+        }
+      }
+    }
+  }
+  .secHead {
+    padding-bottom: 20%;
+  }
+  .main {
+    position: relative;
+    .layer {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 100;
+    }
+  }
+}

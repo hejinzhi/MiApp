@@ -1,0 +1,35 @@
+<ion-header class="head">
+  <div class="nav-head" *ngIf="user" (click)="goToMyDetail()">
+    <i class="iconfontyyy headicon">&#xe613;</i>
+    <div class="pagehead">
+      <ion-avatar class="person">
+        <img [src]="user.avatarUrl">
+      </ion-avatar>
+      <div class="message first">{{user.nickname}}</div>
+      <div class="message">{{user.position}}</div>
+      <div class="message">{{user.department}}</div>
+    </div>
+  </div>
+</ion-header>
+<ion-content class="content1">
+  <ion-list>
+    <ion-item-divider color="light"></ion-item-divider>
+    <button ion-item class="function-message">
+      <ion-icon name="disc" color="keep"></ion-icon>
+        &nbsp;我的收藏
+    </button>
+    <ion-item-divider color="light"></ion-item-divider>
+    <button ion-item class="function-message" (click)="getQrMessage()">
+      <ion-icon name="expand" color="sao"></ion-icon>
+        &nbsp;扫一扫
+    </button>
+    <button ion-item class="function-message">
+      <ion-icon name="create" color="advice"></ion-icon>
+        &nbsp;意见反馈
+    </button>
+    <button ion-item class="function-message" (click)="goSetting()">
+      <ion-icon name="cog" color="mac"></ion-icon>
+        &nbsp;设置
+    </button>
+  </ion-list>
+</ion-content>

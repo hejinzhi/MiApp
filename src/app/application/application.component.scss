@@ -1,0 +1,19 @@
+sg-application {
+  .grid-wrapper {
+    .grid-header {
+      padding-left: 20px;
+      padding-top: 10px;
+      padding-bottom: 10px;
+      font-size: 12px;
+      color: #696969;
+    }
+    .grid-footer {
+      height: 5px;
+      background-color: #f7f7f7;
+    }
+  }
+  .list-ios,
+  .list-md {
+    margin: 0;
+  }
+}

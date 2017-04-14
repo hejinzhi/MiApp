@@ -1,0 +1,33 @@
+<ion-content class="login-content" padding style="background-image: url('assets/bg/bg.png')">
+  <ion-row class="logo-row">
+    <ion-col></ion-col>
+    <ion-col width-67>
+      <img class="logo-img" src="assets/icon/logo.png" />
+    </ion-col>
+    <ion-col></ion-col>
+  </ion-row>
+  <div class="login-box">
+    <form (ngSubmit)="login()" #registerForm="ngForm">
+      <ion-row>
+        <ion-col>
+          <ion-list inset>
+            <ion-item>
+              <ion-input type="text" placeholder="Username" name="username" [(ngModel)]="registerCredentials.username" required></ion-input>
+            </ion-item>
+            <ion-item>
+              <ion-input type="password" placeholder="Password" name="password" [(ngModel)]="registerCredentials.password" required></ion-input>
+            </ion-item>
+          </ion-list>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col class="signup-col">
+          <button ion-button class="submit-btn" full type="submit" [disabled]="!registerForm.form.valid">Login</button>
+          <span ion-button class="register-btn" block clear (click)="createAccount()">Create New Account</span>
+        </ion-col>
+      </ion-row>
+    </form>
+  </div>
+  <!--<button ion-button full (click)="test()">test</button>-->
+  <!--<button ion-button full (click)="test2()">test2</button>-->
+</ion-content>

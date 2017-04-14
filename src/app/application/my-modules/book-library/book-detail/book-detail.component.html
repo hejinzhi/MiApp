@@ -1,0 +1,36 @@
+<ion-header>
+  <ion-navbar>
+    <ion-title>图书详情</ion-title>
+    <ion-buttons end>
+      <button ion-button *ngIf="showBorrowBtn">借阅</button>
+      <button ion-button *ngIf="showAddBtn" (click)="addBook()">录入</button>
+    </ion-buttons>
+  </ion-navbar>
+</ion-header>
+<ion-content>
+  <div class="main-wrapper">
+    <div class="book-list-wrapper">
+      <sg-book-list [books]="[book]" [showAddBookInput]="showAddBtn" (onInputChange)="getAddQty($event)"></sg-book-list>
+    </div>
+    <div class="book-detail-wrapper">
+      <div class="book-intro">
+        <span class="book-title">内容推荐</span>
+        <div class="book-msg">{{book.SUMMARY}}</div>
+      </div>
+      <div class="space-line-30"></div>
+      <div class="book-intro">
+        <span class="book-title">作者简介</span>
+        <div class="book-msg">{{book.AUTHOR_INTRO}}</div>
+      </div>
+      <div class="space-line-30"></div>
+      <div class="book-intro">
+        <span class="book-title">目录</span>
+        <pre class="book-catalog">{{book.CATALOG}}</pre>
+      </div>
+    </div>
+    <!--<div class="control-btn-wrapper">
+      <button ion-button *ngIf="showBorrowBtn"> 借阅 </button>
+      <button ion-button *ngIf="showAddBtn"> 录入 </button>
+    </div>-->
+  </div>
+</ion-content>

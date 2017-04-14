@@ -1,0 +1,11 @@
+<ion-header>
+  <ion-navbar>
+    <ion-buttons end>
+      <button ion-button (click)="showEditBtn()" *ngIf="!showBtn">编辑</button>
+      <button ion-button (click)="hideEditBtn()" *ngIf="showBtn">完成</button>
+    </ion-buttons>
+  </ion-navbar>
+</ion-header>
+<ion-content>
+  <sg-application-grid [items]="items" type="add" [showBtn]="showBtn" (onSelect)="moveItemToAppPage($event)" (onClick)="goToDetailPage($event)"></sg-application-grid>
+</ion-content>

@@ -1,0 +1,46 @@
+sg-book-list {
+  .book-list {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    box-sizing: border-box;
+    margin-top: 5px;
+    background-color: #fff;
+    width: 100%;
+  }
+  .book-image {
+    flex: 0 0 32%;
+    box-sizing: border-box;
+    min-height: 121px;
+    text-align: center;
+  }
+  .book-image img {
+    height: 121px;
+    max-width: 121px;
+  }
+  .book-info {
+    background-color: #fff;
+    flex: 0 0 66%;
+    box-sizing: border-box;
+    margin-left: 10px;
+  }
+  .book-info-style {
+    height: 240rpx;
+    background-color: white;
+  }
+  .book-info-style div {
+    display: block;
+    line-height: 21px;
+    font-size: 13px;
+    margin-bottom: 4px;
+    width: 230px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+    margin-top: 4px;
+  }
+  .line {
+    width: 100%;
+    border: 1px solid #eee;
+  }
+}

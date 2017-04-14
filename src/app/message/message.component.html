@@ -1,0 +1,22 @@
+<ion-header>
+  <ion-navbar>
+    <ion-title class="page-title">
+      <div>消息</div>
+    </ion-title>
+  </ion-navbar>
+</ion-header>
+<ion-content class="list-avatar-page">
+  <ion-searchbar (ionInput)="getItems($event)"></ion-searchbar>
+  <ion-list>
+    <ion-item *ngFor="let item of messageListItem" (click)="goToMessageDetailPage(item)">
+      <div item-left class="img-header">
+        <img class="img" src={{item.avatarSrc}}>
+        <div class="badge" *ngIf="item.unreadCount > 0">{{item.unreadCount}}</div>
+      </div>
+      <h2 class="name">{{item.userNickName}}</h2>
+      <p class="msg">{{item.lastmsg}}</p>
+      <ion-note item-right>{{item.timedesc}}</ion-note>
+    </ion-item>
+  </ion-list>
+  <!--<button (click)="sendMsg()">send</button>-->
+</ion-content>

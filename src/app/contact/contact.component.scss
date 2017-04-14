@@ -1,0 +1,67 @@
+sg-contact {
+  ion-grid {
+    padding: 0;
+    .col {
+      border-bottom: 1px solid #ccc;
+      border-right: 1px solid #ccc;
+      padding-left: 15px;
+      margin-right: -1px;
+      //   box-shadow: 0px 0px 1px #ccc;
+    }
+    .col-img {
+      float: left;
+      height: 40px;
+      width: 40px;
+    }
+    .desc {
+      display: inline-block;
+      height: 40px;
+      line-height: 40px;
+      margin-left: 15px;
+      font-size: 15px;
+      font-weight: 500;
+    }
+  }
+  .contacter {
+    .contacter-header {
+      background-color: #EFF4F7;
+      color: #b9bdbc;
+      text-indent: 15px;
+    }
+    .contacter-content {
+      .row {
+        border-bottom: 1px solid #ccc;
+        .avatar {
+          display: inline-block;
+          margin-left: 15px;
+          width: 40px;
+          height: 40px;
+          line-height: 40px;
+          text-align: center;
+          border-radius: 20px;
+          background-color: #6396E2;
+          color: #fff;
+          font-size: 14px;
+        }
+        .name {
+          font-weight: 600;
+          font-size: 15px;
+        }
+        .company {
+          margin-top: 5px;
+          color: #909090;
+          font-size: 12px;
+        }
+        .position {
+          color: #909090;
+          font-size: 15px;
+        }
+        .department {
+          margin-top: 5px;
+          color: #909090;
+          font-size: 12px;
+        }
+      }
+    }
+  }
+}

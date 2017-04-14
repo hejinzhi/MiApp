@@ -1,0 +1,22 @@
+<div>
+  <div class="book-list" *ngFor="let book of books" (click)="goToDetailPage(book)">
+    <div class="book-image">
+      <img [src]="book.IMAGE">
+    </div>
+    <div class="book-info">
+      <div class="book-info-style">
+        <div>书名:{{book.TITLE}}</div>
+        <div>作者:{{book.AUTHOR}}</div>
+        <div>价格:{{book.PRICE}}</div>
+        <div>出版信息:{{book.PUBLISHER}}</div>
+        <div *ngIf="!showAddBookInput">可借数量:{{book.QTY}}</div>
+        <div *ngIf="showAddBookInput">
+          录入数量:<input type="text" style="text-indent: 5px;" (input)="inputChange($event)" value="1" />
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="line"></div>
+</div>
+<!--[(ngModel)]="addBookQty"-->
+<!--; trackBy:trackByBooks-->
