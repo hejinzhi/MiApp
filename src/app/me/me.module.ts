@@ -4,12 +4,13 @@ import { IonicModule } from 'ionic-angular';
 
 import { SharedModule } from '../shared/shared.module';
 import { MeComponent } from './me.component';
+import { SetComponent } from './set/set.component'
 
 @NgModule({
     imports: [CommonModule, IonicModule, SharedModule],
-    declarations: [MeComponent],
+    declarations: [MeComponent, SetComponent],
     exports: [MeComponent],
-    entryComponents: [MeComponent],
+    entryComponents: [MeComponent, SetComponent],
     providers: []
 })
 export class MeModule { }
