@@ -25,16 +25,19 @@ export class BookDetailComponent implements OnInit {
 
     ngOnInit() {
         this.book = this.navParams.get('book');
-        // if (!this.book.QTY) {
-        //     this.book.QTY = 1;
-        // }
         this.type = this.navParams.get('type');
         if (this.type === 'addBook') {
             this.showAddBtn = true;
             this.showBorrowBtn = false;
         } else {
-            this.showAddBtn = false;
-            this.showBorrowBtn = true;
+            if (this.book.QTY > 0) {
+                this.showAddBtn = false;
+                this.showBorrowBtn = true;
+            } else {
+                this.showAddBtn = false;
+                this.showBorrowBtn = false;
+            }
+
         }
     }
 

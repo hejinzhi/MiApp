@@ -31,17 +31,14 @@ export class BookLibraryComponent implements OnInit {
     }
 
     async ionViewWillEnter() {
-        // let loading = this.loadingCtrl.create({
-        //   content: 'Please wait...'
-        // });
+        let loading = this.loadingCtrl.create({
+            content: 'Please wait...'
+        });
 
-        // loading.present();
-        // this.bookService.getAllBooks().then((res) => {
-        //   this.books = res.json().data;
-        //   // loading.dismiss();
-        // });
+        loading.present();
         let res = await this.bookService.getAllBooks();
         this.books = res.json();
+        loading.dismiss();
         if (!(localStorage.getItem('scanFlag'))) {
             localStorage.setItem('scanFlag', 'true');
             localStorage.setItem('batchAddBooks', 'true');
