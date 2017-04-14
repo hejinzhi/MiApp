@@ -46,8 +46,8 @@ export class LoginComponent {
         if (token) {
           this.currentUser.avatarUrl = res.json().User.AVATAR_URL;
           this.currentUser.nickname = res.json().User.NICK_NAME;
-          this.currentUser.position = '工程师';
-          this.currentUser.department = 'MSL MIS 系統開發處';
+          this.currentUser.position = res.json().User.JOB_TITLE;
+          this.currentUser.department = res.json().User.DEPT_NAME;
           localStorage.setItem('currentUser', JSON.stringify(this.currentUser));
           this.loading.dismiss();
           this.navCtrl.setRoot(TabsComponent);
