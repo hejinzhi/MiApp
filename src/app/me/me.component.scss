@@ -22,7 +22,7 @@ sg-me{
       border-radius: 2*$headImgSize3;
       margin-left: -$headImgSize3/2;
       position: absolute;
-      top: 16%;
+      top: 11%;
       left:50%;
       border: solid 2px #fff;
       img{
@@ -36,9 +36,6 @@ sg-me{
       justify-content:flex-end;
       height:98%;
       width:100%;
-      .message{
-        margin-top: 1%;
-      }
     }
   }
   @media screen and (max-width:500px) {

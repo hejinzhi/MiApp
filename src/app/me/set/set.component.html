@@ -1,0 +1,54 @@
+
+<ion-header color="mac">
+  <ion-navbar color="mac">
+    <ion-title>设置</ion-title>
+  </ion-navbar>
+</ion-header>
+
+
+<ion-content>
+  <ion-list>
+    <button ion-item class="function-message">
+      <ion-icon name="swap" color="mac"></ion-icon>
+        &nbsp;流程信息提醒
+    </button>
+    <button ion-item class="function-message" (click)="toNineCode()">
+      <ion-icon name="lock" color="mac"></ion-icon>
+        &nbsp;手势密码保护
+    </button>
+    <button ion-item class="function-message">
+      <ion-icon name="unlock" color="mac"></ion-icon>
+        &nbsp;修改密码
+    </button>
+    <button ion-item class="function-message">
+      <ion-icon name="people" color="mac"></ion-icon>
+        &nbsp;同步人力资源
+    </button>
+    <button ion-item class="function-message">
+      <ion-icon name="calendar" color="mac"></ion-icon>
+        &nbsp;日程自动同步
+    </button>
+    <ion-item-divider color="light"></ion-item-divider>
+    <button ion-item class="function-message">
+      <ion-icon name="planet" color="mac"></ion-icon>
+        &nbsp;检查更新
+    </button>
+    <button ion-item class="function-message">
+      <ion-icon name="trash" color="mac"></ion-icon>
+        &nbsp;清空聊天记录
+    </button>
+    <button ion-item class="function-message">
+      <ion-icon name="trash" color="mac"></ion-icon>
+        &nbsp;清空缓存
+    </button>
+    <button ion-item class="function-message">
+      <ion-icon name="search" color="mac"></ion-icon>
+        &nbsp;关于
+    </button>
+    <ion-item-divider color="light"></ion-item-divider>
+    <button ion-item class="function-message" (click) = "exit()">
+      <ion-icon name="disc" color="mac"></ion-icon>
+        &nbsp;注销
+    </button>
+  </ion-list>
+</ion-content>
