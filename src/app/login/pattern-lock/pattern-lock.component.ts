@@ -222,17 +222,17 @@ export class PatternLockComponent implements OnInit {
                     if (localStorage.getItem('myNineCode') == pwdArr.join('')) {
                         this.message = '密码正确'
                         let user = JSON.parse(localStorage.getItem('currentUser'));
-                        this.myHttp.post(LoginConfig.loginUrl, { userName: user.username, password: user.password });
-                        // this.jmessageService.login(user.username, user.password);
-
-
-                        // this.authService.getNewJwt();
-                        // this.jmessage.login(user.username, user.password).then(() => {
+                        this.myHttp.post(LoginConfig.loginUrl, { userName: user.username, password: user.password }).then((res) => {
+                            user.avatarUrl = res.json().User.AVATAR_URL;
+                            user.nickname = res.json().User.NICK_NAME;
+                            user.position = res.json().User.JOB_TITLE;
+                            user.department = res.json().User.DEPT_NAME;
+                            localStorage.setItem('currentUser', JSON.stringify(user));
+                        });
+                        // this.jmessageService.login(user.username, user.password).then(()=>{
                         //   // to do loadUnreadMessage
-
-                        //   this.navCtrl.setRoot(TabsComponent);
+                        //     this.navCtrl.setRoot(TabsComponent);
                         // });
-
                     } else {
                         this.message = '密码错误！！！'
                     }
