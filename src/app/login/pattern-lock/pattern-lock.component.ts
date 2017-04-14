@@ -13,11 +13,11 @@ import { LoginConfig } from '../shared/config/login.config';
 export class PatternLockComponent implements OnInit {
     needNineCode: boolean;
     user: any;
-    R: number = 26;
-    canvasWidth: number = 400;
-    canvasHeight: number = 320;
-    OffsetX: number = 30;
-    OffsetY: number = 30;
+    R: number;
+    canvasWidth: number;
+    canvasHeight: number;
+    OffsetX: number;
+    OffsetY: number;
     circleArr = [];
     message: string;
     canChange: boolean;
@@ -89,8 +89,11 @@ export class PatternLockComponent implements OnInit {
         this.headHeight = headCode.offsetHeight;
 
         this.canvasWidth = document.body.offsetWidth;//网页可见区域宽
+        this.canvasHeight = this.headHeight/0.4*0.6-80;
         canvas.width = this.canvasWidth;
         canvas.height = this.canvasHeight;
+        this.R = this.headHeight/9
+        this.OffsetX = this.OffsetY = this.R
         var cxt = canvas.getContext("2d");
         /**
          * 每行3个圆

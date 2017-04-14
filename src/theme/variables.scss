@@ -1,8 +1,7 @@
 // Ionic Variables and Theming. For more info, please see:
 // http://ionicframework.com/docs/v2/theming/
 $font-path: "../assets/fonts";
-@import "ionic.globals";
-// Shared Variables
+@import "ionic.globals"; // Shared Variables
 // --------------------------------------------------
 // To customize the look and feel of this app, you can override
 // the Sass variables found in Ionic's source scss files.
@@ -15,8 +14,7 @@ $font-path: "../assets/fonts";
 // to match your app's branding. Ionic uses a Sass map of
 // colors so you can add, rename and remove colors as needed.
 // The "primary" color is the only required color in the map.
-$colors: ( primary: #387ef5, secondary: #32db64, danger: #f53d3d, light: #f4f4f4, dark: #222, keep: #EA986C, sao: #1296DB, advice: #EEB174, mac: #3773F7);
-// App iOS Variables
+$colors: ( primary: #387ef5, secondary: #32db64, danger: #f53d3d, light: #f4f4f4, dark: #222, keep: #EA986C, sao: #1296DB, advice: #EEB174, mac: #3773F7); // App iOS Variables
 // --------------------------------------------------
 // iOS only Sass variables can go here
 // App Material Design Variables
@@ -31,13 +29,32 @@ $colors: ( primary: #387ef5, secondary: #32db64, danger: #f53d3d, light: #f4f4f4
 // then be future customized. This import comes last
 // so that the above variables are used and Ionic's
 // default are overridden.
-@import "ionic.theme.default";
-// Ionicons
+@import "ionic.theme.default"; // Ionicons
 // --------------------------------------------------
 // The premium icon font for Ionic. For more info, please see:
 // http://ionicframework.com/docs/v2/ionicons/
-@import "ionic.ionicons";
-// Fonts
+@import "ionic.ionicons"; // Fonts
 // --------------------------------------------------
 @import "roboto";
 @import "noto-sans";
+/* 定義阿里圖庫 */
+@font-face {
+  font-family: 'iconfontyyy';
+  /* project id 234366 */
+  src: url('http://at.alicdn.com/t/font_yvgnepw3nogh9f6r.eot');
+  src: url('http://at.alicdn.com/t/font_yvgnepw3nogh9f6r.eot?#iefix') format('embedded-opentype'), url('http://at.alicdn.com/t/font_yvgnepw3nogh9f6r.woff') format('woff'), url('http://at.alicdn.com/t/font_yvgnepw3nogh9f6r.ttf') format('truetype'), url('http://at.alicdn.com/t/font_yvgnepw3nogh9f6r.svg#iconfont') format('svg');
+}
+
+.iconfontyyy {
+  font-family: "iconfontyyy" !important;
+  font-size: 15px;
+  font-style: normal;
+  -webkit-font-smoothing: antialiased;
+  -webkit-text-stroke-width: 0.2px;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+// 定义头像大小的变量
+$headImgSize: 125px;
+$headImgSize1: 88px;
+$headImgSize3: 150px;
