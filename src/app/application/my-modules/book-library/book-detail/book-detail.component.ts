@@ -72,11 +72,8 @@ export class BookDetailComponent implements OnInit {
         try {
             await this.bookService.addBook(this.book);
             if (localStorage.getItem('batchAddBooks') === 'true') {
-                // this.book = await this.bookService.scanAndGetBookInfo();
                 let scanRes = await this.bookService.scan();
                 if (scanRes.cancelled) {
-                    // return;
-                    // this.navCtrl.setPages([{ page: BookLibraryComponent }]);
                     return;
                 }
                 if (!scanRes.cancelled && scanRes.text.length === 13) {
@@ -97,6 +94,16 @@ export class BookDetailComponent implements OnInit {
             this.showError('添加图书错误');
         }
 
+    }
+
+    async borrowBook(isbn13) {
+        try {
+            await this.bookService.borrowBook(isbn13);
+            this.showInfo('预约成功');
+        }
+        catch (err) {
+            this.showError('预约图书失败');
+        }
     }
 
 

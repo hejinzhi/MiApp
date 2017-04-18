@@ -1,0 +1,34 @@
+sg-book-card {
+  .main-wrapper {
+    .card-header {
+      height: 30px;
+      line-height: 30px;
+      width: 100%;
+      .header-cb {
+        float: left;
+        margin-top: 4px;
+        margin-left: 15px;
+      }
+      .header-title {
+        margin-left: 45px;
+        height: 30px;
+        line-height: 30px;
+      }
+    }
+    .card-content {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      background-color: #FAFAFA;
+      border-bottom: 3px solid #eee;
+      .content-cb {
+        flex: 10%;
+        margin-left: 15px;
+      }
+      .content-list {
+        flex: 90%;
+        margin-left: 10px;
+      }
+    }
+  }
+}

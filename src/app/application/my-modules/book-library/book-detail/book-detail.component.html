@@ -2,7 +2,7 @@
   <ion-navbar>
     <ion-title>图书详情</ion-title>
     <ion-buttons end>
-      <button ion-button *ngIf="showBorrowBtn">预约</button>
+      <button ion-button *ngIf="showBorrowBtn" (click)="borrowBook(book.ISBN13)">预约</button>
       <button ion-button *ngIf="showAddBtn" (click)="addBook()">录入</button>
     </ion-buttons>
   </ion-navbar>

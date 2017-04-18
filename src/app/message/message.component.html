@@ -6,9 +6,9 @@
   </ion-navbar>
 </ion-header>
 <ion-content class="list-avatar-page">
-  <ion-searchbar (ionInput)="getItems($event)"></ion-searchbar>
+  <ion-searchbar></ion-searchbar>
   <ion-list>
-    <ion-item *ngFor="let item of messageListItem" (click)="goToMessageDetailPage(item)">
+    <ion-item *ngFor="let item of messageListItem">
       <div item-left class="img-header">
         <img class="img" src={{item.avatarSrc}}>
         <div class="badge" *ngIf="item.unreadCount > 0">{{item.unreadCount}}</div>
