@@ -6,12 +6,15 @@ import { SplashScreen } from '@ionic-native/splash-screen';
 import { LoginComponent } from './login/login.component';
 import { PatternLockComponent } from './login/pattern-lock/pattern-lock.component';
 
+// test
+import { BookCardComponent } from './application/my-modules/book-library/book-card/book-card.component';
+
 declare var cordova: any;
 
 @Component({
   templateUrl: 'app.html'
 })
-export class MyApp {
+export class MyAppComponent {
   rootPage: any = LoginComponent;
   @ViewChild(Nav) nav: Nav;
 
@@ -43,6 +46,7 @@ export class MyApp {
       this.rootPage = PatternLockComponent;
     } else {
       this.rootPage = LoginComponent;
+      // this.rootPage = BookCardComponent
     }
 
     if (localStorage.getItem('toValiPassword')) {

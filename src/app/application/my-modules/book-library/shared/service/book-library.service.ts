@@ -29,6 +29,11 @@ export class BookLibraryService {
         return this.myHttp.get(BookLibraryConfig.doubanUrl + isbn13);
     }
 
+    // 预约图书
+    borrowBook(isbn13) {
+        return this.myHttp.post(BookLibraryConfig.borrowBookUrl, { ISBN13: isbn13 });
+    }
+
 
 
     // 调用摄像头扫描二维码后从豆瓣获取图书信息，返回图书信息
@@ -56,6 +61,7 @@ export class BookLibraryService {
     //     }
     // }
 
+    // 调用摄像头扫描
     scan() {
         return this.barcodeScanner.scan({ resultDisplayDuration: 0, showFlipCameraButton: true, showTorchButton: true });
     }
@@ -91,8 +97,38 @@ export class BookLibraryService {
         confirm.present();
     }
 
+    // 新增图书
     addBook(book) {
         return this.myHttp.post(BookLibraryConfig.addBookUrl, book);
     }
 
+    // 根据书名模糊查询
+    getBooksByTitle(title) {
+        return this.myHttp.get(BookLibraryConfig.getBooksByTitleUrl + '?title=' + title);
+    }
+
+    // 分页查询书籍信息
+    getBooksByPage(page, count) {
+        return this.myHttp.get(BookLibraryConfig.getBooksByPage + `?pageIndex=${page}&pageSize=${count}`)
+    }
+
+    // 获取已预约图书信息
+    getOrderBooks(username?: string) {
+        return this.myHttp.get(BookLibraryConfig.getOrderBooksByUser + `?userName=${username}`);
+    }
+
+    // 获取已借阅的图书信息
+    getBorrowedBooks(username?: string) {
+        return this.myHttp.get(BookLibraryConfig.getBorrowedBooks + `?userName=${username}`);
+    }
+
+    // 获取指定图书的详细信息
+    getBookDetailInfo(id) {
+        return this.myHttp.get(BookLibraryConfig.getBookDetailInfo + '?id=' + id);
+    }
+
+    // 获取已归还图书信息
+    getPaybackBooks(username?: string) {
+        return this.myHttp.get(BookLibraryConfig.getPaybackBooks + `?userName=${username}`);
+    }
 }

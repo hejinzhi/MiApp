@@ -6,7 +6,9 @@ import { Component, Input, Output, EventEmitter } from '@angular/core';
 })
 export class BookListComponent {
     @Input() books;
-    @Input() showAddBookInput: boolean = false;
+    @Input() showAddBookInput: boolean = false; // 是否显示input输入框
+    @Input() showPayBackDate: boolean = false;  // 是否显示“应归还时间”
+    @Input() showActualBackDate: boolean = false;  // 是否显示“实际归还时间”
     @Output() onClick = new EventEmitter();
     @Output() onInputChange = new EventEmitter();
 

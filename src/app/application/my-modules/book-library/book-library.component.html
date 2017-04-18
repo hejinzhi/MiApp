@@ -10,11 +10,15 @@
       <h1>{{user.username}}</h1>
     </div>
     <ion-list>
-      <ion-item>
+      <ion-item (click)="getOrderBooksInfo()">
+        <ion-icon name="archive" item-left color="primary"></ion-icon>
+        已预约图书
+      </ion-item>
+      <ion-item (click)="getBorrowedBooks()">
         <ion-icon name="book" item-left color="primary"></ion-icon>
         已借图书
       </ion-item>
-      <ion-item>
+      <ion-item (click)="getPaybackBooks()">
         <ion-icon name="bookmark" item-left color="primary"></ion-icon>
         已还图书
       </ion-item>
@@ -44,7 +48,7 @@
 <ion-header>
   <ion-navbar hideBackButton>
     <ion-title>
-      <h3>图书馆</h3>
+      图书馆
     </ion-title>
     <ion-buttons start>
       <button ion-button (click)="openMenu()">
@@ -60,8 +64,11 @@
 </ion-header>
 <ion-content class="page" #maincontent>
   <div class="searchbar">
-    <ion-searchbar (ionInput)="queryBooks($event)"></ion-searchbar>
+    <ion-searchbar (ionInput)="queryBooks($event)" #bookInput></ion-searchbar>
   </div>
+  <!--<button ion-button block (click)="addBook()" style="margin-top: 40px">新增图书</button>-->
   <sg-book-list [books]="books" (onClick)="goToDetailPage($event)" class="book-list"></sg-book-list>
-  <!--<button ion-button block (click)="addBook()">新增图书</button>-->
+  <ion-infinite-scroll (ionInfinite)="doInfinite($event)">
+    <ion-infinite-scroll-content></ion-infinite-scroll-content>
+  </ion-infinite-scroll>
 </ion-content>
