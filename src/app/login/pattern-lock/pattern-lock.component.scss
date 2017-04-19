@@ -5,7 +5,7 @@ sg-pattern-lock {
     margin-top: 6% !important;
   }
   .secHead{
-    padding-bottom: 20%;
+    // padding-bottom: 20%;
   }
   .head{
     height:40%;
@@ -73,6 +73,17 @@ sg-pattern-lock {
           margin-left: -$headImgSize1/2;
         }
       }
+    }
+  }
+  .main{
+    position:relative;
+    .layer{
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 100;
     }
   }
 }

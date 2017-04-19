@@ -1,0 +1,26 @@
+export class HolidayType {
+  type:{type: string, name: string}[] = [
+    { type: 'A', name: '年休假' },
+    { type: 'B', name: '產假 - 產假【98天】' },
+    { type: 'B1', name: '難產 - 難產【15天】' },
+    { type: 'B3', name: '多胞胎 - 多胞胎【15天】' },
+    { type: 'B4', name: '生育獎勵假 - 生育獎勵假【80天】' },
+    { type: 'C', name: '工傷假 - 因工受傷【180天】' },
+    { type: 'F', name: '丧假 - 員工的直系親屬(本人之父母、配偶、子女)去世【8天】' },
+    { type: 'H', name: '流產假 - 流產【42天】' },
+    { type: 'H1', name: '陪產假 - 配偶分娩【15天】' },
+    { type: 'H2', name: '產檢假 - 產檢假【1天】' },
+    { type: 'H3', name: '上環/結扎假 - 上環/結扎假【21天】' },
+    { type: 'I', name: '授乳假 - 授乳假(一胞胎)【.13天】' },
+    { type: 'L', name: '曠職' },
+    { type: 'M', name: '停線' },
+    { type: 'O', name: '公假 - 公假【7天】' },
+    { type: 'P', name: '事假 - 一年累積不得超過30天（含)【30天】' },
+    { type: 'R', name: '補假' },
+    { type: 'R1', name: '補休' },
+    { type: 'S', name: '病假 - 病假【90天】' },
+    { type: 'T', name: '調休' },
+    { type: 'W', name: '婚假 - 婚假【3天】' },
+    { type: 'Y', name: '忘刷卡' },
+  ]
+}

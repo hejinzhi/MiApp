@@ -1,0 +1,37 @@
+<ion-header>
+
+  <ion-navbar>
+    <ion-title>考勤维护作业</ion-title>
+    <ion-buttons end>
+      <button ion-button (click)="search()">查询</button>
+    </ion-buttons>
+  </ion-navbar>
+
+</ion-header>
+
+
+<ion-content>
+  <ion-list>
+    <button ion-item (click)='maintain_OT()'>
+    加班单维护(个人)
+    </button>
+    <button ion-item (click)='maintain_leave()'>
+    请假单维护
+    </button>
+    <button ion-item (click)='maintain_undone(0)'>
+    门禁异常处理(个人)
+    </button>
+    <button ion-item (click)='maintain_undone(1)'>
+    未刷卡假别更改
+    </button>
+    <button ion-item (click)='cancel_leave()'>
+    销假申请
+    </button>
+    <button ion-item (click)='maintain_business()'>
+    公出作业
+    </button>
+    <button ion-item>
+    刷卡符号维护
+    </button>
+  </ion-list>
+</ion-content>

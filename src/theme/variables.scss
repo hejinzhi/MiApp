@@ -58,3 +58,24 @@ $colors: ( primary: #387ef5, secondary: #32db64, danger: #f53d3d, light: #f4f4f4
 $headImgSize: 125px;
 $headImgSize1: 88px;
 $headImgSize3: 150px;
+
+// 定义字体
+ion-alert,
+ion-content,
+ion-header,
+ion-list,
+ion-nav,
+ion-picker-cmp {
+  font-family: Arial,"Microsoft Yahei";
+}
+// 定义表单颜色
+.alert ion-label{
+  font-size:50%;
+  color:red!important;
+}
+.has-error ion-label{
+  color: #a94442!important;
+}
+.has-success ion-label{
+  color: #387ef5!important;
+}
