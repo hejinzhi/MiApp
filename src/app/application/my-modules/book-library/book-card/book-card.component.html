@@ -1,0 +1,13 @@
+<div class="main-wrapper">
+  <div class="card-header">
+    <ion-checkbox class="header-cb" color="primary" (click)="selectedAll()"></ion-checkbox>
+    <div class="header-title">jinzhi.he</div>
+  </div>
+  <div class="card-content" *ngFor="let book of books">
+    <ion-checkbox color="primary" [checked]="book.selectItem" class="content-cb" (ionChange)="singleSelect($event,book.ID)"></ion-checkbox>
+    <div class="content-list">
+      <sg-book-list [books]="[book]"></sg-book-list>
+    </div>
+    <div class="line"></div>
+  </div>
+</div>
