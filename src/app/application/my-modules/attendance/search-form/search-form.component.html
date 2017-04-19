@@ -1,0 +1,48 @@
+<ion-header>
+  <ion-navbar>
+    <ion-title>单据查询</ion-title>
+  </ion-navbar>
+</ion-header>
+
+
+<ion-content>
+  <form [formGroup]="todo" *ngIf="todo" (ngSubmit)="leaveForm()">
+    <ion-list>
+      <ion-item [class.has-error]="myValidators.type.error" [class.has-success]="myValidators.type.pass">
+        <ion-label>单据类型*</ion-label>
+        <ion-select cancelText="取消" okText="確認" formControlName="type">
+          <ion-option *ngFor="let item of formType" [value]="item.type">{{item.name}}</ion-option>
+        </ion-select>
+      </ion-item>
+      <ion-item [class.has-error]="myValidators.startTime.error" [class.has-success]="myValidators.startTime.pass">
+        <ion-label>开始时间</ion-label>
+        <ion-datetime displayFormat="YYYY/MM/DD HH:mm"  #start name="start" formControlName="startTime"
+        cancelText="取消" doneText="确认"
+        yearValues="2017,2018"
+        ></ion-datetime>
+      </ion-item>
+      <ion-item [class.has-error]="myValidators.endTime.error" [class.has-success]="myValidators.endTime.pass">
+        <ion-label>结束时间</ion-label>
+        <ion-datetime displayFormat="YYYY/MM/DD HH:mm"  #end name="end" formControlName="endTime"
+        cancelText="取消" doneText="确认"
+        yearValues="2017,2018"
+        ></ion-datetime>
+      </ion-item>
+      <ion-item-divider *ngIf="timeError " class='alert'>{{timeError}}</ion-item-divider>
+      <ion-item [class.has-error]="myValidators.form_No.error" [class.has-success]="myValidators.form_No.pass">
+        <ion-label>单据号</ion-label>
+        <ion-input formControlName="form_No"></ion-input>
+      </ion-item>
+      <ion-item-divider *ngIf="myValidators.form_No.error" class='alert'>{{myValidators.form_No.error}}</ion-item-divider>
+      <ion-grid>
+        <ion-row>
+          <ion-col width-50>
+            <ion-buttons right>
+              <button ion-button class="submit" type="submit" [disabled]="!todo.valid || timeError || myValidators.form_No.error ">提交</button>
+            </ion-buttons>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </ion-list>
+  </form>
+</ion-content>
