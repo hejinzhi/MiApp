@@ -11,12 +11,13 @@ import { BookLibraryService } from './shared/service/book-library.service';
 import { SettingComponent } from './setting/setting.component';
 import { BookCardComponent } from './book-card/book-card.component';
 import { BorrowedListComponent } from './borrowed-list/borrowed-list.component';
+import { BorrowRequestComponent } from './borrow-request/borrow-request.component';
 
 @NgModule({
     imports: [CommonModule, IonicModule, SharedModule],
-    declarations: [BookLibraryComponent, BookListComponent, BookDetailComponent, SettingComponent, BookCardComponent, BorrowedListComponent],
-    exports: [BookLibraryComponent, BookListComponent, BookDetailComponent, SettingComponent, BookCardComponent, BorrowedListComponent],
-    entryComponents: [BookLibraryComponent, BookListComponent, BookDetailComponent, SettingComponent, BookCardComponent, BorrowedListComponent],
+    declarations: [BookLibraryComponent, BookListComponent, BookDetailComponent, SettingComponent, BookCardComponent, BorrowedListComponent, BorrowRequestComponent],
+    exports: [BookLibraryComponent, BookListComponent, BookDetailComponent, SettingComponent, BookCardComponent, BorrowedListComponent, BorrowRequestComponent],
+    entryComponents: [BookLibraryComponent, BookListComponent, BookDetailComponent, SettingComponent, BookCardComponent, BorrowedListComponent, BorrowRequestComponent],
     providers: [BookLibraryService, BarcodeScanner]
 })
 export class BookLibraryModule { }

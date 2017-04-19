@@ -8,6 +8,7 @@ import { BookDetailComponent } from './book-detail/book-detail.component';
 import { SettingComponent } from './setting/setting.component';
 import { BookLibraryConfig } from './shared/config/book-library.config';
 import { BorrowedListComponent } from './borrowed-list/borrowed-list.component';
+import { BorrowRequestComponent } from './borrow-request/borrow-request.component';
 
 @Component({
     selector: 'sg-book-library',
@@ -155,8 +156,21 @@ export class BookLibraryComponent implements OnInit {
 
     // 借书申请
     borrowRequest() {
+        this.borrowPrompt().then(async (username: string) => {
+            let res;
+            if (username) {
+                res = await this.bookService.getOrderBooks(username.toLowerCase());
+            } else {
+                res = await this.bookService.getOrderBooks();
+            }
+            let books = res.json();
+            await this.menuCtrl.close();
+            this.navCtrl.push(BorrowRequestComponent, { books: books });
 
+        });
     }
+
+
 
     // 还书申请
     payBackRequest() {
@@ -182,6 +196,38 @@ export class BookLibraryComponent implements OnInit {
                 this.books = resBooks.json();
             });
 
+
+    }
+
+    borrowPrompt() {
+        return new Promise((resolve, reject) => {
+            let alert = this.alertCtrl.create({
+                title: '借书申请',
+                message: '请输入要借书人的AD',
+                inputs: [
+                    {
+                        name: 'username',
+                        placeholder: 'Username'
+                    }
+                ],
+                buttons: [
+                    {
+                        text: '取消',
+                        handler: data => {
+                            console.log('Cancel clicked');
+                            resolve();
+                        }
+                    },
+                    {
+                        text: '确定',
+                        handler: data => {
+                            resolve(data.username);
+                        }
+                    }
+                ]
+            });
+            alert.present();
+        });
 
     }
 

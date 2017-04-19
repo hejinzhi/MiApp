@@ -4,11 +4,12 @@ import { HttpModule } from '@angular/http';
 
 import { MyHttpService } from './services/myHttp.service';
 import { JMessageService } from './services/jmessage.service';
+import { ArrayUtilService } from './services/arrayUtil.service';
 
 @NgModule({
     imports: [CommonModule, HttpModule],
     declarations: [],
-    providers: [MyHttpService, JMessageService],
+    providers: [MyHttpService, JMessageService, ArrayUtilService],
     exports: []
 })
 export class CoreModule {

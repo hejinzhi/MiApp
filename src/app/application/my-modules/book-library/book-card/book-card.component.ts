@@ -1,33 +1,36 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-
+import { Observable } from 'rxjs/Rx';
 
 @Component({
     selector: 'sg-book-card',
     templateUrl: 'book-card.component.html'
 })
 export class BookCardComponent implements OnInit {
-    @Input() books;
-    @Output() emitSelectedIds = new EventEmitter();;
+    @Input() bookList;
+    @Output() onSelect = new EventEmitter();  // 选中时把id emit出去
+    @Output() onUnselect = new EventEmitter(); // 不选中时把id emit出去
     selectedBorrowId: number[] = []; // 用来记录哪些记录被选中
     selectedAllFlag: boolean; // 是否全选
+
 
     constructor() { }
 
     ngOnInit() {
         // this.books = this.testBook;
-        // this.books.forEach((item) => {
-        //     item.selectItem = false;
-        // })
+        this.bookList.BOOKS.forEach((item) => {
+            item.selectItem = false;
+        })
         // console.log(this.books);
     }
 
     singleSelect(event, id) {
         if (event.checked) {
             this.addItem(this.selectedBorrowId, id);
+            this.onSelect.emit(id);
         } else {
             this.removeItem(this.selectedBorrowId, id);
+            this.onUnselect.emit(id);
         }
-        console.log(this.selectedBorrowId);
     }
 
     addItem(array: number[], item: number) {
@@ -51,35 +54,15 @@ export class BookCardComponent implements OnInit {
     selectedAll() {
         if (this.selectedAllFlag) {
             this.selectedAllFlag = false;
-            this.books.forEach((item) => {
+            this.bookList.BOOKS.forEach((item) => {
                 item.selectItem = false;
             });
         } else {
             this.selectedAllFlag = true;
-            this.books.forEach((item) => {
+            this.bookList.BOOKS.forEach((item) => {
                 item.selectItem = true;
             });
         }
     }
 
-    testBook = [{
-        TITLE: 'Oracle移动网络应用程序设计——基于Oracle Application Express',
-        AUTHOR: 'Roel Hartman,Christian Rokitta,David Peake',
-        PRICE: '49.00元',
-        PUBLISHER: '清华大学出版社',
-        QTY: '9',
-        IMAGE: 'https://img3.doubanio.com/mpic/s27306043.jpg',
-        ISBN13: '123',
-        ID: 1
-    },
-    {
-        TITLE: 'Oracle移动网络应用程序设计——基于Oracle Application Express',
-        AUTHOR: 'Roel Hartman,Christian Rokitta,David Peake',
-        PRICE: '49.00元',
-        PUBLISHER: '清华大学出版社',
-        QTY: '9',
-        IMAGE: 'https://img3.doubanio.com/mpic/s27306043.jpg',
-        ISBN13: '123565',
-        ID: 2
-    }];
 }

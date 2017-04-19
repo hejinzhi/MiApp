@@ -5,16 +5,16 @@
     </div>
     <div class="book-info">
       <div class="book-info-style">
-        <div>书名:{{book.TITLE}}</div>
-        <div>作者:{{book.AUTHOR}}</div>
-        <div>价格:{{book.PRICE}}</div>
-        <div>出版信息:{{book.PUBLISHER}}</div>
-        <div *ngIf="!showAddBookInput && !showPayBackDate && !showActualBackDate">可借数量:{{book.QTY}}</div>
+        <div>书名: {{book.TITLE}}</div>
+        <div>作者: {{book.AUTHOR}}</div>
+        <div>价格: {{book.PRICE}}</div>
+        <div>出版信息: {{book.PUBLISHER}}</div>
+        <div *ngIf="!showAddBookInput && !showPayBackDate && !showActualBackDate">可借数量: {{book.QTY}}</div>
         <div *ngIf="showAddBookInput">
           录入数量:<input type="text" style="text-indent: 5px;" (input)="inputChange($event)" value="1" />
         </div>
-        <div *ngIf="showPayBackDate">应归还时间:{{book.SHOULD_PAYBACK_DATE | date:"y-MM-dd"}}</div>
-        <div *ngIf="showActualBackDate">实际归还时间:{{book.ACTUAL_PAYBACK_DATE | date:"y-MM-dd"}}</div>
+        <div *ngIf="showPayBackDate">借书期限至: {{book.SHOULD_PAYBACK_DATE | date:"y-MM-dd"}}</div>
+        <div *ngIf="showActualBackDate">归还时间: {{book.ACTUAL_PAYBACK_DATE | date:"y-MM-dd"}}</div>
       </div>
     </div>
   </div>
