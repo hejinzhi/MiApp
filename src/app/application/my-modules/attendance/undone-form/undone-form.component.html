@@ -1,0 +1,68 @@
+<ion-header>
+  <ion-navbar >
+    <ion-title>异常维护</ion-title>
+  </ion-navbar>
+</ion-header>
+
+
+<ion-content >
+  <ion-list>
+    <ion-item>
+      状态：
+      <ion-note item-right>
+        {{formData.status}}
+      </ion-note>
+    </ion-item>
+
+    <ion-item>
+      单据编号：
+      <ion-note item-right>
+        {{formData.No}}
+      </ion-note>
+    </ion-item>
+  </ion-list>
+  <form [formGroup]="todo" *ngIf="todo" (ngSubmit)="leaveForm()">
+    <ion-list>
+      <ion-item [class.has-error]="myValidators.type.error" [class.has-success]="myValidators.type.pass">
+        <ion-label>假别*</ion-label>
+        <ion-select cancelText="取消" okText="確認" formControlName="type" #type>
+          <ion-option *ngFor="let item of holidayType" [value]="item.type">{{item.name}}</ion-option>
+        </ion-select>
+      </ion-item>
+
+      <ion-item [class.has-error]="myValidators.startTime.error" [class.has-success]="myValidators.startTime.pass">
+        <ion-label>开始时间*</ion-label>
+        <ion-input readonly formControlName="startTime"></ion-input>
+      </ion-item>
+      <ion-item [class.has-error]="myValidators.endTime.error" [class.has-success]="myValidators.endTime.pass">
+        <ion-label>结束时间*</ion-label>
+        <ion-input readonly formControlName="endTime"></ion-input>
+      </ion-item>
+      <ion-item [class.has-error]="myValidators.reason.error" [class.has-success]="myValidators.reason.pass">
+        <ion-label>原因*</ion-label>
+        <ion-textarea rows="3" cols="20" formControlName="reason" class="reasonTest"
+         #reason
+          data-v-required="true"
+          data-v-required-message="原因不能为空"
+          data-v-minlength = "2"
+          data-v-minlength-message="原因长度不能少于2位"
+        ></ion-textarea>
+      </ion-item>
+      <ion-item-divider *ngIf="myValidators.reason.error" class='alert'>{{myValidators.reason.error}}</ion-item-divider>
+    </ion-list>
+    <ion-grid>
+      <ion-row>
+        <ion-col width-50>
+          <ion-buttons left>
+            <button ion-button class = "submit" type="submit" [disabled]="!todo.valid || myValidators.reason.error">提交</button>
+          </ion-buttons>
+        </ion-col>
+        <ion-col width-50>
+          <ion-buttons right>
+            <button ion-button [disabled]="!todo.valid || myValidators.reason.error">保存</button>
+          </ion-buttons>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </form>
+</ion-content>

@@ -8,10 +8,11 @@ import { MoreApplicationComponent } from './more-application/more-application.co
 import { ApplicationService } from './shared/service/application.service';
 
 import { BookLibraryModule } from './my-modules/book-library/book-library.module';
+import { AttendanceModule } from './my-modules/attendance/attendance.module';
 
 
 @NgModule({
-    imports: [CommonModule, IonicModule, SharedModule, BookLibraryModule],
+    imports: [CommonModule, IonicModule, SharedModule, BookLibraryModule, AttendanceModule],
     declarations: [ApplicationComponent, MoreApplicationComponent],
     exports: [ApplicationComponent, MoreApplicationComponent],
     entryComponents: [ApplicationComponent, MoreApplicationComponent],

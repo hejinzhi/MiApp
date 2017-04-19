@@ -4,11 +4,16 @@ import { HttpModule } from '@angular/http';
 
 import { MyHttpService } from './services/myHttp.service';
 import { JMessageService } from './services/jmessage.service';
+import { PluginService } from './services/plugin.service';
+import { ValidateService } from './services/validate.service';
+
+import { BarcodeScanner } from '@ionic-native/barcode-scanner';
+import { Camera } from '@ionic-native/camera';
 
 @NgModule({
     imports: [CommonModule, HttpModule],
     declarations: [],
-    providers: [MyHttpService, JMessageService],
+    providers: [MyHttpService, JMessageService, PluginService, ValidateService, BarcodeScanner, Camera],
     exports: []
 })
 export class CoreModule {
@@ -20,4 +25,3 @@ export class CoreModule {
         }
     }
 }
-
