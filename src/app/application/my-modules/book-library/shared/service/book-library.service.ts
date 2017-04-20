@@ -114,12 +114,22 @@ export class BookLibraryService {
 
     // 获取已预约图书信息
     getOrderBooks(username?: string) {
-        return this.myHttp.get(BookLibraryConfig.getOrderBooksByUser + `?userName=${username}`);
+        if (username) {
+            return this.myHttp.get(BookLibraryConfig.getOrderBooksByUser + `?userName=${username}`);
+        } else {
+            return this.myHttp.get(BookLibraryConfig.getOrderBooksByUser + '?userName=');
+        }
+
     }
 
     // 获取已借阅的图书信息
     getBorrowedBooks(username?: string) {
-        return this.myHttp.get(BookLibraryConfig.getBorrowedBooks + `?userName=${username}`);
+        if (username) {
+            return this.myHttp.get(BookLibraryConfig.getBorrowedBooks + `?userName=${username}`);
+        } else {
+            return this.myHttp.get(BookLibraryConfig.getBorrowedBooks + '?userName=');
+        }
+
     }
 
     // 获取指定图书的详细信息
@@ -129,6 +139,11 @@ export class BookLibraryService {
 
     // 获取已归还图书信息
     getPaybackBooks(username?: string) {
-        return this.myHttp.get(BookLibraryConfig.getPaybackBooks + `?userName=${username}`);
+        if (username) {
+            return this.myHttp.get(BookLibraryConfig.getPaybackBooks + `?userName=${username}`);
+        } else {
+            return this.myHttp.get(BookLibraryConfig.getPaybackBooks + '?userName=');
+        }
+
     }
 }
