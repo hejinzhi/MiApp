@@ -5,6 +5,7 @@ import { SplashScreen } from '@ionic-native/splash-screen';
 
 import { LoginComponent } from './login/login.component';
 import { PatternLockComponent } from './login/pattern-lock/pattern-lock.component';
+import { MessageService } from './message/shared/service/message.service'
 
 // test
 import { BookCardComponent } from './application/my-modules/book-library/book-card/book-card.component';
@@ -23,12 +24,15 @@ export class MyAppComponent {
     private splashScreen: SplashScreen,
     private keyboard: Keyboard,
     private ionicApp: IonicApp,
-    private menuCtrl: MenuController) {
+    private menuCtrl: MenuController,
+    private messageservice: MessageService) {
 
     this.appInit();
     platform.ready().then(() => {
       statusBar.styleDefault();
       splashScreen.hide();
+      this.messageservice.getContacts();
+      this.messageservice.history =this.messageservice.getLocalMessageHistory()? this.messageservice.getLocalMessageHistory() : [];
     });
     this.registerBackButtonAction();
   }
