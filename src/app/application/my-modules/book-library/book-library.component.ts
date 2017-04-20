@@ -30,6 +30,7 @@ export class BookLibraryComponent implements OnInit {
     user: any;
     firstIn: boolean = true; // 记录是否第一次打开这个页面，如果是，则显示loading提示框，否则不显示
     pageIndex: number = 1; // 记录当前的页码
+    lastPageReached: boolean = false; // 记录是否已经到达最后一页
     @ViewChild('searchbar') mySearchbar: any;
     @ViewChild('maincontent') mainContent: any;
     @ViewChild('bookInput') bookInput: any;
@@ -92,7 +93,7 @@ export class BookLibraryComponent implements OnInit {
         if (!scanRes.cancelled && scanRes.text.length === 13) {
             let doubanRes = await this.bookService.getBookInfoFromDouban(scanRes.text);
             if (doubanRes.json().code === 6000) {
-                this.showError('豆瓣上找不到该书籍的信息，请人工输入.');
+                this.showError('豆瓣上找不到该书籍的信息，请人工输入. ');
             } else {
                 let book = this.bookService.transformBookInfo(doubanRes.json());
                 this.navCtrl.push(BookDetailComponent, { book: book, type: 'addBook' });
@@ -120,9 +121,38 @@ export class BookLibraryComponent implements OnInit {
         nextPageBooks.forEach((book) => {
             this.books.push(book);
         })
-
+        if (nextPageBooks.length < BookLibraryConfig.pageCount) {
+            this.lastPageReached = true;
+        }
         infiniteScroll.complete();
+    }
 
+    isLastPageReached(): boolean {
+        return this.lastPageReached;
+    }
+
+    // 查询图书
+    queryBooks(event: any) {
+        let value = event.target.value;
+        Observable.of(event.target.value)
+            .debounceTime(500)
+            .distinctUntilChanged()
+            .switchMap((res) => {
+                if (res) {
+                    this.pageIndex = 1;
+                    this.lastPageReached = true;
+                    return this.bookService.getBooksByTitle(res);
+                }
+                else {
+                    this.pageIndex = 1;
+                    this.lastPageReached = false;
+                    return this.bookService.getBooksByPage(1, BookLibraryConfig.pageCount);
+                }
+
+            })
+            .subscribe((resBooks) => {
+                this.books = resBooks.json();
+            });
     }
 
 
@@ -156,7 +186,7 @@ export class BookLibraryComponent implements OnInit {
 
     // 借书申请
     borrowRequest() {
-        this.borrowPrompt().then(async (username: string) => {
+        this.prompt('借书申请', '请输入要借书人的AD').then(async (username: string) => {
             let res;
             if (username) {
                 res = await this.bookService.getOrderBooks(username.toLowerCase());
@@ -165,7 +195,7 @@ export class BookLibraryComponent implements OnInit {
             }
             let books = res.json();
             await this.menuCtrl.close();
-            this.navCtrl.push(BorrowRequestComponent, { books: books });
+            this.navCtrl.push(BorrowRequestComponent, { books: books, type: 'borrow' });
 
         }).catch((err) => {
             console.log(err);
@@ -176,36 +206,29 @@ export class BookLibraryComponent implements OnInit {
 
     // 还书申请
     payBackRequest() {
+        this.prompt('还书申请', '请输入还书人的AD').then(async (username: string) => {
+            let res;
+            if (username) {
+                res = await this.bookService.getBorrowedBooks(username.toLowerCase());
+            } else {
+                res = await this.bookService.getBorrowedBooks();
+            }
+            let books = res.json();
+            await this.menuCtrl.close();
+            this.navCtrl.push(BorrowRequestComponent, { books: books, type: 'payback' });
+
+        }).catch((err) => {
+            console.log(err);
+        });
     }
 
-    // 查询图书
-    queryBooks(event: any) {
-        let value = event.target.value;
-
-        Observable.of(event.target.value)
-            .debounceTime(500)
-            .distinctUntilChanged()
-            .switchMap((res) => {
-                if (res) {
-                    return this.bookService.getBooksByTitle(res);
-                }
-                else {
-                    return this.bookService.getAllBooks();
-                }
-
-            })
-            .subscribe((resBooks) => {
-                this.books = resBooks.json();
-            });
 
 
-    }
-
-    borrowPrompt() {
+    prompt(title: string, message: string) {
         return new Promise((resolve, reject) => {
             let alert = this.alertCtrl.create({
-                title: '借书申请',
-                message: '请输入要借书人的AD',
+                title: title,//'借书申请',
+                message: message,//'请输入要借书人的AD',
                 inputs: [
                     {
                         name: 'username',

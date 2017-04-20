@@ -68,7 +68,7 @@
   </div>
   <!--<button ion-button block (click)="addBook()" style="margin-top: 40px">新增图书</button>-->
   <sg-book-list [books]="books" (onClick)="goToDetailPage($event)" class="book-list"></sg-book-list>
-  <ion-infinite-scroll (ionInfinite)="doInfinite($event)">
+  <ion-infinite-scroll (ionInfinite)="doInfinite($event)" *ngIf="!isLastPageReached()">
     <ion-infinite-scroll-content></ion-infinite-scroll-content>
   </ion-infinite-scroll>
 </ion-content>

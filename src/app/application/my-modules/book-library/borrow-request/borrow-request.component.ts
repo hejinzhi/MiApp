@@ -9,10 +9,16 @@ import { BookLibraryService } from '../shared/service/book-library.service';
     templateUrl: 'borrow-request.component.html'
 })
 
+// 借书申请，还书，取消预约共用这一个页面
 export class BorrowRequestComponent implements OnInit {
     selectIDs: number[] = []; // 返回的借书人的清单
     books: any[] = []; // 记录后端返回的原始数据
     userListAfterTransform: CheckList[] = []; // 对借书清单进行分组处理，保存处理后的借书清单
+    title: string;// 页面title
+    type: string; // 记录时哪个页面转跳过来的，borrow代表借书申请 payback 代表还书  cancelbook 代表取消预约
+    showBorrow: boolean = false; // 是否借书申请转跳过来的
+    showPayback: boolean = false; // 是否还书转跳过来的
+    showCancelBook: boolean = false; // 是否取消预约转跳过来的
     constructor(
         public navParams: NavParams,
         private arrayService: ArrayUtilService,
@@ -22,6 +28,23 @@ export class BorrowRequestComponent implements OnInit {
 
     ngOnInit() {
         this.books = this.navParams.get('books');
+        this.type = this.navParams.get('type');
+        if (this.type === 'borrow') {
+            this.title = '借书申请';
+            this.showBorrow = true;
+            this.showPayback = false;
+            this.showCancelBook = false;
+        } else if (this.type === 'payback') {
+            this.title = '还书';
+            this.showBorrow = false;
+            this.showPayback = true;
+            this.showCancelBook = false;
+        } else if (this.type === 'cancelbook') {
+            this.title = '取消预约';
+            this.showBorrow = false;
+            this.showPayback = false;
+            this.showCancelBook = true;
+        }
         if (this.books) {
             this.userListAfterTransform = this.transformUserList(this.books);
         }
@@ -49,7 +72,6 @@ export class BorrowRequestComponent implements OnInit {
 
 
     async borrowConfirm() {
-        console.log(this.selectIDs);
         try {
             await this.bookService.approveBorrowBooks(this.selectIDs);
             this.showInfo('借阅成功!');
@@ -59,7 +81,22 @@ export class BorrowRequestComponent implements OnInit {
         catch (err) {
             this.showError('借阅失败! ' + err);
         }
+    }
 
+    // 取消预约
+    cancelBook() { }
+
+    // 确认还书
+    async paybackConfirm() {
+        try {
+            await this.bookService.payback(this.selectIDs);
+            this.showInfo('还书成功!');
+            this.removeItemFromLocalList(this.selectIDs);
+            this.userListAfterTransform = this.transformUserList(this.books);
+        }
+        catch (err) {
+            this.showError('还书失败! ' + err);
+        }
     }
 
     // 当把后台的数据更新后，同步把本地的数据也删除，刷新页面
