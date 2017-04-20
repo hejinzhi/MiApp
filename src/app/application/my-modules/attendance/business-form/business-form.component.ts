@@ -34,8 +34,7 @@ export class BusinessFormComponent {
     No:'HTL021703007172',
     data:{}
   }
-  canEdit:boolean = true;
-  canCancel:boolean = false;
+  haveSaved:boolean = false;
   isSelectBoss: boolean = false;   // todo 判断是否正确选择代理人
   tempBoss: string = ''; // 临时作保存的中间代理人
   colleague: any;// 搜索得到的候选代理人
@@ -78,11 +77,7 @@ export class BusinessFormComponent {
       this.businsessMes = this.navParams.data.detailMes.data;
       this.isSelectBoss = true;
       this.tempBoss = this.businsessMes.boss;
-      if(this.formData.status.toUpperCase() === 'APPROVED') {
-        this.canEdit = false;
-      }else {
-        this.canCancel = true;
-      }
+      this.haveSaved = true;
     }
 
     this.todo = this.initWork(this.businsessMes);
@@ -194,7 +189,7 @@ export class BusinessFormComponent {
   saveForm() {
     setTimeout(() => {
       this.plugin.showToast('表单保存成功');
-      this.canCancel = true;
+      this.haveSaved = true;
     },1000)
   }
   cancelForm() {
@@ -204,5 +199,9 @@ export class BusinessFormComponent {
         this.navCtrl.pop();
       },1000)
     },1000)
+  }
+
+  callbackSubmit() {
+
   }
 }
