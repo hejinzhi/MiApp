@@ -7,7 +7,7 @@ export class MyHttpService {
 
     constructor(private http: Http) { }
 
-    postWithoutToken(url, body) {
+    postWithoutToken(url: string, body: any) {
         let headers = new Headers({ 'Content-Type': 'application/json; charset=utf-8' });
         let options = new RequestOptions({ headers: headers });
         let stringBody = JSON.stringify(body);
@@ -31,13 +31,13 @@ export class MyHttpService {
         return options;
     }
 
-    async post(url, body) {
+    async post(url: string, body: any) {
         let options = await this.initOptions();
         let stringBody = JSON.stringify(body);
         return this.http.post(url, stringBody, options).toPromise();
     }
 
-    async get(url) {
+    async get(url: string) {
         let options = await this.initOptions();
         return this.http.get(url, options).toPromise();
     }
@@ -52,7 +52,7 @@ export class MyHttpService {
         }
     }
 
-    originGet(url) {
+    originGet(url: string) {
         return this.http.get(url).toPromise();
     }
 
