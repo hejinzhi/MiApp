@@ -1,0 +1,13 @@
+<ion-header>
+  <ion-navbar>
+    <ion-title>借书申请</ion-title>
+    <ion-buttons end>
+      <button ion-button (click)="borrowConfirm()" [disabled]="selectIDs.length === 0">确认借阅</button>
+    </ion-buttons>
+  </ion-navbar>
+</ion-header>
+<ion-content>
+  <div *ngFor="let books of userListAfterTransform">
+    <sg-book-card [bookList]="books" (onSelect)="onSelectItem($event)" (onUnselect)="onUnselectItem($event)"></sg-book-card>
+  </div>
+</ion-content>

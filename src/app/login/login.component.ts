@@ -68,7 +68,7 @@ export class LoginComponent {
     this.loading.present();
   }
 
-  showError(text) {
+  showError(text: string) {
     setTimeout(() => {
       this.loading.dismiss();
     });

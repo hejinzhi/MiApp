@@ -1,0 +1,39 @@
+sg-business-form {
+  .search {
+    position: absolute;
+    top: 271px;
+    left: 20%;
+    z-index: 1000;
+    width: 100%;
+  }
+  .search-result {
+    cursor: pointer;
+    width: 60%;
+  }
+
+  .list-group {
+    margin-top: 0;
+    padding-left: 0;
+    margin-bottom: 20px;
+  }
+
+  .list-group-item {
+    position: relative;
+    display: block;
+    padding: 10px 15px;
+    margin-bottom: -1px;
+    background-color: #fff;
+    border: 1px solid #ddd;
+  }
+  .main{
+    position:relative;
+    .layer{
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 100;
+    }
+  }
+}

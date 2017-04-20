@@ -1,0 +1,88 @@
+<ion-header>
+
+  <ion-navbar>
+    <ion-title>创建加班单</ion-title>
+    <ion-buttons end [ngSwitch]="formData.status.toUpperCase()" *ngIf="haveSaved" >
+    <button ion-button (click)="cancelForm()" *ngSwitchCase="'NEW'">删除单据</button>
+    <button ion-button (click)="callbackSubmit()" *ngSwitchCase="'WAITING'">取消送签</button>
+    </ion-buttons>
+  </ion-navbar>
+</ion-header>
+
+
+<ion-content class="main">
+  <div [class.layer]="!(formData.status.toUpperCase() === 'NEW')">
+  </div>
+  <ion-list>
+    <ion-item>
+      状态：
+      <ion-note item-right>
+        {{formData.status}}
+      </ion-note>
+    </ion-item>
+
+    <ion-item>
+      单据编号：
+      <ion-note item-right>
+        {{formData.No}}
+      </ion-note>
+    </ion-item>
+  </ion-list>
+  <form [formGroup]="todo" *ngIf="todo" (ngSubmit)="leaveForm()">
+    <ion-list>
+      <ion-item [class.has-error]="myValidators.type.error" [class.has-success]="myValidators.type.pass">
+        <ion-label>工作纪要*</ion-label>
+        <ion-select cancelText="取消" okText="確認" formControlName="type">
+          <ion-option *ngFor="let item of jobType" [value]="item.type">{{item.name}}</ion-option>
+        </ion-select>
+      </ion-item>
+
+      <ion-item [class.has-error]="myValidators.OTtime.error" [class.has-success]="myValidators.OTtime.pass">
+        <ion-label>加班日期*</ion-label>
+        <ion-datetime displayFormat="YYYY/MM/DD" formControlName="OTtime"
+        cancelText="取消" doneText="确认"
+        yearValues="2017,2018"
+        ></ion-datetime>
+      </ion-item>
+      <ion-item [class.has-error]="myValidators.startTime.error" [class.has-success]="myValidators.startTime.pass">
+        <ion-label>开始时间*</ion-label>
+        <ion-datetime displayFormat="HH:mm" formControlName="startTime"
+        cancelText="取消" doneText="确认"
+        ></ion-datetime>
+      </ion-item>
+      <ion-item [class.has-error]="myValidators.endTime.error" [class.has-success]="myValidators.endTime.pass">
+        <ion-label>结束时间*</ion-label>
+        <ion-datetime displayFormat="HH:mm" formControlName="endTime"
+        cancelText="取消" doneText="确认"
+        ></ion-datetime>
+      </ion-item>
+      <ion-item-divider *ngIf="timeError " class='alert'>{{timeError}}</ion-item-divider>
+      <ion-item>
+        小时：
+        <ion-note item-right>
+          {{OTCount}}
+        </ion-note>
+      </ion-item>
+      <ion-item [class.has-error]="myValidators.reason.error" [class.has-success]="myValidators.reason.pass">
+        <ion-label>原因*</ion-label>
+        <ion-textarea rows="2" cols="20" formControlName="reason" class="reasonTest"
+        ></ion-textarea>
+      </ion-item>
+      <ion-item-divider *ngIf="myValidators.reason.error" class='alert'>{{myValidators.reason.error}}</ion-item-divider>
+      <ion-grid *ngIf="formData.status.toUpperCase() === 'NEW'">
+        <ion-row>
+          <ion-col width-50>
+            <ion-buttons left>
+              <button ion-button class = "submit" type="submit" [disabled]="!todo.valid || myValidators.reason.error || timeError">提交</button>
+            </ion-buttons>
+          </ion-col>
+          <ion-col width-50>
+            <ion-buttons right>
+              <button ion-button [disabled]="!todo.valid || myValidators.reason.error || timeError" (click)="saveForm()">保存</button>
+            </ion-buttons>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </ion-list>
+  </form>
+</ion-content>

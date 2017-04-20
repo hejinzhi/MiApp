@@ -1,5 +1,5 @@
 <ion-header class="head">
-  <div class="nav-head" *ngIf="user" (click)="goToMyDetail()">
+  <div class="nav-head" *ngIf="user">
     <i class="iconfontyyy headicon">&#xe613;</i>
     <div class="person">
       <img [src]="user.avatarUrl">
@@ -19,7 +19,7 @@
         &nbsp;我的收藏
     </button>
     <ion-item-divider color="light"></ion-item-divider>
-    <button ion-item class="function-message" (click)="getQrMessage()">
+    <button ion-item class="function-message">
       <ion-icon name="expand" color="sao"></ion-icon>
         &nbsp;扫一扫
     </button>
