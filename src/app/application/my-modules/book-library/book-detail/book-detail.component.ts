@@ -18,8 +18,8 @@ export class BookDetailComponent implements OnInit {
         private bookService: BookLibraryService
     ) { }
 
-    book;
-    type; // 记录是否由“添加图书”转跳进来的
+    book: any;
+    type: string; // 记录是否由“添加图书”转跳进来的
     showAddBtn: boolean; // 是否显示“录入”按钮
     showBorrowBtn: boolean; //是否显示“借阅”按钮
 
@@ -41,11 +41,11 @@ export class BookDetailComponent implements OnInit {
         }
     }
 
-    getAddQty(qty) {
+    getAddQty(qty: number) {
         this.book.QTY = qty;
     }
 
-    showError(msg) {
+    showError(msg: string) {
         let confirm = this.alertCtrl.create({
             title: '错误',
             subTitle: msg,
@@ -54,7 +54,7 @@ export class BookDetailComponent implements OnInit {
         confirm.present();
     }
 
-    showInfo(msg) {
+    showInfo(msg: string) {
         let confirm = this.alertCtrl.create({
             subTitle: msg,
             buttons: [
@@ -72,11 +72,8 @@ export class BookDetailComponent implements OnInit {
         try {
             await this.bookService.addBook(this.book);
             if (localStorage.getItem('batchAddBooks') === 'true') {
-                // this.book = await this.bookService.scanAndGetBookInfo();
                 let scanRes = await this.bookService.scan();
                 if (scanRes.cancelled) {
-                    // return;
-                    // this.navCtrl.setPages([{ page: BookLibraryComponent }]);
                     return;
                 }
                 if (!scanRes.cancelled && scanRes.text.length === 13) {
@@ -97,6 +94,16 @@ export class BookDetailComponent implements OnInit {
             this.showError('添加图书错误');
         }
 
+    }
+
+    async borrowBook(isbn13: string) {
+        try {
+            await this.bookService.borrowBook(isbn13);
+            this.showInfo('预约成功');
+        }
+        catch (err) {
+            this.showError('预约图书失败');
+        }
     }
 
 

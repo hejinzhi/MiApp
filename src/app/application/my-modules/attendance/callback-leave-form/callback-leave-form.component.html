@@ -1,0 +1,58 @@
+<ion-header>
+
+  <ion-navbar>
+    <ion-title>销假申请单</ion-title>
+    <ion-buttons end [ngSwitch]="formData.status.toUpperCase()" *ngIf="haveSaved" >
+    <button ion-button (click)="cancelForm()" *ngSwitchCase="'NEW'">删除单据</button>
+    <button ion-button (click)="callbackSubmit()" *ngSwitchCase="'WAITING'">取消送签</button>
+    </ion-buttons>
+  </ion-navbar>
+</ion-header>
+
+
+<ion-content class="main">
+  <div [class.layer]="!(formData.status.toUpperCase() === 'NEW')">
+  </div>
+  <ion-list>
+    <ion-item>
+      状态：
+      <ion-note item-right>
+        {{formData.status}}
+      </ion-note>
+    </ion-item>
+
+    <ion-item>
+      单据编号：
+      <ion-note item-right>
+        {{formData.No}}
+      </ion-note>
+    </ion-item>
+  </ion-list>
+  <form [formGroup]="todo" *ngIf="todo" (ngSubmit)="leaveForm()">
+    <ion-list>
+      <ion-item>
+        <ion-label>申請取消的假單號*</ion-label>
+        <ion-input readonly formControlName="leave_No"></ion-input>
+      </ion-item>
+      <ion-item [class.has-error]="myValidators.reason.error" [class.has-success]="myValidators.reason.pass">
+        <ion-label>原因*</ion-label>
+        <ion-textarea rows="2" cols="20" formControlName="reason" class="reasonTest"></ion-textarea>
+      </ion-item>
+      <ion-item-divider *ngIf="myValidators.reason.error" class='alert'>{{myValidators.reason.error}}</ion-item-divider>
+      <ion-grid *ngIf="formData.status.toUpperCase() === 'NEW'">
+        <ion-row>
+          <ion-col width-50>
+            <ion-buttons left>
+              <button ion-button class="submit" type="submit" [disabled]="!todo.valid || myValidators.reason.error ">提交</button>
+            </ion-buttons>
+          </ion-col>
+          <ion-col width-50>
+            <ion-buttons right>
+              <button ion-button [disabled]="!todo.valid || myValidators.reason.error " (click)="saveForm()">保存</button>
+            </ion-buttons>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </ion-list>
+  </form>
+</ion-content>

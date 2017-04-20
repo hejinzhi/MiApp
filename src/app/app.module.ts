@@ -5,7 +5,7 @@ import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import 'rxjs/add/operator/toPromise';
 
-import { MyApp } from './app.component';
+import { MyAppComponent } from './app.component';
 import { ApplicationModule } from './application/application.module';
 import { MessageModule } from './message/message.module';
 import { ContactModule } from './contact/contact.module';
@@ -18,12 +18,12 @@ import { CoreModule } from './core/core.module';
 
 @NgModule({
   declarations: [
-    MyApp,
+    MyAppComponent,
     TabsComponent
   ],
   imports: [
     BrowserModule,
-    IonicModule.forRoot(MyApp, { tabsHideOnSubPages: true, mode: 'ios', backButtonText: '返回', }),
+    IonicModule.forRoot(MyAppComponent, { tabsHideOnSubPages: true, mode: 'ios', backButtonText: '返回', }),
     LoginModule,
     ApplicationModule,
     MeModule,
@@ -35,7 +35,7 @@ import { CoreModule } from './core/core.module';
   ],
   bootstrap: [IonicApp],
   entryComponents: [
-    MyApp,
+    MyAppComponent,
     TabsComponent
   ],
   providers: [

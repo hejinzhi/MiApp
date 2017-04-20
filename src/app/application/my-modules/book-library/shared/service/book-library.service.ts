@@ -24,9 +24,14 @@ export class BookLibraryService {
     }
 
     // 从豆瓣获取图书信息
-    getBookInfoFromDouban(isbn13) {
+    getBookInfoFromDouban(isbn13: string) {
         // return this.myHttp.originGet('https://api.douban.com/v2/book/isbn/' + isbn13);
         return this.myHttp.get(BookLibraryConfig.doubanUrl + isbn13);
+    }
+
+    // 预约图书
+    borrowBook(isbn13: string) {
+        return this.myHttp.post(BookLibraryConfig.borrowBookUrl, { ISBN13: isbn13 });
     }
 
 
@@ -56,12 +61,13 @@ export class BookLibraryService {
     //     }
     // }
 
+    // 调用摄像头扫描
     scan() {
         return this.barcodeScanner.scan({ resultDisplayDuration: 0, showFlipCameraButton: true, showTorchButton: true });
     }
 
     // 把豆瓣上的book对象转换成大写的book对象
-    transformBookInfo(book) {
+    transformBookInfo(book: any) {
         let newBookObj = {
             AUTHOR: book.author.join(),
             AUTHOR_INFO: book.author_info,
@@ -82,7 +88,7 @@ export class BookLibraryService {
         return newBookObj;
     }
 
-    showError(msg) {
+    showError(msg: string) {
         let confirm = this.alertCtrl.create({
             title: '错误',
             subTitle: msg,
@@ -91,8 +97,58 @@ export class BookLibraryService {
         confirm.present();
     }
 
-    addBook(book) {
+    // 新增图书
+    addBook(book: any) {
         return this.myHttp.post(BookLibraryConfig.addBookUrl, book);
     }
 
+    // 根据书名模糊查询
+    getBooksByTitle(title: string) {
+        return this.myHttp.get(BookLibraryConfig.getBooksByTitleUrl + '?title=' + title);
+    }
+
+    // 分页查询书籍信息
+    getBooksByPage(page: number, count: number) {
+        return this.myHttp.get(BookLibraryConfig.getBooksByPage + `?pageIndex=${page}&pageSize=${count}`)
+    }
+
+    // 获取已预约图书信息
+    getOrderBooks(username?: string) {
+        if (username) {
+            return this.myHttp.get(BookLibraryConfig.getOrderBooksByUser + `?userName=${username}`);
+        } else {
+            return this.myHttp.get(BookLibraryConfig.getOrderBooksByUser + '?userName=');
+        }
+
+    }
+
+    // 获取已借阅的图书信息
+    getBorrowedBooks(username?: string) {
+        if (username) {
+            return this.myHttp.get(BookLibraryConfig.getBorrowedBooks + `?userName=${username}`);
+        } else {
+            return this.myHttp.get(BookLibraryConfig.getBorrowedBooks + '?userName=');
+        }
+
+    }
+
+    // 获取指定图书的详细信息
+    getBookDetailInfo(id: number) {
+        return this.myHttp.get(BookLibraryConfig.getBookDetailInfo + '?id=' + id);
+    }
+
+    // 获取已归还图书信息
+    getPaybackBooks(username?: string) {
+        if (username) {
+            return this.myHttp.get(BookLibraryConfig.getPaybackBooks + `?userName=${username}`);
+        } else {
+            return this.myHttp.get(BookLibraryConfig.getPaybackBooks + '?userName=');
+        }
+
+    }
+
+    // 管理员同意借书
+    approveBorrowBooks(ids: number[]) {
+        return this.myHttp.post(BookLibraryConfig.approveBorrowBooks, { borrowID: ids });
+    }
 }

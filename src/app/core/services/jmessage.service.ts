@@ -2,8 +2,8 @@ import { Injectable } from '@angular/core';
 import { Observable, Subscription } from 'rxjs/Rx';
 
 declare let JMessage: any;
-declare var window;
-declare var document;
+declare var window: any;
+declare var document: any;
 
 @Injectable()
 export class JMessageService {
@@ -31,10 +31,10 @@ export class JMessageService {
     // 注册
     register(username: string, password: string): Promise<any> {
         return new Promise((resolve, reject) => {
-            this.jmessagePlugin.register(username, password, (suc) => {
+            this.jmessagePlugin.register(username, password, (suc: any) => {
                 console.log(suc);
                 resolve(true);
-            }, (err) => {
+            }, (err: any) => {
                 console.log(err);
                 reject(false);
             });
@@ -68,9 +68,9 @@ export class JMessageService {
     // 登录
     login(username: string, password: string, is_md5?: boolean): Promise<any> {
         return new Promise((resolve, reject) => {
-            this.jmessagePlugin.login(username, password, (suc) => {
+            this.jmessagePlugin.login(username, password, (suc: any) => {
                 resolve('OK');
-            }, (err) => {
+            }, (err: any) => {
                 resolve(err);
             });
         });
@@ -84,9 +84,9 @@ export class JMessageService {
     // 获取用户信息
     getUserInfo(username: string, appkey?: string): Promise<any> {
         return new Promise((resolve, reject) => {
-            this.jmessagePlugin.getUserInfo(username, appkey, (suc) => {
+            this.jmessagePlugin.getUserInfo(username, appkey, (suc: any) => {
                 resolve(suc);
-            }, (err) => {
+            }, (err: any) => {
                 reject(err);
             });
         });
@@ -95,9 +95,9 @@ export class JMessageService {
     // 发送单聊文本
     sendSingleTextMessage(username: string, text: string, appKey?: string): Promise<any> {
         return new Promise((resolve, reject) => {
-            this.jmessagePlugin.sendSingleTextMessage(username, text, appKey, (suc) => {
+            this.jmessagePlugin.sendSingleTextMessage(username, text, appKey, (suc: any) => {
                 resolve(suc);
-            }, (err) => {
+            }, (err: any) => {
                 reject(err);
             })
         });
@@ -127,9 +127,9 @@ export class JMessageService {
     // 进入单聊会话
     enterSingleConversation(username: string, appKey?: string): Promise<any> {
         return new Promise((resolve, reject) => {
-            this.jmessagePlugin.enterSingleConversation(username, appKey, (suc) => {
+            this.jmessagePlugin.enterSingleConversation(username, appKey, (suc: any) => {
                 resolve(suc);
-            }, (err) => {
+            }, (err: any) => {
                 reject(err);
             })
         });
@@ -138,9 +138,9 @@ export class JMessageService {
     // 关闭当前会话
     exitConversation(): Promise<any> {
         return new Promise((resolve, reject) => {
-            this.jmessagePlugin.exitConversation((suc) => {
+            this.jmessagePlugin.exitConversation((suc: any) => {
                 resolve(suc);
-            }, (err) => {
+            }, (err: any) => {
                 reject(err);
             })
         });
@@ -149,9 +149,9 @@ export class JMessageService {
     // 设置指定单聊会话的未读消息数
     setSingleConversationUnreadMessageCount(username: string, appKey: string, unreadCount: number): Promise<any> {
         return new Promise((resolve, reject) => {
-            this.jmessagePlugin.setSingleConversationUnreadMessageCount(username, appKey, unreadCount, (suc) => {
+            this.jmessagePlugin.setSingleConversationUnreadMessageCount(username, appKey, unreadCount, (suc: any) => {
                 resolve(suc);
-            }, (err) => {
+            }, (err: any) => {
                 reject(err);
             })
         });
@@ -161,10 +161,10 @@ export class JMessageService {
     // 获取会话列表
     getConversationList(): Promise<any> {
         return new Promise((resolve, reject) => {
-            this.jmessagePlugin.getConversationList((suc) => {
+            this.jmessagePlugin.getConversationList((suc: any) => {
                 console.log(JSON.parse(suc));
                 resolve(suc);
-            }, (err) => {
+            }, (err: any) => {
                 reject(err);
             })
         });
@@ -173,9 +173,9 @@ export class JMessageService {
     // 获取指定会话中从新到旧的部分历史消息。
     getHistoryMessages(conversationType: string, value: string, appKey: string, from: number, limit: number): Promise<any> {
         return new Promise((resolve, reject) => {
-            this.jmessagePlugin.getHistoryMessages(conversationType, value, appKey, from, limit, (suc) => {
+            this.jmessagePlugin.getHistoryMessages(conversationType, value, appKey, from, limit, (suc: any) => {
                 resolve(suc);
-            }, (err) => {
+            }, (err: any) => {
                 reject(err);
             })
         });
@@ -184,30 +184,30 @@ export class JMessageService {
     // 获取当前用户信息
     getMyInfo(): Promise<any> {
         return new Promise((resolve, reject) => {
-            this.jmessagePlugin.getMyInfo((suc) => {
+            this.jmessagePlugin.getMyInfo((suc: any) => {
                 resolve(suc);
-            }, (err) => {
+            }, (err: any) => {
                 reject(err);
             })
         });
     };
 
     // 更新用户头像
-    updateMyAvatar(avatarFileUrl): Promise<any> {
+    updateMyAvatar(avatarFileUrl: string): Promise<any> {
         return new Promise((resolve, reject) => {
-            this.jmessagePlugin.updateMyAvatar(avatarFileUrl, (suc) => {
+            this.jmessagePlugin.updateMyAvatar(avatarFileUrl, (suc: any) => {
                 resolve(suc);
-            }, (err) => {
+            }, (err: any) => {
                 reject(err);
             })
         });
     }
 
-    updateMyAvatarByPath(avatarFilePath): Promise<any> {
+    updateMyAvatarByPath(avatarFilePath: string): Promise<any> {
         return new Promise((resolve, reject) => {
-            this.jmessagePlugin.updateMyAvatarByPath(avatarFilePath, (suc) => {
+            this.jmessagePlugin.updateMyAvatarByPath(avatarFilePath, (suc: any) => {
                 resolve(suc);
-            }, (err) => {
+            }, (err: any) => {
                 reject(err);
             })
         });
@@ -216,9 +216,9 @@ export class JMessageService {
     // 取得用户头像的缩略图地址，如果 username 为空，默认取得当前登录用户的头像缩略图地址。
     getUserAvatar(username?: string): Promise<any> {
         return new Promise((resolve, reject) => {
-            this.jmessagePlugin.getUserAvatar(username, (suc) => {
+            this.jmessagePlugin.getUserAvatar(username, (suc: any) => {
                 resolve(suc);
-            }, (err) => {
+            }, (err: any) => {
                 reject(err);
             })
         });
@@ -227,9 +227,9 @@ export class JMessageService {
     // 下载用户头像大图，如果 username 为空，默认为当前用户。
     getOriginalUserAvatar(username?: string): Promise<any> {
         return new Promise((resolve, reject) => {
-            this.jmessagePlugin.getOriginalUserAvatar(username, (suc) => {
+            this.jmessagePlugin.getOriginalUserAvatar(username, (suc: any) => {
                 resolve(suc);
-            }, (err) => {
+            }, (err: any) => {
                 reject(err);
             })
         });
