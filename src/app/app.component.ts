@@ -5,6 +5,7 @@ import { SplashScreen } from '@ionic-native/splash-screen';
 
 import { LoginComponent } from './login/login.component';
 import { PatternLockComponent } from './login/pattern-lock/pattern-lock.component';
+import { MessageService } from './message/shared/service/message.service'
 
 declare var cordova: any;
 
@@ -20,12 +21,15 @@ export class MyApp {
     private splashScreen: SplashScreen,
     private keyboard: Keyboard,
     private ionicApp: IonicApp,
-    private menuCtrl: MenuController) {
+    private menuCtrl: MenuController,
+    private messageservice: MessageService) {
 
     this.appInit();
     platform.ready().then(() => {
       statusBar.styleDefault();
       splashScreen.hide();
+      this.messageservice.getContacts();
+      this.messageservice.history =this.messageservice.getLocalMessageHistory()? this.messageservice.getLocalMessageHistory() : [];
     });
     this.registerBackButtonAction();
   }

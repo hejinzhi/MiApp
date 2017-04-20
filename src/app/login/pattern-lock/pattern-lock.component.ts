@@ -232,10 +232,10 @@ export class PatternLockComponent implements OnInit {
                             user.department = res.json().User.DEPT_NAME;
                             localStorage.setItem('currentUser', JSON.stringify(user));
                         });
-                        // this.jmessageService.login(user.username, user.password).then(()=>{
-                        //   // to do loadUnreadMessage
-                        //     this.navCtrl.setRoot(TabsComponent);
-                        // });
+                        this.jmessageService.login(user.username, user.password).then(()=>{
+                          // to do loadUnreadMessage
+                          this.navCtrl.setRoot(TabsComponent);
+                        });
                     } else {
                         this.message = '密码错误！！！'
                     }
