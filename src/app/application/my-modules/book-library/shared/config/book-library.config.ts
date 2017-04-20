@@ -39,4 +39,7 @@ export class BookLibraryConfig {
 
     // 获取已归还图书信息
     static getPaybackBooks = EnvConfig.baseUrl + 'Lib/GetReturnBookList';
+
+    // 管理员同意借书
+    static approveBorrowBooks = EnvConfig.baseUrl + 'Lib/ApproveBorrow';
 }

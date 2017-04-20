@@ -25,14 +25,14 @@ export class BookLibraryComponent implements OnInit {
         private barcodeScanner: BarcodeScanner
     ) { }
 
-    books;
-    booksBackup; // 用于备份books的信息。当点击进入明细页面时备份，从明细页面返回时恢复
-    user;
+    books: any[];
+    booksBackup: any[]; // 用于备份books的信息。当点击进入明细页面时备份，从明细页面返回时恢复
+    user: any;
     firstIn: boolean = true; // 记录是否第一次打开这个页面，如果是，则显示loading提示框，否则不显示
     pageIndex: number = 1; // 记录当前的页码
-    @ViewChild('searchbar') mySearchbar;
-    @ViewChild('maincontent') mainContent;
-    @ViewChild('bookInput') bookInput;
+    @ViewChild('searchbar') mySearchbar: any;
+    @ViewChild('maincontent') mainContent: any;
+    @ViewChild('bookInput') bookInput: any;
 
     ngOnInit() {
         this.user = JSON.parse(localStorage.getItem('currentUser'));
@@ -73,7 +73,7 @@ export class BookLibraryComponent implements OnInit {
     }
 
     // 转跳到明细页面
-    async goToDetailPage(book) {
+    async goToDetailPage(book: any) {
         let res = await this.bookService.getBookDetailInfo(book.ID);
         this.navCtrl.push(BookDetailComponent, { book: res.json() });
     }
@@ -103,7 +103,7 @@ export class BookLibraryComponent implements OnInit {
         }
     }
 
-    showError(msg) {
+    showError(msg: string) {
         let confirm = this.alertCtrl.create({
             title: '错误',
             subTitle: msg,
@@ -113,7 +113,7 @@ export class BookLibraryComponent implements OnInit {
     }
 
     // 下拉加载数据
-    async doInfinite(infiniteScroll) {
+    async doInfinite(infiniteScroll: any) {
         this.pageIndex++;
         let res = await this.bookService.getBooksByPage(this.pageIndex, BookLibraryConfig.pageCount);
         let nextPageBooks: any[] = res.json();
@@ -167,6 +167,8 @@ export class BookLibraryComponent implements OnInit {
             await this.menuCtrl.close();
             this.navCtrl.push(BorrowRequestComponent, { books: books });
 
+        }).catch((err) => {
+            console.log(err);
         });
     }
 
@@ -177,7 +179,7 @@ export class BookLibraryComponent implements OnInit {
     }
 
     // 查询图书
-    queryBooks(event) {
+    queryBooks(event: any) {
         let value = event.target.value;
 
         Observable.of(event.target.value)
@@ -213,14 +215,14 @@ export class BookLibraryComponent implements OnInit {
                 buttons: [
                     {
                         text: '取消',
-                        handler: data => {
+                        handler: (data: any) => {
                             console.log('Cancel clicked');
-                            resolve();
+                            reject();
                         }
                     },
                     {
                         text: '确定',
-                        handler: data => {
+                        handler: (data: any) => {
                             resolve(data.username);
                         }
                     }

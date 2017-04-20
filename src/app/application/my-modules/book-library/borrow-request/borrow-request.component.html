@@ -2,7 +2,7 @@
   <ion-navbar>
     <ion-title>借书申请</ion-title>
     <ion-buttons end>
-      <button ion-button (click)="borrowConfirm()">确认借阅</button>
+      <button ion-button (click)="borrowConfirm()" [disabled]="selectIDs.length === 0">确认借阅</button>
     </ion-buttons>
   </ion-navbar>
 </ion-header>

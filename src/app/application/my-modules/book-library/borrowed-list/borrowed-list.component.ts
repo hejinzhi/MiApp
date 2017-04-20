@@ -12,7 +12,7 @@ export class BorrowedListComponent implements OnInit {
 
     }
     title: string;
-    books; // 接收传递过来的书籍信息
+    books: any[]; // 接收传递过来的书籍信息
     type: string;   // 判断是“已预约图书”还是“已借图书”转跳过来的
     showPayBackDate: boolean = false; // 判断是否显示“应归还时间”栏位
     showActualBackDate: boolean = false; // 判断是否显示“实际归还时间”栏位
