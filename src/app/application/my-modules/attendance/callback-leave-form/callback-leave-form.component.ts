@@ -24,8 +24,7 @@ export class CallbackLeaveFormComponent {
     data:{}
   }
 
-  canEdit:boolean = true;
-  canCancel:boolean = false;
+  haveSaved:boolean = false;
   todo: FormGroup;
   myValidators:{};
   MyValidatorControl: MyValidatorModel;
@@ -46,11 +45,7 @@ export class CallbackLeaveFormComponent {
     if(this.navParams.data.detailMes) {
       this.formData = this.navParams.data.detailMes;
       this.callbackMes = this.navParams.data.detailMes.data;
-      if(this.formData.status.toUpperCase() === 'APPROVED') {
-        this.canEdit = false;
-      }else {
-        this.canCancel = true;
-      }
+      this.haveSaved = true;
     }
     if(this.navParams.data.number) {
       this.callbackMes.leave_No = this.navParams.data.number;
@@ -98,7 +93,7 @@ export class CallbackLeaveFormComponent {
   saveForm() {
     setTimeout(() => {
       this.plugin.showToast('表单保存成功');
-      this.canCancel = true;
+      this.haveSaved = true;
     },1000)
   }
   cancelForm() {
@@ -108,5 +103,9 @@ export class CallbackLeaveFormComponent {
         this.navCtrl.pop();
       },1000)
     },1000)
+  }
+
+  callbackSubmit() {
+
   }
 }

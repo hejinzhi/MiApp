@@ -37,8 +37,7 @@ export class LeaveFormComponent {
     data:{}
   }
   title:string = '创建请假单';
-  canEdit:boolean = true;
-  canCancel:boolean = false;
+  haveSaved:boolean = false;
   todo: FormGroup;
   isSelectBoss: boolean = false;   // todo 判断是否正确选择代理人
   tempBoss: string = ''; // 临时作保存的中间代理人
@@ -71,11 +70,7 @@ export class LeaveFormComponent {
       this.isSelectBoss = true;
       this.title = '请假单详情';
       this.tempBoss = this.leaveMes.boss;
-      if(this.formData.status.toUpperCase() === 'APPROVED') {
-        this.canEdit = false;
-      }else {
-        this.canCancel = true;
-      }
+      this.haveSaved = true;
     }
     this.todo = this.initWork(this.leaveMes);
     this.MyValidatorControl = this.initValidator();
@@ -186,7 +181,7 @@ export class LeaveFormComponent {
   saveForm() {
     setTimeout(() => {
       this.plugin.showToast('表单保存成功');
-      this.canCancel = true;
+      this.haveSaved = true;
     },1000)
   }
   cancelForm() {
@@ -196,5 +191,9 @@ export class LeaveFormComponent {
         this.navCtrl.pop();
       },1000)
     },1000)
+  }
+
+  callbackSubmit() {
+
   }
 }

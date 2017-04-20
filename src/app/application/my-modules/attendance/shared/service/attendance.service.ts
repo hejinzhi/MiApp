@@ -34,8 +34,15 @@ export class AttendanceService {
     });
   }
 
-  //撤销已提交的表单
+  //撤销已审批的请假单
   callback(formData:MyFormModel) {
+    return this.myHttp.post('',formData).then((res) => {
+      return Promise.resolve(res.json())
+    });
+  }
+
+  //取消送签
+  callbackSubmit(formData:MyFormModel) {
     return this.myHttp.post('',formData).then((res) => {
       return Promise.resolve(res.json())
     });

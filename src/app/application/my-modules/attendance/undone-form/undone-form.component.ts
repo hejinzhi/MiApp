@@ -1,9 +1,14 @@
 import { Component } from '@angular/core';
 import { NavController, NavParams } from 'ionic-angular';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+
 import { ValidateService }   from '../../../../core/services/validate.service';
+import { PluginService }   from '../../../../core/services/plugin.service';
+
 import { HolidayType } from '../shared/config/holiday-type';
+
 import { MyValidatorModel } from '../../../../shared/models/my-validator.model';
+import { MyFormModel } from '../shared/models/my-form.model';
 
 @Component({
   selector: 'sg-undone-form',
@@ -17,16 +22,24 @@ export class UndoneFormComponent {
     endTime: string,
     reason: string
   }
-  formData = {
+  formData:MyFormModel = {
+    type:'',
     status:'New',
     No:'HTL021703007172',
     data:{}
   }
+
   todo: FormGroup;
   myValidators:{};
   MyValidatorControl: MyValidatorModel;
   holidayType = new HolidayType().type;
-  constructor(public navCtrl: NavController, public navParams: NavParams, private formBuilder: FormBuilder, private validateService: ValidateService) { }
+  constructor(
+    public navCtrl: NavController,
+    public navParams: NavParams,
+    private formBuilder: FormBuilder,
+    private validateService: ValidateService,
+    private plugin: PluginService
+  ) { }
 
   ionViewDidLoad() {
     this.leaveMes = {
@@ -84,5 +97,21 @@ export class UndoneFormComponent {
     this.formData.data = this.todo.value
     console.log(this.formData);
     return false;
+  }
+  saveForm() {
+    setTimeout(() => {
+      this.plugin.showToast('表单保存成功');
+    },1000)
+  }
+  cancelForm() {
+    setTimeout(() => {
+      this.plugin.showToast('表单删除成功');
+      setTimeout(() => {
+        this.navCtrl.pop();
+      },1000)
+    },1000)
+  }
+  callbackSubmit() {
+
   }
 }
