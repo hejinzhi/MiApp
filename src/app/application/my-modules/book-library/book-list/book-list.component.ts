@@ -5,7 +5,7 @@ import { Component, Input, Output, EventEmitter } from '@angular/core';
     templateUrl: 'book-list.component.html'
 })
 export class BookListComponent {
-    @Input() books;
+    @Input() books: any[];
     @Input() showAddBookInput: boolean = false; // 是否显示input输入框
     @Input() showPayBackDate: boolean = false;  // 是否显示“应归还时间”
     @Input() showActualBackDate: boolean = false;  // 是否显示“实际归还时间”
@@ -28,15 +28,15 @@ export class BookListComponent {
         this.addBookQty = 1;
     }
 
-    goToDetailPage(book): void {
+    goToDetailPage(book: any): void {
         this.onClick.emit(book);
     }
 
-    inputChange(event) {
+    inputChange(event: any) {
         this.onInputChange.emit(event.target.value);
     }
 
-    trackByBooks(index, book) {
+    trackByBooks(index: number, book: any) {
         return book.ISBN13;
     }
 

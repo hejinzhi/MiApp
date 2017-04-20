@@ -24,13 +24,13 @@ export class BookLibraryService {
     }
 
     // 从豆瓣获取图书信息
-    getBookInfoFromDouban(isbn13) {
+    getBookInfoFromDouban(isbn13: string) {
         // return this.myHttp.originGet('https://api.douban.com/v2/book/isbn/' + isbn13);
         return this.myHttp.get(BookLibraryConfig.doubanUrl + isbn13);
     }
 
     // 预约图书
-    borrowBook(isbn13) {
+    borrowBook(isbn13: string) {
         return this.myHttp.post(BookLibraryConfig.borrowBookUrl, { ISBN13: isbn13 });
     }
 
@@ -67,7 +67,7 @@ export class BookLibraryService {
     }
 
     // 把豆瓣上的book对象转换成大写的book对象
-    transformBookInfo(book) {
+    transformBookInfo(book: any) {
         let newBookObj = {
             AUTHOR: book.author.join(),
             AUTHOR_INFO: book.author_info,
@@ -88,7 +88,7 @@ export class BookLibraryService {
         return newBookObj;
     }
 
-    showError(msg) {
+    showError(msg: string) {
         let confirm = this.alertCtrl.create({
             title: '错误',
             subTitle: msg,
@@ -98,17 +98,17 @@ export class BookLibraryService {
     }
 
     // 新增图书
-    addBook(book) {
+    addBook(book: any) {
         return this.myHttp.post(BookLibraryConfig.addBookUrl, book);
     }
 
     // 根据书名模糊查询
-    getBooksByTitle(title) {
+    getBooksByTitle(title: string) {
         return this.myHttp.get(BookLibraryConfig.getBooksByTitleUrl + '?title=' + title);
     }
 
     // 分页查询书籍信息
-    getBooksByPage(page, count) {
+    getBooksByPage(page: number, count: number) {
         return this.myHttp.get(BookLibraryConfig.getBooksByPage + `?pageIndex=${page}&pageSize=${count}`)
     }
 
@@ -133,7 +133,7 @@ export class BookLibraryService {
     }
 
     // 获取指定图书的详细信息
-    getBookDetailInfo(id) {
+    getBookDetailInfo(id: number) {
         return this.myHttp.get(BookLibraryConfig.getBookDetailInfo + '?id=' + id);
     }
 
@@ -145,5 +145,10 @@ export class BookLibraryService {
             return this.myHttp.get(BookLibraryConfig.getPaybackBooks + '?userName=');
         }
 
+    }
+
+    // 管理员同意借书
+    approveBorrowBooks(ids: number[]) {
+        return this.myHttp.post(BookLibraryConfig.approveBorrowBooks, { borrowID: ids });
     }
 }
