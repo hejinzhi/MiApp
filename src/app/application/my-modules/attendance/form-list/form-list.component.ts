@@ -58,7 +58,7 @@ export class FormListComponent {
           },
           {
             type:'2',
-            status: 'New',
+            status: 'WAITING',
             No: 'HTL021703017178',
             data: {
               type: 'P',
@@ -122,6 +122,20 @@ export class FormListComponent {
           },
           {
             type:'4',
+            status: 'WAITING',
+            No: 'HTL021703007572',
+            data: {
+              type: '20',
+              autoSet: false,
+              boss: 'xiaomi',
+              businessTime: '2017-03-01',
+              startTime: '01:00',
+              endTime: '02:00',
+              reason: '有急事'
+            }
+          },
+          {
+            type:'4',
             status: 'APPROVED',
             No: 'HTL021703004572',
             data: {
@@ -155,6 +169,15 @@ export class FormListComponent {
               leave_No: 'HTL021703002152',
               reason: '车票买早了'
             }
+          },
+          {
+            type:'0',
+            status: 'WAITING',
+            No: 'HTL021704001572',
+            data: {
+              leave_No: 'HTL021703002152',
+              reason: '车票买早了'
+            }
           }
         ]
         break;
@@ -174,7 +197,7 @@ export class FormListComponent {
           },
           {
             type:'1',
-            status: 'New',
+            status: 'APPROVED',
             No: 'HTL021703008116',
             data: {
               type: '',
@@ -186,7 +209,7 @@ export class FormListComponent {
           },
           {
             type:'0',
-            status: 'New',
+            status: 'WAITING',
             No: 'HTL021703017188',
             data: {
               type: '',
@@ -215,7 +238,6 @@ export class FormListComponent {
   }
   toDetail(detailMes: any) {
     let targetForm:any= '';
-    console.log(this.type === '2')
     switch (this.type) {
       case '2':
         targetForm = LeaveFormComponent;
@@ -233,7 +255,6 @@ export class FormListComponent {
         targetForm = UndoneFormComponent;
       break;
     }
-    console.log(targetForm)
     this.navCtrl.push(targetForm, {
       detailMes: detailMes
     })

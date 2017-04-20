@@ -1,11 +1,16 @@
 <ion-header>
   <ion-navbar >
     <ion-title>异常维护</ion-title>
+    <ion-buttons end [ngSwitch]="formData.status.toUpperCase()">
+    <button ion-button (click)="callbackSubmit()" *ngSwitchCase="'WAITING'">取消送签</button>
+    </ion-buttons>
   </ion-navbar>
 </ion-header>
 
 
-<ion-content >
+<ion-content class="main">
+  <div [class.layer]="!(formData.status.toUpperCase() === 'NEW')">
+  </div>
   <ion-list>
     <ion-item>
       状态：
@@ -49,20 +54,20 @@
         ></ion-textarea>
       </ion-item>
       <ion-item-divider *ngIf="myValidators.reason.error" class='alert'>{{myValidators.reason.error}}</ion-item-divider>
+      <ion-grid *ngIf="formData.status.toUpperCase() === 'NEW'">
+        <ion-row>
+          <ion-col width-50>
+            <ion-buttons left>
+              <button ion-button class = "submit" type="submit" [disabled]="!todo.valid || myValidators.reason.error">提交</button>
+            </ion-buttons>
+          </ion-col>
+          <ion-col width-50>
+            <ion-buttons right>
+              <button ion-button [disabled]="!todo.valid || myValidators.reason.error">保存</button>
+            </ion-buttons>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
     </ion-list>
-    <ion-grid>
-      <ion-row>
-        <ion-col width-50>
-          <ion-buttons left>
-            <button ion-button class = "submit" type="submit" [disabled]="!todo.valid || myValidators.reason.error">提交</button>
-          </ion-buttons>
-        </ion-col>
-        <ion-col width-50>
-          <ion-buttons right>
-            <button ion-button [disabled]="!todo.valid || myValidators.reason.error">保存</button>
-          </ion-buttons>
-        </ion-col>
-      </ion-row>
-    </ion-grid>
   </form>
 </ion-content>

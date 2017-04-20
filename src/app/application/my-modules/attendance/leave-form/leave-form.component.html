@@ -1,18 +1,17 @@
 <ion-header>
   <ion-navbar>
     <ion-title>{{title}}</ion-title>
-    <ion-buttons end *ngIf="canEdit && canCancel">
-    <button ion-button (click)="cancelForm()">删除单据</button>
-    </ion-buttons>
-    <ion-buttons end *ngIf="!canEdit">
-      <button ion-button (click)="callBack()">撤销单据</button>
+    <ion-buttons end [ngSwitch]="formData.status.toUpperCase()" *ngIf="haveSaved" >
+    <button ion-button (click)="cancelForm()" *ngSwitchCase="'NEW'">删除单据</button>
+    <button ion-button (click)="callBack()" *ngSwitchCase="'APPROVED'">撤销单据</button>
+    <button ion-button (click)="callbackSubmit()" *ngSwitchCase="'WAITING'">取消送签</button>
     </ion-buttons>
   </ion-navbar>
 </ion-header>
 
 
 <ion-content class="main">
-  <div [class.layer]="!canEdit">
+  <div [class.layer]="!(formData.status.toUpperCase() === 'NEW')">
   </div>
   <ion-list>
     <ion-item>
@@ -89,7 +88,7 @@
         ></ion-textarea>
       </ion-item>
       <ion-item-divider *ngIf="myValidators.reason.error" class='alert'>{{myValidators.reason.error}}</ion-item-divider>
-      <ion-grid *ngIf="canEdit">
+      <ion-grid *ngIf="formData.status.toUpperCase() === 'NEW'">
         <ion-row>
           <ion-col width-50>
             <ion-buttons left>

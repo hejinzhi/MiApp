@@ -26,9 +26,7 @@ export class OverTimeFormComponent {
     No:'HTL021703007172',
     data:{}
   }
-
-  canEdit:boolean = true;
-  canCancel:boolean = false;
+  haveSaved:boolean = false;
 
   todo: FormGroup;
   timeError: string = '';
@@ -60,11 +58,6 @@ export class OverTimeFormComponent {
     if(this.navParams.data.detailMes) {
       this.formData = this.navParams.data.detailMes;
       this.OtMes = this.navParams.data.detailMes.data;
-      if(this.formData.status.toUpperCase() === 'APPROVED') {
-        this.canEdit = false;
-      }else {
-        this.canCancel = true;
-      }
     }
 
     this.todo = this.initWork(this.OtMes);
@@ -141,7 +134,7 @@ export class OverTimeFormComponent {
   saveForm() {
     setTimeout(() => {
       this.plugin.showToast('表单保存成功');
-      this.canCancel = true;
+      this.haveSaved = true;
     },1000)
   }
   cancelForm() {
@@ -151,5 +144,9 @@ export class OverTimeFormComponent {
         this.navCtrl.pop();
       },1000)
     },1000)
+  }
+
+  callbackSubmit() {
+    
   }
 }
