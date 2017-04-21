@@ -157,5 +157,8 @@ export class BookLibraryService {
         return this.myHttp.post(BookLibraryConfig.paybackUrl, { borrowID: ids });
     }
 
-
+    // 取消预约
+    cancelBook(ids: number[]) {
+        return this.myHttp.post(BookLibraryConfig.cancelBookUrl, { borrowID: ids });
+    }
 }

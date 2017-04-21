@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, ChangeDetectorRef } from '@angular/core';
 import { NavParams, AlertController } from 'ionic-angular';
 import { CheckList } from '../../../../shared/models/check-list.model';
 import { ArrayUtilService } from '../../../../core/services/arrayUtil.service';
@@ -19,11 +19,13 @@ export class BorrowRequestComponent implements OnInit {
     showBorrow: boolean = false; // 是否借书申请转跳过来的
     showPayback: boolean = false; // 是否还书转跳过来的
     showCancelBook: boolean = false; // 是否取消预约转跳过来的
+    enableBtn: boolean = false; // 控制右上角的按钮是否可以被点击
     constructor(
         public navParams: NavParams,
         private arrayService: ArrayUtilService,
         private bookService: BookLibraryService,
         private alertCtrl: AlertController,
+        private ref: ChangeDetectorRef,
     ) { }
 
     ngOnInit() {
@@ -70,13 +72,14 @@ export class BorrowRequestComponent implements OnInit {
         return result;
     }
 
-
+    // 确认借阅
     async borrowConfirm() {
         try {
             await this.bookService.approveBorrowBooks(this.selectIDs);
             this.showInfo('借阅成功!');
             this.removeItemFromLocalList(this.selectIDs);
             this.userListAfterTransform = this.transformUserList(this.books);
+            this.selectIDs = [];
         }
         catch (err) {
             this.showError('借阅失败! ' + err);
@@ -84,7 +87,18 @@ export class BorrowRequestComponent implements OnInit {
     }
 
     // 取消预约
-    cancelBook() { }
+    async cancelBook() {
+        try {
+            await this.bookService.cancelBook(this.selectIDs);
+            this.showInfo('取消预约成功!');
+            this.removeItemFromLocalList(this.selectIDs);
+            this.userListAfterTransform = this.transformUserList(this.books);
+            this.selectIDs = [];
+        }
+        catch (err) {
+            this.showError('取消预约失败! ' + err);
+        }
+    }
 
     // 确认还书
     async paybackConfirm() {
@@ -93,6 +107,7 @@ export class BorrowRequestComponent implements OnInit {
             this.showInfo('还书成功!');
             this.removeItemFromLocalList(this.selectIDs);
             this.userListAfterTransform = this.transformUserList(this.books);
+            this.selectIDs = [];
         }
         catch (err) {
             this.showError('还书失败! ' + err);
@@ -105,7 +120,6 @@ export class BorrowRequestComponent implements OnInit {
             for (let j = 0; j < this.books.length; j++) {
                 if (this.books[j].ID === ids[i]) {
                     this.books.splice(j, 1);
-                    return;
                 }
             }
         }
@@ -113,10 +127,13 @@ export class BorrowRequestComponent implements OnInit {
 
     onSelectItem(id: number) {
         this.addItem(this.selectIDs, id);
+        // 这个事件是子组件被选中时emit出来的，需要手动通知angular检查数据变化，否则会报错
+        this.ref.detectChanges();
     }
 
     onUnselectItem(id: number) {
         this.removeItem(this.selectIDs, id);
+        this.ref.detectChanges();
     }
 
     addItem(array: number[], item: number) {

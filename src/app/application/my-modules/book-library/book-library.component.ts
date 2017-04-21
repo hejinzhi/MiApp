@@ -162,7 +162,8 @@ export class BookLibraryComponent implements OnInit {
         let res = await this.bookService.getOrderBooks(currentUser.username);
         let books = res.json();
         await this.menuCtrl.close();
-        this.navCtrl.push(BorrowedListComponent, { books: books, type: 'book' });
+        // this.navCtrl.push(BorrowedListComponent, { books: books, type: 'book' });
+        this.navCtrl.push(BorrowRequestComponent, { books: books, type: 'cancelbook' });
 
     }
 
