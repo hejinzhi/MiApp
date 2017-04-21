@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { NavController, NavParams } from 'ionic-angular';
+import { NavController, NavParams, PopoverController } from 'ionic-angular';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 import { Observable }        from 'rxjs/Observable';
@@ -10,6 +10,7 @@ import { PluginService }   from '../../../../core/services/plugin.service';
 
 import { AttendanceComponent } from '../attendance.component';
 import { CallbackLeaveFormComponent } from '../callback-leave-form/callback-leave-form.component';
+import { FormMenuComponent } from '../form-menu/form-menu.component';
 
 import { HolidayType } from '../shared/config/holiday-type';
 
@@ -37,7 +38,7 @@ export class LeaveFormComponent {
     data:{}
   }
   title:string = '创建请假单';
-  haveSaved:boolean = false;
+  haveSaved:boolean = true;
   todo: FormGroup;
   isSelectBoss: boolean = false;   // todo 判断是否正确选择代理人
   tempBoss: string = ''; // 临时作保存的中间代理人
@@ -53,7 +54,8 @@ export class LeaveFormComponent {
     public navParams: NavParams,
     private formBuilder: FormBuilder,
     private validateService: ValidateService,
-    private plugin: PluginService
+    private plugin: PluginService,
+    public popoverCtrl: PopoverController
   ) { }
 
   ionViewDidLoad() {
@@ -166,6 +168,17 @@ export class LeaveFormComponent {
         this.calculateTime(this.timeError);
       }
       return Promise.resolve(this.myValidators);
+    });
+  }
+  presentPopover(myEvent:any) {
+    this.formData.data = this.todo.value
+    let popover = this.popoverCtrl.create(FormMenuComponent,{
+      formData:this.formData,
+      haveSaved:this.haveSaved,
+      navCtrl:this.navCtrl
+    });
+    popover.present({
+      ev: myEvent
     });
   }
   leaveForm() {

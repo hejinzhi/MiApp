@@ -6,7 +6,10 @@
     <ion-title *ngSwitchCase="'3'">加班单</ion-title>
     <ion-title *ngSwitchCase="'4'">公出单</ion-title>
     <ion-title *ngSwitchCase="'5'">销假单</ion-title>
-    <ion-title *ngSwitchDefault>未知单据</ion-title>
+    <ion-title *ngSwitchDefault>异常</ion-title>
+    <ion-buttons>
+      <button ion-button (click)="exit()">退出</button>
+    </ion-buttons>
   </ion-navbar>
 
 </ion-header>

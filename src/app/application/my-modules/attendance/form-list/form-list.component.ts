@@ -1,11 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import { NavController, NavParams } from 'ionic-angular';
+import { NavController, NavParams, App } from 'ionic-angular';
 
 import { UndoneFormComponent } from '../undone-form/undone-form.component';
 import { LeaveFormComponent } from '../leave-form/leave-form.component';
 import { BusinessFormComponent } from '../business-form/business-form.component';
 import { CallbackLeaveFormComponent } from '../callback-leave-form/callback-leave-form.component';
 import { OverTimeFormComponent } from '../over-time-form/over-time-form.component';
+import { TabsComponent } from '../../../../tabs/tabs.component'
 
 import { MyFormModel } from '../shared/models/my-form.model';
 
@@ -18,7 +19,7 @@ export class FormListComponent {
   showApproved: boolean = false;
   items: MyFormModel[];
   type: string;
-  constructor(public navCtrl: NavController, public navParams: NavParams) {
+  constructor(public navCtrl: NavController, public navParams: NavParams, private app: App) {
 
   }
   ionViewDidLoad() {
@@ -258,5 +259,9 @@ export class FormListComponent {
     this.navCtrl.push(targetForm, {
       detailMes: detailMes
     })
+  }
+
+  exit() {
+    this.app.getRootNav().setRoot(TabsComponent)
   }
 }

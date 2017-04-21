@@ -11,12 +11,17 @@ import { FormListComponent } from './form-list/form-list.component';
 import { UndoneFormComponent } from './undone-form/undone-form.component';
 import { SearcheComponent } from './search/search.component';
 import { SearchFormComponent } from './search-form/search-form.component';
+import { FormMenuComponent } from './form-menu/form-menu.component';
+import { LeaveSubComponent } from './leave-sub/leave-sub.component';
+import { LeaveMessageMenuComponent } from './leave-message-menu/leave-message-menu.component';
+
 
 @NgModule({
   imports:      [ CommonModule, IonicModule ],
   declarations: [
     AttendanceComponent,
     LeaveFormComponent,
+    FormMenuComponent,
     OverTimeFormComponent,
     CallbackLeaveFormComponent,
     BusinessFormComponent,
@@ -24,11 +29,14 @@ import { SearchFormComponent } from './search-form/search-form.component';
     UndoneFormComponent,
     SearcheComponent,
     SearchFormComponent,
-    HoildayDetailComponent
+    HoildayDetailComponent,
+    LeaveSubComponent,
+    LeaveMessageMenuComponent
   ],
   entryComponents:[
     AttendanceComponent,
     LeaveFormComponent,
+    FormMenuComponent,
     OverTimeFormComponent,
     CallbackLeaveFormComponent,
     BusinessFormComponent,
@@ -36,7 +44,9 @@ import { SearchFormComponent } from './search-form/search-form.component';
     UndoneFormComponent,
     SearcheComponent,
     SearchFormComponent,
-    HoildayDetailComponent
+    HoildayDetailComponent,
+    LeaveSubComponent,
+    LeaveMessageMenuComponent
   ],
   providers:    [ ]
 })

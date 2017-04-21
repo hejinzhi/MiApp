@@ -32,35 +32,35 @@ export class MessageComponent implements OnInit {
 
   ngOnInit() {
 
-    this.jmessageservice.jmessageHandler = this.jmessageservice.onReceiveMessage().subscribe(res => {
-
-      let _content: string;
-      if (res.contentType === 'text') {
-        _content = res.content.text;
-      } else if (res.contentType === 'image') {
-        _content = res.content.localThumbnailPath;
-      }
-
-      let msg: Message = {
-        toUserName: res.targetInfo.userName,
-        fromUserName: res.fromName,
-        content: _content,
-        contentType: res.contentType,
-        time: res.createTimeInMillis,
-        type: 'dialogue',
-        unread: true
-      };
-
-      this.messageservice.history.push(msg);
-
-      this.messageservice.setLocalMessageHistory(this.messageservice.history);
-      this.jmessageservice.setSingleConversationUnreadMessageCount(res.fromName, '', 0);
-
-      this.messageListItem = this.messageservice.getMessageHistory();
-      this.ref.detectChanges();
-
-    });
-    this.loadUnreadMessage();
+    // this.jmessageservice.jmessageHandler = this.jmessageservice.onReceiveMessage().subscribe(res => {
+    //
+    //   let _content: string;
+    //   if (res.contentType === 'text') {
+    //     _content = res.content.text;
+    //   } else if (res.contentType === 'image') {
+    //     _content = res.content.localThumbnailPath;
+    //   }
+    //
+    //   let msg: Message = {
+    //     toUserName: res.targetInfo.userName,
+    //     fromUserName: res.fromName,
+    //     content: _content,
+    //     contentType: res.contentType,
+    //     time: res.createTimeInMillis,
+    //     type: 'dialogue',
+    //     unread: true
+    //   };
+    //
+    //   this.messageservice.history.push(msg);
+    //
+    //   this.messageservice.setLocalMessageHistory(this.messageservice.history);
+    //   this.jmessageservice.setSingleConversationUnreadMessageCount(res.fromName, '', 0);
+    //
+    //   this.messageListItem = this.messageservice.getMessageHistory();
+    //   this.ref.detectChanges();
+    //
+    // });
+    // this.loadUnreadMessage();
   }
 
   // 当用户点击登录后，先去检查它是否有未收到的信息，如果有，往本地写入这些信息，这样message才能显示完成

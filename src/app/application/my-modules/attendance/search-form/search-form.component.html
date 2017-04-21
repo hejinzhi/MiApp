@@ -8,7 +8,7 @@
 <ion-content>
   <form [formGroup]="todo" *ngIf="todo" (ngSubmit)="leaveForm()">
     <ion-list>
-      <ion-item [class.has-error]="myValidators.type.error" [class.has-success]="myValidators.type.pass">
+      <ion-item [class.has-error]="myValidators.type.error" [class.has-success]="myValidators.type.pass" style="display:none">
         <ion-label>单据类型*</ion-label>
         <ion-select cancelText="取消" okText="確認" formControlName="type">
           <ion-option *ngFor="let item of formType" [value]="item.type">{{item.name}}</ion-option>

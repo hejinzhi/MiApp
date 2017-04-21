@@ -38,6 +38,7 @@ export class SearchFormComponent {
       endTime: '',
       form_No: ''
     }
+    this.searchMes.type = this.navParams.data.type || '';
     this.todo = this.initWork(this.searchMes);
     this.MyValidatorControl = this.initValidator();
     this.myValidators = this.MyValidatorControl.validators;
