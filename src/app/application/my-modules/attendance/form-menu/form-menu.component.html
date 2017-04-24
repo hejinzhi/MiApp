@@ -1,5 +1,5 @@
 <ion-list *ngIf="formData">
-  <button ion-item (click)="toSearch()">查询</button>
+  <button ion-item (click)="toSearch()">单据查询</button>
   <button ion-item (click)="toDetail()">个人考勤现状</button>
   <ion-item-group [ngSwitch]="formData.status.toUpperCase()" *ngIf="haveSaved">
   <button ion-item (click)="cancelForm()" *ngSwitchCase="'NEW'">删除单据</button>

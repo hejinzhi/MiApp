@@ -1,22 +1,38 @@
 import { Component } from '@angular/core';
 import { NavController, NavParams } from 'ionic-angular';
 
+import { DetailBetweenFormComponent } from '../detail-between-form/detail-between-form.component';
+import { DetailOnFormComponent } from '../detail-on-form/detail-on-form.component';
+
+import { FormType } from '../shared/config/form-type';
+
 @Component({
   selector:'sg-leave-message-menu',
   templateUrl: 'leave-message-menu.component.html'
 })
 export class LeaveMessageMenuComponent {
 
+  formType = new FormType();
   constructor(public navCtrl: NavController, public navParams: NavParams ) {}
 
   ionViewDidLoad() {
   }
 
-  maintain_Leave() {
-
+  swipe_note() {
+    this.navCtrl.push(DetailBetweenFormComponent,{
+      type:this.formType.swipe_note.type
+    });
   }
 
-  to_detail() {
+  attendance_month() {
+    this.navCtrl.push(DetailOnFormComponent,{
+      type:this.formType.attendance_month.type
+    });
+  }
 
+  attendance_detail() {
+    this.navCtrl.push(DetailBetweenFormComponent,{
+      type:this.formType.attendance_detail.type
+    });
   }
 }

@@ -1,9 +1,11 @@
 import { Component } from '@angular/core';
-import { NavController, NavParams } from 'ionic-angular';
+import { NavController, NavParams, PopoverController } from 'ionic-angular';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 import { Observable }        from 'rxjs/Observable';
 import { Subject }           from 'rxjs/Subject';
+
+import { FormMenuComponent } from '../form-menu/form-menu.component';
 
 import { ValidateService }   from '../../../../core/services/validate.service';
 import { PluginService }   from '../../../../core/services/plugin.service';
@@ -56,6 +58,7 @@ export class BusinessFormComponent {
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
+    public popoverCtrl: PopoverController,
     private formBuilder: FormBuilder,
     private validateService: ValidateService,
     private plugin: PluginService
@@ -178,6 +181,17 @@ export class BusinessFormComponent {
         this.calculateTime(this.timeError);
       }
       return Promise.resolve(this.myValidators);
+    });
+  }
+  presentPopover(myEvent:any) {
+    this.formData.data = this.todo.value
+    let popover = this.popoverCtrl.create(FormMenuComponent,{
+      formData:this.formData,
+      haveSaved:this.haveSaved,
+      navCtrl:this.navCtrl
+    });
+    popover.present({
+      ev: myEvent
     });
   }
   leaveForm() {

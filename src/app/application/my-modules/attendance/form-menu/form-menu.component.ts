@@ -28,7 +28,6 @@ export class FormMenuComponent {
     this.formData = this.navParams.data.formData;
     this.haveSaved = this.navParams.data.haveSaved;
     this.lastNavCtr = this.navParams.data.navCtrl;
-    console.log(456)
   }
   ionViewWillEnter(){
     if(this.isforward){

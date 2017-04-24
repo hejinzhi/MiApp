@@ -5,39 +5,35 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ValidateService }   from '../../../../core/services/validate.service';
 
 import { MyValidatorModel } from '../../../../shared/models/my-validator.model';
+
 import { FormType } from '../shared/config/form-type';
 
-import { FormListComponent } from '../form-list/form-list.component';
+import { AttendanceDetailComponent } from '../attendance-detail/attendance-detail.component';
+import { SwipeNoteComponent } from '../swipe-note/swipe-note.component';
 
 @Component({
-  selector: 'sg-search-form',
-  templateUrl: 'search-form.component.html'
+  selector: 'sg-detail-between-form',
+  templateUrl: 'detail-between-form.component.html'
 })
-export class SearchFormComponent {
-  searchMes: {
-    type:string,
+export class DetailBetweenFormComponent {
+  betweenMes: {
     startTime: string,
     endTime: string,
-    form_No: string,
   }
+  type: string;
   todo: FormGroup;
-  myformType = new FormType();
   timeError:string ='';
   myValidators:{};
   MyValidatorControl: MyValidatorModel;
-  formType:{type:string,name:string} []=[];
   constructor(public navCtrl: NavController, public navParams: NavParams, private formBuilder: FormBuilder, private validateService: ValidateService) { }
 
   ionViewDidLoad() {
-    this.formType = this.myformType.type;
-    this.searchMes = {
-      type:'',
+    this.type = this.navParams.data.type;
+    this.betweenMes = {
       startTime: '',
       endTime: '',
-      form_No: ''
     }
-    this.searchMes.type = this.navParams.data.type || '';
-    this.todo = this.initWork(this.searchMes);
+    this.todo = this.initWork(this.betweenMes);
     this.MyValidatorControl = this.initValidator();
     this.myValidators = this.MyValidatorControl.validators;
     for (let prop in this.myValidators) {
@@ -46,16 +42,11 @@ export class SearchFormComponent {
   }
   initValidator() {
     let newValidator = new MyValidatorModel([
-      {name:'type',valiItems:[{valiName:'Required',errMessage:'单号类型不能为空',valiValue:true}]},
-      {name:'form_No',valiItems:[
-        {valiName:'Length',errMessage:'单据长度不足15位',valiValue:15},
-        {valiName:'Regex',errMessage:'必须是HTL开头并后面加数字组成',valiValue:'[H]{1}[T]{1}[L]{1}[0-9]+'}
-      ]},
       {name:'startTime',valiItems:[
-        {valiName:'TimeSmaller',errMessage:'结束时间必须迟于开始时间',valiValue:'endTime'}
+        {valiName:'DateNotBigger',errMessage:'结束时间不得小于开始时间',valiValue:'endTime'}
       ]},
       {name:'endTime',valiItems:[
-        {valiName:'TimeBigger',errMessage:'结束时间必须迟于开始时间',valiValue:'startTime'}
+        {valiName:'DateNotSmaller',errMessage:'结束时间不得小于开始时间',valiValue:'startTime'}
       ]}
     ])
     return newValidator;
@@ -63,10 +54,8 @@ export class SearchFormComponent {
   //初始化原始數據
   initWork(work: any): FormGroup {
     return this.formBuilder.group({
-      type: [work.type, Validators.required],
-      startTime: [work.startTime],
-      endTime: [work.endTime],
-      form_No: [work.form_No]
+      startTime: [work.startTime, Validators.required],
+      endTime: [work.endTime, Validators.required],
     });
   }
   //單獨輸入塊驗證
@@ -83,10 +72,14 @@ export class SearchFormComponent {
     });
   }
   leaveForm() {
+    let formType = new FormType()
     console.log(this.todo.value);
-    this.navCtrl.push(FormListComponent, {
-      type: this.todo.value.type
-    })
+    if(this.type === formType.swipe_note.type) {
+      this.navCtrl.push(SwipeNoteComponent)
+    }
+    if(this.type === formType.attendance_detail.type) {
+      this.navCtrl.push(AttendanceDetailComponent)
+    }
     return false;
   }
 }

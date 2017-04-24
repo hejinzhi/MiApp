@@ -38,7 +38,7 @@ export class LeaveFormComponent {
     data:{}
   }
   title:string = '创建请假单';
-  haveSaved:boolean = true;
+  haveSaved:boolean = false;
   todo: FormGroup;
   isSelectBoss: boolean = false;   // todo 判断是否正确选择代理人
   tempBoss: string = ''; // 临时作保存的中间代理人

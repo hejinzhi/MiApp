@@ -14,6 +14,18 @@ import { SearchFormComponent } from './search-form/search-form.component';
 import { FormMenuComponent } from './form-menu/form-menu.component';
 import { LeaveSubComponent } from './leave-sub/leave-sub.component';
 import { LeaveMessageMenuComponent } from './leave-message-menu/leave-message-menu.component';
+import { ListFilterComponent } from './list-filter/list-filter.component';
+import { DetailBetweenFormComponent } from './detail-between-form/detail-between-form.component';
+import { SwipeNoteComponent } from './swipe-note/swipe-note.component';
+import { AttendanceDetailComponent } from './attendance-detail/attendance-detail.component';
+import { DetailOnFormComponent } from './detail-on-form/detail-on-form.component';
+import { AttendanceMonthComponent } from './attendance-month/attendance-month.component';
+
+
+import { ReasonTypePipe } from './shared/pipe/reason-type.pipe';
+import { FormTypePipe } from './shared/pipe/form-type.pipe';
+import { SwipeTypePipe } from './shared/pipe/swipe-type.pipe';
+import { AttendanceMonthType } from './shared/pipe/attendance-month-type.pipe';
 
 
 @NgModule({
@@ -31,7 +43,17 @@ import { LeaveMessageMenuComponent } from './leave-message-menu/leave-message-me
     SearchFormComponent,
     HoildayDetailComponent,
     LeaveSubComponent,
-    LeaveMessageMenuComponent
+    LeaveMessageMenuComponent,
+    ListFilterComponent,
+    DetailBetweenFormComponent,
+    SwipeNoteComponent,
+    AttendanceDetailComponent,
+    DetailOnFormComponent,
+    AttendanceMonthComponent,
+    ReasonTypePipe,
+    FormTypePipe,
+    SwipeTypePipe,
+    AttendanceMonthType
   ],
   entryComponents:[
     AttendanceComponent,
@@ -44,9 +66,14 @@ import { LeaveMessageMenuComponent } from './leave-message-menu/leave-message-me
     UndoneFormComponent,
     SearcheComponent,
     SearchFormComponent,
+    DetailBetweenFormComponent,
     HoildayDetailComponent,
+    SwipeNoteComponent,
     LeaveSubComponent,
-    LeaveMessageMenuComponent
+    LeaveMessageMenuComponent,
+    AttendanceDetailComponent,
+    DetailOnFormComponent,
+    AttendanceMonthComponent
   ],
   providers:    [ ]
 })

@@ -5,39 +5,32 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ValidateService }   from '../../../../core/services/validate.service';
 
 import { MyValidatorModel } from '../../../../shared/models/my-validator.model';
+
 import { FormType } from '../shared/config/form-type';
 
-import { FormListComponent } from '../form-list/form-list.component';
+import { AttendanceMonthComponent } from '../attendance-month/attendance-month.component';
 
 @Component({
-  selector: 'sg-search-form',
-  templateUrl: 'search-form.component.html'
+  selector: 'sg-detail-on-form',
+  templateUrl: 'detail-on-form.component.html'
 })
-export class SearchFormComponent {
-  searchMes: {
-    type:string,
-    startTime: string,
-    endTime: string,
-    form_No: string,
+export class DetailOnFormComponent {
+  betweenMes: {
+    date: string
   }
+  type: string;
   todo: FormGroup;
-  myformType = new FormType();
   timeError:string ='';
   myValidators:{};
   MyValidatorControl: MyValidatorModel;
-  formType:{type:string,name:string} []=[];
   constructor(public navCtrl: NavController, public navParams: NavParams, private formBuilder: FormBuilder, private validateService: ValidateService) { }
 
   ionViewDidLoad() {
-    this.formType = this.myformType.type;
-    this.searchMes = {
-      type:'',
-      startTime: '',
-      endTime: '',
-      form_No: ''
+    this.type = this.navParams.data.type;
+    this.betweenMes = {
+      date: ''
     }
-    this.searchMes.type = this.navParams.data.type || '';
-    this.todo = this.initWork(this.searchMes);
+    this.todo = this.initWork(this.betweenMes);
     this.MyValidatorControl = this.initValidator();
     this.myValidators = this.MyValidatorControl.validators;
     for (let prop in this.myValidators) {
@@ -46,16 +39,9 @@ export class SearchFormComponent {
   }
   initValidator() {
     let newValidator = new MyValidatorModel([
-      {name:'type',valiItems:[{valiName:'Required',errMessage:'单号类型不能为空',valiValue:true}]},
-      {name:'form_No',valiItems:[
-        {valiName:'Length',errMessage:'单据长度不足15位',valiValue:15},
-        {valiName:'Regex',errMessage:'必须是HTL开头并后面加数字组成',valiValue:'[H]{1}[T]{1}[L]{1}[0-9]+'}
-      ]},
-      {name:'startTime',valiItems:[
-        {valiName:'TimeSmaller',errMessage:'结束时间必须迟于开始时间',valiValue:'endTime'}
-      ]},
-      {name:'endTime',valiItems:[
-        {valiName:'TimeBigger',errMessage:'结束时间必须迟于开始时间',valiValue:'startTime'}
+      {name:'date',valiItems:[
+        {valiName:'Required',errMessage:'必须选择时间',valiValue:true},
+        {valiName:'BeforeMonth',errMessage:'不能选择本月以后的日期',valiValue:new Date().getMonth()},
       ]}
     ])
     return newValidator;
@@ -63,10 +49,7 @@ export class SearchFormComponent {
   //初始化原始數據
   initWork(work: any): FormGroup {
     return this.formBuilder.group({
-      type: [work.type, Validators.required],
-      startTime: [work.startTime],
-      endTime: [work.endTime],
-      form_No: [work.form_No]
+      date: [work.date, Validators.required],
     });
   }
   //單獨輸入塊驗證
@@ -83,10 +66,9 @@ export class SearchFormComponent {
     });
   }
   leaveForm() {
+    let formType = new FormType()
     console.log(this.todo.value);
-    this.navCtrl.push(FormListComponent, {
-      type: this.todo.value.type
-    })
+    this.navCtrl.push(AttendanceMonthComponent);
     return false;
   }
 }
