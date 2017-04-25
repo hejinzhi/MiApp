@@ -10,6 +10,7 @@
   <ion-list>
     <ion-item *ngFor="let item of items">
       <h2>日期： {{item.date}}</h2>
+      <p>{{item.date | sgWeekName}}</p>
       <p>上午上班： {{item.inTime_am}};  &nbsp;&nbsp;上午下班： {{item.outTime_am}}</p>
       <p>下午上班： {{item.inTime_pm}};  &nbsp;&nbsp;下午下班： {{item.outTime_pm}}</p>
       <p>班别： {{item.workType}}</p>

@@ -11,6 +11,7 @@ import { PluginService }   from '../../../../core/services/plugin.service';
 import { AttendanceComponent } from '../attendance.component';
 import { CallbackLeaveFormComponent } from '../callback-leave-form/callback-leave-form.component';
 import { FormMenuComponent } from '../form-menu/form-menu.component';
+import { SignListComponent } from '../sign-list/sign-list.component';
 
 import { HolidayType } from '../shared/config/holiday-type';
 
@@ -208,5 +209,9 @@ export class LeaveFormComponent {
 
   callbackSubmit() {
 
+  }
+
+  sign_list() {
+    this.navCtrl.push(SignListComponent)
   }
 }

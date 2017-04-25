@@ -1,7 +1,7 @@
 <ion-header>
 
   <ion-navbar>
-    <ion-title>{{type | sgFormType}}</ion-title>
+    <ion-title>簽核歷史記錄</ion-title>
   </ion-navbar>
 
 </ion-header>
@@ -9,11 +9,16 @@
 
 <ion-content>
   <ion-list>
-    <ion-item *ngFor="let item of items">
-      {{item.type | sgOtherType:'attendanceMonthType'}}
-      <ion-note item-right>
-        {{item.value}}
-      </ion-note>
-    </ion-item>
+    <ion-item-group *ngFor="let item of items;let i = index;">
+      <ion-item-divider color="light">版本： {{item.version}}</ion-item-divider>
+      <ion-item *ngFor="let itemSub of item.data" >
+          <h2>序列: {{itemSub.NO}}</h2>
+          <h3>签核人： {{itemSub.id}}</h3>
+          <p>签核状态： {{itemSub.status}}</p>
+          <p>送签时间： {{itemSub.toTime}}</p>
+          <p>签核时间： {{itemSub.outTime}}</p>
+          <p>备注： {{itemSub.PS}}</p>
+      </ion-item>
+    </ion-item-group>
   </ion-list>
 </ion-content>
