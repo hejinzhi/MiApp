@@ -18,7 +18,7 @@ export class PatternLockComponent implements OnInit {
   canvasHeight: number;
   OffsetX: number;
   OffsetY: number;
-  circleArr:{X:number,Y:number}[] = [];
+  circleArr: { X: number, Y: number }[] = [];
   message: string;
   canChange: boolean;
   isVal: boolean = true; // 是否转换带头像的登录验证画面
@@ -113,7 +113,7 @@ export class PatternLockComponent implements OnInit {
   ionViewWillLeave() {
   }
 
-  createCirclePoint(diffX:number, diffY:number) {
+  createCirclePoint(diffX: number, diffY: number) {
     for (var row = 0; row < 3; row++) {
       for (var col = 0; col < 3; col++) {
         // 计算圆心坐标
@@ -126,7 +126,7 @@ export class PatternLockComponent implements OnInit {
     }
   }
 
-  Draw(cxt:any, circleArr:{X:number,Y:number}[], pwdArr:any, touchPoint:any) {
+  Draw(cxt: any, circleArr: { X: number, Y: number }[], pwdArr: any, touchPoint: any) {
     if (pwdArr.length > 0) {
       cxt.beginPath();
       for (var i = 0; i < pwdArr.length; i++) {
@@ -170,7 +170,7 @@ export class PatternLockComponent implements OnInit {
     }
   }
 
-  getSelectPwd(touches:any, pwdArr:any) {
+  getSelectPwd(touches: any, pwdArr: any) {
     for (var i = 0; i < this.circleArr.length; i++) {
       var currentPoint = this.circleArr[i];
       var xdiff = Math.abs(currentPoint.X - touches.pageX);
@@ -184,20 +184,20 @@ export class PatternLockComponent implements OnInit {
     }
   }
 
-  bindEvent(canvas:any, cxt:any) {
-    var pwdArr:any = [];
-    canvas.addEventListener("touchstart", (e:any) => {
+  bindEvent(canvas: any, cxt: any) {
+    var pwdArr: any = [];
+    canvas.addEventListener("touchstart", (e: any) => {
       this.getSelectPwd(e.touches[0], pwdArr);
       this.message = '';
     }, false);
-    canvas.addEventListener("touchmove", (e:any) => {
+    canvas.addEventListener("touchmove", (e: any) => {
       e.preventDefault();
       var touches = e.touches[0];
       this.getSelectPwd(touches, pwdArr);
       cxt.clearRect(0, 0, this.canvasWidth, this.canvasHeight);
       this.Draw(cxt, this.circleArr, pwdArr, { X: touches.pageX, Y: touches.pageY - this.headHeight });
     }, false);
-    canvas.addEventListener("touchend", (e:any) => {
+    canvas.addEventListener("touchend", (e: any) => {
       cxt.clearRect(0, 0, this.canvasWidth, this.canvasHeight);
       this.Draw(cxt, this.circleArr, [], null);
 
@@ -234,9 +234,9 @@ export class PatternLockComponent implements OnInit {
               user.department = res.json().User.DEPT_NAME;
               localStorage.setItem('currentUser', JSON.stringify(user));
             });
-            this.jmessageService.login(user.username, user.password).then(()=>{
+            this.jmessageService.login(user.username, user.password).then(() => {
               // to do loadUnreadMessage
-                this.navCtrl.setRoot(TabsComponent);
+              this.navCtrl.setRoot(TabsComponent);
             });
           } else {
             this.message = '密码错误！！！'

@@ -151,4 +151,14 @@ export class BookLibraryService {
     approveBorrowBooks(ids: number[]) {
         return this.myHttp.post(BookLibraryConfig.approveBorrowBooks, { borrowID: ids });
     }
+
+    // 管理员还书
+    payback(ids: number[]) {
+        return this.myHttp.post(BookLibraryConfig.paybackUrl, { borrowID: ids });
+    }
+
+    // 取消预约
+    cancelBook(ids: number[]) {
+        return this.myHttp.post(BookLibraryConfig.cancelBookUrl, { borrowID: ids });
+    }
 }

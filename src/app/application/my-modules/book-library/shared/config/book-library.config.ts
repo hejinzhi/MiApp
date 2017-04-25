@@ -42,4 +42,10 @@ export class BookLibraryConfig {
 
     // 管理员同意借书
     static approveBorrowBooks = EnvConfig.baseUrl + 'Lib/ApproveBorrow';
+
+    // 管理员还书
+    static paybackUrl = EnvConfig.baseUrl + 'Lib/ReturnBook';
+
+    // 取消预约
+    static cancelBookUrl = EnvConfig.baseUrl + 'Lib/OrderCancel';
 }

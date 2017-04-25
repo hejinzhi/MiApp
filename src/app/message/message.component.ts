@@ -110,7 +110,7 @@ export class MessageComponent implements OnInit {
   }
 
   ionViewWillEnter() {
-    this.refreshData();
+    // this.refreshData();
   }
 
   refreshData() {

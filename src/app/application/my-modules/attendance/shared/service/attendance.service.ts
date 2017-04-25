@@ -70,4 +70,18 @@ export class AttendanceService {
       return Promise.resolve(res.json())
     });
   }
+
+  // 获得请假时间统计
+  getWorkTimeCount() {
+    return this.myHttp.get('').then((res) => {
+      return Promise.resolve(res.json())
+    });
+  }
+
+  // 获得加班时间统计
+  getOverTimeCount() {
+    return this.myHttp.get('').then((res) => {
+      return Promise.resolve(res.json())
+    });
+  }
 }
