@@ -162,7 +162,7 @@ export class JMessageService {
     getConversationList(): Promise<any> {
         return new Promise((resolve, reject) => {
             this.jmessagePlugin.getConversationList((suc: any) => {
-                console.log(JSON.parse(suc));
+                console.log(JSON.parse(suc),666);
                 resolve(suc);
             }, (err: any) => {
                 reject(err);

@@ -14,13 +14,13 @@ import { JMessageService } from '../../core/services/jmessage.service';
 })
 
 export class DialogueComponent implements OnInit, AfterViewChecked {
-    list;
-    input_text;
-    userinfo;
+    list: any;
+    input_text: string;
+    userinfo: any;
     onPlus: boolean = false;
 
-    userName;
-    userNickName;
+    userName: string;
+    userNickName: string;
 
     jmessageHandler: Subscription; //接收句柄，再view被关闭的时候取消订阅，否则对已关闭的view进行数据脏检查会报错
 
