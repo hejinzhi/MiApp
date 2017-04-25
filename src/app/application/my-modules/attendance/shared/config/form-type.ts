@@ -17,6 +17,8 @@ export class FormType {
 
   attendance_detail: {type:string,name:string} = {type:'8',name:'出勤状况明细'};
 
+  sign_list: {type:string,name:string} = {type:'9',name:'签核名单'};
+
   type:{type:string,name:string}[] =[
     this.attendance_wrong,
     this.attendance_lack,

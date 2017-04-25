@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
+import { Tabs } from 'ionic-angular'
 import { NavController, NavParams,App} from 'ionic-angular';
 import { LeaveFormComponent } from './leave-form/leave-form.component';
 import { OverTimeFormComponent } from './over-time-form/over-time-form.component';
@@ -13,6 +14,8 @@ import { StatisticsComponent } from './statistics/statistics.component';
   templateUrl: 'attendance.component.html'
 })
 export class AttendanceComponent {
+
+  @ViewChild('attendance') attendance: Tabs;
 
   tab1Root = FormListComponent;
   tab2Root = OverTimeFormComponent;
