@@ -1,5 +1,5 @@
 export class HolidayType {
-  type:{type: string, name: string}[] = [
+  type: { type: string, name: string }[] = [
     { type: 'A', name: '年休假' },
     { type: 'B', name: '產假 - 產假【98天】' },
     { type: 'B1', name: '難產 - 難產【15天】' },
@@ -22,5 +22,58 @@ export class HolidayType {
     { type: 'T', name: '調休' },
     { type: 'W', name: '婚假 - 婚假【3天】' },
     { type: 'Y', name: '忘刷卡' },
+  ];
+  businessType = [
+    { type: '10', name: '新員工招聘室簽署合同' },
+    { type: '20', name: '前往招聘辦公室處理公務' },
+    { type: '30', name: '前往醫務室婦檢' },
+    { type: '40', name: '因公外出（出差、過磅、辦證、政府部門及銀行辦理業務等)' },
+    { type: '50', name: '受訓、開會' },
+    { type: '60', name: '出差期間加班時數計算' },
+    { type: '70', name: '陪同客戶外出、用餐等' },
+    { type: '80', name: '其它' }
+  ];
+  jobType = [
+    { type: '01', name: '生產需要(for 直接員工)' },
+    { type: '02', name: '配合產線加班' },
+    { type: '03', name: '日常事務處理' },
+    { type: '04', name: 'OTHERS' }
+  ];
+  swipeType = [
+    { type: '+', name: '上班' },
+    { type: '$', name: '中午下班' },
+    { type: '@', name: '中午上班' },
+    { type: '-', name: '下班' }
+  ];
+  attendanceMonthType =[
+    { name: '计薪天数', type: 'SA_DAYS' },
+    { name: '应出勤天数', type: 'NEED_DAYS' },
+    { name: '实出勤天数', type: 'PRESENT_DAYS' },
+    { name: '有薪假天数', type: 'SA_OFFDUTY_DAYS' },
+    { name: '法定有薪假天数', type: 'LEGAL_SA_DAYS' },
+    { name: '事假天数', type: 'ABSENT_LEAVE' },
+    { name: '病假天数', type: 'SICK_LEAVE' },
+    { name: '旷职天数', type: 'WITHOUT_LEAVE' },
+    { name: '全月请假天数', type: 'OFFDUTY_DAYS' },
+    { name: '迟到早退次数', type: 'LATE' },
+    { name: '迟到早退时间', type: 'LATE_TIME' },
+    { name: '折现时数', type: 'OVER_PAY' },
+    { name: '补休时数', type: 'REPAY' },
+    { name: '未刷卡次数', type: 'NOCARD_COUNT' },
+    { name: '停线天数', type: 'STOP_DAYS' },
+    { name: '大夜班次数', type: 'NIGHT_SUBSIDY' },
+    { name: '小夜班次数', type: 'NIGHT_SUBSIDY_LITTLE' },
+    { name: '上个月大夜班次数', type: 'LAST1_NS' },
+    { name: '前个月大夜班次数', type: 'LAST2_NS' },
+    { name: '出勤天数(清凉津贴)', type: 'TOT_DUTY' },
+    { name: '加班总时数', type: 'OVERTIME_HOURS1_133' },
+    { name: '周六加班时数', type: 'SAT_DAYS' },
+    { name: '休息日加班(不含法定假日)', type: 'OVERTIME_HOURS2_2' },
+    { name: '加班时数(正常上班日)', type: 'OVERTIME_HOURS2_133' },
+    { name: '法定假日加班时数', type: 'LEGAL_OVER_HOURS' },
+    { name: '连续请假天数', type: 'CONTINUE_OFF_DAYS' },
+    { name: '未处理天数', type: 'NO_SHEET' },
+    { name: '产假天数', type: 'CHILDBIRTH_LEAVE' },
+    { name: '缺席天数', type: 'OFFDUTY_DAYS' }
   ]
 }

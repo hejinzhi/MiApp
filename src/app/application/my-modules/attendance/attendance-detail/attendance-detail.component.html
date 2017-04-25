@@ -1,0 +1,22 @@
+<ion-header>
+  <ion-navbar>
+    <ion-title>{{type | sgFormType}}</ion-title>
+  </ion-navbar>
+
+</ion-header>
+
+
+<ion-content>
+  <ion-list>
+    <ion-item *ngFor="let item of items">
+      <h2>日期： {{item.date}}</h2>
+      <p>上午上班： {{item.inTime_am}};  &nbsp;&nbsp;上午下班： {{item.outTime_am}}</p>
+      <p>下午上班： {{item.inTime_pm}};  &nbsp;&nbsp;下午下班： {{item.outTime_pm}}</p>
+      <p>班别： {{item.workType}}</p>
+      <p>出勤时数： {{item.timeCount}};  &nbsp;&nbsp;假单时数： {{item.leaveCount}}</p>
+      <p>迟到/早退： {{item.lateOrEarly}}</p>
+      <p>旷职： {{item.notWork}}</p>
+      <p>未刷卡： {{item.notWipte}}</p>
+    </ion-item>
+  </ion-list>
+</ion-content>

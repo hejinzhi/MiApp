@@ -81,7 +81,7 @@ export class ValidateService {
       return /^([\d]+)(\.[\d]{1,2})?$/.test(this.value);
     },//保留兩位數的金額
     TimeBigger : function(another:any){
-      console.log(Date.parse('2017/01/01 ' +this.value))
+      console.log(Date.parse('2017/01/01'))
       let pre1 = /\d{1,2}\:\d{2}/g.test(this.value) && this.value.length <6?'2017/01/01 ':'';
       let pre2 = /\d{1,2}\:\d{2}/g.test(another.value) && this.value.length <6?'2017/01/01 ':'';
       if(this.value && another.value){
@@ -96,8 +96,10 @@ export class ValidateService {
       }
     },
     TimeSmaller : function(another:any){
+      let pre1 = /\d{1,2}\:\d{2}/g.test(this.value) && this.value.length <6?'2017/01/01 ':'';
+      let pre2 = /\d{1,2}\:\d{2}/g.test(another.value) && this.value.length <6?'2017/01/01 ':'';
       if(this.value && another.value){
-        let interval = Date.parse(this.value) - Date.parse(another.value)
+        let interval = Date.parse(pre1+this.value) - Date.parse(pre2+another.value)
         if(interval<0) {
           another.error = '';
           another.pass = true;
@@ -106,6 +108,35 @@ export class ValidateService {
       }else {
         return true;
       }
+    },
+    DateNotSmaller: function(another:any){
+      if(this.value && another.value){
+        let interval = Date.parse(this.value) - Date.parse(another.value)
+        if(interval>=0) {
+          another.error = '';
+          another.pass = true;
+        }
+        return interval>=0;
+      }else {
+        return true;
+      }
+    },
+    DateNotBigger: function(another:any){
+      if(this.value && another.value){
+        let interval = Date.parse(this.value) - Date.parse(another.value)
+        if(interval<=0) {
+          another.error = '';
+          another.pass = true;
+        }
+        return interval<=0;
+      }else {
+        return true;
+      }
+    },
+    BeforeMonth: function(){
+      console.log(new Date(this.value).getMonth());
+      console.log(this.dataset['vBeforeMonth'])
+      return +new Date(this.value).getMonth()<= +this.dataset['vBeforeMonth'];
     }
   };
   resultMes:string;

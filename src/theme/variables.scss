@@ -79,3 +79,11 @@ ion-picker-cmp {
 .has-success ion-label{
   color: #387ef5!important;
 }
+//重设select宽度样式
+ion-select {
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  overflow: hidden;
+  max-width: 100%;
+}

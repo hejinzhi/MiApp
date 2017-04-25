@@ -1,10 +1,13 @@
-import { Component } from '@angular/core';
-import { NavController, NavParams } from 'ionic-angular';
+import { Component, ViewChild } from '@angular/core';
+import { Tabs } from 'ionic-angular'
+import { NavController, NavParams,App} from 'ionic-angular';
 import { LeaveFormComponent } from './leave-form/leave-form.component';
 import { OverTimeFormComponent } from './over-time-form/over-time-form.component';
 import { BusinessFormComponent } from './business-form/business-form.component';
 import { FormListComponent } from './form-list/form-list.component';
-import { SearcheComponent } from './search/search.component';
+import { LeaveSubComponent } from './leave-sub/leave-sub.component';
+import { LeaveMessageMenuComponent } from './leave-message-menu/leave-message-menu.component';
+import { StatisticsComponent } from './statistics/statistics.component';
 
 @Component({
   selector:'sg-attendance',
@@ -12,10 +15,18 @@ import { SearcheComponent } from './search/search.component';
 })
 export class AttendanceComponent {
 
-  constructor(public navCtrl: NavController, public navParams: NavParams) {}
+  @ViewChild('attendance') attendance: Tabs;
+
+  tab1Root = FormListComponent;
+  tab2Root = OverTimeFormComponent;
+  tab3Root = LeaveSubComponent;
+  tab4Root = LeaveMessageMenuComponent;
+  tab5Root = StatisticsComponent;
+
+  constructor(public navCtrl: NavController, public navParams: NavParams, private app :App) {}
 
   ionViewDidLoad() {
-
+    // this.app.getRootNav().setRoot(SearcheComponent)
   }
 
   maintain_leave():void{
@@ -41,9 +52,5 @@ export class AttendanceComponent {
     this.navCtrl.push(FormListComponent,{
       type:num
     });
-  }
-
-  search():void{
-    this.navCtrl.push(SearcheComponent);
   }
 }

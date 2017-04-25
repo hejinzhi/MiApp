@@ -7,7 +7,7 @@ import { SearchFormComponent } from '../search-form/search-form.component';
   selector:'sg-search',
   templateUrl: 'search.component.html'
 })
-export class SearcheComponent {
+export class SearchComponent {
 
   constructor(public navCtrl: NavController, public navParams: NavParams) {}
 

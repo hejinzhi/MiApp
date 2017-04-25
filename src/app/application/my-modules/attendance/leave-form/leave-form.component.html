@@ -1,18 +1,46 @@
 <ion-header>
-    <ion-navbar>
-        <ion-title>{{title}}</ion-title>
-        <ion-buttons end [ngSwitch]="formData.status.toUpperCase()" *ngIf="haveSaved">
-            <button ion-button (click)="cancelForm()" *ngSwitchCase="'NEW'">删除单据</button>
-            <button ion-button (click)="callBack()" *ngSwitchCase="'APPROVED'">撤销单据</button>
-            <button ion-button (click)="callbackSubmit()" *ngSwitchCase="'WAITING'">取消送签</button>
-        </ion-buttons>
-    </ion-navbar>
+
+  <ion-navbar>
+    <ion-title>{{title}}</ion-title>
+    <!-- <ion-buttons end [ngSwitch]="formData.status.toUpperCase()" *ngIf="haveSaved" >
+    <button ion-button (click)="cancelForm()" *ngSwitchCase="'NEW'">删除单据</button>
+    <button ion-button (click)="callBack()" *ngSwitchCase="'APPROVED'">撤销单据</button>
+    <button ion-button (click)="callbackSubmit()" *ngSwitchCase="'WAITING'">取消送签</button>
+    <button ion-button icon-only (click)="presentPopover($event)">
+     <ion-icon name="more"></ion-icon>
+    </button>
+    </ion-buttons> -->
+    <ion-buttons end >
+      <button ion-button icon-only (click)="presentPopover($event)">
+      <ion-icon name="more"></ion-icon>
+    </button>
+    </ion-buttons>
+  </ion-navbar>
+
 </ion-header>
 
 
 <ion-content class="main">
-    <div [class.layer]="!(formData.status.toUpperCase() === 'NEW')">
-    </div>
+
+  <div [class.layer]="!(formData.status.toUpperCase() === 'NEW')">
+  </div>
+  <ion-list>
+    <ion-item>
+      单据状态：
+      <ion-note item-right>
+        {{formData.status}}
+      </ion-note><button ion-button  *ngIf="formData.status.toUpperCase() === 'WAITING'">签核名单</button>
+    </ion-item>
+
+    <ion-item>
+      单据编号：
+      <ion-note item-right>
+        {{formData.No}}
+      </ion-note>
+    </ion-item>
+  </ion-list>
+  <form [formGroup]="todo" *ngIf="todo" (ngSubmit)="leaveForm()">
+
     <ion-list>
         <ion-item>
             状态：

@@ -62,7 +62,7 @@ export class MessageComponent implements OnInit {
 
     });
 
-    setTimeout(()=>this.loadUnreadMessage(),3000);
+    setTimeout(() => this.loadUnreadMessage(), 3000);
   }
 
   // 当用户点击登录后，先去检查它是否有未收到的信息，如果有，往本地写入这些信息，这样message才能显示完成

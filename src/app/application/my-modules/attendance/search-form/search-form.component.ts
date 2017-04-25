@@ -29,15 +29,14 @@ export class SearchFormComponent {
   constructor(public navCtrl: NavController, public navParams: NavParams, private formBuilder: FormBuilder, private validateService: ValidateService) { }
 
   ionViewDidLoad() {
-    for(let prop in this.myformType){
-      this.formType.push(this.myformType[prop]);
-    }
+    this.formType = this.myformType.type;
     this.searchMes = {
       type:'',
       startTime: '',
       endTime: '',
       form_No: ''
     }
+    this.searchMes.type = this.navParams.data.type || '';
     this.todo = this.initWork(this.searchMes);
     this.MyValidatorControl = this.initValidator();
     this.myValidators = this.MyValidatorControl.validators;

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { NavController } from 'ionic-angular';
+import { NavController, App } from 'ionic-angular';
 
 import { ApplicationItem } from '../shared/models/application-item.model';
 import { ApplicationService } from './shared/service/application.service';
@@ -15,11 +15,12 @@ import { InAppBrowser } from '@ionic-native/in-app-browser';
 })
 export class ApplicationComponent implements OnInit {
 
+
   constructor(
     public navCtrl: NavController,
     private appService: ApplicationService,
-    private iab: InAppBrowser) {
-
+    private iab: InAppBrowser,
+    public app:App) {
   }
 
   items: ApplicationItem[]; // 不分类的所有数据
@@ -54,7 +55,7 @@ export class ApplicationComponent implements OnInit {
   }
 
   goToDetailPage(id: number) {
-    this.router.go(this.navCtrl, id);
+    this.router.go(this.navCtrl, id, this.app);
   }
 
   // 作用：用于把一维数组的数据按group分成二维数组存储

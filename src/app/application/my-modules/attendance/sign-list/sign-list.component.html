@@ -1,0 +1,19 @@
+<ion-header>
+
+  <ion-navbar>
+    <ion-title>{{type | sgFormType}}</ion-title>
+  </ion-navbar>
+
+</ion-header>
+
+
+<ion-content>
+  <ion-list>
+    <ion-item *ngFor="let item of items">
+      {{item.type | sgOtherType:'attendanceMonthType'}}
+      <ion-note item-right>
+        {{item.value}}
+      </ion-note>
+    </ion-item>
+  </ion-list>
+</ion-content>

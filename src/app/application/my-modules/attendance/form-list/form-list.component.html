@@ -1,23 +1,21 @@
 <ion-header>
-  <ion-navbar [ngSwitch]="type">
-    <ion-title *ngSwitchCase="'0'">门禁异常</ion-title>
-    <ion-title *ngSwitchCase="'1'">未刷卡</ion-title>
-    <ion-title *ngSwitchCase="'2'">请假单</ion-title>
-    <ion-title *ngSwitchCase="'3'">加班单</ion-title>
-    <ion-title *ngSwitchCase="'4'">公出单</ion-title>
-    <ion-title *ngSwitchCase="'5'">销假单</ion-title>
-    <ion-title *ngSwitchDefault>未知单据</ion-title>
+  <ion-navbar>
+    <ion-title>{{type | sgFormType}}</ion-title>
+    <ion-buttons *ngIf="type === '100'">
+      <button ion-button (click)="exit()">退出</button>
+    </ion-buttons>
   </ion-navbar>
 
 </ion-header>
 
 
 <ion-content>
-  <ion-searchbar (ionInput)="getItems($event)" placeholder="帅选"></ion-searchbar>
+  <!-- <ion-searchbar (ionInput)="getItems($event)" placeholder="帅选"></ion-searchbar>
   <ion-list>
     <ion-item *ngFor="let item of items" (click)="toDetail(item)">
       {{ item.No }}
       <ion-badge item-right color="mac">{{item.status}}</ion-badge>
     </ion-item>
-  </ion-list>
+  </ion-list> -->
+  <sg-list-filter [myset]="{type:type,showApproved:showApproved}" *ngIf="showList"></sg-list-filter>
 </ion-content>

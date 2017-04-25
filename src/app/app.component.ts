@@ -1,9 +1,11 @@
 import { Component, ViewChild } from '@angular/core';
-import { Platform, Nav, Keyboard, IonicApp, MenuController } from 'ionic-angular';
+import { Platform, Nav, Keyboard, IonicApp, MenuController, App } from 'ionic-angular';
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 
 import { LoginComponent } from './login/login.component';
+import { TabsComponent } from './tabs/tabs.component';
+import { AttendanceComponent } from './application/my-modules/attendance/attendance.component'
 import { PatternLockComponent } from './login/pattern-lock/pattern-lock.component';
 import { MessageService } from './message/shared/service/message.service'
 
@@ -25,7 +27,10 @@ export class MyAppComponent {
     private keyboard: Keyboard,
     private ionicApp: IonicApp,
     private menuCtrl: MenuController,
-    private messageservice: MessageService) {
+
+    private messageservice: MessageService,
+    private app: App
+  ) {
 
     this.appInit();
     platform.ready().then(() => {
@@ -79,12 +84,31 @@ export class MyAppComponent {
         return;
       }
       let activeVC = this.nav.getActive();
+      console.log(activeVC)
       if (activeVC.instance instanceof LoginComponent) {
         this.platform.exitApp();
       }
-      let tabs = activeVC.instance.tabRef;
-      let activeNav = tabs.getSelected();
-      return activeNav.canGoBack() ? activeNav.pop() : cordova.plugins.backgroundMode.moveToBackground();
+      if (activeVC.instance instanceof TabsComponent) {
+        let tabs = activeVC.instance.tabRef;
+        let activeNav = tabs.getSelected();
+        if(activeNav.canGoBack()) {
+          activeNav.pop();
+        }else {
+          cordova.plugins.backgroundMode.moveToBackground()
+        }
+        return;
+      }
+      if (activeVC.instance instanceof AttendanceComponent) {
+        let tabs = activeVC.instance.attendance;
+        let activeNav = tabs.getSelected();
+        if(activeNav.canGoBack()) {
+          activeNav.pop();
+        }else {
+          this.app.getRootNav().setRoot(TabsComponent);
+        }
+        return;
+      }
+      return;
     }, 1);
   }
 }

@@ -1,9 +1,11 @@
 import { Component } from '@angular/core';
-import { NavController, NavParams } from 'ionic-angular';
+import { NavController, NavParams, PopoverController } from 'ionic-angular';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms'
 ;
 import { ValidateService }   from '../../../../core/services/validate.service';
 import { PluginService }   from '../../../../core/services/plugin.service';
+
+import { FormMenuComponent } from '../form-menu/form-menu.component';
 
 import { MyValidatorModel } from '../../../../shared/models/my-validator.model';
 import { MyFormModel } from '../shared/models/my-form.model';
@@ -42,6 +44,7 @@ export class OverTimeFormComponent {
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
+    public popoverCtrl: PopoverController,
     private formBuilder: FormBuilder,
     private validateService: ValidateService,
     private plugin: PluginService
@@ -125,6 +128,17 @@ export class OverTimeFormComponent {
       return Promise.resolve(this.myValidators);
     });
   }
+  presentPopover(myEvent:any) {
+    this.formData.data = this.todo.value
+    let popover = this.popoverCtrl.create(FormMenuComponent,{
+      formData:this.formData,
+      haveSaved:this.haveSaved,
+      navCtrl:this.navCtrl
+    });
+    popover.present({
+      ev: myEvent
+    });
+  }
   leaveForm() {
     this.formData.data = this.todo.value
     console.log(this.formData);
@@ -147,6 +161,6 @@ export class OverTimeFormComponent {
   }
 
   callbackSubmit() {
-    
+
   }
 }

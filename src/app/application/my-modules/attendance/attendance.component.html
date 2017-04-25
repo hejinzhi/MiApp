@@ -1,4 +1,4 @@
-<ion-header>
+<!-- <ion-header>
 
   <ion-navbar>
     <ion-title>考勤维护作业</ion-title>
@@ -34,4 +34,11 @@
     刷卡符号维护
     </button>
   </ion-list>
-</ion-content>
+</ion-content> -->
+<ion-tabs #attendance>
+  <ion-tab [root]="tab1Root" tabTitle="我的异常" tabIcon="pricetags"></ion-tab>
+  <ion-tab [root]="tab2Root" tabTitle="加班申请" tabIcon="hammer"></ion-tab>
+  <ion-tab [root]="tab3Root" tabTitle="假单管理" tabIcon="create"></ion-tab>
+  <ion-tab [root]="tab4Root" tabTitle="考勤查询" tabIcon="globe"></ion-tab>
+  <ion-tab [root]="tab5Root" tabTitle="统计图表" tabIcon="stats"></ion-tab>
+</ion-tabs>

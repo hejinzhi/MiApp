@@ -9,6 +9,7 @@ export class MessageService {
         private jmessage: JMessageService
     ) { }
 
+
     userInfo: any;// 当前登录用户的信息
     allUserInfo: any;
     history: Message[];  // 历史消息
@@ -43,6 +44,8 @@ export class MessageService {
             username: JSON.parse(localStorage.getItem('currentUser')).username
         };
 
+
+
         let distince: any = [];
         let dialoguedistince: any = [];
         let sorted = history.sort((a, b) => b.time - a.time);
@@ -76,6 +79,7 @@ export class MessageService {
             }
         });
 
+
         distince.forEach((v: any) => {
             let pmsg;
 
@@ -103,6 +107,8 @@ export class MessageService {
         }
         return this.leftJoin(distince, this.allUserInfo);
     }
+
+
 
     leftJoin(original: any, contacts: any) {
         let contactObj = contacts;
@@ -211,6 +217,7 @@ export class MessageService {
         }
         return localTime;
     }
+
 
     fillZero(v: any) {
         if (v < 10) { v = '0' + v; }
