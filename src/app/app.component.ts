@@ -27,6 +27,7 @@ export class MyAppComponent {
     private keyboard: Keyboard,
     private ionicApp: IonicApp,
     private menuCtrl: MenuController,
+
     private messageservice: MessageService,
     private app: App
   ) {
@@ -36,7 +37,7 @@ export class MyAppComponent {
       statusBar.styleDefault();
       splashScreen.hide();
       this.messageservice.getContacts();
-      this.messageservice.history =this.messageservice.getLocalMessageHistory()? this.messageservice.getLocalMessageHistory() : [];
+      this.messageservice.history = this.messageservice.getLocalMessageHistory() ? this.messageservice.getLocalMessageHistory() : [];
     });
     this.registerBackButtonAction();
   }

@@ -5,27 +5,34 @@ import { ApplicationItem } from '../shared/models/application-item.model';
 import { ApplicationService } from './shared/service/application.service';
 import { MoreApplicationComponent } from './more-application/more-application.component';
 import { MyRouter } from '../core/router/my-router.router';
-import { AttendanceComponent } from './my-modules/attendance/attendance.component'
+import { AttendanceComponent } from './my-modules/attendance/attendance.component';
+
+import { InAppBrowser } from '@ionic-native/in-app-browser';
+
 @Component({
   selector: 'sg-application',
   templateUrl: 'application.component.html'
 })
 export class ApplicationComponent implements OnInit {
 
-  constructor(public navCtrl: NavController, private appService: ApplicationService,public app:App) {
 
+  constructor(
+    public navCtrl: NavController,
+    private appService: ApplicationService,
+    private iab: InAppBrowser,
+    public app:App) {
   }
 
   items: ApplicationItem[]; // 不分类的所有数据
   itemsByGroup: ApplicationItem[][] = []; //按group分组
   showBtn: boolean = false; // 控制是否显示右上角的减号
-  router: MyRouter = new MyRouter();
+  router: MyRouter = new MyRouter(this.iab);
 
   ngOnInit() { }
 
   refreshData(): void {
     let moduleList = JSON.parse(localStorage.getItem('moduleList'));
-    this.items = moduleList.filter((value, index, newArray) => {
+    this.items = moduleList.filter((value: any) => {
       return value.DISPLAY === 'Y';
     });
     this.itemsByGroup = this.selectItems(this.items);
@@ -107,7 +114,7 @@ export class ApplicationComponent implements OnInit {
     this.removeItemById(id);
   }
 
-  updateLocalModuleList(id) {
+  updateLocalModuleList(id: number) {
     let list: any[] = JSON.parse(localStorage.getItem('moduleList'));
     for (let i = 0; i < list.length; i++) {
       if (list[i].MODULE_ID === id) {

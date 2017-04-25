@@ -1,8 +1,11 @@
 <ion-header>
   <ion-navbar>
-    <ion-title>借书申请</ion-title>
+    <ion-title>{{title}}</ion-title>
     <ion-buttons end>
-      <button ion-button (click)="borrowConfirm()" [disabled]="selectIDs.length === 0">确认借阅</button>
+      <button ion-button (click)="borrowConfirm()" [disabled]="selectIDs.length === 0" *ngIf="showBorrow">确认借阅</button>
+      <button ion-button (click)="cancelBook()" [disabled]="selectIDs.length === 0" *ngIf="showCancelBook">取消预约</button>
+      <button ion-button (click)="paybackConfirm()" [disabled]="selectIDs.length === 0" *ngIf="showPayback">确认还书</button>
+      <!--<button ion-button (click)="cancelBook()" *ngIf="showCancelBook" [disabled]="enableBtn">取消预约</button>-->
     </ion-buttons>
   </ion-navbar>
 </ion-header>
