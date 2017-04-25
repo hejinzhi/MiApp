@@ -21,10 +21,10 @@
   </div>
   <ion-list>
     <ion-item>
-      状态：
+      单据状态：
       <ion-note item-right>
         {{formData.status}}
-      </ion-note>
+      </ion-note><button ion-button  *ngIf="formData.status.toUpperCase() === 'WAITING'">签核状态</button>
     </ion-item>
 
     <ion-item>

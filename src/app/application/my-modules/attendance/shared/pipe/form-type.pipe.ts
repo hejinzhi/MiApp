@@ -12,7 +12,7 @@ export class FormTypePipe implements PipeTransform {
     if(defined.length>0){
       return defined[0].name;
     }else{
-      return '异常'
+      return '我的异常'
     }
   }
 }

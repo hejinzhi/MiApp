@@ -10,4 +10,9 @@ sg-undone-form {
       z-index: 100;
     }
   }
+
+  //重设select宽度样式
+  ion-select {
+    max-width: 85%;
+  }
 }
