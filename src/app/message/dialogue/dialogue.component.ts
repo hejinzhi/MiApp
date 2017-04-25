@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, AfterViewChecked } from '@angular/core';
 import { Subscription } from 'rxjs/Rx';
 import { NavParams } from 'ionic-angular';
 import { Camera, CameraOptions } from '@ionic-native/camera';
@@ -13,14 +13,14 @@ import { JMessageService } from '../../core/services/jmessage.service';
     templateUrl: 'dialogue.component.html'
 })
 
-export class DialogueComponent implements OnInit {
-    list;
-    input_text;
-    userinfo;
+export class DialogueComponent implements OnInit, AfterViewChecked {
+    list: any;
+    input_text: string;
+    userinfo: any;
     onPlus: boolean = false;
 
-    userName;
-    userNickName;
+    userName: string;
+    userNickName: string;
 
     jmessageHandler: Subscription; //接收句柄，再view被关闭的时候取消订阅，否则对已关闭的view进行数据脏检查会报错
 

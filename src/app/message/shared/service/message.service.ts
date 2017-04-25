@@ -9,8 +9,8 @@ export class MessageService {
         private jmessage: JMessageService
     ) { }
 
-    userInfo;// 当前登录用户的信息
-    allUserInfo;
+    userInfo: any;// 当前登录用户的信息
+    allUserInfo: any;
     history: Message[];  // 历史消息
 
     getLocalMessageHistory() {
@@ -43,8 +43,8 @@ export class MessageService {
             username: JSON.parse(localStorage.getItem('currentUser')).username
         };
 
-        let distince = [];
-        let dialoguedistince = [];
+        let distince: any = [];
+        let dialoguedistince: any = [];
         let sorted = history.sort((a, b) => b.time - a.time);
         sorted.forEach((v) => {
             if (v.type === 'dialogue') {
@@ -76,7 +76,7 @@ export class MessageService {
             }
         });
 
-        distince.forEach((v) => {
+        distince.forEach((v: any) => {
             let pmsg;
 
             if (v.type === 'dialogue') {
@@ -104,11 +104,11 @@ export class MessageService {
         return this.leftJoin(distince, this.allUserInfo);
     }
 
-    leftJoin(original, contacts) {
+    leftJoin(original: any, contacts: any) {
         let contactObj = contacts;
-        let rst = [];
+        let rst: any = [];
 
-        original.forEach((v) => {
+        original.forEach((v: any) => {
             if (v.username) {
                 v.userNickName = this.getNickName(v.username, contactObj);
                 v.avatarSrc = this.getAvatar(v.username, contactObj);
@@ -212,7 +212,7 @@ export class MessageService {
         return localTime;
     }
 
-    fillZero(v) {
+    fillZero(v: any) {
         if (v < 10) { v = '0' + v; }
         return v;
     }
