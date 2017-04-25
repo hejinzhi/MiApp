@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, AfterViewChecked } from '@angular/core';
 import { Subscription } from 'rxjs/Rx';
 import { NavParams } from 'ionic-angular';
 import { Camera, CameraOptions } from '@ionic-native/camera';
@@ -13,7 +13,7 @@ import { JMessageService } from '../../core/services/jmessage.service';
     templateUrl: 'dialogue.component.html'
 })
 
-export class DialogueComponent implements OnInit {
+export class DialogueComponent implements OnInit, AfterViewChecked {
     list;
     input_text;
     userinfo;

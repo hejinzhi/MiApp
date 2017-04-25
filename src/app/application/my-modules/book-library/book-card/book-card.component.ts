@@ -16,11 +16,9 @@ export class BookCardComponent implements OnInit {
     constructor() { }
 
     ngOnInit() {
-        // this.books = this.testBook;
-        this.bookList.BOOKS.forEach((item: any) => {
-            item.selectItem = false;
-        })
-        // console.log(this.books);
+        // this.bookList.BOOKS.forEach((item: any) => {
+        //     item.selectItem = false;
+        // })   
     }
 
     singleSelect(event: any, id: number) {
