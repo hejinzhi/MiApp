@@ -9,7 +9,7 @@ import { CallbackLeaveFormComponent } from './callback-leave-form/callback-leave
 import { BusinessFormComponent } from './business-form/business-form.component';
 import { FormListComponent } from './form-list/form-list.component';
 import { UndoneFormComponent } from './undone-form/undone-form.component';
-import { SearcheComponent } from './search/search.component';
+import { SearchComponent } from './search/search.component';
 import { SearchFormComponent } from './search-form/search-form.component';
 import { FormMenuComponent } from './form-menu/form-menu.component';
 import { LeaveSubComponent } from './leave-sub/leave-sub.component';
@@ -20,12 +20,12 @@ import { SwipeNoteComponent } from './swipe-note/swipe-note.component';
 import { AttendanceDetailComponent } from './attendance-detail/attendance-detail.component';
 import { DetailOnFormComponent } from './detail-on-form/detail-on-form.component';
 import { AttendanceMonthComponent } from './attendance-month/attendance-month.component';
+import { StatisticsComponent } from './statistics/statistics.component';
 
 
 import { ReasonTypePipe } from './shared/pipe/reason-type.pipe';
+import { OtherTypePipe } from './shared/pipe/other-type.pipe';
 import { FormTypePipe } from './shared/pipe/form-type.pipe';
-import { SwipeTypePipe } from './shared/pipe/swipe-type.pipe';
-import { AttendanceMonthType } from './shared/pipe/attendance-month-type.pipe';
 
 
 @NgModule({
@@ -39,7 +39,7 @@ import { AttendanceMonthType } from './shared/pipe/attendance-month-type.pipe';
     BusinessFormComponent,
     FormListComponent,
     UndoneFormComponent,
-    SearcheComponent,
+    SearchComponent,
     SearchFormComponent,
     HoildayDetailComponent,
     LeaveSubComponent,
@@ -50,10 +50,10 @@ import { AttendanceMonthType } from './shared/pipe/attendance-month-type.pipe';
     AttendanceDetailComponent,
     DetailOnFormComponent,
     AttendanceMonthComponent,
+    StatisticsComponent,
     ReasonTypePipe,
     FormTypePipe,
-    SwipeTypePipe,
-    AttendanceMonthType
+    OtherTypePipe
   ],
   entryComponents:[
     AttendanceComponent,
@@ -64,7 +64,7 @@ import { AttendanceMonthType } from './shared/pipe/attendance-month-type.pipe';
     BusinessFormComponent,
     FormListComponent,
     UndoneFormComponent,
-    SearcheComponent,
+    SearchComponent,
     SearchFormComponent,
     DetailBetweenFormComponent,
     HoildayDetailComponent,
@@ -73,7 +73,8 @@ import { AttendanceMonthType } from './shared/pipe/attendance-month-type.pipe';
     LeaveMessageMenuComponent,
     AttendanceDetailComponent,
     DetailOnFormComponent,
-    AttendanceMonthComponent
+    AttendanceMonthComponent,
+    StatisticsComponent
   ],
   providers:    [ ]
 })

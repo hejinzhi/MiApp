@@ -10,7 +10,7 @@
 <ion-content>
   <ion-list>
     <ion-item *ngFor="let item of items">
-      {{item.type | sgAttendanceMonthType}}
+      {{item.type | sgOtherType:'attendanceMonthType'}}
       <ion-note item-right>
         {{item.value}}
       </ion-note>

@@ -11,7 +11,7 @@
     <ion-item *ngFor="let item of items">
       <h2>日期： {{item.date}}</h2>
       <p>时间： {{item.time}}</p>
-      <p>类别： {{item.type | sgSwipeType}}</p>
+      <p>类别： {{item.type | sgOtherType:'swipeType'}}</p>
       <p>班别： {{item.workType}}</p>
       <p>进/出： {{item.inOrOut}}</p>
       <p>刷卡位置： {{item.wipeSite}}</p>

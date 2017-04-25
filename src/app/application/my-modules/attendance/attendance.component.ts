@@ -4,9 +4,9 @@ import { LeaveFormComponent } from './leave-form/leave-form.component';
 import { OverTimeFormComponent } from './over-time-form/over-time-form.component';
 import { BusinessFormComponent } from './business-form/business-form.component';
 import { FormListComponent } from './form-list/form-list.component';
-import { SearcheComponent } from './search/search.component';
 import { LeaveSubComponent } from './leave-sub/leave-sub.component';
 import { LeaveMessageMenuComponent } from './leave-message-menu/leave-message-menu.component';
+import { StatisticsComponent } from './statistics/statistics.component';
 
 @Component({
   selector:'sg-attendance',
@@ -18,7 +18,7 @@ export class AttendanceComponent {
   tab2Root = OverTimeFormComponent;
   tab3Root = LeaveSubComponent;
   tab4Root = LeaveMessageMenuComponent;
-  tab5Root = SearcheComponent;
+  tab5Root = StatisticsComponent;
 
   constructor(public navCtrl: NavController, public navParams: NavParams, private app :App) {}
 
@@ -49,9 +49,5 @@ export class AttendanceComponent {
     this.navCtrl.push(FormListComponent,{
       type:num
     });
-  }
-
-  search():void{
-    this.navCtrl.push(SearcheComponent);
   }
 }
