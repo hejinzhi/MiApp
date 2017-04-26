@@ -14,15 +14,15 @@ import { MyFormModel } from '../shared/models/my-form.model';
   selector: 'sg-list-filter',
   templateUrl: 'list-filter.component.html',
 })
-export class ListFilterComponent implements OnInit{
+export class ListFilterComponent implements OnInit {
 
-  @Input() myset:any;
+  @Input() myset: any;
 
-  type:string;
-  items:MyFormModel[];
+  type: string;
+  items: MyFormModel[];
   showApproved: boolean = false;
 
-  constructor(public navCtrl: NavController, public navParams: NavParams) {  }
+  constructor(public navCtrl: NavController, public navParams: NavParams) { }
 
   ngOnInit() {
     this.type = this.myset.type;
@@ -35,7 +35,7 @@ export class ListFilterComponent implements OnInit{
       case '2':
         this.items = [
           {
-            type:'2',
+            type: '2',
             status: 'APPROVED',
             No: 'HTL021703007171',
             data: {
@@ -47,7 +47,7 @@ export class ListFilterComponent implements OnInit{
             }
           },
           {
-            type:'2',
+            type: '2',
             status: 'New',
             No: 'HTL021703008115',
             data: {
@@ -59,7 +59,7 @@ export class ListFilterComponent implements OnInit{
             }
           },
           {
-            type:'2',
+            type: '2',
             status: 'WAITING',
             No: 'HTL021703017178',
             data: {
@@ -71,9 +71,9 @@ export class ListFilterComponent implements OnInit{
             }
           }
         ];
-        if(this.showApproved){
+        if (this.showApproved) {
           console.log(456)
-          this.items = this.items.filter((item:any) => {
+          this.items = this.items.filter((item: any) => {
             return item.status.toUpperCase() === 'APPROVED';
           })
         }
@@ -81,7 +81,7 @@ export class ListFilterComponent implements OnInit{
       case '3':
         this.items = [
           {
-            type:'3',
+            type: '3',
             status: 'APPROVED',
             No: 'HTL021704006124',
             data: {
@@ -93,7 +93,7 @@ export class ListFilterComponent implements OnInit{
             }
           },
           {
-            type:'3',
+            type: '3',
             status: 'New',
             No: 'HTL021703007572',
             data: {
@@ -109,7 +109,7 @@ export class ListFilterComponent implements OnInit{
       case '4':
         this.items = [
           {
-            type:'4',
+            type: '4',
             status: 'New',
             No: 'HTL021703007572',
             data: {
@@ -123,7 +123,7 @@ export class ListFilterComponent implements OnInit{
             }
           },
           {
-            type:'4',
+            type: '4',
             status: 'WAITING',
             No: 'HTL021703007572',
             data: {
@@ -137,7 +137,7 @@ export class ListFilterComponent implements OnInit{
             }
           },
           {
-            type:'4',
+            type: '4',
             status: 'APPROVED',
             No: 'HTL021703004572',
             data: {
@@ -155,7 +155,7 @@ export class ListFilterComponent implements OnInit{
       case '5':
         this.items = [
           {
-            type:'0',
+            type: '0',
             status: 'APPROVED',
             No: 'HTL021703004172',
             data: {
@@ -164,7 +164,7 @@ export class ListFilterComponent implements OnInit{
             }
           },
           {
-            type:'0',
+            type: '0',
             status: 'New',
             No: 'HTL021704001172',
             data: {
@@ -173,7 +173,7 @@ export class ListFilterComponent implements OnInit{
             }
           },
           {
-            type:'0',
+            type: '0',
             status: 'WAITING',
             No: 'HTL021704001572',
             data: {
@@ -186,20 +186,20 @@ export class ListFilterComponent implements OnInit{
       default:
         this.items = [
           {
-            type:'0',
+            type: '0',
             status: 'New',
             No: 'HTL021703007172',
             data: {
               type: '',
-              startTime: '2017-01-01T01:00:00Z',
-              endTime: '2017-01-05T01:00:00Z',//"2017-01-01T01:00:00Z",
+              startTime: '2017-01-01T10:00:00Z',
+              endTime: '2017-01-01T11:00:00Z',//"2017-01-01T01:00:00Z",
               boss: '',
               reason: ''
             }
           },
           {
-            type:'1',
-            status: 'APPROVED',
+            type: '1',
+            status: 'New',
             No: 'HTL021703008116',
             data: {
               type: '',
@@ -210,13 +210,13 @@ export class ListFilterComponent implements OnInit{
             }
           },
           {
-            type:'0',
-            status: 'WAITING',
+            type: '0',
+            status: 'New',
             No: 'HTL021703017188',
             data: {
               type: '',
-              startTime: '2017-01-01T01:00:00Z',
-              endTime: '2017-01-05T01:00:00Z',//"2017-01-01T01:00:00Z",
+              startTime: '2017-01-01T09:00:00Z',
+              endTime: '2017-01-01T11:00:00Z',//"2017-01-01T01:00:00Z",
               boss: '',
               reason: ''
             }
@@ -225,10 +225,39 @@ export class ListFilterComponent implements OnInit{
         break;
 
     }
-
+    this.items.sort((a: MyFormModel, b: MyFormModel) => {
+      let first = this.getStatusPoint(a.status);
+      let second = this.getStatusPoint(b.status);
+      return second - first;
+    })
+    if(Number(this.type) === 100){
+      console.log(456)
+      this.items.sort((a: MyFormModel, b: MyFormModel) => {
+        if(b.type === a.type) {
+          return Date.parse(a.data.startTime)-Date.parse(b.data.startTime)
+        }
+        return Number(b.type) - Number(a.type);
+      })
+    }
 
   }
-
+  getStatusPoint(status: string):number {
+    let res = 0
+    switch (status.toUpperCase()) {
+      case 'NEW':
+        res = 3
+        break;
+      case 'WAITING':
+        res = 2;
+        break;
+      case 'APPROVED':
+        res = 1;
+        break;
+      default:
+        break;
+    }
+    return res;
+  }
   getItems(ev: any) {
     this.initializeItems();
     let val = ev.target.value;
@@ -239,23 +268,23 @@ export class ListFilterComponent implements OnInit{
     }
   }
   toDetail(detailMes: any) {
-    let targetForm:any= '';
+    let targetForm: any = '';
     switch (this.type) {
       case '2':
         targetForm = LeaveFormComponent;
-      break;
+        break;
       case '3':
         targetForm = OverTimeFormComponent;
-      break;
+        break;
       case '4':
         targetForm = BusinessFormComponent;
-      break;
+        break;
       case '5':
         targetForm = CallbackLeaveFormComponent;
-      break;
+        break;
       default:
         targetForm = UndoneFormComponent;
-      break;
+        break;
     }
     this.navCtrl.push(targetForm, {
       detailMes: detailMes

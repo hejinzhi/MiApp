@@ -21,11 +21,13 @@ import { AttendanceDetailComponent } from './attendance-detail/attendance-detail
 import { DetailOnFormComponent } from './detail-on-form/detail-on-form.component';
 import { AttendanceMonthComponent } from './attendance-month/attendance-month.component';
 import { StatisticsComponent } from './statistics/statistics.component';
+import { SignListComponent } from './sign-list/sign-list.component';
 
 
 import { ReasonTypePipe } from './shared/pipe/reason-type.pipe';
 import { OtherTypePipe } from './shared/pipe/other-type.pipe';
 import { FormTypePipe } from './shared/pipe/form-type.pipe';
+import { WeekNamePipe } from './shared/pipe/week-name.pipe';
 
 
 @NgModule({
@@ -51,9 +53,11 @@ import { FormTypePipe } from './shared/pipe/form-type.pipe';
     DetailOnFormComponent,
     AttendanceMonthComponent,
     StatisticsComponent,
+    SignListComponent,
     ReasonTypePipe,
     FormTypePipe,
-    OtherTypePipe
+    OtherTypePipe,
+    WeekNamePipe
   ],
   entryComponents:[
     AttendanceComponent,
@@ -74,7 +78,8 @@ import { FormTypePipe } from './shared/pipe/form-type.pipe';
     AttendanceDetailComponent,
     DetailOnFormComponent,
     AttendanceMonthComponent,
-    StatisticsComponent
+    StatisticsComponent,
+    SignListComponent
   ],
   providers:    [ ]
 })

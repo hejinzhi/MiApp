@@ -2,6 +2,8 @@ import { Component } from '@angular/core';
 import { NavController, NavParams } from 'ionic-angular';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
+import { SignListComponent } from '../sign-list/sign-list.component';
+
 import { ValidateService }   from '../../../../core/services/validate.service';
 import { PluginService }   from '../../../../core/services/plugin.service';
 
@@ -107,5 +109,9 @@ export class CallbackLeaveFormComponent {
 
   callbackSubmit() {
 
+  }
+
+  sign_list() {
+    this.navCtrl.push(SignListComponent)
   }
 }
