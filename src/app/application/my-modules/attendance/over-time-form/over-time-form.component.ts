@@ -6,6 +6,7 @@ import { ValidateService }   from '../../../../core/services/validate.service';
 import { PluginService }   from '../../../../core/services/plugin.service';
 
 import { FormMenuComponent } from '../form-menu/form-menu.component';
+import { SignListComponent } from '../sign-list/sign-list.component';
 
 import { MyValidatorModel } from '../../../../shared/models/my-validator.model';
 import { MyFormModel } from '../shared/models/my-form.model';
@@ -16,7 +17,7 @@ import { MyFormModel } from '../shared/models/my-form.model';
 })
 export class OverTimeFormComponent {
   OtMes: {
-    type: string,
+    reasonType: string,
     OTtime: string,
     startTime: string,
     endTime: string,
@@ -52,7 +53,7 @@ export class OverTimeFormComponent {
 
   ionViewDidLoad() {
     this.OtMes = {
-      type: '',
+      reasonType: '',
       OTtime: '',
       startTime: '',
       endTime: '',
@@ -64,16 +65,16 @@ export class OverTimeFormComponent {
     }
 
     this.todo = this.initWork(this.OtMes);
-    this.MyValidatorControl = this.initValidator();
+    this.MyValidatorControl = this.initValidator(this.OtMes);
     this.myValidators = this.MyValidatorControl.validators;
     for (let prop in this.myValidators) {
       this.todo.controls[prop].valueChanges.subscribe((value: any) => this.check(value, prop));
     }
     this.calculateTime(this.timeError);
   }
-  initValidator() {
+  initValidator(bind:any) {
     let newValidator = new MyValidatorModel([
-      {name:'type',valiItems:[{valiName:'Required',errMessage:'请选择加班类型',valiValue:true}]},
+      {name:'reasonType',valiItems:[{valiName:'Required',errMessage:'请选择加班类型',valiValue:true}]},
       {name:'OTtime',valiItems:[{valiName:'Required',errMessage:'加班日期不能为空',valiValue:true}]},
       {name:'reason',valiItems:[
         {valiName:'Required',errMessage:'原因不能为空',valiValue:true},
@@ -87,7 +88,7 @@ export class OverTimeFormComponent {
         {valiName:'Required',errMessage:'结束时间不能为空',valiValue:true},
         {valiName:'TimeBigger',errMessage:'结束时间必须迟于开始时间',valiValue:'startTime'}
       ]}
-    ])
+    ],bind)
     return newValidator;
   }
   //检查
@@ -107,7 +108,7 @@ export class OverTimeFormComponent {
   //初始化原始數據
   initWork(work: any): FormGroup {
     return this.formBuilder.group({
-      type: [work.type, Validators.required],
+      reasonType: [work.reasonType, Validators.required],
       startTime: [work.startTime, Validators.required],
       endTime: [work.endTime, Validators.required],
       OTtime: [work.OTtime, Validators.required],
@@ -162,5 +163,9 @@ export class OverTimeFormComponent {
 
   callbackSubmit() {
 
+  }
+
+  sign_list() {
+    this.navCtrl.push(SignListComponent)
   }
 }

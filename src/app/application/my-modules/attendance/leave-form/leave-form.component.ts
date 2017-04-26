@@ -11,6 +11,7 @@ import { PluginService }   from '../../../../core/services/plugin.service';
 import { AttendanceComponent } from '../attendance.component';
 import { CallbackLeaveFormComponent } from '../callback-leave-form/callback-leave-form.component';
 import { FormMenuComponent } from '../form-menu/form-menu.component';
+import { SignListComponent } from '../sign-list/sign-list.component';
 
 import { HolidayType } from '../shared/config/holiday-type';
 
@@ -25,11 +26,11 @@ export class LeaveFormComponent {
 
   private searchTerms = new Subject<string>();
   leaveMes: {
-    type: string,
+    reasonType: string,
     startTime: string,
     endTime: string,
-    boss: string,
-    reason: string
+    colleague: string,
+    reason: string,
   }
   formData:MyFormModel = {
     type:'2',
@@ -40,8 +41,8 @@ export class LeaveFormComponent {
   title:string = '创建请假单';
   haveSaved:boolean = false;
   todo: FormGroup;
-  isSelectBoss: boolean = false;   // todo 判断是否正确选择代理人
-  tempBoss: string = ''; // 临时作保存的中间代理人
+  isSelectcolleague: boolean = false;   // todo 判断是否正确选择代理人
+  tempcolleague: string = ''; // 临时作保存的中间代理人
   colleague: any;// 搜索得到的候选代理人
   timeError: string = '';
   dayLeave: string = '0';
@@ -56,26 +57,26 @@ export class LeaveFormComponent {
     private validateService: ValidateService,
     private plugin: PluginService,
     public popoverCtrl: PopoverController
-  ) { }
+  ) {new Date().toUTCString()}
 
   ionViewDidLoad() {
     this.leaveMes = {
-      type: '',
+      reasonType: '',
       startTime: '',
       endTime: '',//"2017-01-01T01:00:00Z",
-      boss: '',
+      colleague: '',
       reason: ''
     }
     if(this.navParams.data.detailMes){
       this.formData = this.navParams.data.detailMes;
       this.leaveMes = this.navParams.data.detailMes.data;
-      this.isSelectBoss = true;
+      this.isSelectcolleague = true;
       this.title = '请假单详情';
-      this.tempBoss = this.leaveMes.boss;
+      this.tempcolleague = this.leaveMes.colleague;
       this.haveSaved = true;
     }
     this.todo = this.initWork(this.leaveMes);
-    this.MyValidatorControl = this.initValidator();
+    this.MyValidatorControl = this.initValidator(this.leaveMes);
     this.myValidators = this.MyValidatorControl.validators;
     this.colleague = this.searchTerms
       .debounceTime(300)        // wait for 300ms pause in events
@@ -96,10 +97,10 @@ export class LeaveFormComponent {
     }
     this.calculateTime(this.timeError);
   }
-  initValidator() {
+  initValidator(bind:any) {
     let newValidator = new MyValidatorModel([
-      {name:'type',valiItems:[{valiName:'Required',errMessage:'请选择请假类型',valiValue:true}]},
-      {name:'boss',valiItems:[{valiName:'Required',errMessage:'请选择代理人',valiValue:true}]},
+      {name:'reasonType',valiItems:[{valiName:'Required',errMessage:'请选择请假类型',valiValue:true}]},
+      {name:'colleague',valiItems:[{valiName:'Required',errMessage:'请选择代理人',valiValue:true}]},
       {name:'reason',valiItems:[
         {valiName:'Required',errMessage:'原因不能为空',valiValue:true},
         {valiName:'Minlength',errMessage:'原因长度不能少于2位',valiValue:2}
@@ -112,7 +113,7 @@ export class LeaveFormComponent {
         {valiName:'Required',errMessage:'结束时间不能为空',valiValue:true},
         {valiName:'TimeBigger',errMessage:'结束时间必须迟于开始时间',valiValue:'startTime'}
       ]}
-    ])
+    ],bind)
     return newValidator;
   }
   //检查
@@ -132,28 +133,28 @@ export class LeaveFormComponent {
   //初始化原始數據
   initWork(work: any): FormGroup {
     return this.formBuilder.group({
-      type: [work.type, Validators.required],
+      reasonType: [work.reasonType, Validators.required],
       startTime: [work.startTime, Validators.required],
       endTime: [work.endTime, Validators.required],
-      boss: [work.boss, Validators.required],
+      colleague: [work.colleague, Validators.required],
       reason: [work.reason, Validators.required],
     });
   }
   // keyup觸發的方法
   search(item: any) {
     // todo 判断是否正确选择代理人
-    if (this.tempBoss) {
-      this.isSelectBoss = item.value != this.tempBoss ? false : true;
+    if (this.tempcolleague) {
+      this.isSelectcolleague = item.value != this.tempcolleague ? false : true;
     }
     this.searchTerms.next(item.value);
   }
   // 选取上级
-  getBoss(name: string) {
+  getcolleague(name: string) {
 
-    this.isSelectBoss = true;
-    this.tempBoss = name;
+    this.isSelectcolleague = true;
+    this.tempcolleague = name;
     this.searchTerms.next('')
-    this.todo.controls['boss'].setValue(name);
+    this.todo.controls['colleague'].setValue(name);
   }
 
   //單獨輸入塊驗證
@@ -182,7 +183,12 @@ export class LeaveFormComponent {
     });
   }
   leaveForm() {
+    let res = this.todo.value;
+    // Object.assign(res,this.formData);
     this.formData.data = this.todo.value
+    console.log(new Date(this.formData.data.startTime).toISOString())
+    this.formData.data.startTime = Date.parse(this.formData.data.startTime)-60*60*8*1000
+    console.log(new Date(this.formData.data.startTime).toLocaleString())
     console.log(this.formData);
     return false;
   }
@@ -208,5 +214,9 @@ export class LeaveFormComponent {
 
   callbackSubmit() {
 
+  }
+
+  sign_list() {
+    this.navCtrl.push(SignListComponent)
   }
 }

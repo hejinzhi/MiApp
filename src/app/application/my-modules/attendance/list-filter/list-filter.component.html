@@ -7,6 +7,8 @@
     <p *ngIf="+item.type<3">结束时间： {{ item.data.endTime | date:"yyyy/MM/dd HH:mm" }}</p>
     <p *ngIf="item.type === '4'">出差日期： {{ item.data.businessTime | date:"yyyy/MM/dd" }}</p>
     <p *ngIf="item.type === '3'">加班日期： {{ item.data.OTtime | date:"yyyy/MM/dd" }}</p>
-    <p>类别： {{item.data.type | sgReasonType: item.type}}</p>
+    <p *ngIf="item.data.reasonType">类别： {{item.data.reasonType | sgReasonType: item.type}}</p>
+    <p *ngIf="item.type === '5'">请假单据号： {{item.data.leave_No}}</p>
+    <p *ngIf="item.type === '5'">销假原因： {{item.data.reason}}</p>
   </ion-item>
 </ion-list>

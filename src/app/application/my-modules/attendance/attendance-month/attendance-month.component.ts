@@ -46,5 +46,8 @@ export class AttendanceMonthComponent {
       { value: '0', type: 'CHILDBIRTH_LEAVE' },
       { value: '0', type: 'OFFDUTY_DAYS' }
     ]
+    this.items.sort((a:any,b:any) => {
+      return Number(b.value)-Number(a.value)
+    })
   }
 }

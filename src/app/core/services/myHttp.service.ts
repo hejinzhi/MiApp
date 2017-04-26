@@ -18,10 +18,8 @@ export class MyHttpService {
         let headers = new Headers({ 'Content-Type': 'application/json; charset=utf-8' });
         let token = JSON.parse(localStorage.getItem('access_token'));
         if (token && !this.isTokenExpired() && !loginFlag) {
-            console.log('not refresh');
             headers.append('access_token', token);
         } else {
-            console.log('refresh');
             let res = await this.getNewToken();
             let newToken = res.json().Token;
             localStorage.setItem('moduleList', JSON.stringify(res.json().Modules));

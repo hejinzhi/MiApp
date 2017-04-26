@@ -6,6 +6,7 @@ import { Observable }        from 'rxjs/Observable';
 import { Subject }           from 'rxjs/Subject';
 
 import { FormMenuComponent } from '../form-menu/form-menu.component';
+import { SignListComponent } from '../sign-list/sign-list.component';
 
 import { ValidateService }   from '../../../../core/services/validate.service';
 import { PluginService }   from '../../../../core/services/plugin.service';
@@ -22,9 +23,9 @@ export class BusinessFormComponent {
   private searchTerms = new Subject<string>();
 
   businsessMes: {
-    type: string,
+    reasonType: string,
     autoSet: boolean,
-    boss: string,
+    colleague: string,
     businessTime: string,
     startTime: string,
     endTime: string,
@@ -37,8 +38,8 @@ export class BusinessFormComponent {
     data:{}
   }
   haveSaved:boolean = false;
-  isSelectBoss: boolean = false;   // todo 判断是否正确选择代理人
-  tempBoss: string = ''; // 临时作保存的中间代理人
+  isSelectcolleague: boolean = false;   // todo 判断是否正确选择代理人
+  tempcolleague: string = ''; // 临时作保存的中间代理人
   colleague: any;// 搜索得到的候选代理人
   timeError: string = '';
   timeCount: string = '0';
@@ -66,9 +67,9 @@ export class BusinessFormComponent {
 
   ionViewDidLoad() {
     this.businsessMes = {
-      type: '',
+      reasonType: '',
       autoSet: false,
-      boss: '',
+      colleague: '',
       businessTime: '',
       startTime: '',
       endTime: '',
@@ -78,13 +79,13 @@ export class BusinessFormComponent {
     if(this.navParams.data.detailMes){
       this.formData = this.navParams.data.detailMes;
       this.businsessMes = this.navParams.data.detailMes.data;
-      this.isSelectBoss = true;
-      this.tempBoss = this.businsessMes.boss;
+      this.isSelectcolleague = true;
+      this.tempcolleague = this.businsessMes.colleague;
       this.haveSaved = true;
     }
 
     this.todo = this.initWork(this.businsessMes);
-    this.MyValidatorControl = this.initValidator();
+    this.MyValidatorControl = this.initValidator(this.businsessMes);
     this.myValidators = this.MyValidatorControl.validators;
     this.colleague = this.searchTerms
       .debounceTime(300)        // wait for 300ms pause in events
@@ -119,11 +120,11 @@ export class BusinessFormComponent {
       this.timeCount = (interval / (1000 * 60 * 60)).toFixed(1);
     }
   }
-  initValidator() {
+  initValidator(bind:any) {
     let newValidator = new MyValidatorModel([
-      {name:'type',valiItems:[{valiName:'Required',errMessage:'请选择加班类型',valiValue:true}]},
+      {name:'reasonType',valiItems:[{valiName:'Required',errMessage:'请选择加班类型',valiValue:true}]},
       {name:'autoSet',valiItems:[]},
-      {name:'boss',valiItems:[{valiName:'Required',errMessage:'请选择代理人',valiValue:true}]},
+      {name:'colleague',valiItems:[{valiName:'Required',errMessage:'请选择代理人',valiValue:true}]},
       {name:'businessTime',valiItems:[{valiName:'Required',errMessage:'公出日期不能为空',valiValue:true}]},
       {name:'reason',valiItems:[
         {valiName:'Required',errMessage:'原因不能为空',valiValue:true},
@@ -137,15 +138,15 @@ export class BusinessFormComponent {
         {valiName:'Required',errMessage:'结束时间不能为空',valiValue:true},
         {valiName:'TimeBigger',errMessage:'结束时间必须迟于开始时间',valiValue:'startTime'}
       ]}
-    ])
+    ],bind)
     return newValidator;
   }
   //初始化原始數據
   initWork(work: any): FormGroup {
     return this.formBuilder.group({
-      type: [work.type, Validators.required],
+      reasonType: [work.reasonType, Validators.required],
       autoSet: [work.autoSet],
-      boss: [work.boss, Validators.required],
+      colleague: [work.colleague, Validators.required],
       startTime: [work.startTime, Validators.required],
       endTime: [work.endTime, Validators.required],
       businessTime: [work.businessTime, Validators.required],
@@ -155,18 +156,18 @@ export class BusinessFormComponent {
   // keyup觸發的方法
   search(item: any) {
     // todo 判断是否正确选择代理人
-    if (this.tempBoss) {
-      this.isSelectBoss = item.value != this.tempBoss ? false : true;
+    if (this.tempcolleague) {
+      this.isSelectcolleague = item.value != this.tempcolleague ? false : true;
     }
     this.searchTerms.next(item.value);
   }
   // 选取上级
-  getBoss(name: string) {
+  getcolleague(name: string) {
 
-    this.isSelectBoss = true;
-    this.tempBoss = name;
+    this.isSelectcolleague = true;
+    this.tempcolleague = name;
     this.searchTerms.next('')
-    this.todo.controls['boss'].setValue(name);
+    this.todo.controls['colleague'].setValue(name);
   }
 
   //單獨輸入塊驗證
@@ -217,5 +218,8 @@ export class BusinessFormComponent {
 
   callbackSubmit() {
 
+  }
+  sign_list() {
+    this.navCtrl.push(SignListComponent)
   }
 }

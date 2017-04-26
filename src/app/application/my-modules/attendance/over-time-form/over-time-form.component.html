@@ -23,7 +23,7 @@
       单据状态：
       <ion-note item-right>
         {{formData.status}}
-      </ion-note><button ion-button  *ngIf="formData.status.toUpperCase() === 'WAITING'">签核名单</button>
+      </ion-note><button ion-button  *ngIf="formData.status.toUpperCase() != 'NEW'" (click)="sign_list()">签核名单</button>
     </ion-item>
 
     <ion-item>
@@ -35,9 +35,9 @@
   </ion-list>
   <form [formGroup]="todo" *ngIf="todo" (ngSubmit)="leaveForm()">
     <ion-list>
-      <ion-item [class.has-error]="myValidators.type.error" [class.has-success]="myValidators.type.pass">
+      <ion-item [class.has-error]="myValidators.reasonType.error" [class.has-success]="myValidators.reasonType.pass">
         <ion-label>工作纪要*</ion-label>
-        <ion-select cancelText="取消" okText="確認" formControlName="type">
+        <ion-select cancelText="取消" okText="確認" formControlName="reasonType">
           <ion-option *ngFor="let item of jobType" [value]="item.type">{{item.name}}</ion-option>
         </ion-select>
       </ion-item>
