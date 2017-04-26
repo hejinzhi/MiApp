@@ -33,36 +33,36 @@ export class MessageComponent implements OnInit {
 
   ngOnInit() {
 
-    this.jmessageService.jmessageHandler = this.jmessageService.onReceiveMessage().subscribe(res => {
+    // this.jmessageService.jmessageHandler = this.jmessageService.onReceiveMessage().subscribe(res => {
 
-      let _content: string;
-      if (res.contentType === 'text') {
-        _content = res.content.text;
-      } else if (res.contentType === 'image') {
-        _content = res.content.localThumbnailPath;
-      }
+    //   let _content: string;
+    //   if (res.contentType === 'text') {
+    //     _content = res.content.text;
+    //   } else if (res.contentType === 'image') {
+    //     _content = res.content.localThumbnailPath;
+    //   }
 
-      let msg: Message = {
-        toUserName: res.targetInfo.userName,
-        fromUserName: res.fromName,
-        content: _content,
-        contentType: res.contentType,
-        time: res.createTimeInMillis,
-        type: 'dialogue',
-        unread: true
-      };
+    //   let msg: Message = {
+    //     toUserName: res.targetInfo.userName,
+    //     fromUserName: res.fromName,
+    //     content: _content,
+    //     contentType: res.contentType,
+    //     time: res.createTimeInMillis,
+    //     type: 'dialogue',
+    //     unread: true
+    //   };
 
-      this.messageService.history.push(msg);
+    //   this.messageService.history.push(msg);
 
-      this.messageService.setLocalMessageHistory(this.messageService.history);
-      this.jmessageService.setSingleConversationUnreadMessageCount(res.fromName, '', 0);
+    //   this.messageService.setLocalMessageHistory(this.messageService.history);
+    //   this.jmessageService.setSingleConversationUnreadMessageCount(res.fromName, '', 0);
 
-      this.messageListItem = this.messageService.getMessageHistory();
-      this.ref.detectChanges();
+    //   this.messageListItem = this.messageService.getMessageHistory();
+    //   this.ref.detectChanges();
 
-    });
+    // });
 
-    setTimeout(() => this.loadUnreadMessage(), 3000);
+    // setTimeout(() => this.loadUnreadMessage(), 3000);
   }
 
   // 当用户点击登录后，先去检查它是否有未收到的信息，如果有，往本地写入这些信息，这样message才能显示完成

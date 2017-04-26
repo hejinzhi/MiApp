@@ -227,7 +227,7 @@ export class PatternLockComponent implements OnInit {
           if (localStorage.getItem('myNineCode') == pwdArr.join('')) {
             this.message = '密码正确'
             let user = JSON.parse(localStorage.getItem('currentUser'));
-            this.myHttp.post(LoginConfig.loginUrl, { userName: user.username, password: user.password }).then((res) => {
+            this.myHttp.post(LoginConfig.loginUrl, { userName: user.username, password: user.password }, true).then((res) => {
               user.avatarUrl = res.json().User.AVATAR_URL;
               user.nickname = res.json().User.NICK_NAME;
               user.position = res.json().User.JOB_TITLE;
@@ -239,7 +239,7 @@ export class PatternLockComponent implements OnInit {
               this.navCtrl.setRoot(TabsComponent);
             });
           } else {
-            this.message = '密码错误！！！'
+            this.message = '密码错误！！！';
           }
           // 更改手势密码判定
         } else {
