@@ -39,10 +39,10 @@ export class ListFilterComponent implements OnInit {
             status: 'APPROVED',
             No: 'HTL021703007171',
             data: {
-              type: 'P',
+              reasonType: 'P',
               startTime: '2017-01-01T01:00:00Z',
               endTime: '2017-01-05T01:00:00Z',//"2017-01-01T01:00:00Z",
-              boss: '小米',
+              colleague: '小米',
               reason: '有急事'
             }
           },
@@ -51,10 +51,10 @@ export class ListFilterComponent implements OnInit {
             status: 'New',
             No: 'HTL021703008115',
             data: {
-              type: 'P',
+              reasonType: 'P',
               startTime: '2017-01-01T01:00:00Z',
               endTime: '2017-01-05T01:00:00Z',//"2017-01-01T01:00:00Z",
-              boss: '小米',
+              colleague: '小米',
               reason: '有急事'
             }
           },
@@ -63,16 +63,15 @@ export class ListFilterComponent implements OnInit {
             status: 'WAITING',
             No: 'HTL021703017178',
             data: {
-              type: 'P',
+              reasonType: 'P',
               startTime: '2017-01-01T01:00:00Z',
               endTime: '2017-01-05T01:00:00Z',//"2017-01-01T01:00:00Z",
-              boss: '小米',
+              colleague: '小米',
               reason: '有急事'
             }
           }
         ];
         if (this.showApproved) {
-          console.log(456)
           this.items = this.items.filter((item: any) => {
             return item.status.toUpperCase() === 'APPROVED';
           })
@@ -85,7 +84,7 @@ export class ListFilterComponent implements OnInit {
             status: 'APPROVED',
             No: 'HTL021704006124',
             data: {
-              type: '01',
+              reasonType: '01',
               OTtime: '2017-04-01',
               startTime: '11:00',
               endTime: '22:00',
@@ -97,7 +96,7 @@ export class ListFilterComponent implements OnInit {
             status: 'New',
             No: 'HTL021703007572',
             data: {
-              type: '02',
+              reasonType: '02',
               OTtime: '2017-04-06',
               startTime: '11:00',
               endTime: '12:00',
@@ -113,9 +112,9 @@ export class ListFilterComponent implements OnInit {
             status: 'New',
             No: 'HTL021703007572',
             data: {
-              type: '20',
+              reasonType: '20',
               autoSet: false,
-              boss: 'xiaomi',
+              colleague: 'xiaomi',
               businessTime: '2017-03-01',
               startTime: '01:00',
               endTime: '02:00',
@@ -127,9 +126,9 @@ export class ListFilterComponent implements OnInit {
             status: 'WAITING',
             No: 'HTL021703007572',
             data: {
-              type: '20',
+              reasonType: '20',
               autoSet: false,
-              boss: 'xiaomi',
+              colleague: 'xiaomi',
               businessTime: '2017-03-01',
               startTime: '01:00',
               endTime: '02:00',
@@ -141,9 +140,9 @@ export class ListFilterComponent implements OnInit {
             status: 'APPROVED',
             No: 'HTL021703004572',
             data: {
-              type: '30',
+              reasonType: '30',
               autoSet: false,
-              boss: 'xiaomi',
+              colleague: 'xiaomi',
               businessTime: '2017-01-01',
               startTime: '18:30',
               endTime: '21:00',
@@ -155,7 +154,7 @@ export class ListFilterComponent implements OnInit {
       case '5':
         this.items = [
           {
-            type: '0',
+            type: '5',
             status: 'APPROVED',
             No: 'HTL021703004172',
             data: {
@@ -164,7 +163,7 @@ export class ListFilterComponent implements OnInit {
             }
           },
           {
-            type: '0',
+            type: '5',
             status: 'New',
             No: 'HTL021704001172',
             data: {
@@ -173,7 +172,7 @@ export class ListFilterComponent implements OnInit {
             }
           },
           {
-            type: '0',
+            type: '5',
             status: 'WAITING',
             No: 'HTL021704001572',
             data: {
@@ -190,10 +189,10 @@ export class ListFilterComponent implements OnInit {
             status: 'New',
             No: 'HTL021703007172',
             data: {
-              type: '',
+              reasonType: '',
               startTime: '2017-01-01T10:00:00Z',
               endTime: '2017-01-01T11:00:00Z',//"2017-01-01T01:00:00Z",
-              boss: '',
+              colleague: '',
               reason: ''
             }
           },
@@ -202,10 +201,10 @@ export class ListFilterComponent implements OnInit {
             status: 'New',
             No: 'HTL021703008116',
             data: {
-              type: '',
+              reasonType: '',
               startTime: '2017-01-01T01:00:00Z',
               endTime: '2017-01-05T01:00:00Z',//"2017-01-01T01:00:00Z",
-              boss: '',
+              colleague: '',
               reason: ''
             }
           },
@@ -214,10 +213,10 @@ export class ListFilterComponent implements OnInit {
             status: 'New',
             No: 'HTL021703017188',
             data: {
-              type: '',
+              reasonType: '',
               startTime: '2017-01-01T09:00:00Z',
               endTime: '2017-01-01T11:00:00Z',//"2017-01-01T01:00:00Z",
-              boss: '',
+              colleague: '',
               reason: ''
             }
           }

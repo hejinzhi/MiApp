@@ -7,8 +7,8 @@ import { LoginComponent } from './login/login.component';
 import { TabsComponent } from './tabs/tabs.component';
 import { AttendanceComponent } from './application/my-modules/attendance/attendance.component'
 import { PatternLockComponent } from './login/pattern-lock/pattern-lock.component';
-import { MessageService } from './message/shared/service/message.service'
-
+import { MessageService } from './message/shared/service/message.service';
+import { PluginService } from './core/services/plugin.service';
 // test
 import { BookCardComponent } from './application/my-modules/book-library/book-card/book-card.component';
 
@@ -19,6 +19,7 @@ declare var cordova: any;
 })
 export class MyAppComponent {
   rootPage: any = LoginComponent;
+  backButtonPressed: boolean = false;  //用于判断返回键是否触发
   @ViewChild(Nav) nav: Nav;
 
   constructor(private platform: Platform,
@@ -29,6 +30,7 @@ export class MyAppComponent {
     private menuCtrl: MenuController,
 
     private messageservice: MessageService,
+    private plugin: PluginService,
     private app: App
   ) {
 
@@ -84,31 +86,29 @@ export class MyAppComponent {
         return;
       }
       let activeVC = this.nav.getActive();
-      console.log(activeVC)
       if (activeVC.instance instanceof LoginComponent) {
         this.platform.exitApp();
-      }
-      if (activeVC.instance instanceof TabsComponent) {
-        let tabs = activeVC.instance.tabRef;
-        let activeNav = tabs.getSelected();
-        if(activeNav.canGoBack()) {
-          activeNav.pop();
-        }else {
-          cordova.plugins.backgroundMode.moveToBackground()
-        }
-        return;
-      }
-      if (activeVC.instance instanceof AttendanceComponent) {
+      }else if(activeVC.instance instanceof PatternLockComponent){
+        this.platform.exitApp();
+      }else if(activeVC.instance instanceof AttendanceComponent) {
         let tabs = activeVC.instance.attendance;
         let activeNav = tabs.getSelected();
-        if(activeNav.canGoBack()) {
-          activeNav.pop();
-        }else {
-          this.app.getRootNav().setRoot(TabsComponent);
-        }
-        return;
+        return activeNav.canGoBack()?activeNav.pop():this.app.getRootNav().setRoot(TabsComponent);
+      } else {
+        let tabs = activeVC.instance.tabRef;
+        let activeNav = tabs.getSelected();
+        return activeNav.canGoBack()?activeNav.pop():cordova.plugins.backgroundMode.moveToBackground();
       }
-      return;
     }, 1);
+  }
+  //双击退出功能模块并返回主界面
+  showExit() {
+    if (this.backButtonPressed) { //当触发标志为true时，即2秒内双击返回按键则返回主界面
+      this.app.getRootNav().setRoot(TabsComponent);
+    } else {
+      this.backButtonPressed = true;
+      this.plugin.showToast('再按一次返回主界面');
+      setTimeout(() => this.backButtonPressed = false, 2000);//2秒内没有再次点击返回则将触发标志标记为false
+    }
   }
 }

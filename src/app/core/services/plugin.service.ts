@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { ToastController } from 'ionic-angular';
+import { ToastController, LoadingController } from 'ionic-angular';
 import { BarcodeScanner } from '@ionic-native/barcode-scanner';
 import { Camera, CameraOptions } from '@ionic-native/camera';
 
@@ -7,6 +7,7 @@ import { Camera, CameraOptions } from '@ionic-native/camera';
 export class PluginService {
   constructor(
     private toastCtrl: ToastController,
+    private loadingCtrl: LoadingController,
     private barcodeScanner: BarcodeScanner,
     private camera: Camera
   ) {  }
@@ -48,11 +49,17 @@ export class PluginService {
     });
   }
 
-  showToast(content:string,position:string = 'top') {
+  showToast(content:string,position:string = 'top',duration:number=2000) {
     this.toastCtrl.create({
       message: content,
-      duration: 2000,
+      duration: duration,
       position: position
     }).present()
+  }
+
+  createLoading(content:string ='Please wait...') {
+    return this.loadingCtrl.create({
+        content: content
+    });
   }
 }

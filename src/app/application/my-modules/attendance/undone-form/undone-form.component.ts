@@ -17,7 +17,7 @@ import { MyFormModel } from '../shared/models/my-form.model';
 export class UndoneFormComponent {
 
   leaveMes: {
-    type: string,
+    reasonType: string,
     startTime: string,
     endTime: string,
     reason: string
@@ -43,7 +43,7 @@ export class UndoneFormComponent {
 
   ionViewDidLoad() {
     this.leaveMes = {
-      type: '',
+      reasonType: '',
       startTime: '',
       endTime: '',//"2017-01-01T01:00:00Z",
       reason: ''
@@ -51,15 +51,15 @@ export class UndoneFormComponent {
     this.formData = this.navParams.data.detailMes;
     this.leaveMes = this.navParams.data.detailMes.data;
     this.todo = this.initWork(this.leaveMes);
-    this.MyValidatorControl = this.initValidator();
+    this.MyValidatorControl = this.initValidator(this.leaveMes);
     this.myValidators = this.MyValidatorControl.validators;
     for (let prop in this.myValidators) {
       this.todo.controls[prop].valueChanges.subscribe((value: any) => this.check(value, prop));
     }
   }
-  initValidator() {
+  initValidator(bind:any) {
     let newValidator = new MyValidatorModel([
-      {name:'type',valiItems:[{valiName:'Required',errMessage:'请选择请假类型',valiValue:true}]},
+      {name:'reasonType',valiItems:[{valiName:'Required',errMessage:'请选择请假类型',valiValue:true}]},
       {name:'reason',valiItems:[
         {valiName:'Required',errMessage:'原因不能为空',valiValue:true},
         {valiName:'Minlength',errMessage:'原因长度不能少于2位',valiValue:2}
@@ -76,7 +76,7 @@ export class UndoneFormComponent {
   //初始化原始數據
   initWork(work: any): FormGroup {
     return this.formBuilder.group({
-      type: [work.type, Validators.required],
+      reasonType: [work.reasonType, Validators.required],
       startTime: [work.startTime, Validators.required],
       endTime: [work.endTime, Validators.required],
       reason: [work.reason, Validators.required],

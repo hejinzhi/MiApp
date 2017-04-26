@@ -40,16 +40,16 @@
   </ion-list>
   <form [formGroup]="todo" *ngIf="todo" (ngSubmit)="leaveForm()">
     <ion-list>
-      <ion-item [class.has-error]="myValidators.type.error" [class.has-success]="myValidators.type.pass">
+      <ion-item [class.has-error]="myValidators.reasonType.error" [class.has-success]="myValidators.reasonType.pass">
         <ion-label>假别*</ion-label>
-        <ion-select cancelText="取消" okText="確認" formControlName="type" #type>
+        <ion-select cancelText="取消" okText="確認" formControlName="reasonType" #type>
           <ion-option *ngFor="let item of holidayType" [value]="item.type">{{item.name}}</ion-option>
         </ion-select>
       </ion-item>
 
       <ion-item [class.has-error]="myValidators.startTime.error" [class.has-success]="myValidators.startTime.pass">
         <ion-label>开始时间*</ion-label>
-        <ion-datetime displayFormat="YYYY/MM/DD HH:mm"  #start name="start" formControlName="startTime"
+        <ion-datetime  type="datetime-local" displayFormat="YYYY/MM/DD HH:mm"  #start name="start" formControlName="startTime"
         cancelText="取消" doneText="确认"
         yearValues="2017,2018"
         ></ion-datetime>
@@ -62,11 +62,11 @@
         ></ion-datetime>
       </ion-item>
       <ion-item-divider *ngIf="timeError " class='alert'>{{timeError}}</ion-item-divider>
-      <ion-item class="searchOut" [class.has-error]="myValidators.boss.error" [class.has-success]="myValidators.boss.pass">
+      <ion-item class="searchOut" [class.has-error]="myValidators.colleague.error" [class.has-success]="myValidators.colleague.pass">
         <ion-label>代理*</ion-label>
-        <ion-input type="text" #name (keyup)="search(name)" formControlName="boss" (focus)="name.Error=''" data-v-required="true" data-v-required-message="请选择代理人"></ion-input>
+        <ion-input type="text" #name (keyup)="search(name)" formControlName="colleague" data-v-required="true" data-v-required-message="请选择代理人"></ion-input>
       </ion-item>
-      <ion-item-divider *ngIf="myValidators.boss.error" class='alert'>{{myValidators.boss.error}}</ion-item-divider>
+      <ion-item-divider *ngIf="myValidators.colleague.error" class='alert'>{{myValidators.colleague.error}}</ion-item-divider>
       <ion-grid>
         <ion-row>
           <ion-col width-50>
@@ -102,12 +102,12 @@
         <ion-row>
           <ion-col width-50>
             <ion-buttons left>
-              <button ion-button class = "submit" type="submit" [disabled]="!todo.valid || myValidators.reason.error || myValidators.boss.error || !isSelectBoss || timeError">提交</button>
+              <button ion-button class = "submit" type="submit" [disabled]="!todo.valid || myValidators.reason.error || myValidators.colleague.error || !isSelectcolleague || timeError">送签</button>
             </ion-buttons>
           </ion-col>
           <ion-col width-50>
             <ion-buttons right>
-              <button ion-button [disabled]="!todo.valid || myValidators.reason.error || myValidators.boss.error || !isSelectBoss || timeError" (click)="saveForm()">保存</button>
+              <button ion-button [disabled]="!todo.valid || myValidators.reason.error || myValidators.colleague.error || !isSelectcolleague || timeError" (click)="saveForm()">保存</button>
             </ion-buttons>
           </ion-col>
         </ion-row>
@@ -115,7 +115,7 @@
     </ion-list>
   </form>
   <ul class="list-group" [class.search]="colleague">
-    <li *ngFor="let person of colleague | async" (click) ="getBoss(person.name)"
+    <li *ngFor="let person of colleague | async" (click)="getcolleague(person.name)"
         class="search-result list-group-item">{{person.name}}</li>
   </ul>
 </ion-content>
