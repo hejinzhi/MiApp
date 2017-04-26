@@ -230,7 +230,6 @@ export class ListFilterComponent implements OnInit {
       return second - first;
     })
     if(Number(this.type) === 100){
-      console.log(456)
       this.items.sort((a: MyFormModel, b: MyFormModel) => {
         if(b.type === a.type) {
           return Date.parse(a.data.startTime)-Date.parse(b.data.startTime)
