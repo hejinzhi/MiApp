@@ -1,8 +1,9 @@
 import { Component } from '@angular/core';
-import { NavController, NavParams } from 'ionic-angular';
+import { NavController, NavParams, PopoverController } from 'ionic-angular';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 import { SignListComponent } from '../sign-list/sign-list.component';
+import { FormMenuComponent } from '../form-menu/form-menu.component';
 
 import { ValidateService }   from '../../../../core/services/validate.service';
 import { PluginService }   from '../../../../core/services/plugin.service';
@@ -33,6 +34,7 @@ export class CallbackLeaveFormComponent {
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
+    public popoverCtrl: PopoverController,
     private formBuilder: FormBuilder,
     private validateService: ValidateService,
     private plugin: PluginService
@@ -53,20 +55,20 @@ export class CallbackLeaveFormComponent {
       this.callbackMes.leave_No = this.navParams.data.number;
     }
     this.todo = this.initWork(this.callbackMes);
-    this.MyValidatorControl = this.initValidator();
+    this.MyValidatorControl = this.initValidator(this.callbackMes);
     this.myValidators = this.MyValidatorControl.validators;
     for (let prop in this.myValidators) {
       this.todo.controls[prop].valueChanges.subscribe((value: any) => this.check(value, prop));
     }
   }
-  initValidator() {
+  initValidator(bind:any) {
     let newValidator = new MyValidatorModel([
       {name:'leave_No',valiItems:[{valiName:'Required',errMessage:'请假单号不能为空',valiValue:true}]},
       {name:'reason',valiItems:[
         {valiName:'Required',errMessage:'原因不能为空',valiValue:true},
         {valiName:'Minlength',errMessage:'原因长度不能少于2位',valiValue:2}
       ]}
-    ])
+    ],bind)
     return newValidator;
   }
   //初始化原始數據
@@ -91,7 +93,17 @@ export class CallbackLeaveFormComponent {
     console.log(this.formData);
     return false;
   }
-
+  presentPopover(myEvent:any) {
+    this.formData.data = this.todo.value
+    let popover = this.popoverCtrl.create(FormMenuComponent,{
+      formData:this.formData,
+      haveSaved:this.haveSaved,
+      navCtrl:this.navCtrl
+    });
+    popover.present({
+      ev: myEvent
+    });
+  }
   saveForm() {
     setTimeout(() => {
       this.plugin.showToast('表单保存成功');

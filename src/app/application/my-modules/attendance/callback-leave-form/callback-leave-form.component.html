@@ -2,9 +2,14 @@
 
   <ion-navbar>
     <ion-title>销假申请单</ion-title>
-    <ion-buttons end [ngSwitch]="formData.status.toUpperCase()" *ngIf="haveSaved" >
+    <!-- <ion-buttons end [ngSwitch]="formData.status.toUpperCase()" *ngIf="haveSaved" >
     <button ion-button (click)="cancelForm()" *ngSwitchCase="'NEW'">删除单据</button>
     <button ion-button (click)="callbackSubmit()" *ngSwitchCase="'WAITING'">取消送签</button>
+    </ion-buttons> -->
+    <ion-buttons end >
+      <button ion-button icon-only (click)="presentPopover($event)">
+      <ion-icon name="more"></ion-icon>
+    </button>
     </ion-buttons>
   </ion-navbar>
 </ion-header>

@@ -29,6 +29,7 @@ import { OtherTypePipe } from './shared/pipe/other-type.pipe';
 import { FormTypePipe } from './shared/pipe/form-type.pipe';
 import { WeekNamePipe } from './shared/pipe/week-name.pipe';
 
+import { AttendanceService } from './shared/service/attendance.service';
 
 @NgModule({
   imports:      [ CommonModule, IonicModule ],
@@ -81,6 +82,6 @@ import { WeekNamePipe } from './shared/pipe/week-name.pipe';
     StatisticsComponent,
     SignListComponent
   ],
-  providers:    [ ]
+  providers:    [ AttendanceService ]
 })
 export class AttendanceModule {}

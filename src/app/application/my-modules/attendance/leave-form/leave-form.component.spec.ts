@@ -17,7 +17,7 @@ describe('LeaveFormComponent', () => {
     type :'P',
     startTime: '',
     endTime: '',
-    boss:'',
+    colleague:'',
     reason:'123'
   }
   beforeEach(async(() => {
@@ -54,7 +54,7 @@ describe('LeaveFormComponent', () => {
     comp.todo.controls['reason'].setValue('666')
     comp.todo.controls['startTime'].setValue("2017-01-01T01:00:00Z")
     comp.todo.controls['endTime'].setValue("2017-01-01T05:00:00Z")
-    comp.getBoss('xiaomi')
+    comp.getcolleague('xiaomi')
     fixture.detectChanges();
     expect(el.disabled).toBe(true);;
   });
@@ -63,7 +63,7 @@ describe('LeaveFormComponent', () => {
     comp.todo.controls['reason'].setValue('')
     comp.todo.controls['startTime'].setValue("2017-01-01T01:00:00Z")
     comp.todo.controls['endTime'].setValue("2017-01-01T05:00:00Z")
-    comp.getBoss('xiaomi')
+    comp.getcolleague('xiaomi')
     fixture.detectChanges();
     expect(el.disabled).toBe(true);;
   });
@@ -72,8 +72,8 @@ describe('LeaveFormComponent', () => {
     comp.todo.controls['reason'].setValue('456')
     comp.todo.controls['startTime'].setValue("2017-01-01T01:00:00Z")
     comp.todo.controls['endTime'].setValue("2017-01-01T05:00:00Z")
-    comp.getBoss('xiaomi')
-    comp.myValidators.boss.error='错误'
+    comp.getcolleague('xiaomi')
+    comp.myValidators.colleague.error='错误'
     fixture.detectChanges();
     expect(el.disabled).toBe(true);
   });
@@ -82,7 +82,7 @@ describe('LeaveFormComponent', () => {
     comp.todo.controls['reason'].setValue('456')
     comp.todo.controls['startTime'].setValue("2017-01-01T01:00:00Z")
     comp.todo.controls['endTime'].setValue("2017-01-01T05:00:00Z")
-    comp.getBoss('xiaomi')
+    comp.getcolleague('xiaomi')
     comp.myValidators.reason.error='错误'
     fixture.detectChanges();
     expect(el.disabled).toBe(true);
@@ -107,7 +107,7 @@ describe('LeaveFormComponent', () => {
     comp.todo.controls['reason'].setValue('456')
     comp.todo.controls['startTime'].setValue("")
     comp.todo.controls['endTime'].setValue("2017-01-01T05:00:00Z")
-    comp.getBoss('xiaomi')
+    comp.getcolleague('xiaomi')
     fixture.detectChanges();
     expect(el.disabled).toBe(true);;
   });
@@ -117,7 +117,7 @@ describe('LeaveFormComponent', () => {
     comp.todo.controls['reason'].setValue('456')
     comp.todo.controls['startTime'].setValue("2017-01-01T01:00:00Z")
     comp.todo.controls['endTime'].setValue('')
-    comp.getBoss('xiaomi')
+    comp.getcolleague('xiaomi')
     fixture.detectChanges();
     expect(el.disabled).toBe(true);;
   });
@@ -126,7 +126,7 @@ describe('LeaveFormComponent', () => {
     comp.todo.controls['reason'].setValue('456')
     comp.todo.controls['startTime'].setValue("2017-01-01T01:00:00Z")
     comp.todo.controls['endTime'].setValue("2017-01-01T00:00:00Z")
-    comp.getBoss('xiaomi')
+    comp.getcolleague('xiaomi')
     comp.check(comp.todo.controls['endTime'].value,'endTime').then((val) => {
       fixture.detectChanges();
       expect(el.disabled).toBe(true);;
@@ -137,8 +137,8 @@ describe('LeaveFormComponent', () => {
     comp.todo.controls['reason'].setValue('456')
     comp.todo.controls['startTime'].setValue("2017-01-01T01:00:00Z")
     comp.todo.controls['endTime'].setValue("2017-01-01T05:00:00Z")
-    comp.getBoss('xiaomi')
-    comp.isSelectBoss = false;
+    comp.getcolleague('xiaomi')
+    comp.isSelectcolleague = false;
     fixture.detectChanges();
     expect(el.disabled).toBe(true);;
   });
@@ -147,7 +147,7 @@ describe('LeaveFormComponent', () => {
     comp.todo.controls['reason'].setValue('666')
     comp.todo.controls['startTime'].setValue("2017-01-01T01:00:00Z")
     comp.todo.controls['endTime'].setValue("2017-01-01T05:00:00Z")
-    comp.getBoss('xiaomi')
+    comp.getcolleague('xiaomi')
     comp.search('xiaomi1')
     fixture.detectChanges()
     expect(el.disabled).toBe(true);;
@@ -157,12 +157,12 @@ describe('LeaveFormComponent', () => {
     comp.todo.controls['reason'].setValue('666')
     comp.todo.controls['startTime'].setValue("2017-01-01T01:00:00Z")
     comp.todo.controls['endTime'].setValue("2017-01-01T05:00:00Z")
-    comp.getBoss('xiaomi')
+    comp.getcolleague('xiaomi')
     comp.search('xiaomi1')
     comp.search('xiaomi')
-    comp.isSelectBoss = true;
+    comp.isSelectcolleague = true;
     fixture.detectChanges()
-    expect(comp.isSelectBoss).toBe(true);
+    expect(comp.isSelectcolleague).toBe(true);
   });
   it('由搜索中选择上级,true', () => {
     comp.todo.controls['type'].setValue('P')
@@ -170,28 +170,28 @@ describe('LeaveFormComponent', () => {
     comp.todo.controls['startTime'].setValue("2017-01-01T01:00:00Z")
     comp.todo.controls['endTime'].setValue("2017-01-01T05:00:00Z")
     comp.search('xiaomi')
-    comp.getBoss('xiaomi')
+    comp.getcolleague('xiaomi')
     fixture.detectChanges()
-    expect(comp.isSelectBoss).toBe(true);
+    expect(comp.isSelectcolleague).toBe(true);
   });
   it('直接输入上级不选择', () => {
     comp.todo.controls['type'].setValue('P')
     comp.todo.controls['reason'].setValue('666')
     comp.todo.controls['startTime'].setValue("2017-01-01T01:00:00Z")
     comp.todo.controls['endTime'].setValue("2017-01-01T05:00:00Z")
-    comp.todo.controls['boss'].setValue("xiaomi")
+    comp.todo.controls['colleague'].setValue("xiaomi")
     fixture.detectChanges()
-    expect(comp.isSelectBoss).toBe(false);
+    expect(comp.isSelectcolleague).toBe(false);
   });
   it('上级为空时显示错误信息', () => {
     comp.todo.controls['type'].setValue('P')
     comp.todo.controls['reason'].setValue('666')
     comp.todo.controls['startTime'].setValue("2017-01-01T01:00:00Z")
     comp.todo.controls['endTime'].setValue("2017-01-01T05:00:00Z")
-    comp.todo.controls['boss'].setValue("")
-    comp.check(comp.todo.value.boss,'boss').then((valid) => {
+    comp.todo.controls['colleague'].setValue("")
+    comp.check(comp.todo.value.colleague,'colleague').then((valid) => {
       fixture.detectChanges()
-      expect(valid.boss.error).toBe(valid.boss.dataset.vRequiredMessage);;
+      expect(valid.colleague.error).toBe(valid.colleague.dataset.vRequiredMessage);;
     });
   });
   it('提交', () => {
