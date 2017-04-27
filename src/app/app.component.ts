@@ -46,6 +46,14 @@ export class MyAppComponent {
     let __this = this;
     platform.runBackButtonAction = function(): void {
       if (localStorage.getItem('subTab') === '-1') {
+        let activePortal = __this.ionicApp._toastPortal.getActive()
+          || __this.ionicApp._loadingPortal.getActive()
+          || __this.ionicApp._overlayPortal.getActive()
+          || __this.ionicApp._modalPortal.getActive();
+        if (activePortal) {
+          activePortal.dismiss();
+          return
+        }
         original.apply(platform);
       } else {
         __this.myBackButtonAction();

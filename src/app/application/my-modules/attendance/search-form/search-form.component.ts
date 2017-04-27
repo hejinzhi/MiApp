@@ -3,6 +3,8 @@ import { NavController, NavParams } from 'ionic-angular';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 import { ValidateService }   from '../../../../core/services/validate.service';
+import { AttendanceService } from '../shared/service/attendance.service';
+import { PluginService }   from '../../../../core/services/plugin.service';
 
 import { MyValidatorModel } from '../../../../shared/models/my-validator.model';
 import { FormType } from '../shared/config/form-type';
@@ -26,7 +28,14 @@ export class SearchFormComponent {
   myValidators:{};
   MyValidatorControl: MyValidatorModel;
   formType:{type:string,name:string} []=[];
-  constructor(public navCtrl: NavController, public navParams: NavParams, private formBuilder: FormBuilder, private validateService: ValidateService) { }
+  constructor(
+    public navCtrl: NavController,
+    public navParams: NavParams,
+    private formBuilder: FormBuilder,
+    private validateService: ValidateService,
+    private attendanceService: AttendanceService,
+    private plugin: PluginService,
+  ) { }
 
   ionViewDidLoad() {
     this.formType = this.myformType.type;
@@ -82,10 +91,24 @@ export class SearchFormComponent {
       return Promise.resolve(this.myValidators);
     });
   }
-  leaveForm() {
+  async leaveForm() {
     console.log(this.todo.value);
+    let res:any = [];
+    let loading = this.plugin.createLoading();
+    loading.present();
+    switch(Number(this.searchMes.type)) {
+      case 2:
+        res = await this.attendanceService.getLeaveForm(this.todo.value);
+        break;
+      default:
+        res = [];
+        break;
+    }
+    loading.dismiss();
+    console.log(res);
     this.navCtrl.push(FormListComponent, {
-      type: this.todo.value.type
+      type: this.todo.value.type,
+      formData: res
     })
     return false;
   }

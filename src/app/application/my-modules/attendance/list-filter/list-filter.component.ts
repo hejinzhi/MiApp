@@ -26,7 +26,9 @@ export class ListFilterComponent implements OnInit {
 
   ngOnInit() {
     this.type = this.myset.type;
+    this.items = this.myset.formData || [];
     this.showApproved = this.myset.showApproved;
+    if(this.items.length > 0) return;
     this.initializeItems();
   }
 

@@ -72,7 +72,14 @@ export class LeaveFormComponent {
     }
     if(this.navParams.data.detailMes){
       this.formData = this.navParams.data.detailMes;
-      this.leaveMes = this.navParams.data.detailMes.data;
+      let detail = this.navParams.data.detailMes.data;
+      for(let prop in this.leaveMes) {
+        this.leaveMes[prop] = detail[prop]
+      }
+      this.dayLeave = this.navParams.data.detailMes.data.days || '';
+      this.hourLeave = this.navParams.data.detailMes.data.hours || '';
+      this.leaveMes.startTime = this.attendanceService.formatTime(this.leaveMes.startTime,false);
+      this.leaveMes.endTime = this.attendanceService.formatTime(this.leaveMes.endTime,false);
       this.isSelectcolleague = true;
       this.title = '请假单详情';
       this.tempcolleague = this.leaveMes.colleague;
@@ -191,7 +198,10 @@ export class LeaveFormComponent {
     // this.formData.data.startTime = Date.parse(this.formData.data.startTime)-60*60*8*1000
     // console.log(new Date(this.formData.data.startTime).toLocaleString())
     // console.log(this.formData);
-    let res = await this.attendanceService.saveLeave(this.formData);
+    let loading = this.plugin.createLoading();
+    loading.present()
+    let res = await this.attendanceService.saveLeaveForm(this.formData);
+    loading.dismiss()
     console.log(res)
     return false;
   }
