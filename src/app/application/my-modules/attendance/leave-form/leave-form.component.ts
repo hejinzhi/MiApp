@@ -18,6 +18,8 @@ import { HolidayType } from '../shared/config/holiday-type';
 import { MyValidatorModel } from '../../../../shared/models/my-validator.model';
 import { MyFormModel } from '../shared/models/my-form.model';
 
+import { AttendanceService } from '../shared/service/attendance.service';
+
 @Component({
   selector: 'sg-leave-form',
   templateUrl: 'leave-form.component.html'
@@ -56,6 +58,7 @@ export class LeaveFormComponent {
     private formBuilder: FormBuilder,
     private validateService: ValidateService,
     private plugin: PluginService,
+    private attendanceService: AttendanceService,
     public popoverCtrl: PopoverController
   ) {new Date().toUTCString()}
 
@@ -182,14 +185,14 @@ export class LeaveFormComponent {
       ev: myEvent
     });
   }
-  leaveForm() {
-    let res = this.todo.value;
-    // Object.assign(res,this.formData);
+  async leaveForm() {
     this.formData.data = this.todo.value
-    console.log(new Date(this.formData.data.startTime).toISOString())
-    this.formData.data.startTime = Date.parse(this.formData.data.startTime)-60*60*8*1000
-    console.log(new Date(this.formData.data.startTime).toLocaleString())
-    console.log(this.formData);
+    // console.log(new Date(this.formData.data.startTime).toISOString())
+    // this.formData.data.startTime = Date.parse(this.formData.data.startTime)-60*60*8*1000
+    // console.log(new Date(this.formData.data.startTime).toLocaleString())
+    // console.log(this.formData);
+    let res = await this.attendanceService.saveLeave(this.formData);
+    console.log(res)
     return false;
   }
   callBack() {

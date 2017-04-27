@@ -15,35 +15,34 @@ export class AttendanceService {
 
   // 请假单申请
   saveLeave(data: MyFormModel) {
-
-    // return this.myHttp.post(AttendanceConfig.saveLeaveUrl,'').then((res) => {
-    //   return Promise.resolve(res.json())
-    // }).catch((err) => {
-    //   this.errorDeal(err);
-    //   return Promise.resolve([])
-    // });
+    let sendData = this.editLeaveData(data);
+    console.log(sendData)
+    return this.myHttp.post(AttendanceConfig.saveLeaveUrl,sendData).then((res) => {
+      return Promise.resolve(res.json())
+    }).catch((err) => {
+      this.errorDeal(err);
+      return Promise.resolve([])
+    });
   }
   editLeaveData(data: MyFormModel) {
-    let sendData: {
-      TYPE: string,
-      STATUS: string,
-      DOCNO: string,
+    let sendData= {
+      TYPE: '',
+      STATUS: '',
+      DOCNO: '',
       DETAIL: {
-        ABSENT_CODE: string,
-        START_TIME: string,
-        END_TIME: string,
-        AGENT: string,
-        REASON: string
+        ABSENT_CODE: '',
+        START_TIME: '',
+        END_TIME: '',
+        AGENT: '',
+        REASON: ''
       }
-    }
-    sendData.TYPE = data.type;
-    sendData.STATUS = data.status;
-    sendData.DOCNO = data.No;
-    sendData.DETAIL.ABSENT_CODE = data.data.reasonType;
-    sendData.DETAIL.START_TIME = data.data.startTime;
-    sendData.DETAIL.END_TIME = data.data.endTime;
-    sendData.DETAIL.AGENT = data.data.colleague;
-    sendData.DETAIL.REASON = data.data.reason;
+    };
+    ({type: sendData.TYPE, status: sendData.STATUS, No: sendData.DOCNO} = data);
+    ({reasonType: sendData.DETAIL.ABSENT_CODE,
+      startTime: sendData.DETAIL.START_TIME,
+      endTime: sendData.DETAIL.END_TIME,
+      colleague: sendData.DETAIL.AGENT,
+      reason: sendData.DETAIL.REASON } = data.data);
     return sendData;
   }
   // 获得签核名单

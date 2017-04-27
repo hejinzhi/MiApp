@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { NavController, NavParams, App } from 'ionic-angular';
+import { NavController, NavParams, App, Platform } from 'ionic-angular';
 
 import { TabsComponent } from '../../../../tabs/tabs.component'
 
@@ -12,7 +12,7 @@ export class FormListComponent {
   showList:boolean = false;
   showApproved: boolean = false;
   type: string ='100';
-  constructor(public navCtrl: NavController, public navParams: NavParams, private app: App) {
+  constructor(public navCtrl: NavController, public navParams: NavParams, private app: App, private platform: Platform) {
 
   }
   ionViewDidLoad() {
@@ -25,6 +25,6 @@ export class FormListComponent {
   }
 
   exit() {
-    this.app.getRootNav().setRoot(TabsComponent)
+    this.platform.runBackButtonAction();
   }
 }
