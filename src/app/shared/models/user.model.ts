@@ -7,6 +7,7 @@ export class UserModel {
     position: string;
     department: string;
     patternCode: string;
+    myNineCode: string;
 
     constructor(username: string, password: string) {
         this.username = username;

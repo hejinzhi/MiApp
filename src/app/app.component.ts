@@ -41,7 +41,7 @@ export class MyAppComponent {
       this.messageservice.getContacts();
       this.messageservice.history = this.messageservice.getLocalMessageHistory() ? this.messageservice.getLocalMessageHistory() : [];
     });
-    this.registerBackButtonAction();
+    // this.registerBackButtonAction();
   }
 
 
@@ -86,19 +86,20 @@ export class MyAppComponent {
         return;
       }
       let activeVC = this.nav.getActive();
+      console.log(activeVC);
+
       if (activeVC.instance instanceof LoginComponent) {
         this.platform.exitApp();
-      }else if(activeVC.instance instanceof PatternLockComponent){
+      } else if (activeVC.instance instanceof PatternLockComponent) {
         this.platform.exitApp();
-      }else if(activeVC.instance instanceof AttendanceComponent) {
-        let tabs = activeVC.instance.attendance;
-        let activeNav = tabs.getSelected();
-        return activeNav.canGoBack()?activeNav.pop():this.app.getRootNav().setRoot(TabsComponent);
       } else {
         let tabs = activeVC.instance.tabRef;
         let activeNav = tabs.getSelected();
-        return activeNav.canGoBack()?activeNav.pop():cordova.plugins.backgroundMode.moveToBackground();
+        console.log(activeNav);
+        return activeNav.canGoBack() ? activeNav.pop() : cordova.plugins.backgroundMode.moveToBackground();
       }
+
+
     }, 1);
   }
   //双击退出功能模块并返回主界面

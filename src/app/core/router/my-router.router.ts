@@ -12,6 +12,7 @@ export class MyRouter {
     switch (id) {
 
       case 1:
+        // app.getRootNav().setRoot(BookLibraryComponent);
         navCtrl.push(BookLibraryComponent);
         break;
       case 21:

@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { NavController, ModalController, MenuController, AlertController, LoadingController } from 'ionic-angular';
+import { NavController, ModalController, MenuController, AlertController, LoadingController, App } from 'ionic-angular';
 import { BarcodeScanner } from '@ionic-native/barcode-scanner';
 import { Observable } from 'rxjs/Rx';
 
@@ -9,6 +9,7 @@ import { SettingComponent } from './setting/setting.component';
 import { BookLibraryConfig } from './shared/config/book-library.config';
 import { BorrowedListComponent } from './borrowed-list/borrowed-list.component';
 import { BorrowRequestComponent } from './borrow-request/borrow-request.component';
+import { TabsComponent } from '../../../tabs/tabs.component';
 
 @Component({
     selector: 'sg-book-library',
@@ -22,7 +23,8 @@ export class BookLibraryComponent implements OnInit {
         private alertCtrl: AlertController,
         private menuCtrl: MenuController,
         private loadingCtrl: LoadingController,
-        private barcodeScanner: BarcodeScanner
+        private barcodeScanner: BarcodeScanner,
+        private app: App
     ) { }
 
     books: any[];

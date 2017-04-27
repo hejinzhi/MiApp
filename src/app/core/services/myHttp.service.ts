@@ -31,7 +31,7 @@ export class MyHttpService {
         return options;
     }
 
-    async post(url: string, body: any, loginFlag?: boolean) {
+    async post(url: string, body: any, loginFlag: boolean = false) {
         let options = await this.initOptions(loginFlag);
         let stringBody = JSON.stringify(body);
         return this.http.post(url, stringBody, options).toPromise();
