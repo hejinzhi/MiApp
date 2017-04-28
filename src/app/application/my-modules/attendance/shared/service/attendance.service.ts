@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
 import { MyHttpService } from '../../../../../core/services/myHttp.service';
 import { MyFormModel } from '../models/my-form.model'
 import { AttendanceConfig } from '../config/attendance.config'
@@ -124,6 +125,22 @@ export class AttendanceService {
     }
     return newTime;
   }
+
+  // 获得请假类型信息
+  async getLeaveReasonType():Promise<{name:string,value:string}[]>{
+    let res = await this.myHttp.get(AttendanceConfig.getLeaveReasonTypeUrl)
+    res = res.json()
+    let formatRes:{name:string,value:string}[] = [];
+    return formatRes;
+  }
+
+  // 获得代理人
+  getAgent(name: string): Observable<any> {
+    let emp_name = name.toUpperCase();
+    return Observable.fromPromise(this.myHttp.get(AttendanceConfig.getAgentUrl + `emp_name=${emp_name}`)).map((r) => {
+      return r.json();
+    });
+  }
   // 获得签核名单
   getSignList(form_No: string) {
     return this.myHttp.get(AttendanceConfig.getSignListUrl + form_No).then((res) => {
@@ -133,7 +150,23 @@ export class AttendanceService {
       return Promise.resolve([])
     });
   }
-
+  // 送签
+  sendSign(formData: MyFormModel) {
+    let sendData = {
+      KIND: "OFFDUTY",
+      DOCNO: ""
+    };
+    ({No:sendData.DOCNO}=formData);
+    console.log(sendData)
+    return this.myHttp.post(AttendanceConfig.sendSignUrl, sendData).then((res) => {
+      console.log(res)
+      return Promise.resolve()
+    }).catch((err) => {
+      console.log(err)
+      this.errorDeal(err);
+      return Promise.resolve([])
+    });
+  }
   errorDeal(err: any) {
     switch (err.status) {
       case 404:

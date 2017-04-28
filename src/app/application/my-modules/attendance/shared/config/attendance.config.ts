@@ -14,4 +14,13 @@ export class AttendanceConfig {
     // 根据单据号获取请假单
     static getLeaveFormByNoUrl = EnvConfig.baseUrl + 'OffDuty/GetOffDutyByDOCNO?';
 
+    // 获得请假类型信息
+    static getLeaveReasonTypeUrl = EnvConfig.baseUrl + 'OffDuty/GetOffDutyType';
+
+    // 获得代理人
+    static getAgentUrl = EnvConfig.baseUrl + 'OffDuty/GetOffDutyAgent?';
+
+    // 送签
+    static sendSignUrl = EnvConfig.baseUrl + 'Att/SendSign';
+
 }

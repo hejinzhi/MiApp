@@ -26,12 +26,10 @@ export class AttendanceComponent {
   constructor(public navCtrl: NavController, public navParams: NavParams, private app :App, private platform: Platform) {}
 
   ionViewDidLoad() {
-    // this.app.getRootNav().setRoot(SearcheComponent)
-    localStorage.setItem('subTab','-1');
+
   }
   ionViewWillLeave() {
-    // this.app.getRootNav().setRoot(SearcheComponent)
-    localStorage.setItem('subTab','1');
+
   }
   maintain_leave():void{
     this.navCtrl.push(LeaveFormComponent);

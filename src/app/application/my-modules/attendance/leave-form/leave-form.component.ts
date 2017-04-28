@@ -92,8 +92,8 @@ export class LeaveFormComponent {
       .debounceTime(300)        // wait for 300ms pause in events
       .distinctUntilChanged()   // ignore if next search term is same as previous
       .switchMap(term => {
-        if (term) {
-          return Observable.of<any>([{ name: 'xiaomi' }, { name: 'xiaodong' }])
+        if (term.length > 2) {
+          return this.attendanceService.getAgent(term);
         } else {
           return Observable.of<any>([])
         }
@@ -156,11 +156,11 @@ export class LeaveFormComponent {
     if (this.tempcolleague) {
       this.isSelectcolleague = item.value != this.tempcolleague ? false : true;
     }
+    console.log(this.colleague)
     this.searchTerms.next(item.value);
   }
   // 选取上级
   getcolleague(name: string) {
-
     this.isSelectcolleague = true;
     this.tempcolleague = name;
     this.searchTerms.next('')
@@ -194,6 +194,11 @@ export class LeaveFormComponent {
   }
   async leaveForm() {
     this.formData.data = this.todo.value
+    let loading = this.plugin.createLoading();
+    loading.present()
+    let res = await this.attendanceService.sendSign(this.formData);
+    loading.dismiss()
+    console.log(res);
     return false;
   }
   callBack() {
@@ -211,6 +216,7 @@ export class LeaveFormComponent {
     this.hourLeave = res.HOURS;
     this.formData.No = res.DOCNO
     this.haveSaved = true;
+    this.plugin.showToast('表单保存成功');
     console.log(res)
     // setTimeout(() => {
     //   this.plugin.showToast('表单保存成功');
