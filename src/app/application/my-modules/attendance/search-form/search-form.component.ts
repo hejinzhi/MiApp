@@ -43,7 +43,7 @@ export class SearchFormComponent {
       type:'',
       startTime: '',
       endTime: '',
-      form_No: ''
+      form_No: 'HTL021704000047'
     }
     this.searchMes.type = this.navParams.data.type || '';
     this.todo = this.initWork(this.searchMes);
@@ -106,6 +106,7 @@ export class SearchFormComponent {
     }
     loading.dismiss();
     console.log(res);
+    if(res.length === 0) return false;
     this.navCtrl.push(FormListComponent, {
       type: this.todo.value.type,
       formData: res

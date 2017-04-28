@@ -37,7 +37,7 @@ export class LeaveFormComponent {
   formData:MyFormModel = {
     type:'2',
     status:'New',
-    No:'HTL021703007172',
+    No:'',
     data:{}
   }
   title:string = '创建请假单';
@@ -176,7 +176,7 @@ export class LeaveFormComponent {
       this.myValidators[name].pass = !prams.mes;
       if (name === 'startTime' || name === 'endTime') {
         this.timeError = prams.mes;
-        this.calculateTime(this.timeError);
+        // this.calculateTime(this.timeError);
       }
       return Promise.resolve(this.myValidators);
     });
@@ -194,15 +194,6 @@ export class LeaveFormComponent {
   }
   async leaveForm() {
     this.formData.data = this.todo.value
-    // console.log(new Date(this.formData.data.startTime).toISOString())
-    // this.formData.data.startTime = Date.parse(this.formData.data.startTime)-60*60*8*1000
-    // console.log(new Date(this.formData.data.startTime).toLocaleString())
-    // console.log(this.formData);
-    let loading = this.plugin.createLoading();
-    loading.present()
-    let res = await this.attendanceService.saveLeaveForm(this.formData);
-    loading.dismiss()
-    console.log(res)
     return false;
   }
   callBack() {
@@ -210,11 +201,22 @@ export class LeaveFormComponent {
       number:this.formData.No
     })
   }
-  saveForm() {
-    setTimeout(() => {
-      this.plugin.showToast('表单保存成功');
-      this.haveSaved = true;
-    },1000)
+  async saveForm() {
+    this.formData.data = this.todo.value
+    let loading = this.plugin.createLoading();
+    loading.present()
+    let res:any = await this.attendanceService.saveLeaveForm(this.formData);
+    loading.dismiss()
+    this.dayLeave = res.DAYS;
+    this.hourLeave = res.HOURS;
+    this.formData.No = res.DOCNO
+    this.haveSaved = true;
+    console.log(res)
+    // setTimeout(() => {
+    //   this.plugin.showToast('表单保存成功');
+    //   this.haveSaved = true;
+    // },1000);
+    // this.navCtrl.popToRoot();
   }
   cancelForm() {
     setTimeout(() => {

@@ -9,6 +9,9 @@ export class AttendanceConfig {
     static saveLeaveUrl = EnvConfig.baseUrl + 'OffDuty/AddOffDuty';
 
     // 根据日期获取请假单
-    static getLeaveFormUrl = EnvConfig.baseUrl + 'OffDuty/GetOffDutyByDate?';
+    static getLeaveFormByDateUrl = EnvConfig.baseUrl + 'OffDuty/GetOffDutyByDate?';
+
+    // 根据单据号获取请假单
+    static getLeaveFormByNoUrl = EnvConfig.baseUrl + 'OffDuty/GetOffDutyByDOCNO?';
 
 }
