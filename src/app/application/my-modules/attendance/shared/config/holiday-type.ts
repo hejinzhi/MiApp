@@ -1,4 +1,16 @@
+import { AttendanceService } from '../service/attendance.service';
+
 export class HolidayType {
+  constructor(private attendanceService: AttendanceService,type:string ='100') {
+    switch(type) {
+      case '2':
+        this.attendanceService.getLeaveReasonType();
+        break;
+      default:
+        break;
+    }
+
+  }
   type: { type: string, name: string }[] = [
     { type: 'A', name: '年休假' },
     { type: 'B', name: '產假 - 產假【98天】' },

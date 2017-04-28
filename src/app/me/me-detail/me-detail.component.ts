@@ -29,7 +29,6 @@ export class MeDetailComponent {
 
   ionViewDidLoad() {
     this.user = this.navParams.data.user;
-    console.log(this.user)
   }
 
   showLoading() {
@@ -40,7 +39,10 @@ export class MeDetailComponent {
   }
 
   async getNewPhoto(type: number, size: number) {
-    this.user.avatarurl = await this.plugin.getNewPhoto(type, size);
+    this.user.avatarurl = await this.plugin.getNewPhoto(type, size).catch((err) =>{
+      console.log(err)
+    });
+    if(!this.user.avatarurl) return;
     this.showLoading();
     await this.jmessage.updateMyAvatar(this.user.avatarUrl);
     this.loading.dismiss();

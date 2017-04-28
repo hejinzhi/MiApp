@@ -26,10 +26,22 @@ export class ListFilterComponent implements OnInit {
 
   ngOnInit() {
     this.type = this.myset.type;
+    this.items = this.myset.formData || [];
     this.showApproved = this.myset.showApproved;
+    this.sortItems(this.type);
+    if(this.items.length > 0) return;
     this.initializeItems();
   }
 
+  sortItems(type:string) {
+    switch(type) {
+      case '2':
+        this.items = this.sortByStatusAndDate(this.items,'startTime');
+        break;
+      default:
+        break;
+    }
+  }
   initializeItems() {
     switch (this.type) {
       case '2':
@@ -230,15 +242,26 @@ export class ListFilterComponent implements OnInit {
       return second - first;
     })
     if(Number(this.type) === 100){
-      console.log(456)
       this.items.sort((a: MyFormModel, b: MyFormModel) => {
         if(b.type === a.type) {
-          return Date.parse(a.data.startTime)-Date.parse(b.data.startTime)
+          return Date.parse(b.data.startTime)-Date.parse(a.data.startTime)
         }
         return Number(b.type) - Number(a.type);
       })
     }
 
+  }
+
+  sortByStatusAndDate(items:MyFormModel[], targetDateName:string) {
+    items.sort((a: MyFormModel, b: MyFormModel) => {
+      let first = this.getStatusPoint(a.status);
+      let second = this.getStatusPoint(b.status);
+      if(second === first) {
+        return Date.parse(b.data[targetDateName])-Date.parse(a.data[targetDateName])
+      }
+      return second - first;
+    })
+    return items;
   }
   getStatusPoint(status: string):number {
     let res = 0

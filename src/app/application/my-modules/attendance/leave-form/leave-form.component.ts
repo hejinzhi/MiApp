@@ -18,6 +18,8 @@ import { HolidayType } from '../shared/config/holiday-type';
 import { MyValidatorModel } from '../../../../shared/models/my-validator.model';
 import { MyFormModel } from '../shared/models/my-form.model';
 
+import { AttendanceService } from '../shared/service/attendance.service';
+
 @Component({
   selector: 'sg-leave-form',
   templateUrl: 'leave-form.component.html'
@@ -35,7 +37,7 @@ export class LeaveFormComponent {
   formData:MyFormModel = {
     type:'2',
     status:'New',
-    No:'HTL021703007172',
+    No:'',
     data:{}
   }
   title:string = '创建请假单';
@@ -56,6 +58,7 @@ export class LeaveFormComponent {
     private formBuilder: FormBuilder,
     private validateService: ValidateService,
     private plugin: PluginService,
+    private attendanceService: AttendanceService,
     public popoverCtrl: PopoverController
   ) {new Date().toUTCString()}
 
@@ -69,7 +72,14 @@ export class LeaveFormComponent {
     }
     if(this.navParams.data.detailMes){
       this.formData = this.navParams.data.detailMes;
-      this.leaveMes = this.navParams.data.detailMes.data;
+      let detail = this.navParams.data.detailMes.data;
+      for(let prop in this.leaveMes) {
+        this.leaveMes[prop] = detail[prop]
+      }
+      this.dayLeave = this.navParams.data.detailMes.data.days || '';
+      this.hourLeave = this.navParams.data.detailMes.data.hours || '';
+      this.leaveMes.startTime = this.attendanceService.formatTime(this.leaveMes.startTime,false);
+      this.leaveMes.endTime = this.attendanceService.formatTime(this.leaveMes.endTime,false);
       this.isSelectcolleague = true;
       this.title = '请假单详情';
       this.tempcolleague = this.leaveMes.colleague;
@@ -82,8 +92,8 @@ export class LeaveFormComponent {
       .debounceTime(300)        // wait for 300ms pause in events
       .distinctUntilChanged()   // ignore if next search term is same as previous
       .switchMap(term => {
-        if (term) {
-          return Observable.of<any>([{ name: 'xiaomi' }, { name: 'xiaodong' }])
+        if (term.length > 2) {
+          return this.attendanceService.getAgent(term);
         } else {
           return Observable.of<any>([])
         }
@@ -146,11 +156,11 @@ export class LeaveFormComponent {
     if (this.tempcolleague) {
       this.isSelectcolleague = item.value != this.tempcolleague ? false : true;
     }
+    console.log(this.colleague)
     this.searchTerms.next(item.value);
   }
   // 选取上级
   getcolleague(name: string) {
-
     this.isSelectcolleague = true;
     this.tempcolleague = name;
     this.searchTerms.next('')
@@ -166,7 +176,7 @@ export class LeaveFormComponent {
       this.myValidators[name].pass = !prams.mes;
       if (name === 'startTime' || name === 'endTime') {
         this.timeError = prams.mes;
-        this.calculateTime(this.timeError);
+        // this.calculateTime(this.timeError);
       }
       return Promise.resolve(this.myValidators);
     });
@@ -182,14 +192,13 @@ export class LeaveFormComponent {
       ev: myEvent
     });
   }
-  leaveForm() {
-    let res = this.todo.value;
-    // Object.assign(res,this.formData);
+  async leaveForm() {
     this.formData.data = this.todo.value
-    console.log(new Date(this.formData.data.startTime).toISOString())
-    this.formData.data.startTime = Date.parse(this.formData.data.startTime)-60*60*8*1000
-    console.log(new Date(this.formData.data.startTime).toLocaleString())
-    console.log(this.formData);
+    let loading = this.plugin.createLoading();
+    loading.present()
+    let res = await this.attendanceService.sendSign(this.formData);
+    loading.dismiss()
+    console.log(res);
     return false;
   }
   callBack() {
@@ -197,11 +206,23 @@ export class LeaveFormComponent {
       number:this.formData.No
     })
   }
-  saveForm() {
-    setTimeout(() => {
-      this.plugin.showToast('表单保存成功');
-      this.haveSaved = true;
-    },1000)
+  async saveForm() {
+    this.formData.data = this.todo.value
+    let loading = this.plugin.createLoading();
+    loading.present()
+    let res:any = await this.attendanceService.saveLeaveForm(this.formData);
+    loading.dismiss()
+    this.dayLeave = res.DAYS;
+    this.hourLeave = res.HOURS;
+    this.formData.No = res.DOCNO
+    this.haveSaved = true;
+    this.plugin.showToast('表单保存成功');
+    console.log(res)
+    // setTimeout(() => {
+    //   this.plugin.showToast('表单保存成功');
+    //   this.haveSaved = true;
+    // },1000);
+    // this.navCtrl.popToRoot();
   }
   cancelForm() {
     setTimeout(() => {
