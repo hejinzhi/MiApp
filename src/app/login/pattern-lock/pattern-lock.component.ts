@@ -33,22 +33,60 @@ export class PatternLockComponent implements OnInit {
     private jmessageService: JMessageService
   ) {
     // 判定是否是进行验证功能还是更改功能
-    this.needNineCode = localStorage.getItem('needPassNineCode') == 'true' ? true : false;
-    this.isVal = !this.navParams.data.reset ? true : false;
-    this.message = this.isVal ? '请验证手势密码' : '请输入原来的密码';
-    this.isReSet = localStorage.getItem('myNineCode') ? false : true;
-    this.message = this.isReSet ? '请设置手势密码' : this.message;
+    // this.needNineCode = localStorage.getItem('needPassNineCode') == 'true' ? true : false;
+    // this.isVal = !this.navParams.data.reset ? true : false;
+    // this.message = this.isVal ? '请验证手势密码' : '请输入原来的密码';
+    // this.isReSet = localStorage.getItem('myNineCode') ? false : true;
+    // this.message = this.isReSet ? '请设置手势密码' : this.message;
   }
 
 
 
-  ngOnInit() {
+  ngOnInit() { }
 
+  back() {
+    this.navCtrl.pop();
+  }
+
+  // 启用手势密码的开关
+  toggleBtn(event: any) {
+    if (event.checked) {
+      this.needNineCode = true;
+      if (this.user && this.user.myNineCode) {
+
+      } else {
+        this.message = '请设置手势密码';
+      }
+
+    } else {
+      this.needNineCode = false;
+      this.user.myNineCode = '';
+      this.isReSet = true;
+      localStorage.setItem('currentUser', JSON.stringify(this.user));
+    }
+  }
+
+  ionViewDidLoad() {
+    this.user = JSON.parse(localStorage.getItem('currentUser'));
+
+    if (this.user && this.user.myNineCode) {
+      this.needNineCode = true;
+      this.isReSet = false;
+    } else {
+      this.needNineCode = false;
+      this.isReSet = true;
+    }
+
+    this.isVal = !this.navParams.data.reset ? true : false;
+    this.message = this.isVal ? '请验证手势密码' : '请输入原来的密码';
+    this.message = this.isReSet ? '请设置手势密码' : this.message;
   }
 
   // 忘记手势密码
   validateId(): void {
-    localStorage.setItem('toValiPassword', 'true');
+    // localStorage.setItem('toValiPassword', 'true');
+    this.user.myNineCode = '';
+    localStorage.setItem('currentUser', JSON.stringify(this.user));
     this.navCtrl.setRoot(LoginComponent);
   }
 
@@ -74,10 +112,7 @@ export class PatternLockComponent implements OnInit {
     this.navCtrl.setRoot(TabsComponent);
   }
 
-  ionViewDidLoad() {
-    // this.storage.get('currentUser').then(user => { this.user = user[0] });
-    this.user = JSON.parse(localStorage.getItem('currentUser'));
-  }
+
 
   ionViewWillEnter() {
     // 初始化验证过程
@@ -205,8 +240,10 @@ export class PatternLockComponent implements OnInit {
         if (this.myCode.length > 0) {
           if (this.myCode.join('') == pwdArr.join('')) {
             this.message = '手势密码设置成功';
-            localStorage.setItem('myNineCode', this.myCode.join(''));
-            localStorage.setItem('needPassNineCode', 'true');
+            // localStorage.setItem('myNineCode', this.myCode.join(''));
+            // localStorage.setItem('needPassNineCode', 'true');
+            this.user.myNineCode = this.myCode.join('');
+            localStorage.setItem('currentUser', JSON.stringify(this.user));
             setTimeout(() => {
               if (!this.isVal) {
                 this.navCtrl.pop();
@@ -224,20 +261,23 @@ export class PatternLockComponent implements OnInit {
       } else {
         //用户验证判定
         if (this.isVal) {
-          if (localStorage.getItem('myNineCode') == pwdArr.join('')) {
-            this.message = '密码正确'
-            let user = JSON.parse(localStorage.getItem('currentUser'));
-            this.myHttp.post(LoginConfig.loginUrl, { userName: user.username, password: user.password }, true).then((res) => {
-              user.avatarUrl = res.json().User.AVATAR_URL;
-              user.nickname = res.json().User.NICK_NAME;
-              user.position = res.json().User.JOB_TITLE;
-              user.department = res.json().User.DEPT_NAME;
-              localStorage.setItem('currentUser', JSON.stringify(user));
+          // if (localStorage.getItem('myNineCode') == pwdArr.join('')) {
+          if (this.user.myNineCode == pwdArr.join('')) {
+            this.message = '密码正确';
+            // let user = JSON.parse(localStorage.getItem('currentUser'));
+            this.myHttp.post(LoginConfig.loginUrl, { userName: this.user.username, password: this.user.password }, true).then((res) => {
+              this.user.avatarUrl = res.json().User.AVATAR_URL;
+              this.user.nickname = res.json().User.NICK_NAME;
+              this.user.position = res.json().User.JOB_TITLE;
+              this.user.department = res.json().User.DEPT_NAME;
+              this.user.empno = res.json().User.EMPNO;
+              localStorage.setItem('currentUser', JSON.stringify(this.user));
             });
-            this.jmessageService.login(user.username, user.password).then(() => {
-              // to do loadUnreadMessage
-              this.navCtrl.setRoot(TabsComponent);
-            });
+            this.navCtrl.setRoot(TabsComponent);
+            // this.jmessageService.login(this.user.username, this.user.password).then(() => {
+            //   // to do loadUnreadMessage
+            //   this.navCtrl.setRoot(TabsComponent);
+            // });
           } else {
             this.message = '密码错误！！！';
           }
@@ -248,7 +288,9 @@ export class PatternLockComponent implements OnInit {
             if (this.myCode.length > 0) {
               if (this.myCode.join('') == pwdArr.join('')) {
                 this.message = '已更新密码';
-                localStorage.setItem('myNineCode', this.myCode.join(''));
+                // localStorage.setItem('myNineCode', this.myCode.join(''));
+                this.user.myNineCode = this.myCode.join('');
+                localStorage.setItem('currentUser', JSON.stringify(this.user));
                 setTimeout(() => {
                   this.navCtrl.pop();
                 }, 300)
@@ -261,7 +303,8 @@ export class PatternLockComponent implements OnInit {
               this.message = '请再次输入密码';
             }
           } else {
-            if (localStorage.getItem('myNineCode') == pwdArr.join('')) {
+            // if (localStorage.getItem('myNineCode') == pwdArr.join('')) {
+            if (this.user.myNineCode == pwdArr.join('')) {
               this.canChange = true;
               this.message = '请设置新的密码'
             } else {

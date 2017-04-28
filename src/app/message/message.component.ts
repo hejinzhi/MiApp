@@ -7,6 +7,8 @@ import { MessageService } from './shared/service/message.service';
 import { Message } from './shared/classes/Message';
 import { DialogueComponent } from './dialogue/dialogue.component';
 
+import { MyHttpService } from '../core/services/myHttp.service';
+
 @Component({
   selector: 'sg-message',
   templateUrl: 'message.component.html'
@@ -25,11 +27,33 @@ export class MessageComponent implements OnInit {
     private ref: ChangeDetectorRef,
     private messageService: MessageService,
     private platform: Platform,
-    public appCtrl: App) {
+    public appCtrl: App,
+    private myHttp: MyHttpService
+  ) {
   }
 
 
   loading: Loading;
+
+  test() {
+    let obj = {
+      "TYPE": "2",
+      "STATUS": "APPROVED",
+      "DOCNO": "",
+      "DETAIL": {
+        "ABSENT_CODE": "P",
+        "START_TIME": "2017-04-14T01:30:00Z",
+        "END_TIME": "2017-04-14T02:00:00Z",
+        "AGENT": "小米22",
+        "REASON": "ASDA22"
+      }
+    };
+
+
+    this.myHttp.post('http://10.86.16.166/webapi/OffDuty/AddOffDuty', obj).then((res) => {
+      console.log(res);
+    })
+  }
 
   ngOnInit() {
 
