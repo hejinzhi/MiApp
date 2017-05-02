@@ -46,7 +46,7 @@ export class SearchFormComponent {
       type:'',
       startTime: '',
       endTime: '',
-      form_No: 'HTL021704000047'
+      form_No: ''
     }
     this.searchMes.type = this.navParams.data.type || '';
     this.todo = this.initWork(this.searchMes);

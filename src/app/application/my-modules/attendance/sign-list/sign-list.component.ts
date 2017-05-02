@@ -20,12 +20,13 @@ export class SignListComponent {
   ) { }
 
   ionViewDidLoad() {
-    this.getSignList()
+    let form_No = this.navParams.data.formData.No;
+    this.getSignList(form_No)
   }
-  async getSignList(){
+  async getSignList(form_No:string){
     let loading = this.plugin.createLoading()
     loading.present();
-    this.items = await this.attendanceService.getSignList('BANK0905065');
+    this.items = await this.attendanceService.getSignList(form_No);
     loading.dismiss();
     this.items.sort((a: any, b: any) => {
       return b.version - a.version

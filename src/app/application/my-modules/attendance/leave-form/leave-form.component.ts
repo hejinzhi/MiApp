@@ -90,7 +90,7 @@ export class LeaveFormComponent {
     this.todo = this.initWork(this.leaveMes);
     this.MyValidatorControl = this.initValidator(this.leaveMes);
     this.myValidators = this.MyValidatorControl.validators;
-    this.holidayType = await this.attendanceService.getLeaveReasonType();
+    this.holidayType = localStorage.getItem('leaveType')? JSON.parse(localStorage.getItem('leaveType')):new HolidayType().type;
     this.colleague = this.searchTerms
       .debounceTime(300)        // wait for 300ms pause in events
       .distinctUntilChanged()   // ignore if next search term is same as previous
@@ -179,6 +179,7 @@ export class LeaveFormComponent {
     });
   }
   async leaveForm() {
+    console.log(456)
     this.formData.data = this.todo.value
     let loading = this.plugin.createLoading();
     loading.present()
@@ -207,12 +208,6 @@ export class LeaveFormComponent {
     this.formData.No = res.DOCNO
     this.haveSaved = true;
     this.plugin.showToast('表单保存成功');
-    console.log(res)
-    // setTimeout(() => {
-    //   this.plugin.showToast('表单保存成功');
-    //   this.haveSaved = true;
-    // },1000);
-    // this.navCtrl.popToRoot();
   }
   cancelForm() {
     setTimeout(() => {
@@ -228,6 +223,8 @@ export class LeaveFormComponent {
   }
 
   sign_list() {
-    this.navCtrl.push(SignListComponent)
+    this.navCtrl.push(SignListComponent,{
+      formData: this.formData
+    })
   }
 }

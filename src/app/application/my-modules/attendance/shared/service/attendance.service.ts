@@ -62,6 +62,38 @@ export class AttendanceService {
       return Promise.resolve('')
     });
   }
+  // 删除表单
+  deleteForm(formData:MyFormModel) {
+    switch (formData.type) {
+      case '0':
+        break;
+      case '1':
+        break;
+      case '2':
+        return this.deleteLeaveForm(formData);
+      case '3':
+        break;
+      case '4':
+        break;
+      default:
+        break
+    }
+  }
+  // 删除请假单
+  deleteLeaveForm(formData:MyFormModel) {
+    let sendData = {
+      DOCNO: ""
+    };
+    ({No:sendData.DOCNO}=formData);
+    return this.myHttp.post(AttendanceConfig.deleteLeaveFormUrl, sendData).then((res) => {
+      console.log(res)
+      return Promise.resolve('ok')
+    }).catch((err) => {
+      console.log(err)
+      this.errorDeal(err);
+      return Promise.resolve('')
+    });
+  }
   editLeaveData_get(data: any) {
     let newData = {
       type: '2',
@@ -112,7 +144,6 @@ export class AttendanceService {
       colleague: sendData.DETAIL.AGENT,
       reason: sendData.DETAIL.REASON
     } = data.data);
-    sendData.DOCNO = '';
     sendData.DETAIL.END_TIME = this.formatTime(sendData.DETAIL.END_TIME, true);
     sendData.DETAIL.START_TIME = this.formatTime(sendData.DETAIL.START_TIME, true);
     console.log(new Date(sendData.DETAIL.END_TIME).toLocaleString())
@@ -176,8 +207,23 @@ export class AttendanceService {
       DOCNO: ""
     };
     ({No:sendData.DOCNO}=formData);
-    console.log(sendData)
     return this.myHttp.post(AttendanceConfig.sendSignUrl, sendData).then((res) => {
+      console.log(res)
+      return Promise.resolve('ok')
+    }).catch((err) => {
+      console.log(err)
+      this.errorDeal(err);
+      return Promise.resolve('')
+    });
+  }
+  // 取消送签
+  callBackSign(formData:MyFormModel) {
+    let sendData = {
+      KIND: "OFFDUTY",
+      DOCNO: ""
+    };
+    ({No:sendData.DOCNO}=formData);
+    return this.myHttp.post(AttendanceConfig.callBackSignUrl, sendData).then((res) => {
       console.log(res)
       return Promise.resolve('ok')
     }).catch((err) => {
@@ -192,7 +238,7 @@ export class AttendanceService {
         this.plugin.showToast(err.statusText);
         break;
       case 400:
-        this.plugin.showToast(err._body);
+        this.plugin.createBasicAlert(err.json().ExceptionMessage);
         break;
       case 0:
         this.plugin.showToast('连接服务器失败');

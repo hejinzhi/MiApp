@@ -1,6 +1,7 @@
 import { Component, ViewChild } from '@angular/core';
 import { Tabs } from 'ionic-angular'
 import { NavController, NavParams, App, Platform} from 'ionic-angular';
+
 import { LeaveFormComponent } from './leave-form/leave-form.component';
 import { OverTimeFormComponent } from './over-time-form/over-time-form.component';
 import { BusinessFormComponent } from './business-form/business-form.component';
@@ -8,6 +9,8 @@ import { FormListComponent } from './form-list/form-list.component';
 import { LeaveSubComponent } from './leave-sub/leave-sub.component';
 import { LeaveMessageMenuComponent } from './leave-message-menu/leave-message-menu.component';
 import { StatisticsComponent } from './statistics/statistics.component';
+
+import { AttendanceService } from './shared/service/attendance.service';
 
 @Component({
   selector:'sg-attendance',
@@ -23,10 +26,16 @@ export class AttendanceComponent {
   tab4Root = LeaveMessageMenuComponent;
   tab5Root = StatisticsComponent;
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, private app :App, private platform: Platform) {}
+  constructor(
+    public navCtrl: NavController,
+    public navParams: NavParams,
+    private app :App,
+    private platform: Platform,
+    private attendanceService: AttendanceService
+  ) {}
 
   ionViewDidLoad() {
-
+    this.attendanceService.getLeaveReasonType();
   }
   ionViewWillLeave() {
 
