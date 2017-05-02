@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { NavController, ModalController, MenuController, AlertController, LoadingController } from 'ionic-angular';
+import { NavController, ModalController, MenuController, AlertController, LoadingController, App } from 'ionic-angular';
 import { BarcodeScanner } from '@ionic-native/barcode-scanner';
 import { Observable } from 'rxjs/Rx';
 
@@ -9,6 +9,7 @@ import { SettingComponent } from './setting/setting.component';
 import { BookLibraryConfig } from './shared/config/book-library.config';
 import { BorrowedListComponent } from './borrowed-list/borrowed-list.component';
 import { BorrowRequestComponent } from './borrow-request/borrow-request.component';
+import { TabsComponent } from '../../../tabs/tabs.component';
 
 @Component({
     selector: 'sg-book-library',
@@ -22,7 +23,8 @@ export class BookLibraryComponent implements OnInit {
         private alertCtrl: AlertController,
         private menuCtrl: MenuController,
         private loadingCtrl: LoadingController,
-        private barcodeScanner: BarcodeScanner
+        private barcodeScanner: BarcodeScanner,
+        private app: App
     ) { }
 
     books: any[];
@@ -261,28 +263,7 @@ export class BookLibraryComponent implements OnInit {
     // for test
     async  addBook() {
 
-        // let isbn13Array = ['9787513506915',
-        //     '9787811373226',
-        //     '9787544600613',
-        //     '9787511206961',
-        //     '9787301204580',
-        //     '9787562154259',
-        //     '9787544628365',
-        //     '9787513536509',
-        //     '9787544607513',
-        //     '9787310020584',
-        //     '9787118076554',
-        //     '9787544606479',
-        //     '9787307080515',
-        //     '9787544617277',
-        //     '9787544617956',
-        //     '9787810950565',
-        //     '9787544617765',
-        //     '9787544627634',
-        //     '9787544619035',
-        //     '9787544617383',
-        //     '9787810950626',
-        //     '9787310028306'
+        // let isbn13Array = ['9781449398583'
         // ];
         // for (let i = 0; i < isbn13Array.length; i++) {
         //     let doubanRes = await this.bookService.getBookInfoFromDouban(isbn13Array[i]);
@@ -291,8 +272,38 @@ export class BookLibraryComponent implements OnInit {
         //     console.log(`insert ${isbn13Array[i]} success`);
         // }
 
+
+        // let myArray: string[] = [
+        //     'node', 'angular', 'html', 'oracle', 'css', 'apex', '艺术', '体育', '篮球', '足球',
+        //     '排球', 'JAVA', 'WEB', 'windows', 'novell', 'unix', '硬体', 'offic', '管理', '数据库',
+        //     'MYSQL', 'MONGO', 'VUE', '经济', '投资', '金钱', 'apex', '会计', '文员', '工程师'];
+
+        // for (let i = 0; i < myArray.length; i++) {
+        //     let result = await this.bookService.getBooksFromDoubanByName(myArray[i]);
+        //     let bookArray = result.json().books;
+        //     for (let j = 0; j < bookArray.length; j++) {
+        //         let book = this.bookService.transformBookInfo(bookArray[i]);
+        //         await this.bookService.addBook(book);
+        //     }
+        // }
+
+        let myArray: string[] = [
+            'node', 'angular', 'html', 'oracle', 'css', 'apex', '艺术', '体育', '篮球', '足球',
+            '排球', 'JAVA', 'WEB', 'windows', 'novell', 'unix', '硬体', 'offic', '管理', '数据库',
+            '企业', 'MONGO', 'VUE', '经济', '投资', '金钱', 'apex', '会计', '文员', '工程师'];
+
+        for (let i = 0; i < myArray.length; i++) {
+            let result = await this.bookService.getBooksFromDoubanByName(myArray[i]);
+            let bookArray = result.json().books;
+            for (let j = 0; j < bookArray.length; j++) {
+                let book = this.bookService.transformBookInfo(bookArray[j]);
+                try {
+                    await this.bookService.addBook(book);
+                }
+                catch (err) {
+                    console.log(book.ISBN13);
+                }
+            }
+        }
     }
-
-
-
 }

@@ -14,10 +14,10 @@ export class MyHttpService {
         return this.http.post(url, stringBody, options).toPromise();
     }
 
-    async initOptions() {
+    async initOptions(loginFlag: boolean) {
         let headers = new Headers({ 'Content-Type': 'application/json; charset=utf-8' });
         let token = JSON.parse(localStorage.getItem('access_token'));
-        if (token && !this.isTokenExpired()) {
+        if (token && !this.isTokenExpired() && !loginFlag) {
             headers.append('access_token', token);
         } else {
             let res = await this.getNewToken();
@@ -31,14 +31,14 @@ export class MyHttpService {
         return options;
     }
 
-    async post(url: string, body: any) {
-        let options = await this.initOptions();
+    async post(url: string, body: any, loginFlag: boolean = false) {
+        let options = await this.initOptions(loginFlag);
         let stringBody = JSON.stringify(body);
         return this.http.post(url, stringBody, options).toPromise();
     }
 
     async get(url: string) {
-        let options = await this.initOptions();
+        let options = await this.initOptions(false);
         return this.http.get(url, options).toPromise();
     }
 

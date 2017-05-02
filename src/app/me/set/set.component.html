@@ -1,11 +1,8 @@
-
-<ion-header color="mac">
-  <ion-navbar color="mac">
+<ion-header>
+  <ion-navbar>
     <ion-title>设置</ion-title>
   </ion-navbar>
 </ion-header>
-
-
 <ion-content>
   <ion-list>
     <button ion-item class="function-message">
@@ -46,7 +43,7 @@
         &nbsp;关于
     </button>
     <ion-item-divider color="light"></ion-item-divider>
-    <button ion-item class="function-message" (click) = "exit()">
+    <button ion-item class="function-message" (click)="logout()">
       <ion-icon name="disc" color="mac"></ion-icon>
         &nbsp;注销
     </button>
