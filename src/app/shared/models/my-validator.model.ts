@@ -11,8 +11,8 @@ export class MyValidatorModel{
         value:''};
       this.addValidators(target[i].name,target[i].valiItems);
     }
-    for(let prop in bind) {
-      this.validators[prop].value = bind[prop];
+    for(let prop in this.validators) {
+      this.validators[prop].value = bind[prop] || '';
     }
   }
   addValidator(name:string,valiItem:ValiItem):void{

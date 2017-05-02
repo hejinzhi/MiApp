@@ -16,7 +16,6 @@ export class MyRouter {
         navCtrl.push(BookLibraryComponent);
         break;
       case 21:
-        // app.getRootNav().setRoot(AttendanceComponent);
         navCtrl.push(AttendanceComponent);
         break;
       case 22:

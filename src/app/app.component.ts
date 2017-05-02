@@ -39,7 +39,34 @@ export class MyAppComponent {
       this.messageservice.getContacts();
       this.messageservice.history = this.messageservice.getLocalMessageHistory() ? this.messageservice.getLocalMessageHistory() : [];
     });
-    // this.registerBackButtonAction();
+
+    let original = platform.runBackButtonAction;
+    let __this = this;
+    platform.runBackButtonAction = function (): void {
+      if (__this.keyboard.isOpen()) {//如果键盘开启则隐藏键盘
+        __this.keyboard.close();
+        return;
+      }
+      let activePortal = __this.ionicApp._toastPortal.getActive()
+        || __this.ionicApp._loadingPortal.getActive()
+        || __this.ionicApp._overlayPortal.getActive()
+        || __this.ionicApp._modalPortal.getActive();
+      if (activePortal) {
+        activePortal.dismiss();
+        return;
+      }
+      let activeVC = __this.nav.getActive();
+      if (activeVC.instance instanceof LoginComponent) {
+        platform.exitApp();
+      } else if (activeVC.instance instanceof PatternLockComponent) {
+        platform.exitApp();
+      } else {
+        let tabs = activeVC.instance.tabRef;
+        let activeNav = tabs.getSelected();
+        console.log(activeVC)
+        return activeNav.canGoBack() ? original.apply(platform) : cordova.plugins.backgroundMode.moveToBackground();
+      }
+    }
   }
 
 
@@ -62,6 +89,7 @@ export class MyAppComponent {
     //   localStorage.removeItem('toValiPassword')
     // }
   }
+
 
 
   registerBackButtonAction() {
