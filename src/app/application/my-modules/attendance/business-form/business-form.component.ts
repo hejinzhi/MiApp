@@ -10,9 +10,12 @@ import { SignListComponent } from '../sign-list/sign-list.component';
 
 import { ValidateService }   from '../../../../core/services/validate.service';
 import { PluginService }   from '../../../../core/services/plugin.service';
+import { AttendanceService } from '../shared/service/attendance.service';
 
 import { MyFormModel } from '../shared/models/my-form.model';
 import { MyValidatorModel } from '../../../../shared/models/my-validator.model';
+
+import { AttendanceConfig } from '../shared/config/attendance.config';
 
 @Component({
   selector: 'sg-business-form',
@@ -37,6 +40,7 @@ export class BusinessFormComponent {
     No:'HTL021703007172',
     data:{}
   }
+  selectMaxYear = AttendanceConfig.SelectedMaxYear;
   haveSaved:boolean = false;
   isSelectcolleague: boolean = false;   // todo 判断是否正确选择代理人
   tempcolleague: string = ''; // 临时作保存的中间代理人
@@ -62,7 +66,8 @@ export class BusinessFormComponent {
     public popoverCtrl: PopoverController,
     private formBuilder: FormBuilder,
     private validateService: ValidateService,
-    private plugin: PluginService
+    private plugin: PluginService,
+    private attendanceService: AttendanceService
   ) { }
 
   ionViewDidLoad() {
@@ -91,8 +96,8 @@ export class BusinessFormComponent {
       .debounceTime(300)        // wait for 300ms pause in events
       .distinctUntilChanged()   // ignore if next search term is same as previous
       .switchMap(term => {
-        if (term) {
-          return Observable.of<any>([{ name: 'xiaomi' }, { name: 'xiaodong' }])
+        if (term.length > 2) {
+          return this.attendanceService.getAgent(term);
         } else {
           return Observable.of<any>([])
         }

@@ -19,6 +19,7 @@ import { HolidayType } from '../shared/config/holiday-type';
 import { MyValidatorModel } from '../../../../shared/models/my-validator.model';
 import { MyFormModel } from '../shared/models/my-form.model';
 
+import { AttendanceConfig } from '../shared/config/attendance.config';
 
 @Component({
   selector: 'sg-leave-form',
@@ -40,6 +41,7 @@ export class LeaveFormComponent {
     No:'',
     data:{}
   }
+  selectMaxYear = AttendanceConfig.SelectedMaxYear;
   title:string = '创建请假单';
   haveSaved:boolean = false;
   todo: FormGroup;

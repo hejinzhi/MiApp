@@ -18,7 +18,6 @@ export class AttendanceService {
     let dateFM = '';
     let dateTO = '';
     let docNum = 'HTL021704000047';
-    console.log(formData)
     if (formData.form_No) {
       return this.myHttp.get(AttendanceConfig.getLeaveFormByNoUrl + `DOCNO=${formData.form_No}`).then((res) => {
         console.log(res.json)
@@ -33,6 +32,9 @@ export class AttendanceService {
         return Promise.resolve([])
       });
     } else {
+      dateFM = formData.startTime || this.getMinStartTime(6);
+      dateTO = formData.endTime || '';
+      console.log(dateFM)
       return this.myHttp.get(AttendanceConfig.getLeaveFormByDateUrl + `dateFM=${dateFM}&dateTO=${dateTO}`).then((res) => {
         let formData = res.json();
         formData = formData.map((item: any) => {
@@ -46,7 +48,9 @@ export class AttendanceService {
       });
     }
   }
-
+  getMinStartTime(intervalMonth:number) {
+    return new Date(Date.parse(new Date().toString()) - 1000*60*60*24*30*intervalMonth).toDateString();
+  }
   // 请假单申请
   saveLeaveForm(data: MyFormModel) {
     let sendData = this.editLeaveData_send(data);

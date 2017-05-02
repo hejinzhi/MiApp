@@ -12,7 +12,7 @@
         <ion-label>日期*</ion-label>
         <ion-datetime displayFormat="YYYY/MM" formControlName="date"
         cancelText="取消" doneText="确认"
-        yearValues="2017"
+        min="2000" [max]="selectMaxYear"
         ></ion-datetime>
       </ion-item>
       <ion-item-divider *ngIf="myValidators.date.error " class='alert'>{{myValidators.date.error}}</ion-item-divider>
