@@ -1,14 +1,7 @@
-import { AttendanceService } from '../service/attendance.service';
 
 export class HolidayType {
-  constructor(private attendanceService: AttendanceService,type:string ='100') {
-    switch(type) {
-      case '2':
-        this.attendanceService.getLeaveReasonType();
-        break;
-      default:
-        break;
-    }
+  constructor() {
+
 
   }
   type: { type: string, name: string }[] = [

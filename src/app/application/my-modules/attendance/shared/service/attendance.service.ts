@@ -50,13 +50,12 @@ export class AttendanceService {
   // 请假单申请
   saveLeaveForm(data: MyFormModel) {
     let sendData = this.editLeaveData_send(data);
-    console.log(sendData)
     return this.myHttp.post(AttendanceConfig.saveLeaveUrl, sendData).then((res) => {
       return Promise.resolve(res.json())
     }).catch((err) => {
       console.log(err)
       this.errorDeal(err);
-      return Promise.resolve({})
+      return Promise.resolve('')
     });
   }
   editLeaveData_get(data: any) {
@@ -127,11 +126,22 @@ export class AttendanceService {
   }
 
   // 获得请假类型信息
-  async getLeaveReasonType():Promise<{name:string,value:string}[]>{
-    let res = await this.myHttp.get(AttendanceConfig.getLeaveReasonTypeUrl)
-    res = res.json()
-    let formatRes:{name:string,value:string}[] = [];
-    return formatRes;
+  async getLeaveReasonType():Promise<{name:string,type:string}[]>{
+    let res:any = await this.myHttp.get(AttendanceConfig.getLeaveReasonTypeUrl).catch((err) =>{
+      this.errorDeal(err);
+      return Promise.resolve([])
+    });
+    if(res.length === 0) {
+      return res;
+    }
+    res= res.json()
+    res = res.map((item:{ABSENT_TYPE_CODE:string, ABSENT:string}) => {
+      let format:{name:string,type:string}= {name:'',type:''};
+      ({ABSENT_TYPE_CODE:format.type, ABSENT:format.name} = item);
+      return format;
+    })
+    localStorage.setItem('leaveType',JSON.stringify(res));
+    return res;
   }
 
   // 获得代理人
@@ -151,7 +161,12 @@ export class AttendanceService {
     });
   }
   // 送签
-  sendSign(formData: MyFormModel) {
+  async sendSign(formData: MyFormModel) {
+    let saveRes:any;
+    if(!formData.No){
+      saveRes = await this.saveLeaveForm(formData);
+    }
+    if(!saveRes) return Promise.resolve('');
     let sendData = {
       KIND: "OFFDUTY",
       DOCNO: ""
@@ -160,11 +175,11 @@ export class AttendanceService {
     console.log(sendData)
     return this.myHttp.post(AttendanceConfig.sendSignUrl, sendData).then((res) => {
       console.log(res)
-      return Promise.resolve()
+      return Promise.resolve('ok')
     }).catch((err) => {
       console.log(err)
       this.errorDeal(err);
-      return Promise.resolve([])
+      return Promise.resolve('')
     });
   }
   errorDeal(err: any) {

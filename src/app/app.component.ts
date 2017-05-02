@@ -90,47 +90,4 @@ export class MyAppComponent {
       localStorage.removeItem('toValiPassword')
     }
   }
-
-  myBackButtonAction() {
-    if (this.keyboard.isOpen()) {//如果键盘开启则隐藏键盘
-      this.keyboard.close();
-      return;
-    }
-    if (this.menuCtrl.isOpen()) {//如果侧边菜单栏打开就关闭
-      this.menuCtrl.close();
-      return;
-    }
-    //如果想点击返回按钮隐藏toast或loading或Overlay就把下面加上
-    let activePortal = this.ionicApp._toastPortal.getActive()
-      || this.ionicApp._loadingPortal.getActive()
-      || this.ionicApp._overlayPortal.getActive()
-      || this.ionicApp._modalPortal.getActive();
-    if (activePortal) {
-      activePortal.dismiss();
-      return;
-    }
-    let activeVC = this.nav.getActive();
-    if (activeVC.instance instanceof LoginComponent) {
-      this.platform.exitApp();
-    } else if (activeVC.instance instanceof PatternLockComponent) {
-      this.platform.exitApp();
-    } else if (activeVC.instance instanceof AttendanceComponent) {
-      console.log(activeVC.instance)
-    } else {
-      let tabs = activeVC.instance.tabRef;
-      let activeNav = tabs.getSelected();
-      console.log(activeVC)
-      return activeNav.canGoBack() ? activeNav.pop() : cordova.plugins.backgroundMode.moveToBackground();
-    }
-  }
-  //双击退出功能模块并返回主界面
-  showExit() {
-    if (this.backButtonPressed) { //当触发标志为true时，即2秒内双击返回按键则返回主界面
-      this.app.getRootNav().setRoot(TabsComponent);
-    } else {
-      this.backButtonPressed = true;
-      this.plugin.showToast('再按一次返回主界面');
-      setTimeout(() => this.backButtonPressed = false, 2000);//2秒内没有再次点击返回则将触发标志标记为false
-    }
-  }
 }
