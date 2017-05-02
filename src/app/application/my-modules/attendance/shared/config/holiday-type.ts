@@ -1,4 +1,9 @@
+
 export class HolidayType {
+  constructor() {
+
+
+  }
   type: { type: string, name: string }[] = [
     { type: 'A', name: '年休假' },
     { type: 'B', name: '產假 - 產假【98天】' },

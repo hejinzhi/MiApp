@@ -64,7 +64,7 @@
       <ion-item-divider *ngIf="timeError " class='alert'>{{timeError}}</ion-item-divider>
       <ion-item class="searchOut" [class.has-error]="myValidators.colleague.error" [class.has-success]="myValidators.colleague.pass">
         <ion-label>代理*</ion-label>
-        <ion-input type="text" #name (keyup)="search(name)" formControlName="colleague" data-v-required="true" data-v-required-message="请选择代理人"></ion-input>
+        <ion-input type="text" #name placeholder="请输入2位以上的工号进行查询" (keyup)="search(name)" formControlName="colleague" data-v-required="true" data-v-required-message="请选择代理人"></ion-input>
       </ion-item>
       <ion-item-divider *ngIf="myValidators.colleague.error" class='alert'>{{myValidators.colleague.error}}</ion-item-divider>
       <ion-grid>
@@ -115,7 +115,7 @@
     </ion-list>
   </form>
   <ul class="list-group" [class.search]="colleague">
-    <li *ngFor="let person of colleague | async" (click)="getcolleague(person.name)"
-        class="search-result list-group-item">{{person.name}}</li>
+    <li *ngFor="let person of colleague | async" (click)="getcolleague(person.AGENT_NAME)"
+        class="search-result list-group-item">{{person.AGENT_NAME}}</li>
   </ul>
 </ion-content>

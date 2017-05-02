@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { NavController, NavParams, App } from 'ionic-angular';
+import { NavController, NavParams, App, Platform } from 'ionic-angular';
 
 import { TabsComponent } from '../../../../tabs/tabs.component'
 
@@ -12,11 +12,13 @@ export class FormListComponent {
   showList:boolean = false;
   showApproved: boolean = false;
   type: string ='100';
-  constructor(public navCtrl: NavController, public navParams: NavParams, private app: App) {
+  formData:any = [];
+  constructor(public navCtrl: NavController, public navParams: NavParams, private app: App, private platform: Platform) {
 
   }
   ionViewDidLoad() {
     this.type = this.navParams.data.type || '100';
+    this.formData = this.navParams.data.formData;
     console.log(this.type)
     if(this.navParams.data.status) {
       this.showApproved = this.navParams.data.status === 'APPROVED'? true:false;
@@ -25,6 +27,6 @@ export class FormListComponent {
   }
 
   exit() {
-    this.app.getRootNav().setRoot(TabsComponent)
+    this.platform.runBackButtonAction();
   }
 }

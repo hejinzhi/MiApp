@@ -41,7 +41,33 @@ export class MyAppComponent {
       this.messageservice.getContacts();
       this.messageservice.history = this.messageservice.getLocalMessageHistory() ? this.messageservice.getLocalMessageHistory() : [];
     });
-    this.registerBackButtonAction();
+    let original = platform.runBackButtonAction;
+    let __this = this;
+    platform.runBackButtonAction = function(): void {
+      if (__this.keyboard.isOpen()) {//如果键盘开启则隐藏键盘
+        __this.keyboard.close();
+        return;
+      }
+      let activePortal = __this.ionicApp._toastPortal.getActive()
+        || __this.ionicApp._loadingPortal.getActive()
+        || __this.ionicApp._overlayPortal.getActive()
+        || __this.ionicApp._modalPortal.getActive();
+      if (activePortal) {
+        activePortal.dismiss();
+        return;
+      }
+      let activeVC = __this.nav.getActive();
+      if (activeVC.instance instanceof LoginComponent) {
+        platform.exitApp();
+      } else if (activeVC.instance instanceof PatternLockComponent) {
+        platform.exitApp();
+      }  else {
+        let tabs = activeVC.instance.tabRef;
+        let activeNav = tabs.getSelected();
+        console.log(activeVC)
+        return activeNav.canGoBack() ? original.apply(platform) : cordova.plugins.backgroundMode.moveToBackground();
+      }
+    }
   }
 
 
@@ -62,53 +88,6 @@ export class MyAppComponent {
 
     if (localStorage.getItem('toValiPassword')) {
       localStorage.removeItem('toValiPassword')
-    }
-  }
-
-
-  registerBackButtonAction() {
-    this.platform.registerBackButtonAction(() => {
-      if (this.keyboard.isOpen()) {//如果键盘开启则隐藏键盘
-        this.keyboard.close();
-        return;
-      }
-      if (this.menuCtrl.isOpen()) {//如果侧边菜单栏打开就关闭
-        this.menuCtrl.close();
-        return;
-      }
-      //如果想点击返回按钮隐藏toast或loading或Overlay就把下面加上
-      let activePortal = this.ionicApp._toastPortal.getActive()
-        || this.ionicApp._loadingPortal.getActive()
-        || this.ionicApp._overlayPortal.getActive()
-        || this.ionicApp._modalPortal.getActive();
-      if (activePortal) {
-        activePortal.dismiss();
-        return;
-      }
-      let activeVC = this.nav.getActive();
-      if (activeVC.instance instanceof LoginComponent) {
-        this.platform.exitApp();
-      }else if(activeVC.instance instanceof PatternLockComponent){
-        this.platform.exitApp();
-      }else if(activeVC.instance instanceof AttendanceComponent) {
-        let tabs = activeVC.instance.attendance;
-        let activeNav = tabs.getSelected();
-        return activeNav.canGoBack()?activeNav.pop():this.app.getRootNav().setRoot(TabsComponent);
-      } else {
-        let tabs = activeVC.instance.tabRef;
-        let activeNav = tabs.getSelected();
-        return activeNav.canGoBack()?activeNav.pop():cordova.plugins.backgroundMode.moveToBackground();
-      }
-    }, 1);
-  }
-  //双击退出功能模块并返回主界面
-  showExit() {
-    if (this.backButtonPressed) { //当触发标志为true时，即2秒内双击返回按键则返回主界面
-      this.app.getRootNav().setRoot(TabsComponent);
-    } else {
-      this.backButtonPressed = true;
-      this.plugin.showToast('再按一次返回主界面');
-      setTimeout(() => this.backButtonPressed = false, 2000);//2秒内没有再次点击返回则将触发标志标记为false
     }
   }
 }
