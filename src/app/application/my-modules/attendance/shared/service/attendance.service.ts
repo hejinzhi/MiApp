@@ -48,6 +48,7 @@ export class AttendanceService {
       });
     }
   }
+  // 获得默认最小开始时间
   getMinStartTime(intervalMonth:number) {
     return new Date(Date.parse(new Date().toString()) - 1000*60*60*24*30*intervalMonth).toDateString();
   }
@@ -94,6 +95,7 @@ export class AttendanceService {
       return Promise.resolve('')
     });
   }
+  // 对服务器返回的数据内部格式化并时间转换（适应datepicker组件）
   editLeaveData_get(data: any) {
     let newData = {
       type: '2',
@@ -123,6 +125,7 @@ export class AttendanceService {
     newData.data.endTime = new Date(Date.parse(data.DATE_TO) + data.TIME_HH_TO * 60 * 60 * 1000 + data.TIME_MM_TO * 60 * 1000 - 8 * 60 * 60 * 1000).toISOString();
     return newData;
   }
+  // 对发给服务器的数据内部格式化并时间转换（适应datepicker组件）
   editLeaveData_send(data: MyFormModel) {
     let sendData = {
       TYPE: '',
