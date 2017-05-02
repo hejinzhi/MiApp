@@ -63,7 +63,6 @@ export class MyAppComponent {
       } else {
         let tabs = activeVC.instance.tabRef;
         let activeNav = tabs.getSelected();
-        console.log(activeVC)
         return activeNav.canGoBack() ? original.apply(platform) : cordova.plugins.backgroundMode.moveToBackground();
       }
     }
@@ -71,23 +70,13 @@ export class MyAppComponent {
 
 
   appInit() {
-    //第一次安装app后设置手势密码页面为登录验证
-    // if (!localStorage.getItem('needPassNineCode')) {
-    //   localStorage.setItem('needPassNineCode', 'true');
-    // }
-
     let user = JSON.parse(localStorage.getItem('currentUser'));
-    // if (user && (localStorage.getItem('needPassNineCode') == 'true')) {
     if (user && user.myNineCode) {
       // 已经有用户信息和设定为要验证手势密码
       this.rootPage = PatternLockComponent;
     } else {
       this.rootPage = LoginComponent;
     }
-
-    // if (localStorage.getItem('toValiPassword')) {
-    //   localStorage.removeItem('toValiPassword')
-    // }
   }
 
 
@@ -124,10 +113,9 @@ export class MyAppComponent {
         console.log(activeNav);
         return activeNav.canGoBack() ? activeNav.pop() : cordova.plugins.backgroundMode.moveToBackground();
       }
-
-
     }, 1);
   }
+
   //双击退出功能模块并返回主界面
   showExit() {
     if (this.backButtonPressed) { //当触发标志为true时，即2秒内双击返回按键则返回主界面
