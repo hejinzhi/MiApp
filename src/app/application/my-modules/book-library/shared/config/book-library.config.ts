@@ -19,6 +19,9 @@ export class BookLibraryConfig {
     // 豆瓣URL
     static doubanUrl = 'https://api.douban.com/v2/book/isbn/';
 
+    // 根据书名模糊查询
+    static doubanByName = 'https://api.douban.com/v2/book/search?q=';
+
     // 借书
     static borrowBookUrl = EnvConfig.baseUrl + 'Lib/OrderBook';
 

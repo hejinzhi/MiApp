@@ -35,26 +35,6 @@ export class MessageComponent implements OnInit {
 
   loading: Loading;
 
-  test() {
-    let obj = {
-      "TYPE": "2",
-      "STATUS": "APPROVED",
-      "DOCNO": "",
-      "DETAIL": {
-        "ABSENT_CODE": "P",
-        "START_TIME": "2017-04-14T01:30:00Z",
-        "END_TIME": "2017-04-14T02:00:00Z",
-        "AGENT": "小米22",
-        "REASON": "ASDA22"
-      }
-    };
-
-
-    this.myHttp.post('http://10.86.16.166/webapi/OffDuty/AddOffDuty', obj).then((res) => {
-      console.log(res);
-    })
-  }
-
   ngOnInit() {
 
     // this.jmessageService.jmessageHandler = this.jmessageService.onReceiveMessage().subscribe(res => {
