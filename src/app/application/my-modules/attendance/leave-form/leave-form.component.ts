@@ -10,7 +10,6 @@ import { PluginService }   from '../../../../core/services/plugin.service';
 import { AttendanceService } from '../shared/service/attendance.service';
 
 import { AttendanceComponent } from '../attendance.component';
-import { CallbackLeaveFormComponent } from '../callback-leave-form/callback-leave-form.component';
 import { FormMenuComponent } from '../form-menu/form-menu.component';
 import { SignListComponent } from '../sign-list/sign-list.component';
 
@@ -179,7 +178,6 @@ export class LeaveFormComponent {
     });
   }
   async leaveForm() {
-    console.log(456)
     this.formData.data = this.todo.value
     let loading = this.plugin.createLoading();
     loading.present()
@@ -190,11 +188,6 @@ export class LeaveFormComponent {
       this.navCtrl.popToRoot();
     }
     return false;
-  }
-  callBack() {
-    this.navCtrl.push(CallbackLeaveFormComponent,{
-      number:this.formData.No
-    })
   }
   async saveForm() {
     this.formData.data = this.todo.value
@@ -209,19 +202,6 @@ export class LeaveFormComponent {
     this.haveSaved = true;
     this.plugin.showToast('表单保存成功');
   }
-  cancelForm() {
-    setTimeout(() => {
-      this.plugin.showToast('表单删除成功');
-      setTimeout(() => {
-        this.navCtrl.pop();
-      },1000)
-    },1000)
-  }
-
-  callbackSubmit() {
-
-  }
-
   sign_list() {
     this.navCtrl.push(SignListComponent,{
       formData: this.formData

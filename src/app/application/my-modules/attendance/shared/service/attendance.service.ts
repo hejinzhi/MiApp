@@ -20,7 +20,6 @@ export class AttendanceService {
     let docNum = 'HTL021704000047';
     if (formData.form_No) {
       return this.myHttp.get(AttendanceConfig.getLeaveFormByNoUrl + `DOCNO=${formData.form_No}`).then((res) => {
-        console.log(res.json)
         let formData = res.json();
         let list = [];
         formData = this.editLeaveData_get(formData);
@@ -34,7 +33,6 @@ export class AttendanceService {
     } else {
       dateFM = formData.startTime || this.getMinStartTime(6);
       dateTO = formData.endTime || '';
-      console.log(dateFM)
       return this.myHttp.get(AttendanceConfig.getLeaveFormByDateUrl + `dateFM=${dateFM}&dateTO=${dateTO}`).then((res) => {
         let formData = res.json();
         formData = formData.map((item: any) => {
@@ -87,7 +85,6 @@ export class AttendanceService {
     };
     ({No:sendData.DOCNO}=formData);
     return this.myHttp.post(AttendanceConfig.deleteLeaveFormUrl, sendData).then((res) => {
-      console.log(res)
       return Promise.resolve('ok')
     }).catch((err) => {
       console.log(err)
@@ -149,8 +146,6 @@ export class AttendanceService {
     } = data.data);
     sendData.DETAIL.END_TIME = this.formatTime(sendData.DETAIL.END_TIME, true);
     sendData.DETAIL.START_TIME = this.formatTime(sendData.DETAIL.START_TIME, true);
-    console.log(new Date(sendData.DETAIL.END_TIME).toLocaleString())
-    console.log(new Date(sendData.DETAIL.START_TIME).toLocaleString())
     return sendData;
   }
   formatTime(time: string, send: boolean) {
@@ -231,15 +226,15 @@ export class AttendanceService {
     let saveRes:any;
     if(!formData.No){
       saveRes = await this.saveLeaveForm(formData);
+      if(!saveRes) return Promise.resolve('');
+      formData.No = saveRes.DOCNO;
     }
-    if(!saveRes) return Promise.resolve('');
     let sendData = {
       KIND: "OFFDUTY",
       DOCNO: ""
     };
     ({No:sendData.DOCNO}=formData);
     return this.myHttp.post(AttendanceConfig.sendSignUrl, sendData).then((res) => {
-      console.log(res)
       return Promise.resolve('ok')
     }).catch((err) => {
       console.log(err)
@@ -255,7 +250,6 @@ export class AttendanceService {
     };
     ({No:sendData.DOCNO}=formData);
     return this.myHttp.post(AttendanceConfig.callBackSignUrl, sendData).then((res) => {
-      console.log(res)
       return Promise.resolve('ok')
     }).catch((err) => {
       console.log(err)
