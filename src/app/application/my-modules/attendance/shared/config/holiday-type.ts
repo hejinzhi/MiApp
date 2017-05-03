@@ -81,4 +81,24 @@ export class HolidayType {
     { name: '产假天数', type: 'CHILDBIRTH_LEAVE' },
     { name: '缺席天数', type: 'OFFDUTY_DAYS' }
   ]
+  leaveDayType = [
+    { name: '年休假天数', type: 'A_DAYS' },
+    { name: '补假时数', type: 'R_DAYS' },
+    { name: '补休时数', type: 'R1_DAYS' },
+    { name: '事假', type: 'SHIJIA_DAYS' },
+    { name: '病假', type: 'BINGJIA_DAYS' },
+    { name: '公假', type: 'GONGJIA_DAYS' },
+    { name: '补假', type: 'BUJIA_DAYS' },
+    { name: '补休', type: 'BUXIU_DAYS' },
+    { name: '停线', type: 'TINGXIAN_DAYS' },
+    { name: '婚假', type: 'HUNJIA_DAYS' },
+    { name: '产假', type: 'CHANJIA_DAYS' },
+    { name: '陪产假', type: 'PEICHANJIA_DAYS' },
+    { name: '授乳假', type: 'SHOURUJIA_DAYS' },
+    { name: '旷职', type: 'KUANGZHI_DAYS' },
+    { name: '流产假', type: 'LIUCHAN_DAYS' },
+    { name: '丧假', type: 'SANGJIA_DAYS' },
+    { name: '工伤', type: 'GONGSHANG_DAYS' },
+    { name: '特休假生效日期', type: 'STADATE' },
+  ]
 }

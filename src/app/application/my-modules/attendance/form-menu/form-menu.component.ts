@@ -40,9 +40,16 @@ export class FormMenuComponent {
     })
 
   }
-  toDetail() {
+  async toDetail() {
     this.viewCtrl.dismiss();
-    this.lastNavCtr.push(HoildayDetailComponent);
+    let loading = this.plugin.createLoading();
+    loading.present();
+    let res = await this.attendanceService.getLeaveDays();
+    loading.dismiss();
+    if(!res) return;
+    this.lastNavCtr.push(HoildayDetailComponent,{
+      leaveDays:res
+    });
   }
   async deleteForm() {
     this.viewCtrl.dismiss();

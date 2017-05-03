@@ -181,7 +181,35 @@ export class AttendanceService {
     localStorage.setItem('leaveType',JSON.stringify(res));
     return res;
   }
+  // 获得所有假期信息
+  async getLeaveDays():Promise<{STADATE:string,detail_used:{type:string,value:string}[],detail_canUse:{type:string,value:string}[]}>{
+    let res:any = await this.myHttp.get(AttendanceConfig.getLeaveDaysUrl).catch((err) =>{
+      this.errorDeal(err);
+      return Promise.resolve('')
+    });
+    if(res.length === 0) {
+      return res;
+    }
+    res= res.json()
+    let formateRes:{STADATE:string,detail_used:{type:string,value:string}[],detail_canUse:{type:string,value:string}[]} ={
+      STADATE:'',
+      detail_used:[],
+      detail_canUse:[]
+    };
+    formateRes.STADATE = res.STADATE;
+    for(let prop in res) {
+      if(['EMPNO', 'STADATE'].indexOf(prop)<0) {
+        let newItem = {type:prop, value:res[prop]};
+        if(['A_DAYS', 'R_DAYS', 'R1_DAYS'].indexOf(prop)<0) {
+          formateRes.detail_used.push(newItem);
+        } else {
+          formateRes.detail_canUse.push(newItem);
+        }
+      }
+    }
 
+    return formateRes;
+  }
   // 获得代理人
   getAgent(name: string): Observable<any> {
     let emp_name = name.toUpperCase();

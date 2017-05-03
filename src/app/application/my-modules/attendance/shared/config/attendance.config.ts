@@ -19,6 +19,9 @@ export class AttendanceConfig {
   // 获得请假类型信息
   static getLeaveReasonTypeUrl = EnvConfig.baseUrl + 'OffDuty/GetOffDutyType';
 
+  // 获得所有假期信息
+  static getLeaveDaysUrl = EnvConfig.baseUrl + 'OffDuty/GetOffDutyDays';
+
   // 删除请假单
   static deleteLeaveFormUrl = EnvConfig.baseUrl + 'OffDuty/DeleteOffDuty';
 
