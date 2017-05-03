@@ -10,6 +10,8 @@ import { FormType } from '../shared/config/form-type';
 
 import { AttendanceMonthComponent } from '../attendance-month/attendance-month.component';
 
+import { AttendanceConfig } from '../shared/config/attendance.config';
+
 @Component({
   selector: 'sg-detail-on-form',
   templateUrl: 'detail-on-form.component.html'
@@ -18,6 +20,7 @@ export class DetailOnFormComponent {
   betweenMes: {
     date: string
   }
+  selectMaxYear = AttendanceConfig.SelectedMaxYear;
   type: string;
   todo: FormGroup;
   timeError:string ='';

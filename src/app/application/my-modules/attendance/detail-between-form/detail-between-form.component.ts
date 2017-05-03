@@ -11,6 +11,8 @@ import { FormType } from '../shared/config/form-type';
 import { AttendanceDetailComponent } from '../attendance-detail/attendance-detail.component';
 import { SwipeNoteComponent } from '../swipe-note/swipe-note.component';
 
+import { AttendanceConfig } from '../shared/config/attendance.config';
+
 @Component({
   selector: 'sg-detail-between-form',
   templateUrl: 'detail-between-form.component.html'
@@ -20,6 +22,7 @@ export class DetailBetweenFormComponent {
     startTime: string,
     endTime: string,
   }
+  selectMaxYear = AttendanceConfig.SelectedMaxYear;
   type: string;
   todo: FormGroup;
   timeError:string ='';

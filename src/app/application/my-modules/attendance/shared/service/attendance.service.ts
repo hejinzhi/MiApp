@@ -18,7 +18,6 @@ export class AttendanceService {
     let dateFM = '';
     let dateTO = '';
     let docNum = 'HTL021704000047';
-    console.log(formData)
     if (formData.form_No) {
       return this.myHttp.get(AttendanceConfig.getLeaveFormByNoUrl + `DOCNO=${formData.form_No}`).then((res) => {
         console.log(res.json)
@@ -33,6 +32,9 @@ export class AttendanceService {
         return Promise.resolve([])
       });
     } else {
+      dateFM = formData.startTime || this.getMinStartTime(6);
+      dateTO = formData.endTime || '';
+      console.log(dateFM)
       return this.myHttp.get(AttendanceConfig.getLeaveFormByDateUrl + `dateFM=${dateFM}&dateTO=${dateTO}`).then((res) => {
         let formData = res.json();
         formData = formData.map((item: any) => {
@@ -46,7 +48,10 @@ export class AttendanceService {
       });
     }
   }
-
+  // 获得默认最小开始时间
+  getMinStartTime(intervalMonth:number) {
+    return new Date(Date.parse(new Date().toString()) - 1000*60*60*24*30*intervalMonth).toDateString();
+  }
   // 请假单申请
   saveLeaveForm(data: MyFormModel) {
     let sendData = this.editLeaveData_send(data);
@@ -58,6 +63,39 @@ export class AttendanceService {
       return Promise.resolve('')
     });
   }
+  // 删除表单
+  deleteForm(formData:MyFormModel) {
+    switch (formData.type) {
+      case '0':
+        break;
+      case '1':
+        break;
+      case '2':
+        return this.deleteLeaveForm(formData);
+      case '3':
+        break;
+      case '4':
+        break;
+      default:
+        break
+    }
+  }
+  // 删除请假单
+  deleteLeaveForm(formData:MyFormModel) {
+    let sendData = {
+      DOCNO: ""
+    };
+    ({No:sendData.DOCNO}=formData);
+    return this.myHttp.post(AttendanceConfig.deleteLeaveFormUrl, sendData).then((res) => {
+      console.log(res)
+      return Promise.resolve('ok')
+    }).catch((err) => {
+      console.log(err)
+      this.errorDeal(err);
+      return Promise.resolve('')
+    });
+  }
+  // 对服务器返回的数据内部格式化并时间转换（适应datepicker组件）
   editLeaveData_get(data: any) {
     let newData = {
       type: '2',
@@ -87,6 +125,7 @@ export class AttendanceService {
     newData.data.endTime = new Date(Date.parse(data.DATE_TO) + data.TIME_HH_TO * 60 * 60 * 1000 + data.TIME_MM_TO * 60 * 1000 - 8 * 60 * 60 * 1000).toISOString();
     return newData;
   }
+  // 对发给服务器的数据内部格式化并时间转换（适应datepicker组件）
   editLeaveData_send(data: MyFormModel) {
     let sendData = {
       TYPE: '',
@@ -108,7 +147,6 @@ export class AttendanceService {
       colleague: sendData.DETAIL.AGENT,
       reason: sendData.DETAIL.REASON
     } = data.data);
-    sendData.DOCNO = '';
     sendData.DETAIL.END_TIME = this.formatTime(sendData.DETAIL.END_TIME, true);
     sendData.DETAIL.START_TIME = this.formatTime(sendData.DETAIL.START_TIME, true);
     console.log(new Date(sendData.DETAIL.END_TIME).toLocaleString())
@@ -172,8 +210,23 @@ export class AttendanceService {
       DOCNO: ""
     };
     ({No:sendData.DOCNO}=formData);
-    console.log(sendData)
     return this.myHttp.post(AttendanceConfig.sendSignUrl, sendData).then((res) => {
+      console.log(res)
+      return Promise.resolve('ok')
+    }).catch((err) => {
+      console.log(err)
+      this.errorDeal(err);
+      return Promise.resolve('')
+    });
+  }
+  // 取消送签
+  callBackSign(formData:MyFormModel) {
+    let sendData = {
+      KIND: "OFFDUTY",
+      DOCNO: ""
+    };
+    ({No:sendData.DOCNO}=formData);
+    return this.myHttp.post(AttendanceConfig.callBackSignUrl, sendData).then((res) => {
       console.log(res)
       return Promise.resolve('ok')
     }).catch((err) => {
@@ -188,7 +241,7 @@ export class AttendanceService {
         this.plugin.showToast(err.statusText);
         break;
       case 400:
-        this.plugin.showToast(err._body);
+        this.plugin.createBasicAlert(err.json().ExceptionMessage);
         break;
       case 0:
         this.plugin.showToast('连接服务器失败');

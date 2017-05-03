@@ -11,6 +11,8 @@ import { SignListComponent } from '../sign-list/sign-list.component';
 import { MyValidatorModel } from '../../../../shared/models/my-validator.model';
 import { MyFormModel } from '../shared/models/my-form.model';
 
+import { AttendanceConfig } from '../shared/config/attendance.config';
+
 @Component({
   selector: 'sg-over-time-form',
   templateUrl: 'over-time-form.component.html'
@@ -23,6 +25,7 @@ export class OverTimeFormComponent {
     endTime: string,
     reason: string
   }
+  selectMaxYear = AttendanceConfig.SelectedMaxYear;
   formData:MyFormModel = {
     type:'3',
     status:'New',

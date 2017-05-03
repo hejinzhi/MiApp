@@ -21,14 +21,14 @@
 
 
 <ion-content class="main">
-  <div [class.layer]="!(formData.status.toUpperCase() === 'NEW')">
+  <div [class.layer]="['APPROVED','WAITING'].indexOf(formData.status.toUpperCase())>-1">
   </div>
   <ion-list>
     <ion-item >
       单据状态：
       <ion-note item-right>
         {{formData.status}}
-      </ion-note><button ion-button  *ngIf="formData.status.toUpperCase() != 'NEW'" (click)="sign_list()">签核名单</button>
+      </ion-note><button ion-button  *ngIf="['APPROVED','WAITING'].indexOf(formData.status.toUpperCase())>-1" (click)="sign_list()">签核名单</button>
     </ion-item>
 
     <ion-item>
@@ -51,14 +51,14 @@
         <ion-label>开始时间*</ion-label>
         <ion-datetime  type="datetime-local" displayFormat="YYYY/MM/DD HH:mm"  #start name="start" formControlName="startTime"
         cancelText="取消" doneText="确认"
-        yearValues="2017,2018"
+        min="2000" [max]="selectMaxYear"
         ></ion-datetime>
       </ion-item>
       <ion-item [class.has-error]="myValidators.endTime.error" [class.has-success]="myValidators.endTime.pass">
         <ion-label>结束时间*</ion-label>
         <ion-datetime displayFormat="YYYY/MM/DD HH:mm"  #end name="end" formControlName="endTime"
         cancelText="取消" doneText="确认"
-        yearValues="2017,2018"
+        min="2000" [max]="selectMaxYear"
         ></ion-datetime>
       </ion-item>
       <ion-item-divider *ngIf="timeError " class='alert'>{{timeError}}</ion-item-divider>
@@ -98,7 +98,7 @@
         ></ion-textarea>
       </ion-item>
       <ion-item-divider *ngIf="myValidators.reason.error" class='alert'>{{myValidators.reason.error}}</ion-item-divider>
-      <ion-grid *ngIf="formData.status.toUpperCase() === 'NEW'">
+      <ion-grid *ngIf="['APPROVED','WAITING'].indexOf(formData.status.toUpperCase())<0">
         <ion-row>
           <ion-col width-50>
             <ion-buttons left>
@@ -107,7 +107,7 @@
           </ion-col>
           <ion-col width-50>
             <ion-buttons right>
-              <button ion-button [disabled]="!todo.valid || myValidators.reason.error || myValidators.colleague.error || !isSelectcolleague || timeError" (click)="saveForm()">保存</button>
+              <button ion-button type="button" [disabled]="!todo.valid || myValidators.reason.error || myValidators.colleague.error || !isSelectcolleague || timeError" (click)="saveForm()">保存</button>
             </ion-buttons>
           </ion-col>
         </ion-row>

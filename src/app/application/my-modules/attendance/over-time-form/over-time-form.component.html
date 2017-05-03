@@ -46,13 +46,14 @@
         <ion-label>加班日期*</ion-label>
         <ion-datetime displayFormat="YYYY/MM/DD" formControlName="OTtime"
         cancelText="取消" doneText="确认"
-        yearValues="2017,2018"
+        min="2000" [max]="selectMaxYear"
         ></ion-datetime>
       </ion-item>
       <ion-item [class.has-error]="myValidators.startTime.error" [class.has-success]="myValidators.startTime.pass">
         <ion-label>开始时间*</ion-label>
         <ion-datetime displayFormat="HH:mm" formControlName="startTime"
         cancelText="取消" doneText="确认"
+        min="2000" [max]="selectMaxYear"  
         ></ion-datetime>
       </ion-item>
       <ion-item [class.has-error]="myValidators.endTime.error" [class.has-success]="myValidators.endTime.pass">

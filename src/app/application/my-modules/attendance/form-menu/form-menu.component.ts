@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { ViewController, NavController, NavParams } from 'ionic-angular';
 
 import { PluginService }   from '../../../../core/services/plugin.service';
+import { AttendanceService } from '../shared/service/attendance.service';
 
 import { SearchFormComponent } from '../search-form/search-form.component';
 import { CallbackLeaveFormComponent } from '../callback-leave-form/callback-leave-form.component';
@@ -19,10 +20,10 @@ export class FormMenuComponent {
     public navParams: NavParams,
     public viewCtrl: ViewController,
     private plugin: PluginService,
+    private attendanceService: AttendanceService
   ) {}
   formData:MyFormModel;
   haveSaved:boolean;
-  isforward:boolean = false;
   lastNavCtr:any;
   ionViewDidLoad(){
     this.formData = this.navParams.data.formData;
@@ -30,17 +31,8 @@ export class FormMenuComponent {
     this.lastNavCtr = this.navParams.data.navCtrl;
   }
   ionViewWillEnter(){
-    if(this.isforward){
-      this.viewCtrl.dismiss();
-      this.isforward = false;
-    }
-  }
-  close() {
-    console.log(this.viewCtrl)
-    console.log(this.navParams)
-    this.viewCtrl.dismiss();
-  }
 
+  }
   toSearch() {
     this.viewCtrl.dismiss()
     this.lastNavCtr.push(SearchFormComponent,{
@@ -52,28 +44,30 @@ export class FormMenuComponent {
     this.viewCtrl.dismiss();
     this.lastNavCtr.push(HoildayDetailComponent);
   }
-  async cancelForm() {
+  async deleteForm() {
     this.viewCtrl.dismiss();
-    await setTimeout(() => {
-      this.plugin.showToast('表单删除成功');
-    },1000);
-    setTimeout(() => {
-      this.lastNavCtr.pop();
-    },1000)
+    let loading = this.plugin.createLoading();
+    loading.present();
+    let res = await this.attendanceService.deleteForm(this.formData);
+    loading.dismiss();
+    if(!res) return;
+    this.plugin.showToast('删除表单成功');
+    this.lastNavCtr.popToRoot()
   }
-  callbackSubmit() {
+  async callbackSign() {
     this.viewCtrl.dismiss();
-    setTimeout(() => {
-      this.plugin.showToast('取消送签成功');
-      setTimeout(() => {
-        this.lastNavCtr.pop();
-      },1000)
-    },1000)
+    let loading = this.plugin.createLoading();
+    loading.present();
+    let res = await this.attendanceService.callBackSign(this.formData);
+    loading.dismiss();
+    if(!res) return;
+    this.plugin.showToast('取消送签成功');
+    this.lastNavCtr.popToRoot()
   }
   callBack() {
     this.viewCtrl.dismiss();
     this.lastNavCtr.push(CallbackLeaveFormComponent,{
-      number:this.formData.No
+      form_No:this.formData.No
     })
   }
 }

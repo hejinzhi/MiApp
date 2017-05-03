@@ -11,6 +11,8 @@ import { FormType } from '../shared/config/form-type';
 
 import { FormListComponent } from '../form-list/form-list.component';
 
+import { AttendanceConfig } from '../shared/config/attendance.config';
+
 @Component({
   selector: 'sg-search-form',
   templateUrl: 'search-form.component.html'
@@ -22,6 +24,7 @@ export class SearchFormComponent {
     endTime: string,
     form_No: string,
   }
+  selectMaxYear = AttendanceConfig.SelectedMaxYear;
   todo: FormGroup;
   myformType = new FormType();
   timeError:string ='';
@@ -43,7 +46,7 @@ export class SearchFormComponent {
       type:'',
       startTime: '',
       endTime: '',
-      form_No: 'HTL021704000047'
+      form_No: ''
     }
     this.searchMes.type = this.navParams.data.type || '';
     this.todo = this.initWork(this.searchMes);
