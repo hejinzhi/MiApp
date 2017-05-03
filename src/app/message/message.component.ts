@@ -7,6 +7,8 @@ import { MessageService } from './shared/service/message.service';
 import { Message } from './shared/classes/Message';
 import { DialogueComponent } from './dialogue/dialogue.component';
 
+import { MyHttpService } from '../core/services/myHttp.service';
+
 @Component({
   selector: 'sg-message',
   templateUrl: 'message.component.html'
@@ -25,7 +27,9 @@ export class MessageComponent implements OnInit {
     private ref: ChangeDetectorRef,
     private messageService: MessageService,
     private platform: Platform,
-    public appCtrl: App) {
+    public appCtrl: App,
+    private myHttp: MyHttpService
+  ) {
   }
 
 
@@ -34,14 +38,17 @@ export class MessageComponent implements OnInit {
   ngOnInit() {
 
     // this.jmessageService.jmessageHandler = this.jmessageService.onReceiveMessage().subscribe(res => {
-    //
+
+
     //   let _content: string;
     //   if (res.contentType === 'text') {
     //     _content = res.content.text;
     //   } else if (res.contentType === 'image') {
     //     _content = res.content.localThumbnailPath;
     //   }
-    //
+
+
+
     //   let msg: Message = {
     //     toUserName: res.targetInfo.userName,
     //     fromUserName: res.fromName,
@@ -51,17 +58,18 @@ export class MessageComponent implements OnInit {
     //     type: 'dialogue',
     //     unread: true
     //   };
-    //
+
+
     //   this.messageService.history.push(msg);
-    //
+
     //   this.messageService.setLocalMessageHistory(this.messageService.history);
     //   this.jmessageService.setSingleConversationUnreadMessageCount(res.fromName, '', 0);
-    //
+
     //   this.messageListItem = this.messageService.getMessageHistory();
     //   this.ref.detectChanges();
-    //
+
     // });
-    //
+
     // setTimeout(() => this.loadUnreadMessage(), 3000);
   }
 

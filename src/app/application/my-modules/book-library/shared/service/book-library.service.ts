@@ -29,6 +29,11 @@ export class BookLibraryService {
         return this.myHttp.get(BookLibraryConfig.doubanUrl + isbn13);
     }
 
+    // 从豆瓣模糊查询图书信息
+    getBooksFromDoubanByName(name: string) {
+        return this.myHttp.get(BookLibraryConfig.doubanByName + name);
+    }
+
     // 预约图书
     borrowBook(isbn13: string) {
         return this.myHttp.post(BookLibraryConfig.borrowBookUrl, { ISBN13: isbn13 });
