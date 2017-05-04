@@ -35,4 +35,12 @@ export class AttendanceConfig {
   static callBackSignUrl = EnvConfig.baseUrl + 'Att/CancelSign';
 
 
+
+  // 加班单申请
+  static saveOverTimeUrl = EnvConfig.baseUrl + 'OverTime/AddOverTime';
+
+  // 删除加班单
+  static deleteOverTimeFormUrl = EnvConfig.baseUrl + 'OverTime/DeleteOverTime';
+
+
 }

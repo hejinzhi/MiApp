@@ -1,8 +1,11 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { MyHttpService } from '../../../../../core/services/myHttp.service';
+
 import { MyFormModel } from '../models/my-form.model'
+
 import { AttendanceConfig } from '../config/attendance.config'
+import { HolidayType } from '../config/holiday-type'
 
 import { PluginService }   from '../../../../../core/services/plugin.service';
 
@@ -47,8 +50,8 @@ export class AttendanceService {
     }
   }
   // 获得默认最小开始时间
-  getMinStartTime(intervalMonth:number) {
-    return new Date(Date.parse(new Date().toString()) - 1000*60*60*24*30*intervalMonth).toDateString();
+  getMinStartTime(intervalMonth: number) {
+    return new Date(Date.parse(new Date().toString()) - 1000 * 60 * 60 * 24 * 30 * intervalMonth).toDateString();
   }
   // 请假单申请
   saveLeaveForm(data: MyFormModel) {
@@ -62,28 +65,28 @@ export class AttendanceService {
     });
   }
   // 删除表单
-  deleteForm(formData:MyFormModel) {
+  deleteForm(formData: MyFormModel) {
     switch (formData.type) {
       case '0':
-        break;
+        return Promise.resolve('');
       case '1':
-        break;
+        return Promise.resolve('');
       case '2':
         return this.deleteLeaveForm(formData);
       case '3':
-        break;
+        return this.deleteOverTimeForm(formData);
       case '4':
-        break;
+        return Promise.resolve('');
       default:
-        break
+        return Promise.resolve('');
     }
   }
   // 删除请假单
-  deleteLeaveForm(formData:MyFormModel) {
+  deleteLeaveForm(formData: MyFormModel) {
     let sendData = {
       DOCNO: ""
     };
-    ({No:sendData.DOCNO}=formData);
+    ({ No: sendData.DOCNO } = formData);
     return this.myHttp.post(AttendanceConfig.deleteLeaveFormUrl, sendData).then((res) => {
       return Promise.resolve('ok')
     }).catch((err) => {
@@ -100,6 +103,8 @@ export class AttendanceService {
       No: '',
       data: {
         reasonType: '',
+        startDate: '',
+        endDate: '',
         startTime: '',
         endTime: '',
         colleague: '',
@@ -114,13 +119,20 @@ export class AttendanceService {
       ABSENT_CODE: newData.data.reasonType,
       REASON: newData.data.reason,
       AGENT: newData.data.colleague,
+      DATE_FM: newData.data.startDate,
+      DATE_TO: newData.data.endDate,
       DAYS: newData.data.days,
       HOURS: newData.data.hours
     } = data);
-    // 转格式，也由于后台返回时间为延后八小时的时间，要减八小时
-    newData.data.startTime = new Date(Date.parse(data.DATE_FM) + data.TIME_HH_FM * 60 * 60 * 1000 + data.TIME_MM_FM * 60 * 1000 - 8 * 60 * 60 * 1000).toISOString();
-    newData.data.endTime = new Date(Date.parse(data.DATE_TO) + data.TIME_HH_TO * 60 * 60 * 1000 + data.TIME_MM_TO * 60 * 1000 - 8 * 60 * 60 * 1000).toISOString();
+
+    newData.data.startTime = '00:' + this.padLeft(data.TIME_HH_FM) + ':' + this.padLeft(data.TIME_MM_FM);
+    newData.data.endTime = '00:' + this.padLeft(data.TIME_HH_TO) + ':' + this.padLeft(data.TIME_MM_TO);
+    newData.data.startDate = newData.data.startDate.substr(0,newData.data.startDate.indexOf('T'));
+    newData.data.endDate = newData.data.endDate.substr(0,newData.data.endDate.indexOf('T'));
     return newData;
+  }
+  padLeft(data:number) {
+    return (+data<10)?'0'+data:data;
   }
   // 对发给服务器的数据内部格式化并时间转换（适应datepicker组件）
   editLeaveData_send(data: MyFormModel) {
@@ -130,6 +142,8 @@ export class AttendanceService {
       DOCNO: '',
       DETAIL: {
         ABSENT_CODE: '',
+        START_DATE: '',
+        END_DATE: '',
         START_TIME: '',
         END_TIME: '',
         AGENT: '',
@@ -139,13 +153,15 @@ export class AttendanceService {
     ({ type: sendData.TYPE, status: sendData.STATUS, No: sendData.DOCNO } = data);
     ({
       reasonType: sendData.DETAIL.ABSENT_CODE,
+      startDate: sendData.DETAIL.START_DATE,
+      endDate: sendData.DETAIL.END_DATE,
       startTime: sendData.DETAIL.START_TIME,
       endTime: sendData.DETAIL.END_TIME,
       colleague: sendData.DETAIL.AGENT,
       reason: sendData.DETAIL.REASON
     } = data.data);
-    sendData.DETAIL.END_TIME = this.formatTime(sendData.DETAIL.END_TIME, true);
-    sendData.DETAIL.START_TIME = this.formatTime(sendData.DETAIL.START_TIME, true);
+    sendData.DETAIL.END_TIME = sendData.DETAIL.END_TIME.substr(3);
+    sendData.DETAIL.START_TIME = sendData.DETAIL.START_TIME.substr(3);
     return sendData;
   }
   formatTime(time: string, send: boolean) {
@@ -159,43 +175,43 @@ export class AttendanceService {
   }
 
   // 获得请假类型信息
-  async getLeaveReasonType():Promise<{name:string,type:string}[]>{
-    let res:any = await this.myHttp.get(AttendanceConfig.getLeaveReasonTypeUrl).catch((err) =>{
+  async getLeaveReasonType(): Promise<{ name: string, type: string }[]> {
+    let res: any = await this.myHttp.get(AttendanceConfig.getLeaveReasonTypeUrl).catch((err) => {
       this.errorDeal(err);
       return Promise.resolve([])
     });
-    if(res.length === 0) {
+    if (res.length === 0) {
       return res;
     }
-    res= res.json()
-    res = res.map((item:{ABSENT_TYPE_CODE:string, ABSENT:string}) => {
-      let format:{name:string,type:string}= {name:'',type:''};
-      ({ABSENT_TYPE_CODE:format.type, ABSENT:format.name} = item);
+    res = res.json()
+    res = res.map((item: { ABSENT_TYPE_CODE: string, ABSENT: string }) => {
+      let format: { name: string, type: string } = { name: '', type: '' };
+      ({ ABSENT_TYPE_CODE: format.type, ABSENT: format.name } = item);
       return format;
     })
-    localStorage.setItem('leaveType',JSON.stringify(res));
+    localStorage.setItem('leaveType', JSON.stringify(res));
     return res;
   }
   // 获得所有假期信息
-  async getLeaveDays():Promise<{STADATE:string,detail_used:{type:string,value:string}[],detail_canUse:{type:string,value:string}[]}>{
-    let res:any = await this.myHttp.get(AttendanceConfig.getLeaveDaysUrl).catch((err) =>{
+  async getLeaveDays(): Promise<{ STADATE: string, detail_used: { type: string, value: string }[], detail_canUse: { type: string, value: string }[] }> {
+    let res: any = await this.myHttp.get(AttendanceConfig.getLeaveDaysUrl).catch((err) => {
       this.errorDeal(err);
       return Promise.resolve('')
     });
-    if(res.length === 0) {
+    if (res.length === 0) {
       return res;
     }
-    res= res.json()
-    let formateRes:{STADATE:string,detail_used:{type:string,value:string}[],detail_canUse:{type:string,value:string}[]} ={
-      STADATE:'',
-      detail_used:[],
-      detail_canUse:[]
+    res = res.json()
+    let formateRes: { STADATE: string, detail_used: { type: string, value: string }[], detail_canUse: { type: string, value: string }[] } = {
+      STADATE: '',
+      detail_used: [],
+      detail_canUse: []
     };
     formateRes.STADATE = res.STADATE;
-    for(let prop in res) {
-      if(['EMPNO', 'STADATE'].indexOf(prop)<0) {
-        let newItem = {type:prop, value:res[prop]};
-        if(['A_DAYS', 'R_DAYS', 'R1_DAYS'].indexOf(prop)<0) {
+    for (let prop in res) {
+      if (['EMPNO', 'STADATE'].indexOf(prop) < 0) {
+        let newItem = { type: prop, value: res[prop] };
+        if (['A_DAYS', 'R_DAYS', 'R1_DAYS'].indexOf(prop) < 0) {
           formateRes.detail_used.push(newItem);
         } else {
           formateRes.detail_canUse.push(newItem);
@@ -223,32 +239,62 @@ export class AttendanceService {
   }
   // 送签
   async sendSign(formData: MyFormModel) {
-    let saveRes:any;
-    if(!formData.No){
-      saveRes = await this.saveLeaveForm(formData);
-      if(!saveRes) return Promise.resolve('');
+    let saveRes: any ='';
+    if (!formData.No) {
+      switch(Number(formData.type)){
+        case 2:
+          saveRes = await this.saveLeaveForm(formData);
+          break;
+        case 3:
+          saveRes = await this.saveOverTimeForm(formData);
+          break;
+        default:
+          break;
+      }
+      if (!saveRes) return Promise.resolve({
+        content:saveRes,
+        status:false
+      });
       formData.No = saveRes.DOCNO;
     }
     let sendData = {
-      KIND: "OFFDUTY",
-      DOCNO: ""
+      KIND: '',
+      DOCNO: ''
     };
-    ({No:sendData.DOCNO}=formData);
+    switch(Number(formData.type)){
+      case 2:
+        sendData.KIND = 'OFFDUTY';
+        break;
+      case 3:
+        sendData.KIND = 'OVERTIME';
+        break;
+      default:
+        break;
+    }
+    ({ No: sendData.DOCNO } = formData);
     return this.myHttp.post(AttendanceConfig.sendSignUrl, sendData).then((res) => {
-      return Promise.resolve('ok')
+      let result = {
+        content:saveRes,
+        status:true
+      }
+      return Promise.resolve(result)
     }).catch((err) => {
       console.log(err)
       this.errorDeal(err);
-      return Promise.resolve('')
+      let result = {
+        content:saveRes,
+        status:false
+      }
+      return Promise.resolve(result)
     });
   }
   // 取消送签
-  callBackSign(formData:MyFormModel) {
+  callBackSign(formData: MyFormModel) {
     let sendData = {
       KIND: "OFFDUTY",
       DOCNO: ""
     };
-    ({No:sendData.DOCNO}=formData);
+    ({ No: sendData.DOCNO } = formData);
     return this.myHttp.post(AttendanceConfig.callBackSignUrl, sendData).then((res) => {
       return Promise.resolve('ok')
     }).catch((err) => {
@@ -257,6 +303,51 @@ export class AttendanceService {
       return Promise.resolve('')
     });
   }
+
+  // 加班单申请
+  saveOverTimeForm(formData: MyFormModel) {
+    let send = this.editOverTime_send(formData);
+    console.log(send)
+    return this.myHttp.post(AttendanceConfig.saveOverTimeUrl,send).then((res) => {
+      return Promise.resolve(res.json())
+    }).catch((err) => {
+      console.log(err)
+      this.errorDeal(err);
+      return Promise.resolve('')
+    });
+  }
+  // 对发送的加班单数据进行加工
+  editOverTime_send(formData: MyFormModel) {
+    let send = {
+      "DOCNO": "",
+      "IDATE": "",
+      "START_TIME": "",
+      "END_TIME": "",
+      "NOTES": "",
+      "NOTES_DETAIL": ""
+    };
+    send.DOCNO = formData.No;
+    send.IDATE = formData.data.OTtime;
+    send.START_TIME = formData.data.startTime.substr(3);
+    send.END_TIME = formData.data.endTime.substr(3);
+    send.NOTES_DETAIL = formData.data.reason;
+    send.NOTES = new HolidayType().jobType.filter((item) => item.type === formData.data.reasonType)[0].name;
+    return send;
+  }
+
+  // 加班单申请
+  deleteOverTimeForm(formData: MyFormModel) {
+    let send = {DOCNO: ''};
+    send.DOCNO = formData.No;
+    return this.myHttp.post(AttendanceConfig.deleteOverTimeFormUrl, send).then((res) => {
+      return Promise.resolve('ok')
+    }).catch((err) => {
+      console.log(err)
+      this.errorDeal(err);
+      return Promise.resolve('')
+    });
+  }
+
   errorDeal(err: any) {
     switch (err.status) {
       case 404:

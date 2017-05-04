@@ -59,7 +59,7 @@ export class FormMenuComponent {
     loading.dismiss();
     if(!res) return;
     this.plugin.showToast('删除表单成功');
-    this.lastNavCtr.popToRoot()
+    return this.lastNavCtr.canGoBack()?this.lastNavCtr.popToRoot():'';
   }
   async callbackSign() {
     this.viewCtrl.dismiss();

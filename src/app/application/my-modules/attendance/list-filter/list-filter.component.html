@@ -3,8 +3,10 @@
   <ion-item *ngFor="let item of items" (click)="toDetail(item)">
     <h2>单号： {{ item.No }}</h2>
     <p *ngIf="+item.type>1">状态： {{item.status}}</p>
-    <p *ngIf="+item.type<3">开始时间： {{ item.data.startTime | date:"yyyy/MM/dd HH:mm" }}</p>
-    <p *ngIf="+item.type<3">结束时间： {{ item.data.endTime | date:"yyyy/MM/dd HH:mm" }}</p>
+    <p *ngIf="+item.type<2">开始时间： {{ item.data.startTime | date:"yyyy/MM/dd HH:mm" }}</p>
+    <p *ngIf="+item.type<2">结束时间： {{ item.data.endTime | date:"yyyy/MM/dd HH:mm" }}</p>
+    <p *ngIf="item.type === '2' ">开始时间： {{item.data.startDate +' ' + item.data.startTime.substr(3) }}</p>
+    <p *ngIf="item.type === '2' ">结束时间： {{item.data.endDate +' ' + item.data.endTime.substr(3) }}</p>
     <p *ngIf="item.type === '4'">出差日期： {{ item.data.businessTime | date:"yyyy/MM/dd" }}</p>
     <p *ngIf="item.type === '3'">加班日期： {{ item.data.OTtime | date:"yyyy/MM/dd" }}</p>
     <p>类别： {{item.data.reasonType | sgReasonType: item.type}}</p>
