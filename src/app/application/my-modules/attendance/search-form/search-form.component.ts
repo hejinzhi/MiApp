@@ -19,7 +19,7 @@ import { AttendanceConfig } from '../shared/config/attendance.config';
 })
 export class SearchFormComponent {
   searchMes: {
-    type:string,
+    type: string,
     startTime: string,
     endTime: string,
     form_No: string,
@@ -27,10 +27,10 @@ export class SearchFormComponent {
   selectMaxYear = AttendanceConfig.SelectedMaxYear;
   todo: FormGroup;
   myformType = new FormType();
-  timeError:string ='';
-  myValidators:{};
+  timeError: string = '';
+  myValidators: {};
   MyValidatorControl: MyValidatorModel;
-  formType:{type:string,name:string} []=[];
+  formType: { type: string, name: string }[] = [];
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
@@ -43,7 +43,7 @@ export class SearchFormComponent {
   ionViewDidLoad() {
     this.formType = this.myformType.type;
     this.searchMes = {
-      type:'',
+      type: '',
       startTime: '',
       endTime: '',
       form_No: ''
@@ -57,18 +57,38 @@ export class SearchFormComponent {
     }
   }
   initValidator() {
+    let form_No_reg = '^[Hh]{1}[Tt]{1}';
+    let form_No_reg_mes = '必须是HT开头'
+    switch (Number(this.searchMes.type)) {
+      case 2:
+        form_No_reg = '^[Hh]{1}[Tt]{1}[Ll]{1}';
+        form_No_reg_mes = '必须是HTL开头';
+        break;
+      case 3:
+        form_No_reg = '^[Hh]{1}[Tt]{1}[Oo]{1}';
+        form_No_reg_mes = '必须是HTO开头';
+        break;
+      default:
+        break;
+    }
     let newValidator = new MyValidatorModel([
-      {name:'type',valiItems:[{valiName:'Required',errMessage:'单号类型不能为空',valiValue:true}]},
-      {name:'form_No',valiItems:[
-        {valiName:'Length',errMessage:'单据长度不足15位',valiValue:15},
-        {valiName:'Regex',errMessage:'必须是HTL开头并后面加数字组成',valiValue:'[H]{1}[T]{1}[L]{1}[0-9]+'}
-      ]},
-      {name:'startTime',valiItems:[
-        {valiName:'TimeSmaller',errMessage:'结束时间必须迟于开始时间',valiValue:'endTime'}
-      ]},
-      {name:'endTime',valiItems:[
-        {valiName:'TimeBigger',errMessage:'结束时间必须迟于开始时间',valiValue:'startTime'}
-      ]}
+      { name: 'type', valiItems: [{ valiName: 'Required', errMessage: '单号类型不能为空', valiValue: true }] },
+      {
+        name: 'form_No', valiItems: [
+          { valiName: 'Length', errMessage: '单据长度不足15位', valiValue: 15 },
+          { valiName: 'Regex', errMessage: form_No_reg_mes, valiValue: form_No_reg }
+        ]
+      },
+      {
+        name: 'startTime', valiItems: [
+          { valiName: 'TimeSmaller', errMessage: '结束时间必须迟于开始时间', valiValue: 'endTime' }
+        ]
+      },
+      {
+        name: 'endTime', valiItems: [
+          { valiName: 'TimeBigger', errMessage: '结束时间必须迟于开始时间', valiValue: 'startTime' }
+        ]
+      }
     ])
     return newValidator;
   }
@@ -96,20 +116,23 @@ export class SearchFormComponent {
   }
   async leaveForm() {
     console.log(this.todo.value);
-    let res:any = [];
+    let res: any = [];
     let loading = this.plugin.createLoading();
-    switch(Number(this.searchMes.type)) {
-      case 2:
-        loading.present();
-        res = await this.attendanceService.getLeaveForm(this.todo.value);
-        loading.dismiss();
-        break;
-      default:
-        res = [];
-        break;
-    }
+    // switch(Number(this.searchMes.type)) {
+    //   case 2:
+    //     loading.present();
+    //     res = await this.attendanceService.getLeaveForm(this.todo.value);
+    //     loading.dismiss();
+    //     break;
+    //   default:
+    //     res = [];
+    //     break;
+    // }
+    loading.present();
+    res = await this.attendanceService.getForm(this.todo.value);
+    loading.dismiss();
     console.log(res);
-    if(res.length === 0) return false;
+    if (res.length === 0) return false;
     this.navCtrl.push(FormListComponent, {
       type: this.todo.value.type,
       formData: res

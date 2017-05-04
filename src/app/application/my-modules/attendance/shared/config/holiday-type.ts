@@ -39,7 +39,7 @@ export class HolidayType {
     { type: '80', name: '其它' }
   ];
   jobType = [
-    { type: '01', name: '生產需要(for 直接員工)' },
+    { type: '01', name: '生產需要(for直接員工)' },
     { type: '02', name: '配合產線加班' },
     { type: '03', name: '日常事務處理' },
     { type: '04', name: 'OTHERS' }

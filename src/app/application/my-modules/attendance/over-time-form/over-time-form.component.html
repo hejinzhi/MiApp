@@ -23,7 +23,7 @@
       单据状态：
       <ion-note item-right>
         {{formData.status}}
-      </ion-note><button ion-button  *ngIf="['APPROVED','WAITING'].indexOf(formData.status.toUpperCase())>-1">签核名单</button>
+      </ion-note><button ion-button  *ngIf="['APPROVED','WAITING'].indexOf(formData.status.toUpperCase())>-1" (click)="sign_list()">签核名单</button>
     </ion-item>
 
     <ion-item>

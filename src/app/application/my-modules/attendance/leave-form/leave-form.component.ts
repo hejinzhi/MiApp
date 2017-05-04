@@ -181,7 +181,6 @@ export class LeaveFormComponent {
   //單獨輸入塊驗證
   check(value: any, name: string): Promise<any> {
     this.myValidators[name].value = value;
-    console.log(value)
     let compare = this.myValidators[name].compare ? this.myValidators[this.myValidators[name].compare] : ''
     return this.validateService.check(this.myValidators[name], this.myValidators).then((prams) => {
       this.myValidators[name].error = prams.mes;

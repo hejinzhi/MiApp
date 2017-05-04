@@ -10,7 +10,6 @@ import { TabsComponent } from '../../../../tabs/tabs.component'
 })
 export class FormListComponent {
   showList: boolean = false;
-  showApproved: boolean = false;
 
   type: string = '100';
   formData: any = [];
@@ -20,10 +19,6 @@ export class FormListComponent {
   ionViewDidLoad() {
     this.type = this.navParams.data.type || '100';
     this.formData = this.navParams.data.formData;
-    console.log(this.type)
-    if (this.navParams.data.status) {
-      this.showApproved = this.navParams.data.status === 'APPROVED' ? true : false;
-    }
     this.showList = true;
   }
 

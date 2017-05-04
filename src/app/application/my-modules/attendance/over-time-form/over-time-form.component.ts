@@ -81,8 +81,9 @@ export class OverTimeFormComponent {
     if(this.navParams.data.detailMes) {
       this.formData = this.navParams.data.detailMes;
       this.OtMes = this.navParams.data.detailMes.data;
+      this.OTCount = this.navParams.data.detailMes.data.count || '';
+      this.haveSaved = true;
     }
-
     this.todo = this.initWork(this.OtMes);
     this.MyValidatorControl = this.initValidator(this.OtMes);
     this.myValidators = this.MyValidatorControl.validators;
@@ -166,6 +167,7 @@ export class OverTimeFormComponent {
     loading.dismiss()
     if(res.status) {
       this.plugin.showToast('送签成功');
+      this.navCtrl.canGoBack()?this.navCtrl.popToRoot():'';
     }
     if(res.content) {
       this.OTCount = res.content.HOURS;
@@ -186,20 +188,9 @@ export class OverTimeFormComponent {
     this.haveSaved = true;
     this.plugin.showToast('表单保存成功');
   }
-  cancelForm() {
-    setTimeout(() => {
-      this.plugin.showToast('表单删除成功');
-      setTimeout(() => {
-        this.navCtrl.pop();
-      },1000)
-    },1000)
-  }
-
-  callbackSubmit() {
-
-  }
-
   sign_list() {
-    this.navCtrl.push(SignListComponent)
+    this.navCtrl.push(SignListComponent,{
+      formData: this.formData
+    })
   }
 }

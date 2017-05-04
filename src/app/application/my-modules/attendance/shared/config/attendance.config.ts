@@ -42,5 +42,10 @@ export class AttendanceConfig {
   // 删除加班单
   static deleteOverTimeFormUrl = EnvConfig.baseUrl + 'OverTime/DeleteOverTime';
 
+  // 根据日期获取加班单
+  static getOverTimeFormByDateUrl = EnvConfig.baseUrl + 'OverTime/GetOverTimeByDate?';
+
+  // 根据单据号获取加班单
+  static getOverTimeFormByNoUrl = EnvConfig.baseUrl + 'OverTime/GetOverTImeByDOCNO?';
 
 }
