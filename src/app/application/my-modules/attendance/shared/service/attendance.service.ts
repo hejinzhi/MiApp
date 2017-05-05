@@ -70,6 +70,17 @@ export class AttendanceService {
   getMinStartTime(intervalMonth: number) {
     return new Date(Date.parse(new Date().toString()) - 1000 * 60 * 60 * 24 * 30 * intervalMonth).toDateString();
   }
+  // 获得限制的时间段范围
+  getTimeRange(form:number,to:number) {
+    let range = '';
+    for(let i = form;i<to+1;i++) {
+      range += i;
+      if(i !== to) {
+        range +=','
+      }
+    }
+    return range
+  }
   // 请假单申请
   saveLeaveForm(data: MyFormModel) {
     let sendData = this.editLeaveData_send(data);
@@ -120,6 +131,7 @@ export class AttendanceService {
       No: '',
       data: {
         reasonType: '',
+        autoSet: '',
         startDate: '',
         endDate: '',
         startTime: '',
@@ -138,10 +150,11 @@ export class AttendanceService {
       AGENT: newData.data.colleague,
       DATE_FM: newData.data.startDate,
       DATE_TO: newData.data.endDate,
+      AGENT_TEMPLATE: newData.data.autoSet,
       DAYS: newData.data.days,
       HOURS: newData.data.hours
     } = data);
-
+    console.log(data)
     newData.data.startTime = '00:' + this.padLeft(data.TIME_HH_FM) + ':' + this.padLeft(data.TIME_MM_FM);
     newData.data.endTime = '00:' + this.padLeft(data.TIME_HH_TO) + ':' + this.padLeft(data.TIME_MM_TO);
     newData.data.startDate = newData.data.startDate.substr(0, newData.data.startDate.indexOf('T'));
@@ -164,7 +177,9 @@ export class AttendanceService {
         START_TIME: '',
         END_TIME: '',
         AGENT: '',
-        REASON: ''
+        REASON: '',
+        AGENT_TEMPLATE:'',
+        BEAWAYTYPE: ''
       }
     };
     ({ type: sendData.TYPE, status: sendData.STATUS, No: sendData.DOCNO } = data);
@@ -179,6 +194,7 @@ export class AttendanceService {
     } = data.data);
     sendData.DETAIL.END_TIME = sendData.DETAIL.END_TIME.substr(3);
     sendData.DETAIL.START_TIME = sendData.DETAIL.START_TIME.substr(3);
+    sendData.DETAIL.AGENT_TEMPLATE = data.data.autoSet?'Y':'N';
     return sendData;
   }
   formatTime(time: string, send: boolean) {
@@ -308,9 +324,19 @@ export class AttendanceService {
   // 取消送签
   callBackSign(formData: MyFormModel) {
     let sendData = {
-      KIND: "OFFDUTY",
-      DOCNO: ""
+      KIND: '',
+      DOCNO: ''
     };
+    switch (Number(formData.type)) {
+      case 2:
+        sendData.KIND = 'OFFDUTY';
+        break;
+      case 3:
+        sendData.KIND = 'OVERTIME';
+        break;
+      default:
+        break;
+    }
     ({ No: sendData.DOCNO } = formData);
     return this.myHttp.post(AttendanceConfig.callBackSignUrl, sendData).then((res) => {
       return Promise.resolve('ok')

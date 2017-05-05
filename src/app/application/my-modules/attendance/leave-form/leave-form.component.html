@@ -46,7 +46,10 @@
           <ion-option *ngFor="let item of holidayType" [value]="item.type">{{item.name}}</ion-option>
         </ion-select>
       </ion-item>
-
+      <ion-item>
+        <ion-label>代理人Template產生代理</ion-label>
+        <ion-toggle formControlName="autoSet"></ion-toggle>
+      </ion-item>
       <ion-item>
         <ion-label>开始日期*</ion-label>
         <ion-datetime  type="datetime-local" displayFormat="YYYY/MM/DD"  formControlName="startDate"

@@ -81,12 +81,12 @@ export class SearchFormComponent {
       },
       {
         name: 'startTime', valiItems: [
-          { valiName: 'TimeSmaller', errMessage: '结束时间必须迟于开始时间', valiValue: 'endTime' }
+          { valiName: 'DateNotBigger', errMessage: '结束时间必须迟于开始时间', valiValue: 'endTime' }
         ]
       },
       {
         name: 'endTime', valiItems: [
-          { valiName: 'TimeBigger', errMessage: '结束时间必须迟于开始时间', valiValue: 'startTime' }
+          { valiName: 'DateNotSmaller', errMessage: '结束时间必须迟于开始时间', valiValue: 'startTime' }
         ]
       }
     ])

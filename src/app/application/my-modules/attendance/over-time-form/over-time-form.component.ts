@@ -11,6 +11,7 @@ import { SignListComponent } from '../sign-list/sign-list.component';
 
 import { MyValidatorModel } from '../../../../shared/models/my-validator.model';
 import { MyFormModel } from '../shared/models/my-form.model';
+import { HolidayType } from '../shared/config/holiday-type';
 
 import { AttendanceConfig } from '../shared/config/attendance.config';
 
@@ -41,12 +42,7 @@ export class OverTimeFormComponent {
   OTCount: string;
   myValidators:{};
   MyValidatorControl: MyValidatorModel;
-  jobType =[
-    {type:'01',name:'生產需要(for 直接員工)'},
-    {type:'02',name:'配合產線加班'},
-    {type:'03',name:'日常事務處理'},
-    {type:'04',name:'OTHERS'}
-  ];
+  jobType =new HolidayType().jobType;
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
@@ -61,7 +57,8 @@ export class OverTimeFormComponent {
     this.ionViewDidLoad();
   }
   ionViewDidLoad() {
-    this.setHourRange();
+    this.startHourRange = this.attendanceService.getTimeRange(0,37);
+    this.endHourRange = this.attendanceService.getTimeRange(0,41);
     this.timeError = '';
     this.haveSaved = false;
     this.OTCount = '';
@@ -89,20 +86,6 @@ export class OverTimeFormComponent {
     this.myValidators = this.MyValidatorControl.validators;
     for (let prop in this.myValidators) {
       this.todo.controls[prop].valueChanges.subscribe((value: any) => this.check(value, prop));
-    }
-  }
-  setHourRange() {
-    for(let i =0;i<38;i++) {
-      this.startHourRange += i;
-      if(i !== 37) {
-        this.startHourRange +=','
-      }
-    }
-    for(let i =0;i<42;i++) {
-      this.endHourRange += i;
-      if(i !== 41) {
-        this.endHourRange +=','
-      }
     }
   }
   initValidator(bind:any) {

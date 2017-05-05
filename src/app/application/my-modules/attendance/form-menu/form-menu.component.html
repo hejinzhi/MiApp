@@ -1,9 +1,9 @@
 <ion-list *ngIf="formData">
   <button ion-item (click)="toSearch()">单据查询</button>
   <button ion-item (click)="toDetail()">个人考勤现状</button>
-  <ion-item-group [ngSwitch]="formData.status.toUpperCase()" *ngIf="haveSaved">
-  <button ion-item (click)="deleteForm()" *ngSwitchCase="'NEW'">删除单据</button>
-  <button ion-item (click)="callbackSign()" *ngSwitchCase="'WAITING'">取消送签</button>
+  <ion-item-group *ngIf="haveSaved">
+  <button ion-item (click)="deleteForm()"  *ngIf="['APPROVED','WAITING'].indexOf(formData.status.toUpperCase())<0">删除单据</button>
+  <button ion-item (click)="callbackSign()" *ngIf="formData.status.toUpperCase() === 'WAITING'">取消送签</button>
   </ion-item-group>
   <button ion-item (click)="callBack()" *ngIf="formData.status.toUpperCase() === 'APPROVED'&& formData.type === '2'">撤销单据</button>
 </ion-list>

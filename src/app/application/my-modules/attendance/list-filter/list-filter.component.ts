@@ -35,7 +35,7 @@ export class ListFilterComponent implements OnInit {
   sortItems(type: string) {
     switch (type) {
       case '2':
-        this.items = this.sortByStatusAndDate(this.items, 'startTime');
+        this.items = this.sortByStatusAndDate(this.items, 'startDate');
         break;
       case '3':
         this.items = this.sortByStatusAndDate(this.items, 'OTtime');
@@ -196,7 +196,13 @@ export class ListFilterComponent implements OnInit {
     let res = 0
     switch (status.toUpperCase()) {
       case 'NEW':
-        res = 3
+        res = 5
+        break;
+      case 'CANCELED':
+        res = 4;
+        break;
+      case 'REJECTED':
+        res = 3;
         break;
       case 'WAITING':
         res = 2;

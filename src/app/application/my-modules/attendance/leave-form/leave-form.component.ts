@@ -29,6 +29,7 @@ export class LeaveFormComponent {
   private searchTerms = new Subject<string>();
   leaveMes: {
     reasonType: string,
+    autoSet: boolean,
     startDate: string,
     startTime: string,
     endDate: string,
@@ -68,9 +69,11 @@ export class LeaveFormComponent {
   ) {new Date().toUTCString()}
 
   async ionViewDidLoad() {
-    this.setHourRange();
+    this.startHourRange = this.attendanceService.getTimeRange(0,37);
+    this.endHourRange = this.attendanceService.getTimeRange(0,41);
     this.leaveMes = {
       reasonType: '',
+      autoSet: false,
       startDate: '',
       startTime: '',
       endTime: '',//"2017-01-01T01:00:00Z",
@@ -125,24 +128,11 @@ export class LeaveFormComponent {
       })
     }
   }
-  setHourRange() {
-    for(let i =0;i<38;i++) {
-      this.startHourRange += i;
-      if(i !== 37) {
-        this.startHourRange +=','
-      }
-    }
-    for(let i =0;i<42;i++) {
-      this.endHourRange += i;
-      if(i !== 41) {
-        this.endHourRange +=','
-      }
-    }
-  }
   initValidator(bind:any) {
     let newValidator = new MyValidatorModel([
       {name:'reasonType',valiItems:[{valiName:'Required',errMessage:'请选择请假类型',valiValue:true}]},
       {name:'colleague',valiItems:[{valiName:'Required',errMessage:'请选择代理人',valiValue:true}]},
+      {name:'autoSet',valiItems:[]},
       {name:'reason',valiItems:[
         {valiName:'Required',errMessage:'原因不能为空',valiValue:true},
         {valiName:'Minlength',errMessage:'原因长度不能少于2位',valiValue:2}
@@ -154,6 +144,7 @@ export class LeaveFormComponent {
   initWork(work: any): FormGroup {
     return this.formBuilder.group({
       reasonType: [work.reasonType, Validators.required],
+      autoSet: [work.autoSet],
       startTime: [work.startTime, Validators.required],
       endTime: [work.endTime, Validators.required],
       startDate: [work.startDate, Validators.required],
