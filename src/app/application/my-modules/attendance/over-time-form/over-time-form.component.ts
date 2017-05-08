@@ -34,6 +34,7 @@ export class OverTimeFormComponent {
     No:'',
     data:{}
   }
+  dutyType: string;
   haveSaved:boolean;
   startHourRange:string ='';
   endHourRange:string ='';
@@ -62,6 +63,7 @@ export class OverTimeFormComponent {
     this.timeError = '';
     this.haveSaved = false;
     this.OTCount = '';
+    this.dutyType = '';
     this.formData =  {
       type:'3',
       status:'New',

@@ -82,7 +82,7 @@
         <ion-input type="text" #name placeholder="请输入2位以上的工号进行查询" (keyup)="search(name)" formControlName="colleague" data-v-required="true" data-v-required-message="请选择代理人"></ion-input>
       </ion-item>
       <ion-item-divider *ngIf="myValidators.colleague.error" class='alert'>{{myValidators.colleague.error}}</ion-item-divider>
-      <ion-grid>
+      <ion-grid *ngIf="dayLeave && hourLeave">
         <ion-row>
           <ion-col width-50>
             <ion-item>

@@ -41,7 +41,12 @@
           <ion-option *ngFor="let item of jobType" [value]="item.type">{{item.name}}</ion-option>
         </ion-select>
       </ion-item>
-
+      <ion-item *ngIf="dutyType">
+        班别：
+        <ion-note item-right>
+          {{dutyType}}
+        </ion-note>
+      </ion-item>
       <ion-item [class.has-error]="myValidators.OTtime.error" [class.has-success]="myValidators.OTtime.pass">
         <ion-label>加班日期*</ion-label>
         <ion-datetime displayFormat="YYYY/MM/DD" formControlName="OTtime"
