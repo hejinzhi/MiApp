@@ -10,7 +10,6 @@ import { PluginService }   from '../../../../core/services/plugin.service';
 import { AttendanceService } from '../shared/service/attendance.service';
 
 import { AttendanceComponent } from '../attendance.component';
-import { CallbackLeaveFormComponent } from '../callback-leave-form/callback-leave-form.component';
 import { FormMenuComponent } from '../form-menu/form-menu.component';
 import { SignListComponent } from '../sign-list/sign-list.component';
 
@@ -30,7 +29,10 @@ export class LeaveFormComponent {
   private searchTerms = new Subject<string>();
   leaveMes: {
     reasonType: string,
+    autoSet: boolean,
+    startDate: string,
     startTime: string,
+    endDate: string,
     endTime: string,
     colleague: string,
     reason: string,
@@ -41,6 +43,8 @@ export class LeaveFormComponent {
     No:'',
     data:{}
   }
+  startHourRange:string ='';
+  endHourRange:string ='';
   selectMaxYear = AttendanceConfig.SelectedMaxYear;
   title:string = '创建请假单';
   haveSaved:boolean = false;
@@ -49,8 +53,8 @@ export class LeaveFormComponent {
   tempcolleague: string = ''; // 临时作保存的中间代理人
   colleague: any;// 搜索得到的候选代理人
   timeError: string = '';
-  dayLeave: string = '0';
-  hourLeave: string = '0';
+  dayLeave: string = '';
+  hourLeave: string = '';
   myValidators:{};
   MyValidatorControl: MyValidatorModel;
   holidayType:any;
@@ -65,10 +69,15 @@ export class LeaveFormComponent {
   ) {new Date().toUTCString()}
 
   async ionViewDidLoad() {
+    this.startHourRange = this.attendanceService.getTimeRange(0,37);
+    this.endHourRange = this.attendanceService.getTimeRange(0,41);
     this.leaveMes = {
       reasonType: '',
+      autoSet: false,
+      startDate: '',
       startTime: '',
       endTime: '',//"2017-01-01T01:00:00Z",
+      endDate: '',
       colleague: '',
       reason: ''
     }
@@ -80,8 +89,6 @@ export class LeaveFormComponent {
       }
       this.dayLeave = this.navParams.data.detailMes.data.days || '';
       this.hourLeave = this.navParams.data.detailMes.data.hours || '';
-      this.leaveMes.startTime = this.attendanceService.formatTime(this.leaveMes.startTime,false);
-      this.leaveMes.endTime = this.attendanceService.formatTime(this.leaveMes.endTime,false);
       this.isSelectcolleague = true;
       this.title = '请假单详情';
       this.tempcolleague = this.leaveMes.colleague;
@@ -108,22 +115,27 @@ export class LeaveFormComponent {
     for (let prop in this.myValidators) {
       this.todo.controls[prop].valueChanges.subscribe((value: any) => this.check(value, prop));
     }
+    let timeCheck = ['startDate', 'endDate', 'startTime', 'endTime']
+    for (let i = 0;i<timeCheck.length;i++) {
+      let check = timeCheck[i];
+      this.todo.controls[check].valueChanges.subscribe((value: any) => {
+        let values = this.todo.controls
+        if(values.startDate.value && values.endDate.value && values.startTime.value && values.endTime.value) {
+          let startTime = values.startDate.value + ' ' + values.startTime.value;
+          let endTime = values.endDate.value + ' ' + values.endTime.value;
+          this.timeError = (Date.parse(endTime) - Date.parse(startTime) <= 0)?'开始时间必须早于结束时间':'';
+        }
+      })
+    }
   }
   initValidator(bind:any) {
     let newValidator = new MyValidatorModel([
       {name:'reasonType',valiItems:[{valiName:'Required',errMessage:'请选择请假类型',valiValue:true}]},
       {name:'colleague',valiItems:[{valiName:'Required',errMessage:'请选择代理人',valiValue:true}]},
+      {name:'autoSet',valiItems:[]},
       {name:'reason',valiItems:[
         {valiName:'Required',errMessage:'原因不能为空',valiValue:true},
         {valiName:'Minlength',errMessage:'原因长度不能少于2位',valiValue:2}
-      ]},
-      {name:'startTime',valiItems:[
-        {valiName:'Required',errMessage:'开始时间不能为空',valiValue:true},
-        {valiName:'TimeSmaller',errMessage:'结束时间必须迟于开始时间',valiValue:'endTime'}
-      ]},
-      {name:'endTime',valiItems:[
-        {valiName:'Required',errMessage:'结束时间不能为空',valiValue:true},
-        {valiName:'TimeBigger',errMessage:'结束时间必须迟于开始时间',valiValue:'startTime'}
       ]}
     ],bind)
     return newValidator;
@@ -132,8 +144,11 @@ export class LeaveFormComponent {
   initWork(work: any): FormGroup {
     return this.formBuilder.group({
       reasonType: [work.reasonType, Validators.required],
+      autoSet: [work.autoSet],
       startTime: [work.startTime, Validators.required],
       endTime: [work.endTime, Validators.required],
+      startDate: [work.startDate, Validators.required],
+      endDate: [work.endDate, Validators.required],
       colleague: [work.colleague, Validators.required],
       reason: [work.reason, Validators.required],
     });
@@ -161,9 +176,6 @@ export class LeaveFormComponent {
     return this.validateService.check(this.myValidators[name], this.myValidators).then((prams) => {
       this.myValidators[name].error = prams.mes;
       this.myValidators[name].pass = !prams.mes;
-      if (name === 'startTime' || name === 'endTime') {
-        this.timeError = prams.mes;
-      }
       return Promise.resolve(this.myValidators);
     });
   }
@@ -179,22 +191,21 @@ export class LeaveFormComponent {
     });
   }
   async leaveForm() {
-    console.log(456)
     this.formData.data = this.todo.value
     let loading = this.plugin.createLoading();
     loading.present()
-    let res = await this.attendanceService.sendSign(this.formData);
+    let res:any = await this.attendanceService.sendSign(this.formData);
     loading.dismiss()
-    if(res) {
+    if(res.status) {
       this.plugin.showToast('送签成功');
       this.navCtrl.popToRoot();
     }
+    if(res.content) {
+      this.hourLeave = res.content.HOURS;
+      this.dayLeave = res.content.DAYS;
+      this.haveSaved = true;
+    }
     return false;
-  }
-  callBack() {
-    this.navCtrl.push(CallbackLeaveFormComponent,{
-      number:this.formData.No
-    })
   }
   async saveForm() {
     this.formData.data = this.todo.value
@@ -209,19 +220,6 @@ export class LeaveFormComponent {
     this.haveSaved = true;
     this.plugin.showToast('表单保存成功');
   }
-  cancelForm() {
-    setTimeout(() => {
-      this.plugin.showToast('表单删除成功');
-      setTimeout(() => {
-        this.navCtrl.pop();
-      },1000)
-    },1000)
-  }
-
-  callbackSubmit() {
-
-  }
-
   sign_list() {
     this.navCtrl.push(SignListComponent,{
       formData: this.formData

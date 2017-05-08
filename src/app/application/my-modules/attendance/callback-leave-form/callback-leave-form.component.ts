@@ -23,7 +23,7 @@ export class CallbackLeaveFormComponent {
   formData:MyFormModel = {
     type:'5',
     status:'New',
-    No:'HTL021703007172',
+    No:'',
     data:{}
   }
 
@@ -51,8 +51,8 @@ export class CallbackLeaveFormComponent {
       this.callbackMes = this.navParams.data.detailMes.data;
       this.haveSaved = true;
     }
-    if(this.navParams.data.number) {
-      this.callbackMes.leave_No = this.navParams.data.number;
+    if(this.navParams.data.form_No) {
+      this.callbackMes.leave_No = this.navParams.data.form_No;
     }
     this.todo = this.initWork(this.callbackMes);
     this.MyValidatorControl = this.initValidator(this.callbackMes);

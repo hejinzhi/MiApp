@@ -32,14 +32,14 @@ export class HolidayType {
     { type: '10', name: '新員工招聘室簽署合同' },
     { type: '20', name: '前往招聘辦公室處理公務' },
     { type: '30', name: '前往醫務室婦檢' },
-    { type: '40', name: '因公外出（出差、過磅、辦證、政府部門及銀行辦理業務等)' },
+    { type: '40', name: '因公外出(出差、過磅、辦證、政府部門及銀行辦理業務等)' },
     { type: '50', name: '受訓、開會' },
     { type: '60', name: '出差期間加班時數計算' },
     { type: '70', name: '陪同客戶外出、用餐等' },
     { type: '80', name: '其它' }
   ];
   jobType = [
-    { type: '01', name: '生產需要(for 直接員工)' },
+    { type: '01', name: '生產需要(for直接員工)' },
     { type: '02', name: '配合產線加班' },
     { type: '03', name: '日常事務處理' },
     { type: '04', name: 'OTHERS' }
@@ -80,5 +80,25 @@ export class HolidayType {
     { name: '未处理天数', type: 'NO_SHEET' },
     { name: '产假天数', type: 'CHILDBIRTH_LEAVE' },
     { name: '缺席天数', type: 'OFFDUTY_DAYS' }
+  ]
+  leaveDayType = [
+    { name: '年休假天数', type: 'A_DAYS' },
+    { name: '补假时数', type: 'R_DAYS' },
+    { name: '补休时数', type: 'R1_DAYS' },
+    { name: '事假', type: 'SHIJIA_DAYS' },
+    { name: '病假', type: 'BINGJIA_DAYS' },
+    { name: '公假', type: 'GONGJIA_DAYS' },
+    { name: '补假', type: 'BUJIA_DAYS' },
+    { name: '补休', type: 'BUXIU_DAYS' },
+    { name: '停线', type: 'TINGXIAN_DAYS' },
+    { name: '婚假', type: 'HUNJIA_DAYS' },
+    { name: '产假', type: 'CHANJIA_DAYS' },
+    { name: '陪产假', type: 'PEICHANJIA_DAYS' },
+    { name: '授乳假', type: 'SHOURUJIA_DAYS' },
+    { name: '旷职', type: 'KUANGZHI_DAYS' },
+    { name: '流产假', type: 'LIUCHAN_DAYS' },
+    { name: '丧假', type: 'SANGJIA_DAYS' },
+    { name: '工伤', type: 'GONGSHANG_DAYS' },
+    { name: '特休假生效日期', type: 'STADATE' },
   ]
 }

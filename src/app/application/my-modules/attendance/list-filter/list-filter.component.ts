@@ -26,97 +26,26 @@ export class ListFilterComponent implements OnInit {
 
   ngOnInit() {
     this.type = this.myset.type;
-    this.items = this.myset.formData || [];
-    this.showApproved = this.myset.showApproved;
-    this.sortItems(this.type);
-    if(this.items.length > 0) return;
     this.initializeItems();
   }
 
-  sortItems(type:string) {
-    switch(type) {
+  sortItems(type: string) {
+    switch (type) {
       case '2':
-        this.items = this.sortByStatusAndDate(this.items,'startTime');
+        this.items = this.sortByStatusAndDate(this.items, 'startDate');
+        break;
+      case '3':
+        this.items = this.sortByStatusAndDate(this.items, 'OTtime');
         break;
       default:
         break;
     }
   }
   initializeItems() {
+    this.items = this.myset.formData || [];
+    this.sortItems(this.type);
+    if (this.items.length > 0) return;
     switch (this.type) {
-      case '2':
-        this.items = [
-          {
-            type: '2',
-            status: 'APPROVED',
-            No: 'HTL021703007171',
-            data: {
-              reasonType: 'P',
-              startTime: '2017-01-01T01:00:00Z',
-              endTime: '2017-01-05T01:00:00Z',//"2017-01-01T01:00:00Z",
-              colleague: '小米',
-              reason: '有急事'
-            }
-          },
-          {
-            type: '2',
-            status: 'New',
-            No: 'HTL021703008115',
-            data: {
-              reasonType: 'P',
-              startTime: '2017-01-01T01:00:00Z',
-              endTime: '2017-01-05T01:00:00Z',//"2017-01-01T01:00:00Z",
-              colleague: '小米',
-              reason: '有急事'
-            }
-          },
-          {
-            type: '2',
-            status: 'WAITING',
-            No: 'HTL021703017178',
-            data: {
-              reasonType: 'P',
-              startTime: '2017-01-01T01:00:00Z',
-              endTime: '2017-01-05T01:00:00Z',//"2017-01-01T01:00:00Z",
-              colleague: '小米',
-              reason: '有急事'
-            }
-          }
-        ];
-        if (this.showApproved) {
-          this.items = this.items.filter((item: any) => {
-            return item.status.toUpperCase() === 'APPROVED';
-          })
-        }
-        break;
-      case '3':
-        this.items = [
-          {
-            type: '3',
-            status: 'APPROVED',
-            No: 'HTL021704006124',
-            data: {
-              reasonType: '01',
-              OTtime: '2017-04-01',
-              startTime: '11:00',
-              endTime: '22:00',
-              reason: '有急事'
-            }
-          },
-          {
-            type: '3',
-            status: 'New',
-            No: 'HTL021703007572',
-            data: {
-              reasonType: '02',
-              OTtime: '2017-04-06',
-              startTime: '11:00',
-              endTime: '12:00',
-              reason: '有急事'
-            }
-          }
-        ]
-        break;
       case '4':
         this.items = [
           {
@@ -241,10 +170,10 @@ export class ListFilterComponent implements OnInit {
       let second = this.getStatusPoint(b.status);
       return second - first;
     })
-    if(Number(this.type) === 100){
+    if (Number(this.type) === 100) {
       this.items.sort((a: MyFormModel, b: MyFormModel) => {
-        if(b.type === a.type) {
-          return Date.parse(b.data.startTime)-Date.parse(a.data.startTime)
+        if (b.type === a.type) {
+          return Date.parse(b.data.startTime) - Date.parse(a.data.startTime)
         }
         return Number(b.type) - Number(a.type);
       })
@@ -252,27 +181,36 @@ export class ListFilterComponent implements OnInit {
 
   }
 
-  sortByStatusAndDate(items:MyFormModel[], targetDateName:string) {
+  sortByStatusAndDate(items: MyFormModel[], targetDateName: string) {
     items.sort((a: MyFormModel, b: MyFormModel) => {
       let first = this.getStatusPoint(a.status);
       let second = this.getStatusPoint(b.status);
-      if(second === first) {
-        return Date.parse(b.data[targetDateName])-Date.parse(a.data[targetDateName])
+      if (second === first) {
+        return Date.parse(b.data[targetDateName]) - Date.parse(a.data[targetDateName])
       }
       return second - first;
     })
     return items;
   }
-  getStatusPoint(status: string):number {
+  getStatusPoint(status: string): number {
     let res = 0
     switch (status.toUpperCase()) {
       case 'NEW':
-        res = 3
+        res = 6
+        break;
+      case 'CANCELED':
+        res = 5;
+        break;
+      case 'REJECTED':
+        res = 4;
         break;
       case 'WAITING':
-        res = 2;
+        res = 3;
         break;
       case 'APPROVED':
+        res = 2;
+        break;
+      case 'FINISHED':
         res = 1;
         break;
       default:

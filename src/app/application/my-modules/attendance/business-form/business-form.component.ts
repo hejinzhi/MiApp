@@ -14,6 +14,7 @@ import { AttendanceService } from '../shared/service/attendance.service';
 
 import { MyFormModel } from '../shared/models/my-form.model';
 import { MyValidatorModel } from '../../../../shared/models/my-validator.model';
+import { HolidayType } from '../shared/config/holiday-type';
 
 import { AttendanceConfig } from '../shared/config/attendance.config';
 
@@ -37,9 +38,11 @@ export class BusinessFormComponent {
   formData:MyFormModel = {
     type:'4',
     status:'New',
-    No:'HTL021703007172',
+    No:'',
     data:{}
   }
+  startHourRange:string ='';
+  endHourRange:string ='';
   selectMaxYear = AttendanceConfig.SelectedMaxYear;
   haveSaved:boolean = false;
   isSelectcolleague: boolean = false;   // todo 判断是否正确选择代理人
@@ -50,16 +53,7 @@ export class BusinessFormComponent {
   todo: FormGroup;
   myValidators:{};
   MyValidatorControl: MyValidatorModel;
-  businessType = [
-    {type:'10',name:'新員工招聘室簽署合同'},
-    {type:'20',name:'前往招聘辦公室處理公務'},
-    {type:'30',name:'前往醫務室婦檢'},
-    {type:'40',name:'因公外出（出差、過磅、辦證、政府部門及銀行辦理業務等)'},
-    {type:'50',name:'受訓、開會'},
-    {type:'60',name:'出差期間加班時數計算'},
-    {type:'70',name:'陪同客戶外出、用餐等'},
-    {type:'80',name:'其它'}
-  ]
+  businessType = new HolidayType().businessType;
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
@@ -71,6 +65,8 @@ export class BusinessFormComponent {
   ) { }
 
   ionViewDidLoad() {
+    this.startHourRange = this.attendanceService.getTimeRange(0,37);
+    this.endHourRange = this.attendanceService.getTimeRange(0,41);
     this.businsessMes = {
       reasonType: '',
       autoSet: false,

@@ -32,7 +32,7 @@ export class UndoneFormComponent {
   todo: FormGroup;
   myValidators:{};
   MyValidatorControl: MyValidatorModel;
-  holidayType = new HolidayType().type;
+  holidayType:any;
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
@@ -42,6 +42,7 @@ export class UndoneFormComponent {
   ) { }
 
   ionViewDidLoad() {
+    this.holidayType = localStorage.getItem('leaveType')? JSON.parse(localStorage.getItem('leaveType')):new HolidayType().type;
     this.leaveMes = {
       reasonType: '',
       startTime: '',
