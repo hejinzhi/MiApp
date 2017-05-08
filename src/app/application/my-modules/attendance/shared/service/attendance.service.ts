@@ -154,7 +154,6 @@ export class AttendanceService {
       DAYS: newData.data.days,
       HOURS: newData.data.hours
     } = data);
-    console.log(data)
     newData.data.startTime = '00:' + this.padLeft(data.TIME_HH_FM) + ':' + this.padLeft(data.TIME_MM_FM);
     newData.data.endTime = '00:' + this.padLeft(data.TIME_HH_TO) + ':' + this.padLeft(data.TIME_MM_TO);
     newData.data.startDate = newData.data.startDate.substr(0, newData.data.startDate.indexOf('T'));
@@ -350,7 +349,6 @@ export class AttendanceService {
   // 加班单申请
   saveOverTimeForm(formData: MyFormModel) {
     let send = this.editOverTime_send(formData);
-    console.log(send)
     return this.myHttp.post(AttendanceConfig.saveOverTimeUrl, send).then((res) => {
       return Promise.resolve(res.json())
     }).catch((err) => {

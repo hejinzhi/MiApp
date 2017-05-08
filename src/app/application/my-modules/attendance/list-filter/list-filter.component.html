@@ -1,4 +1,4 @@
-<ion-searchbar (ionInput)="getItems($event)" placeholder="单据号筛选"></ion-searchbar>
+<ion-searchbar (ionInput)="getItems($event)" placeholder="单据号筛选" class = "searchBar"></ion-searchbar>
 <ion-list>
   <ion-item *ngFor="let item of items" (click)="toDetail(item)">
     <h2>单号： {{ item.No }}</h2>

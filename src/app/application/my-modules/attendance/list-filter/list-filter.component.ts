@@ -26,9 +26,6 @@ export class ListFilterComponent implements OnInit {
 
   ngOnInit() {
     this.type = this.myset.type;
-    this.items = this.myset.formData || [];
-    this.sortItems(this.type);
-    if (this.items.length > 0) return;
     this.initializeItems();
   }
 
@@ -45,6 +42,9 @@ export class ListFilterComponent implements OnInit {
     }
   }
   initializeItems() {
+    this.items = this.myset.formData || [];
+    this.sortItems(this.type);
+    if (this.items.length > 0) return;
     switch (this.type) {
       case '4':
         this.items = [
@@ -196,18 +196,21 @@ export class ListFilterComponent implements OnInit {
     let res = 0
     switch (status.toUpperCase()) {
       case 'NEW':
-        res = 5
+        res = 6
         break;
       case 'CANCELED':
-        res = 4;
+        res = 5;
         break;
       case 'REJECTED':
-        res = 3;
+        res = 4;
         break;
       case 'WAITING':
-        res = 2;
+        res = 3;
         break;
       case 'APPROVED':
+        res = 2;
+        break;
+      case 'FINISHED':
         res = 1;
         break;
       default:
