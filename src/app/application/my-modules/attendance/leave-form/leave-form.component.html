@@ -104,7 +104,7 @@
       </ion-grid>
       <ion-item [class.has-error]="myValidators.reason.error" [class.has-success]="myValidators.reason.pass">
         <ion-label>原因*</ion-label>
-        <ion-textarea rows="3" cols="20" formControlName="reason" class="reasonTest"
+        <ion-textarea rows="2" cols="20" formControlName="reason" class="reasonTest"
          #reason
           data-v-required="true"
           data-v-required-message="原因不能为空"
@@ -117,12 +117,12 @@
         <ion-row>
           <ion-col width-50>
             <ion-buttons left>
-              <button ion-button class = "submit" type="submit" [disabled]="!todo.valid || myValidators.reason.error || myValidators.colleague.error || !isSelectcolleague || timeError">送签</button>
+              <button ion-button full class = "submit" type="submit" [disabled]="!todo.valid || myValidators.reason.error || myValidators.colleague.error || !isSelectcolleague || timeError">送签</button>
             </ion-buttons>
           </ion-col>
           <ion-col width-50>
             <ion-buttons right>
-              <button ion-button type="button" [disabled]="!todo.valid || myValidators.reason.error || myValidators.colleague.error || !isSelectcolleague || timeError" (click)="saveForm()">保存</button>
+              <button ion-button full type="button" [disabled]="!todo.valid || myValidators.reason.error || myValidators.colleague.error || !isSelectcolleague || timeError" (click)="saveForm()">保存</button>
             </ion-buttons>
           </ion-col>
         </ion-row>

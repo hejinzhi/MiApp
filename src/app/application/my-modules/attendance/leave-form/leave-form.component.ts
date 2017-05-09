@@ -37,17 +37,17 @@ export class LeaveFormComponent {
     colleague: string,
     reason: string,
   }
-  formData:MyFormModel = {
-    type:'2',
-    status:'New',
-    No:'',
-    data:{}
+  formData: MyFormModel = {
+    type: '2',
+    status: 'New',
+    No: '',
+    data: {}
   }
-  startHourRange:string ='';
-  endHourRange:string ='';
+  startHourRange: string = '';
+  endHourRange: string = '';
   selectMaxYear = AttendanceConfig.SelectedMaxYear;
-  title:string = '创建请假单';
-  haveSaved:boolean = false;
+  title: string = '创建请假单';
+  haveSaved: boolean = false;
   todo: FormGroup;
   isSelectcolleague: boolean = false;   // todo 判断是否正确选择代理人
   tempcolleague: string = ''; // 临时作保存的中间代理人
@@ -55,9 +55,9 @@ export class LeaveFormComponent {
   timeError: string = '';
   dayLeave: string = '';
   hourLeave: string = '';
-  myValidators:{};
+  myValidators: {};
   MyValidatorControl: MyValidatorModel;
-  holidayType:any;
+  holidayType: any;
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
@@ -66,11 +66,11 @@ export class LeaveFormComponent {
     private plugin: PluginService,
     private attendanceService: AttendanceService,
     public popoverCtrl: PopoverController
-  ) {new Date().toUTCString()}
+  ) { new Date().toUTCString() }
 
   async ionViewDidLoad() {
-    this.startHourRange = this.attendanceService.getTimeRange(0,37);
-    this.endHourRange = this.attendanceService.getTimeRange(0,41);
+    this.startHourRange = this.attendanceService.getTimeRange(0, 37);
+    this.endHourRange = this.attendanceService.getTimeRange(0, 41);
     this.leaveMes = {
       reasonType: '',
       autoSet: false,
@@ -81,10 +81,10 @@ export class LeaveFormComponent {
       colleague: '',
       reason: ''
     }
-    if(this.navParams.data.detailMes){
+    if (this.navParams.data.detailMes) {
       this.formData = this.navParams.data.detailMes;
       let detail = this.navParams.data.detailMes.data;
-      for(let prop in this.leaveMes) {
+      for (let prop in this.leaveMes) {
         this.leaveMes[prop] = detail[prop]
       }
       this.dayLeave = this.navParams.data.detailMes.data.days || '';
@@ -97,7 +97,7 @@ export class LeaveFormComponent {
     this.todo = this.initWork(this.leaveMes);
     this.MyValidatorControl = this.initValidator(this.leaveMes);
     this.myValidators = this.MyValidatorControl.validators;
-    this.holidayType = localStorage.getItem('leaveType')? JSON.parse(localStorage.getItem('leaveType')):new HolidayType().type;
+    this.holidayType = localStorage.getItem('leaveType') ? JSON.parse(localStorage.getItem('leaveType')) : new HolidayType().type;
     this.colleague = this.searchTerms
       .debounceTime(300)        // wait for 300ms pause in events
       .distinctUntilChanged()   // ignore if next search term is same as previous
@@ -112,32 +112,53 @@ export class LeaveFormComponent {
         // TODO: real error handling
         return Observable.of<string>(error);
       });
+    if (!this.haveSaved && !this.todo.controls['startDate'].value && !this.todo.controls['endDate'].value) {
+      this.leaveMes.startDate = this.leaveMes.endDate = await this.getWorkDay();
+      this.todo = this.initWork(this.leaveMes);
+      this.askForDuring();
+    }
+    this.addSubcribe();
+  }
+  addSubcribe() {
     for (let prop in this.myValidators) {
       this.todo.controls[prop].valueChanges.subscribe((value: any) => this.check(value, prop));
     }
-    let timeCheck = ['startDate', 'endDate', 'startTime', 'endTime']
-    for (let i = 0;i<timeCheck.length;i++) {
+    let timeCheck = ['reasonType', 'startDate', 'endDate', 'startTime', 'endTime']
+    for (let i = 0; i < timeCheck.length; i++) {
       let check = timeCheck[i];
       this.todo.controls[check].valueChanges.subscribe((value: any) => {
         let values = this.todo.controls
-        if(values.startDate.value && values.endDate.value && values.startTime.value && values.endTime.value) {
+        console.log(values)
+        if (values.startDate.value && values.endDate.value && values.startTime.value && values.endTime.value) {
           let startTime = values.startDate.value + ' ' + values.startTime.value;
           let endTime = values.endDate.value + ' ' + values.endTime.value;
-          this.timeError = (Date.parse(endTime) - Date.parse(startTime) <= 0)?'开始时间必须早于结束时间':'';
+          this.timeError = (Date.parse(endTime) - Date.parse(startTime) <= 0) ? '开始时间必须早于结束时间' : '';
+        }
+        if (!this.timeError) {
+          this.askForDuring();
+        } else {
+          this.hourLeave = '';
+          this.dayLeave = '';
         }
       })
     }
   }
-  initValidator(bind:any) {
+  initValidator(bind: any) {
     let newValidator = new MyValidatorModel([
-      {name:'reasonType',valiItems:[{valiName:'Required',errMessage:'请选择请假类型',valiValue:true}]},
-      {name:'colleague',valiItems:[{valiName:'Required',errMessage:'请选择代理人',valiValue:true}]},
-      {name:'autoSet',valiItems:[]},
-      {name:'reason',valiItems:[
-        {valiName:'Required',errMessage:'原因不能为空',valiValue:true},
-        {valiName:'Minlength',errMessage:'原因长度不能少于2位',valiValue:2}
-      ]}
-    ],bind)
+      { name: 'reasonType', valiItems: [{ valiName: 'Required', errMessage: '请选择请假类型', valiValue: true }] },
+      { name: 'colleague', valiItems: [{ valiName: 'Required', errMessage: '请选择代理人', valiValue: true }] },
+      { name: 'startDate', valiItems: [] },
+      { name: 'endDate', valiItems: [] },
+      { name: 'startDate', valiItems: [] },
+      { name: 'endTime', valiItems: [] },
+      { name: 'autoSet', valiItems: [] },
+      {
+        name: 'reason', valiItems: [
+          { valiName: 'Required', errMessage: '原因不能为空', valiValue: true },
+          { valiName: 'Minlength', errMessage: '原因长度不能少于2位', valiValue: 2 }
+        ]
+      }
+    ], bind)
     return newValidator;
   }
   //初始化原始數據
@@ -168,10 +189,15 @@ export class LeaveFormComponent {
     this.searchTerms.next('')
     this.todo.controls['colleague'].setValue(name);
   }
-
+  // 获得最近工作日，范围包括今天
+  async getWorkDay() {
+    let day: string = await this.attendanceService.getWorkDay();
+    return day
+  }
   //單獨輸入塊驗證
   check(value: any, name: string): Promise<any> {
     this.myValidators[name].value = value;
+    if (!this.myValidators[name].dataset) return;
     let compare = this.myValidators[name].compare ? this.myValidators[this.myValidators[name].compare] : ''
     return this.validateService.check(this.myValidators[name], this.myValidators).then((prams) => {
       this.myValidators[name].error = prams.mes;
@@ -179,12 +205,39 @@ export class LeaveFormComponent {
       return Promise.resolve(this.myValidators);
     });
   }
-  presentPopover(myEvent:any) {
+  updateDuring(data: MyFormModel) {
+    this.dayLeave = data.data.days || '';
+    this.hourLeave = data.data.hours || '';
+    Object.assign(this.leaveMes, this.todo.value);
+    this.leaveMes.startTime = data.data.startTime;
+    this.leaveMes.endTime = data.data.endTime;
+    this.todo = this.initWork(this.leaveMes);
+    this.addSubcribe();
+  }
+  async askForDuring() {
+    let values = this.todo.controls
+    if (values.startDate.value && values.endDate.value) {
+      this.formData.data = {
+        reasonType: values.reasonType.value,
+        autoSet: false,
+        startDate: values.startDate.value,
+        startTime: values.startTime.value,
+        endTime: values.endTime.value,
+        endDate: values.endDate.value,
+        colleague: '',
+        reason: ''
+      }
+      let res: any = await this.attendanceService.getLeaveDuring(this.formData);
+      if (!res) return;
+      this.updateDuring(res);
+    }
+  }
+  async presentPopover(myEvent: any) {
     this.formData.data = this.todo.value
-    let popover = this.popoverCtrl.create(FormMenuComponent,{
-      formData:this.formData,
-      haveSaved:this.haveSaved,
-      navCtrl:this.navCtrl
+    let popover = this.popoverCtrl.create(FormMenuComponent, {
+      formData: this.formData,
+      haveSaved: this.haveSaved,
+      navCtrl: this.navCtrl
     });
     popover.present({
       ev: myEvent
@@ -194,13 +247,13 @@ export class LeaveFormComponent {
     this.formData.data = this.todo.value
     let loading = this.plugin.createLoading();
     loading.present()
-    let res:any = await this.attendanceService.sendSign(this.formData);
+    let res: any = await this.attendanceService.sendSign(this.formData);
     loading.dismiss()
-    if(res.status) {
+    if (res.status) {
       this.plugin.showToast('送签成功');
       this.navCtrl.popToRoot();
     }
-    if(res.content) {
+    if (res.content) {
       this.hourLeave = res.content.HOURS;
       this.dayLeave = res.content.DAYS;
       this.haveSaved = true;
@@ -211,9 +264,9 @@ export class LeaveFormComponent {
     this.formData.data = this.todo.value
     let loading = this.plugin.createLoading();
     loading.present()
-    let res:any = await this.attendanceService.saveLeaveForm(this.formData);
+    let res: any = await this.attendanceService.saveLeaveForm(this.formData);
     loading.dismiss()
-    if(!res) return;
+    if (!res) return;
     this.dayLeave = res.DAYS;
     this.hourLeave = res.HOURS;
     this.formData.No = res.DOCNO
@@ -221,7 +274,7 @@ export class LeaveFormComponent {
     this.plugin.showToast('表单保存成功');
   }
   sign_list() {
-    this.navCtrl.push(SignListComponent,{
+    this.navCtrl.push(SignListComponent, {
       formData: this.formData
     })
   }

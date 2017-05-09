@@ -40,4 +40,10 @@ sg-leave-form {
   ion-select {
     max-width: 85%;
   }
+  ion-label,ion-note,ion-select,ion-datetime,ion-input,ion-item{
+    font-size: 16px;
+  }
+  .item-block {
+    min-height: 4.0rem;
+  }
 }

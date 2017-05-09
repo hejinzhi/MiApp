@@ -32,10 +32,10 @@ export class ListFilterComponent implements OnInit {
   sortItems(type: string) {
     switch (type) {
       case '2':
-        this.items = this.sortByStatusAndDate(this.items, 'startDate');
+        this.items = this.sortByDate(this.items, 'startDate');
         break;
       case '3':
-        this.items = this.sortByStatusAndDate(this.items, 'OTtime');
+        this.items = this.sortByDate(this.items, 'OTtime');
         break;
       default:
         break;
@@ -189,6 +189,12 @@ export class ListFilterComponent implements OnInit {
         return Date.parse(b.data[targetDateName]) - Date.parse(a.data[targetDateName])
       }
       return second - first;
+    })
+    return items;
+  }
+  sortByDate(items: MyFormModel[],targetDateName: string) {
+    items.sort((a: MyFormModel, b: MyFormModel) => {
+      return Date.parse(b.data[targetDateName]) - Date.parse(a.data[targetDateName])
     })
     return items;
   }

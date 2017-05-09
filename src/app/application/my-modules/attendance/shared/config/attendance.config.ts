@@ -19,6 +19,12 @@ export class AttendanceConfig {
   // 获得请假类型信息
   static getLeaveReasonTypeUrl = EnvConfig.baseUrl + 'OffDuty/GetOffDutyType';
 
+  // 获得默认上班时间及更新请假时长
+  static getLeaveDuringUrl = EnvConfig.baseUrl + 'OffDuty/CheckOffDuty';
+
+  // 获得最近工作日，范围包括今天
+  static getWorkDayUrl = EnvConfig.baseUrl + 'OffDuty/GetWorkDay';
+
   // 获得所有假期信息
   static getLeaveDaysUrl = EnvConfig.baseUrl + 'OffDuty/GetOffDutyDays';
 
@@ -47,5 +53,10 @@ export class AttendanceConfig {
 
   // 根据单据号获取加班单
   static getOverTimeFormByNoUrl = EnvConfig.baseUrl + 'OverTime/GetOverTImeByDOCNO?';
+
+
+  // 获取可销假的请假单
+  static getCanCallbackLeaveFromUrl = EnvConfig.baseUrl + 'DelOffDuty/GetCanDelOffDuty';
+  
 
 }

@@ -81,6 +81,7 @@ export class OverTimeFormComponent {
       this.formData = this.navParams.data.detailMes;
       this.OtMes = this.navParams.data.detailMes.data;
       this.OTCount = this.navParams.data.detailMes.data.count || '';
+      this.dutyType = this.navParams.data.detailMes.data.duty_type || '';
       this.haveSaved = true;
     }
     this.todo = this.initWork(this.OtMes);

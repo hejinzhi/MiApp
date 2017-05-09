@@ -66,6 +66,20 @@ export class AttendanceService {
       });
     }
   }
+  // 获取可销假的请假单
+  getCanCallbackLeaveFrom() {
+    return this.myHttp.get(AttendanceConfig.getCanCallbackLeaveFromUrl).then((res) => {
+      let formData = res.json();
+      formData = formData === null? []:formData.map((item: any) => {
+        return this.editLeaveData_get(item);
+      })
+      return Promise.resolve(formData)
+    }).catch((err) => {
+      console.log(err)
+      this.errorDeal(err);
+      return Promise.resolve([])
+    });
+  }
   // 获得默认最小开始时间
   getMinStartTime(intervalMonth: number) {
     return new Date(Date.parse(new Date().toString()) - 1000 * 60 * 60 * 24 * 30 * intervalMonth).toDateString();
@@ -80,6 +94,32 @@ export class AttendanceService {
       }
     }
     return range
+  }
+
+  // 获得默认上班时间及更新请假时长
+  getLeaveDuring(data: MyFormModel) {
+    let sendData = this.editLeaveData_send(data);
+    return this.myHttp.post(AttendanceConfig.getLeaveDuringUrl, sendData).then((res) => {
+      let newData = this.editLeaveData_get(res.json());
+      return Promise.resolve(newData);
+    }).catch((err) => {
+      console.log(err)
+      this.errorDeal(err,false);
+      return Promise.resolve('');
+    });
+  }
+
+  // 获得最近工作日，范围包括今天
+  getWorkDay():Promise<string> {
+    return this.myHttp.get(AttendanceConfig.getWorkDayUrl).then((res) => {
+      let day = res.json().CDATE;
+      day = day.substr(0, day.indexOf('T'));
+      return Promise.resolve(day);
+    }).catch((err) => {
+      console.log(err)
+      this.errorDeal(err,false);
+      return Promise.resolve('');
+    });
   }
   // 请假单申请
   saveLeaveForm(data: MyFormModel) {
@@ -376,7 +416,7 @@ export class AttendanceService {
     return send;
   }
 
-  // 对发送的加班单数据进行加工
+  // 对获得的加班单数据进行加工
   editOverTime_get(data:any) {
     let newData = {
       type: '3',
@@ -388,7 +428,8 @@ export class AttendanceService {
         startTime: '',
         endTime: '',
         reason: '',
-        count: ''
+        count: '',
+        duty_type:''
       }
     };
     ({
@@ -396,7 +437,8 @@ export class AttendanceService {
       DOCNO: newData.No,
       NOTES_DETAIL: newData.data.reason,
       IDATE: newData.data.OTtime,
-      HOURS: newData.data.count
+      HOURS: newData.data.count,
+      DUTY_KIND: newData.data.duty_type
     } = data);
     newData.data.startTime = '00:' + this.padLeft(data.TIME_HH_FM) + ':' + this.padLeft(data.TIME_MM_FM);
     newData.data.endTime = '00:' + this.padLeft(data.TIME_HH_TO) + ':' + this.padLeft(data.TIME_MM_TO);
@@ -417,13 +459,17 @@ export class AttendanceService {
     });
   }
 
-  errorDeal(err: any) {
+  errorDeal(err: any, showAlert:boolean = false) {
     switch (err.status) {
       case 404:
         this.plugin.showToast(err.statusText);
         break;
       case 400:
-        this.plugin.createBasicAlert(err.json().ExceptionMessage);
+        if(showAlert) {
+          this.plugin.createBasicAlert(err.json().ExceptionMessage);
+        } else {
+          this.plugin.showToast(err.json().ExceptionMessage);
+        }
         break;
       case 0:
         this.plugin.showToast('连接服务器失败');

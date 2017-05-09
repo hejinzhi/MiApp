@@ -31,16 +31,8 @@ export class LeaveSubComponent {
   async cancel_leave(){
     let loading  = this.plugin.createLoading();
     loading.present();
-    let res = await this.attendanceService.getForm({
-      type: '2',
-      startTime: '',
-      endTime: '',
-      form_No: ''
-    });
+    let res:any = await this.attendanceService.getCanCallbackLeaveFrom();
     loading.dismiss();
-    res = res.filter((item: any) => {
-      return item.status.toUpperCase() === 'APPROVED';
-    })
     if(res.length === 0) return this.plugin.showToast('无可销假的假单');
     this.navCtrl.push(FormListComponent,{
       formData:res,
