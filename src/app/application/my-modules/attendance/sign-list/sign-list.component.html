@@ -18,7 +18,7 @@
           <p>签核状态： {{itemSub.STATUS}}</p>
           <p>送签时间： {{itemSub.IN_TIME | sgTTime | date:"yyyy/MM/dd HH:mm"}}</p>
           <p>签核时间： {{itemSub.OUT_TIME | sgTTime | date:"yyyy/MM/dd HH:mm"}}</p>
-          <p>备注： {{itemSub.COMMENTS}}</p>
+          <p *ngIf="itemSub.COMMENTS" >备注： {{itemSub.COMMENTS}}</p>
       </ion-item>
     </ion-item-group>
   </ion-list>

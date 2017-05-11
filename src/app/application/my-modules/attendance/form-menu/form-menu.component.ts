@@ -71,10 +71,20 @@ export class FormMenuComponent {
     this.plugin.showToast('取消送签成功');
     this.lastNavCtr.popToRoot()
   }
-  callBack() {
+  async callBack() {
     this.viewCtrl.dismiss();
-    this.lastNavCtr.push(CallbackLeaveFormComponent,{
-      form_No:this.formData.No
-    })
+    let loading = this.plugin.createLoading();
+    loading.present();
+    let res:any = await this.attendanceService.getCallbackLeaveFrom(this.formData.No);
+    loading.dismiss();
+    if(res.length>0) {
+      this.lastNavCtr.push(CallbackLeaveFormComponent,{
+        detailMes: res[0]
+      })
+    } else {
+      this.lastNavCtr.push(CallbackLeaveFormComponent,{
+        form_No:this.formData.No
+      })
+    }
   }
 }

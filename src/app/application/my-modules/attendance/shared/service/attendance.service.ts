@@ -70,7 +70,7 @@ export class AttendanceService {
   getCanCallbackLeaveFrom() {
     return this.myHttp.get(AttendanceConfig.getCanCallbackLeaveFromUrl).then((res) => {
       let formData = res.json();
-      formData = formData === null? []:formData.map((item: any) => {
+      formData = formData === null ? [] : formData.map((item: any) => {
         return this.editLeaveData_get(item);
       })
       return Promise.resolve(formData)
@@ -85,12 +85,12 @@ export class AttendanceService {
     return new Date(Date.parse(new Date().toString()) - 1000 * 60 * 60 * 24 * 30 * intervalMonth).toDateString();
   }
   // 获得限制的时间段范围
-  getTimeRange(form:number,to:number) {
+  getTimeRange(form: number, to: number) {
     let range = '';
-    for(let i = form;i<to+1;i++) {
+    for (let i = form; i < to + 1; i++) {
       range += i;
-      if(i !== to) {
-        range +=','
+      if (i !== to) {
+        range += ','
       }
     }
     return range
@@ -104,20 +104,20 @@ export class AttendanceService {
       return Promise.resolve(newData);
     }).catch((err) => {
       console.log(err)
-      this.errorDeal(err,false);
+      this.errorDeal(err, false);
       return Promise.resolve('');
     });
   }
 
   // 获得最近工作日，范围包括今天
-  getWorkDay():Promise<string> {
+  getWorkDay(): Promise<string> {
     return this.myHttp.get(AttendanceConfig.getWorkDayUrl).then((res) => {
       let day = res.json().CDATE;
       day = day.substr(0, day.indexOf('T'));
       return Promise.resolve(day);
     }).catch((err) => {
       console.log(err)
-      this.errorDeal(err,false);
+      this.errorDeal(err, false);
       return Promise.resolve('');
     });
   }
@@ -145,6 +145,8 @@ export class AttendanceService {
         return this.deleteOverTimeForm(formData);
       case '4':
         return Promise.resolve('');
+      case '5':
+        return this.deleteCallbackLeaveFrom(formData);
       default:
         return Promise.resolve('');
     }
@@ -217,7 +219,7 @@ export class AttendanceService {
         END_TIME: '',
         AGENT: '',
         REASON: '',
-        AGENT_TEMPLATE:'',
+        AGENT_TEMPLATE: '',
         BEAWAYTYPE: ''
       }
     };
@@ -233,7 +235,7 @@ export class AttendanceService {
     } = data.data);
     sendData.DETAIL.END_TIME = sendData.DETAIL.END_TIME.substr(3);
     sendData.DETAIL.START_TIME = sendData.DETAIL.START_TIME.substr(3);
-    sendData.DETAIL.AGENT_TEMPLATE = data.data.autoSet?'Y':'N';
+    sendData.DETAIL.AGENT_TEMPLATE = data.data.autoSet ? 'Y' : 'N';
     return sendData;
   }
   formatTime(time: string, send: boolean) {
@@ -386,6 +388,24 @@ export class AttendanceService {
     });
   }
 
+  // 获得班别与加班时长
+  getOverTimeDetail(formData: MyFormModel) {
+    let send = {
+      "IDATE": "",
+      "START_TIME": "",
+      "END_TIME": "",
+    }
+    send.IDATE = formData.data.OTtime;
+    return this.myHttp.post(AttendanceConfig.getOverTimeDetailUrl, send).then((res) => {
+      let newData = res.json();
+      newData = this.editOverTime_get(newData);
+      return Promise.resolve(newData)
+    }).catch((err) => {
+      console.log(err)
+      this.errorDeal(err);
+      return Promise.resolve('')
+    });
+  }
   // 加班单申请
   saveOverTimeForm(formData: MyFormModel) {
     let send = this.editOverTime_send(formData);
@@ -417,7 +437,7 @@ export class AttendanceService {
   }
 
   // 对获得的加班单数据进行加工
-  editOverTime_get(data:any) {
+  editOverTime_get(data: any) {
     let newData = {
       type: '3',
       status: '',
@@ -429,7 +449,7 @@ export class AttendanceService {
         endTime: '',
         reason: '',
         count: '',
-        duty_type:''
+        duty_type: ''
       }
     };
     ({
@@ -443,7 +463,7 @@ export class AttendanceService {
     newData.data.startTime = '00:' + this.padLeft(data.TIME_HH_FM) + ':' + this.padLeft(data.TIME_MM_FM);
     newData.data.endTime = '00:' + this.padLeft(data.TIME_HH_TO) + ':' + this.padLeft(data.TIME_MM_TO);
     let reasonType = new HolidayType().jobType.filter((item) => item.name === data.NOTES);
-    newData.data.reasonType = reasonType.length>0 ?reasonType[0].type: '04';
+    newData.data.reasonType = reasonType.length > 0 ? reasonType[0].type : '04';
     return newData;
   }
   // 加班单申请
@@ -459,13 +479,75 @@ export class AttendanceService {
     });
   }
 
-  errorDeal(err: any, showAlert:boolean = false) {
+  // 申请销假单
+  saveCallbackLeaveFrom(formData: MyFormModel) {
+    let send = { OFFDUTY_DOCNO: '', NEREAON: '', DOCNO1: '' };
+    send.DOCNO1 = formData.No;
+    send.OFFDUTY_DOCNO = formData.data.leave_No;
+    send.NEREAON = formData.data.reason
+    return this.myHttp.post(AttendanceConfig.saveCallbackLeaveFromUrl, send).then((res) => {
+      return Promise.resolve(res.json())
+    }).catch((err) => {
+      console.log(err)
+      this.errorDeal(err);
+      return Promise.resolve('')
+    });
+  }
+
+  // 删除销假单
+  deleteCallbackLeaveFrom(formData: MyFormModel) {
+    let sendData = {
+      DOCNO1: ""
+    };
+    ({ No: sendData.DOCNO1 } = formData);
+    return this.myHttp.post(AttendanceConfig.deleteCallbackLeaveFromUrl, sendData).then((res) => {
+      return Promise.resolve('ok')
+    }).catch((err) => {
+      console.log(err)
+      this.errorDeal(err);
+      return Promise.resolve('')
+    });
+  }
+  // 获取销假单
+  getCallbackLeaveFrom(leave_No: string = '') {
+    return this.myHttp.get(AttendanceConfig.getCallbackLeaveFromUrl + `DOCNO=${leave_No}`).then((res) => {
+      let newData = res.json();
+      if (newData != null) {
+        newData = newData.map((item: {
+          DOCNO1: string,
+          OFFDUTY_DOCNO: string,
+          NEREAON: string,
+          STATUS: string
+        }) => {
+          let data:MyFormModel = {
+            type: '5',
+            status: '',
+            No: '',
+            data: {}
+          }
+          data.status = item.STATUS;
+          data.No = item.DOCNO1;
+          data.data.leave_No = item.OFFDUTY_DOCNO;
+          data.data.reason = item.NEREAON;
+          return data;
+        })
+      }else {
+        newData =[];
+      }
+      return Promise.resolve(newData);
+    }).catch((err) => {
+      console.log(err)
+      this.errorDeal(err);
+      return Promise.resolve([])
+    });
+  }
+  errorDeal(err: any, showAlert: boolean = false) {
     switch (err.status) {
       case 404:
-        this.plugin.showToast(err.statusText);
+        this.plugin.showToast('未找到结果，可联系MIS处理');
         break;
       case 400:
-        if(showAlert) {
+        if (showAlert) {
           this.plugin.createBasicAlert(err.json().ExceptionMessage);
         } else {
           this.plugin.showToast(err.json().ExceptionMessage);

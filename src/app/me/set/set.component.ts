@@ -2,7 +2,9 @@ import { Component } from '@angular/core';
 import { NavController, NavParams, AlertController, App, Platform } from 'ionic-angular';
 import { PatternLockComponent } from '../../login/pattern-lock/pattern-lock.component';
 import { LoginComponent } from '../../login/login.component';
+
 import { JMessageService } from '../../core/services/jmessage.service'
+import { PluginService } from '../../core/services/plugin.service'
 
 @Component({
   selector: 'sg-set',
@@ -15,6 +17,7 @@ export class SetComponent {
     public navParams: NavParams,
     public alertCtrl: AlertController,
     private jmessage: JMessageService,
+    private plugin: PluginService,
     private app: App,
     private platform: Platform
   ) {
@@ -27,7 +30,33 @@ export class SetComponent {
   ionViewWillLeave() {
 
   }
+  changeFont() {
+    // localStorage.set('fontType','simple_Chinese');
+    let alert = this.alertCtrl.create();
+    alert.setTitle('语言版本选择');
+    alert.addInput({
+      type: 'radio',
+      label: '简体中文',
+      value: 'simple_Chinese',
+      checked: true
+    });
+    alert.addInput({
+      type: 'radio',
+      label: '繁体中文',
+      value: 'traditional_Chinese',
+      checked: false
+    });
 
+    alert.addButton('取消');
+    alert.addButton({
+      text: '确认',
+      handler: (data:string) => {
+        localStorage.setItem('fontType',data);
+        this.plugin.showToast('已切换语言版本,重启可获得最佳体验')
+      }
+    });
+    alert.present();
+  }
   // 注销用户
   logout(): void {
     let confirm = this.alertCtrl.create({

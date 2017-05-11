@@ -7,6 +7,7 @@ import { FormMenuComponent } from '../form-menu/form-menu.component';
 
 import { ValidateService }   from '../../../../core/services/validate.service';
 import { PluginService }   from '../../../../core/services/plugin.service';
+import { AttendanceService } from '../shared/service/attendance.service';
 
 import { MyValidatorModel } from '../../../../shared/models/my-validator.model';
 import { MyFormModel } from '../shared/models/my-form.model';
@@ -22,7 +23,7 @@ export class CallbackLeaveFormComponent {
   }
   formData:MyFormModel = {
     type:'5',
-    status:'New',
+    status:'',
     No:'',
     data:{}
   }
@@ -37,6 +38,7 @@ export class CallbackLeaveFormComponent {
     public popoverCtrl: PopoverController,
     private formBuilder: FormBuilder,
     private validateService: ValidateService,
+    private attendanceService: AttendanceService,
     private plugin: PluginService
   ) { }
 
@@ -88,11 +90,6 @@ export class CallbackLeaveFormComponent {
       return Promise.resolve(this.myValidators);
     });
   }
-  leaveForm() {
-    this.formData.data = this.todo.value
-    console.log(this.formData);
-    return false;
-  }
   presentPopover(myEvent:any) {
     this.formData.data = this.todo.value
     let popover = this.popoverCtrl.create(FormMenuComponent,{
@@ -104,25 +101,23 @@ export class CallbackLeaveFormComponent {
       ev: myEvent
     });
   }
-  saveForm() {
-    setTimeout(() => {
-      this.plugin.showToast('表单保存成功');
-      this.haveSaved = true;
-    },1000)
+  leaveForm() {
+    this.formData.data = this.todo.value
+    console.log(this.formData);
+    return false;
   }
-  cancelForm() {
-    setTimeout(() => {
-      this.plugin.showToast('表单删除成功');
-      setTimeout(() => {
-        this.navCtrl.pop();
-      },1000)
-    },1000)
+  async saveForm() {
+    this.formData.data = this.todo.value
+    let loading = this.plugin.createLoading();
+    loading.present()
+    let res: any = await this.attendanceService.saveCallbackLeaveFrom(this.formData);
+    loading.dismiss()
+    if (!res) return;
+    this.formData.status = res.STATUS;
+    this.formData.No = res.DOCNO1
+    this.haveSaved = true;
+    this.plugin.showToast('保存成功');
   }
-
-  callbackSubmit() {
-
-  }
-
   sign_list() {
     this.navCtrl.push(SignListComponent)
   }

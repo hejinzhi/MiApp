@@ -77,6 +77,9 @@ export class MyAppComponent {
     } else {
       this.rootPage = LoginComponent;
     }
+    if(!localStorage.getItem('fontType')) {
+      localStorage.setItem('fontType','simple_Chinese');
+    }
   }
 
 

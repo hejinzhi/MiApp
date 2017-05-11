@@ -19,6 +19,7 @@ import { MyValidatorModel } from '../../../../shared/models/my-validator.model';
 import { MyFormModel } from '../shared/models/my-form.model';
 
 import { AttendanceConfig } from '../shared/config/attendance.config';
+import { FontTypeConfig } from '../shared/config/font-type.config';
 
 @Component({
   selector: 'sg-leave-form',
@@ -39,14 +40,16 @@ export class LeaveFormComponent {
   }
   formData: MyFormModel = {
     type: '2',
-    status: 'New',
+    status: '',
     No: '',
     data: {}
   }
+  fontType:string = localStorage.getItem('fontType')
+  fontContent = FontTypeConfig.LeaveFormComponent[this.fontType];
+
   startHourRange: string = '';
   endHourRange: string = '';
   selectMaxYear = AttendanceConfig.SelectedMaxYear;
-  title: string = '创建请假单';
   haveSaved: boolean = false;
   todo: FormGroup;
   isSelectcolleague: boolean = false;   // todo 判断是否正确选择代理人
@@ -90,7 +93,6 @@ export class LeaveFormComponent {
       this.dayLeave = this.navParams.data.detailMes.data.days || '';
       this.hourLeave = this.navParams.data.detailMes.data.hours || '';
       this.isSelectcolleague = true;
-      this.title = '请假单详情';
       this.tempcolleague = this.leaveMes.colleague;
       this.haveSaved = true;
     }
@@ -132,7 +134,7 @@ export class LeaveFormComponent {
         if (values.startDate.value && values.endDate.value && values.startTime.value && values.endTime.value) {
           let startTime = values.startDate.value + ' ' + values.startTime.value;
           let endTime = values.endDate.value + ' ' + values.endTime.value;
-          this.timeError = (Date.parse(endTime) - Date.parse(startTime) <= 0) ? '开始时间必须早于结束时间' : '';
+          this.timeError = (Date.parse(endTime) - Date.parse(startTime) <= 0) ? this.fontContent.time_err : '';
         }
         if (!this.timeError) {
           this.askForDuring();
@@ -145,8 +147,8 @@ export class LeaveFormComponent {
   }
   initValidator(bind: any) {
     let newValidator = new MyValidatorModel([
-      { name: 'reasonType', valiItems: [{ valiName: 'Required', errMessage: '请选择请假类型', valiValue: true }] },
-      { name: 'colleague', valiItems: [{ valiName: 'Required', errMessage: '请选择代理人', valiValue: true }] },
+      { name: 'reasonType', valiItems: [{ valiName: 'Required', errMessage: this.fontContent.reason_required_err, valiValue: true }] },
+      { name: 'colleague', valiItems: [{ valiName: 'Required', errMessage: this.fontContent.colleague_required_err, valiValue: true }] },
       { name: 'startDate', valiItems: [] },
       { name: 'endDate', valiItems: [] },
       { name: 'startDate', valiItems: [] },
@@ -154,8 +156,8 @@ export class LeaveFormComponent {
       { name: 'autoSet', valiItems: [] },
       {
         name: 'reason', valiItems: [
-          { valiName: 'Required', errMessage: '原因不能为空', valiValue: true },
-          { valiName: 'Minlength', errMessage: '原因长度不能少于2位', valiValue: 2 }
+          { valiName: 'Required', errMessage: this.fontContent.reason_required_err, valiValue: true },
+          { valiName: 'Minlength', errMessage: this.fontContent.reason_minlength_err, valiValue: 2 }
         ]
       }
     ], bind)
@@ -250,7 +252,7 @@ export class LeaveFormComponent {
     let res: any = await this.attendanceService.sendSign(this.formData);
     loading.dismiss()
     if (res.status) {
-      this.plugin.showToast('送签成功');
+      this.plugin.showToast(this.fontContent.sign_success);
       this.navCtrl.popToRoot();
     }
     if (res.content) {
@@ -271,7 +273,7 @@ export class LeaveFormComponent {
     this.hourLeave = res.HOURS;
     this.formData.No = res.DOCNO
     this.haveSaved = true;
-    this.plugin.showToast('表单保存成功');
+    this.plugin.showToast(this.fontContent.save_success);
   }
   sign_list() {
     this.navCtrl.push(SignListComponent, {

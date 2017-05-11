@@ -5,7 +5,7 @@ export class AttendanceConfig {
   static SelectedMaxYear = +new Date().getFullYear()+1+'';
 
   // 获得签核名单
-  static getSignListUrl = EnvConfig.baseUrl + 'Att/GetApproveList?docNum=';
+  static getSignListUrl = EnvConfig.baseUrl + 'Attendance/GetApproveList?docNum=';
 
   // 保存表单
   static saveLeaveUrl = EnvConfig.baseUrl + 'OffDuty/AddOffDuty';
@@ -35,10 +35,10 @@ export class AttendanceConfig {
   static getAgentUrl = EnvConfig.baseUrl + 'OffDuty/GetOffDutyAgent?';
 
   // 送签
-  static sendSignUrl = EnvConfig.baseUrl + 'Att/SendSign';
+  static sendSignUrl = EnvConfig.baseUrl + 'Attendance/SendSign';
 
   // 取消送签
-  static callBackSignUrl = EnvConfig.baseUrl + 'Att/CancelSign';
+  static callBackSignUrl = EnvConfig.baseUrl + 'Attendance/CancelSign';
 
 
 
@@ -54,9 +54,20 @@ export class AttendanceConfig {
   // 根据单据号获取加班单
   static getOverTimeFormByNoUrl = EnvConfig.baseUrl + 'OverTime/GetOverTImeByDOCNO?';
 
+  // 获得班别与加班时长
+  static getOverTimeDetailUrl = EnvConfig.baseUrl + 'OverTime/GetOverTimeDutyKind';
+
 
   // 获取可销假的请假单
   static getCanCallbackLeaveFromUrl = EnvConfig.baseUrl + 'DelOffDuty/GetCanDelOffDuty';
-  
+
+  // 申请销假单
+  static saveCallbackLeaveFromUrl = EnvConfig.baseUrl + 'DelOffDuty/AddOffDuty';
+
+  // 删除销假单
+  static deleteCallbackLeaveFromUrl = EnvConfig.baseUrl + 'DelOffDuty/DeleteDelOffDuty';
+
+  // 获取销假单
+  static getCallbackLeaveFromUrl = EnvConfig.baseUrl + 'DelOffDuty/GetDelOffDuty?';
 
 }

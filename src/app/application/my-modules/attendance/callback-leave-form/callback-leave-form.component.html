@@ -16,14 +16,14 @@
 
 
 <ion-content class="main">
-  <div [class.layer]="!(formData.status.toUpperCase() === 'NEW')">
+  <div [class.layer]="['APPROVED','WAITING'].indexOf(formData.status.toUpperCase())>-1">
   </div>
   <ion-list>
     <ion-item>
       单据状态：
       <ion-note item-right>
         {{formData.status}}
-      </ion-note><button ion-button  *ngIf="formData.status.toUpperCase() != 'NEW'" (click)="sign_list()">签核名单</button>
+      </ion-note><button ion-button  *ngIf="['APPROVED','WAITING'].indexOf(formData.status.toUpperCase())>-1" (click)="sign_list()">签核名单</button>
     </ion-item>
 
     <ion-item>
@@ -44,7 +44,7 @@
         <ion-textarea rows="2" cols="20" formControlName="reason" class="reasonTest"></ion-textarea>
       </ion-item>
       <ion-item-divider *ngIf="myValidators.reason.error" class='alert'>{{myValidators.reason.error}}</ion-item-divider>
-      <ion-grid *ngIf="formData.status.toUpperCase() === 'NEW'">
+      <ion-grid *ngIf="['APPROVED','WAITING'].indexOf(formData.status.toUpperCase())<0">
         <ion-row>
           <ion-col width-50>
             <ion-buttons left>
@@ -53,7 +53,7 @@
           </ion-col>
           <ion-col width-50>
             <ion-buttons right>
-              <button ion-button [disabled]="!todo.valid || myValidators.reason.error " (click)="saveForm()">保存</button>
+              <button ion-button type="button" [disabled]="!todo.valid || myValidators.reason.error " (click)="saveForm()">保存</button>
             </ion-buttons>
           </ion-col>
         </ion-row>
