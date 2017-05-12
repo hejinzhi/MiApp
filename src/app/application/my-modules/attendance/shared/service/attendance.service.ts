@@ -166,14 +166,14 @@ export class AttendanceService {
     });
   }
   // 对服务器返回的数据内部格式化并时间转换（适应datepicker组件）
-  editLeaveData_get(data: any) {
+  editLeaveData_get(data: any, type: string = '2') {
     let newData = {
-      type: '2',
+      type: type,
       status: '',
       No: '',
       data: {
         reasonType: '',
-        autoSet: '',
+        autoSet: false,
         startDate: '',
         endDate: '',
         startTime: '',
@@ -182,24 +182,42 @@ export class AttendanceService {
         reason: '',
         days: '',
         hours: '',
+        businessTime: '',
+        timeCount: ''
       }
     };
     ({
       STATUS: newData.status,
       DOCNO: newData.No,
-      ABSENT_CODE: newData.data.reasonType,
       REASON: newData.data.reason,
       AGENT: newData.data.colleague,
-      DATE_FM: newData.data.startDate,
-      DATE_TO: newData.data.endDate,
-      AGENT_TEMPLATE: newData.data.autoSet,
-      DAYS: newData.data.days,
-      HOURS: newData.data.hours
     } = data);
+    switch (Number(type)) {
+      case 2:
+        ({
+          ABSENT_CODE: newData.data.reasonType,
+          DATE_FM: newData.data.startDate,
+          DATE_TO: newData.data.endDate,
+          DAYS: newData.data.days,
+          HOURS: newData.data.hours
+        } = data);
+        newData.data.startDate = newData.data.startDate.substr(0, newData.data.startDate.indexOf('T'));
+        newData.data.endDate = newData.data.endDate.substr(0, newData.data.endDate.indexOf('T'));
+        break;
+      case 4:
+        ({
+          BEAWAYTYPE: newData.data.reasonType,
+          DATE_FM: newData.data.businessTime,
+          HOURS: newData.data.timeCount
+        } = data);
+        newData.data.businessTime = newData.data.businessTime.substr(0, newData.data.businessTime.indexOf('T'));
+        break;
+      default:
+        break;
+    }
     newData.data.startTime = '00:' + this.padLeft(data.TIME_HH_FM) + ':' + this.padLeft(data.TIME_MM_FM);
     newData.data.endTime = '00:' + this.padLeft(data.TIME_HH_TO) + ':' + this.padLeft(data.TIME_MM_TO);
-    newData.data.startDate = newData.data.startDate.substr(0, newData.data.startDate.indexOf('T'));
-    newData.data.endDate = newData.data.endDate.substr(0, newData.data.endDate.indexOf('T'));
+    newData.data.autoSet = data.AGENT_TEMPLATE === 'Y' ? true : false;
     return newData;
   }
   padLeft(data: number) {
@@ -225,14 +243,30 @@ export class AttendanceService {
     };
     ({ type: sendData.TYPE, status: sendData.STATUS, No: sendData.DOCNO } = data);
     ({
-      reasonType: sendData.DETAIL.ABSENT_CODE,
-      startDate: sendData.DETAIL.START_DATE,
-      endDate: sendData.DETAIL.END_DATE,
       startTime: sendData.DETAIL.START_TIME,
       endTime: sendData.DETAIL.END_TIME,
       colleague: sendData.DETAIL.AGENT,
+      autoSet: sendData.DETAIL.AGENT_TEMPLATE,
       reason: sendData.DETAIL.REASON
     } = data.data);
+    switch (Number(data.type)) {
+      case 2:
+        ({
+          reasonType: sendData.DETAIL.ABSENT_CODE,
+          startDate: sendData.DETAIL.START_DATE,
+          endDate: sendData.DETAIL.END_DATE
+        } = data.data);
+        break;
+      case 4:
+        ({
+          reasonType: sendData.DETAIL.BEAWAYTYPE,
+          businessTime: sendData.DETAIL.START_DATE
+        } = data.data);
+        sendData.DETAIL.END_DATE = sendData.DETAIL.START_DATE;
+        break;
+      default:
+        break;
+    }
     sendData.DETAIL.END_TIME = sendData.DETAIL.END_TIME.substr(3);
     sendData.DETAIL.START_TIME = sendData.DETAIL.START_TIME.substr(3);
     sendData.DETAIL.AGENT_TEMPLATE = data.data.autoSet ? 'Y' : 'N';
@@ -322,6 +356,9 @@ export class AttendanceService {
         case 3:
           saveRes = await this.saveOverTimeForm(formData);
           break;
+        case 5:
+          saveRes = await this.saveCallbackLeaveFrom(formData);
+          break;
         default:
           break;
       }
@@ -341,6 +378,9 @@ export class AttendanceService {
         break;
       case 3:
         sendData.KIND = 'OVERTIME';
+        break;
+      case 5:
+        sendData.KIND = 'DELETE_OFFDUTY';
         break;
       default:
         break;
@@ -374,6 +414,9 @@ export class AttendanceService {
         break;
       case 3:
         sendData.KIND = 'OVERTIME';
+        break;
+      case 5:
+        sendData.KIND = 'DELETE_OFFDUTY';
         break;
       default:
         break;
@@ -519,7 +562,7 @@ export class AttendanceService {
           NEREAON: string,
           STATUS: string
         }) => {
-          let data:MyFormModel = {
+          let data: MyFormModel = {
             type: '5',
             status: '',
             No: '',
@@ -531,14 +574,50 @@ export class AttendanceService {
           data.data.reason = item.NEREAON;
           return data;
         })
-      }else {
-        newData =[];
+      } else {
+        newData = [];
       }
-      return Promise.resolve(newData);
+      return Promise.resolve({ content: newData, status: true });
     }).catch((err) => {
       console.log(err)
       this.errorDeal(err);
-      return Promise.resolve([])
+      return Promise.resolve({ content: [], status: false })
+    });
+  }
+
+  // 获取月出勤记录
+  getAttendanceMonth(formData: { date: string }) {
+    formData.date = formData.date.replace('-', '');
+    return this.myHttp.get(AttendanceConfig.getAttendanceMonthUrl + `date=${formData.date}`).then((res) => {
+      return Promise.resolve({ content: res.json(), status: true });
+    }).catch((err) => {
+      console.log(err)
+      this.errorDeal(err);
+      return Promise.resolve({ content: '', status: false })
+    });
+  }
+  // 获取月出勤记录
+  getSwipeNote(formData: { startTime: string, endTime: string }) {
+    let dateFM = formData.startTime;
+    let dateTO = formData.endTime;
+    return this.myHttp.get(AttendanceConfig.getSwipeNoteUrl + `dateFM=${dateFM}&dateTO=${dateTO}`).then((res) => {
+      return Promise.resolve({ content: res.json(), status: true });
+    }).catch((err) => {
+      console.log(err)
+      this.errorDeal(err);
+      return Promise.resolve({ content: '', status: false })
+    });
+  }
+  // 获取出勤明细
+  getAttendanceDetail(formData: { startTime: string, endTime: string }) {
+    let dateFM = formData.startTime;
+    let dateTO = formData.endTime;
+    return this.myHttp.get(AttendanceConfig.getAttendanceDetailUrl + `dateFM=${dateFM}&dateTO=${dateTO}`).then((res) => {
+      return Promise.resolve({ content: res.json(), status: true });
+    }).catch((err) => {
+      console.log(err)
+      this.errorDeal(err);
+      return Promise.resolve({ content: '', status: false })
     });
   }
   errorDeal(err: any, showAlert: boolean = false) {

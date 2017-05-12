@@ -1,6 +1,6 @@
 <ion-header>
   <ion-navbar>
-    <ion-title>单据查询</ion-title>
+    <ion-title *ngIf="searchMes && searchMes.type">{{searchMes.type | sgFormType}}查询</ion-title>
   </ion-navbar>
 </ion-header>
 

@@ -12,7 +12,7 @@ import { StatisticsComponent } from './statistics/statistics.component';
 
 import { AttendanceService } from './shared/service/attendance.service';
 
-import { FontTypeConfig } from './shared/config/font-type.config';
+import { LanguageTypeConfig } from './shared/config/language-type.config';
 
 @Component({
   selector:'sg-attendance',
@@ -28,8 +28,8 @@ export class AttendanceComponent {
   tab4Root = LeaveMessageMenuComponent;
   tab5Root = StatisticsComponent;
 
-  fontType:string = localStorage.getItem('fontType')
-  fontContent = FontTypeConfig.attendanceComponent[this.fontType];
+  fontType:string = localStorage.getItem('languageType')
+  fontContent = LanguageTypeConfig.attendanceComponent[this.fontType];
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,

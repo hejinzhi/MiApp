@@ -12,6 +12,8 @@ import { AttendanceService } from '../shared/service/attendance.service';
 import { MyValidatorModel } from '../../../../shared/models/my-validator.model';
 import { MyFormModel } from '../shared/models/my-form.model';
 
+import { LanguageTypeConfig } from '../shared/config/language-type.config';
+
 @Component({
   selector: 'sg-callback-leave-form',
   templateUrl: 'callback-leave-form.component.html'
@@ -27,6 +29,8 @@ export class CallbackLeaveFormComponent {
     No:'',
     data:{}
   }
+  fontType:string = localStorage.getItem('languageType')
+  fontContent = LanguageTypeConfig.callbackLeaveFormComponent[this.fontType];
 
   haveSaved:boolean = false;
   todo: FormGroup;
@@ -65,10 +69,10 @@ export class CallbackLeaveFormComponent {
   }
   initValidator(bind:any) {
     let newValidator = new MyValidatorModel([
-      {name:'leave_No',valiItems:[{valiName:'Required',errMessage:'请假单号不能为空',valiValue:true}]},
+      {name:'leave_No',valiItems:[{valiName:'Required',errMessage:this.fontContent.leave_No_required_err,valiValue:true}]},
       {name:'reason',valiItems:[
-        {valiName:'Required',errMessage:'原因不能为空',valiValue:true},
-        {valiName:'Minlength',errMessage:'原因长度不能少于2位',valiValue:2}
+        {valiName:'Required',errMessage:this.fontContent.reason_required_err,valiValue:true},
+        {valiName:'Minlength',errMessage:this.fontContent.reason_minlength_err,valiValue:2}
       ]}
     ],bind)
     return newValidator;
@@ -101,9 +105,19 @@ export class CallbackLeaveFormComponent {
       ev: myEvent
     });
   }
-  leaveForm() {
+  async leaveForm() {
     this.formData.data = this.todo.value
-    console.log(this.formData);
+    let loading = this.plugin.createLoading();
+    loading.present()
+    let res: any = await this.attendanceService.sendSign(this.formData);
+    loading.dismiss()
+    if (res.status) {
+      this.plugin.showToast(this.fontContent.sign_success);
+      this.navCtrl.popToRoot();
+    }
+    if (res.content) {
+      this.haveSaved = true;
+    }
     return false;
   }
   async saveForm() {
@@ -116,9 +130,11 @@ export class CallbackLeaveFormComponent {
     this.formData.status = res.STATUS;
     this.formData.No = res.DOCNO1
     this.haveSaved = true;
-    this.plugin.showToast('保存成功');
+    this.plugin.showToast(this.fontContent.save_success);
   }
   sign_list() {
-    this.navCtrl.push(SignListComponent)
+    this.navCtrl.push(SignListComponent,{
+      formData: this.formData
+    })
   }
 }

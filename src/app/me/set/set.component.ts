@@ -51,7 +51,7 @@ export class SetComponent {
     alert.addButton({
       text: '确认',
       handler: (data:string) => {
-        localStorage.setItem('fontType',data);
+        localStorage.setItem('languageType',data);
         this.plugin.showToast('已切换语言版本,重启可获得最佳体验')
       }
     });

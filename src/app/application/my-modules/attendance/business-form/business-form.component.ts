@@ -17,6 +17,7 @@ import { MyValidatorModel } from '../../../../shared/models/my-validator.model';
 import { HolidayType } from '../shared/config/holiday-type';
 
 import { AttendanceConfig } from '../shared/config/attendance.config';
+import { LanguageTypeConfig } from '../shared/config/language-type.config';
 
 @Component({
   selector: 'sg-business-form',
@@ -37,10 +38,14 @@ export class BusinessFormComponent {
   }
   formData:MyFormModel = {
     type:'4',
-    status:'New',
+    status:'',
     No:'',
     data:{}
   }
+
+  fontType:string = localStorage.getItem('languageType')
+  fontContent = LanguageTypeConfig.businessFormComponent[this.fontType];
+
   startHourRange:string ='';
   endHourRange:string ='';
   selectMaxYear = AttendanceConfig.SelectedMaxYear;
@@ -49,7 +54,7 @@ export class BusinessFormComponent {
   tempcolleague: string = ''; // 临时作保存的中间代理人
   colleague: any;// 搜索得到的候选代理人
   timeError: string = '';
-  timeCount: string = '0';
+  timeCount: string = '';
   todo: FormGroup;
   myValidators:{};
   MyValidatorControl: MyValidatorModel;
@@ -64,7 +69,7 @@ export class BusinessFormComponent {
     private attendanceService: AttendanceService
   ) { }
 
-  ionViewDidLoad() {
+  async ionViewDidLoad() {
     this.startHourRange = this.attendanceService.getTimeRange(0,37);
     this.endHourRange = this.attendanceService.getTimeRange(0,41);
     this.businsessMes = {
@@ -72,8 +77,8 @@ export class BusinessFormComponent {
       autoSet: false,
       colleague: '',
       businessTime: '',
-      startTime: '',
-      endTime: '',
+      startTime: '00:08:00',
+      endTime: '00:17:30',
       reason: ''
     }
 
@@ -105,39 +110,29 @@ export class BusinessFormComponent {
     for (let prop in this.myValidators) {
       this.todo.controls[prop].valueChanges.subscribe((value: any) => this.check(value, prop));
     }
-    this.calculateTime(this.timeError);
-  }
-  //检查
-  calculateTime(error:string) {
-    if(error) {
-      this.timeCount= '0';
-      return;
-    }
-    let startTime = this.todo.controls['startTime'].value;
-    let endTime = this.todo.controls['endTime'].value;
-    let pre = '2017/01/01 ';
-    if(startTime && endTime) {
-      let interval = Date.parse(pre+endTime) - Date.parse(pre+startTime)
-      this.timeCount = (interval / (1000 * 60 * 60)).toFixed(1);
+    // this.todo.controls['businessTime'].valueChanges.subscribe(())
+    if (!this.haveSaved && !this.todo.controls['businessTime'].value) {
+      let day = new Date().toISOString()
+      this.todo.controls['businessTime'].setValue(day.substr(0,day.indexOf('T')));
     }
   }
   initValidator(bind:any) {
     let newValidator = new MyValidatorModel([
-      {name:'reasonType',valiItems:[{valiName:'Required',errMessage:'请选择加班类型',valiValue:true}]},
+      {name:'reasonType',valiItems:[{valiName:'Required',errMessage:this.fontContent.reasonType_required_err,valiValue:true}]},
       {name:'autoSet',valiItems:[]},
-      {name:'colleague',valiItems:[{valiName:'Required',errMessage:'请选择代理人',valiValue:true}]},
-      {name:'businessTime',valiItems:[{valiName:'Required',errMessage:'公出日期不能为空',valiValue:true}]},
+      {name:'colleague',valiItems:[{valiName:'Required',errMessage:this.fontContent.colleague_required_err,valiValue:true}]},
+      {name:'businessTime',valiItems:[{valiName:'Required',errMessage:this.fontContent.businessTime_required_err,valiValue:true}]},
       {name:'reason',valiItems:[
-        {valiName:'Required',errMessage:'原因不能为空',valiValue:true},
-        {valiName:'Minlength',errMessage:'原因长度不能少于2位',valiValue:2}
+        {valiName:'Required',errMessage:this.fontContent.reason_required_err,valiValue:true},
+        {valiName:'Minlength',errMessage:this.fontContent.reason_minlength_err,valiValue:2}
       ]},
       {name:'startTime',valiItems:[
-        {valiName:'Required',errMessage:'开始时间不能为空',valiValue:true},
-        {valiName:'TimeSmaller',errMessage:'结束时间必须迟于开始时间',valiValue:'endTime'}
+        {valiName:'Required',errMessage:this.fontContent.startTime_required_err,valiValue:true},
+        {valiName:'TimeSmaller',errMessage:this.fontContent.startTime_timeSmaller_err,valiValue:'endTime'}
       ]},
       {name:'endTime',valiItems:[
-        {valiName:'Required',errMessage:'结束时间不能为空',valiValue:true},
-        {valiName:'TimeBigger',errMessage:'结束时间必须迟于开始时间',valiValue:'startTime'}
+        {valiName:'Required',errMessage:this.fontContent.endTime_required_err,valiValue:true},
+        {valiName:'TimeBigger',errMessage:this.fontContent.endTime_timeBigger_err,valiValue:'startTime'}
       ]}
     ],bind)
     return newValidator;
@@ -180,7 +175,6 @@ export class BusinessFormComponent {
       this.myValidators[name].pass = !prams.mes;
       if (name === 'startTime' || name === 'endTime') {
         this.timeError = prams.mes;
-        this.calculateTime(this.timeError);
       }
       return Promise.resolve(this.myValidators);
     });

@@ -1,11 +1,8 @@
 <ion-header>
 
   <ion-navbar>
-    <ion-title>销假申请单</ion-title>
-    <!-- <ion-buttons end [ngSwitch]="formData.status.toUpperCase()" *ngIf="haveSaved" >
-    <button ion-button (click)="cancelForm()" *ngSwitchCase="'NEW'">删除单据</button>
-    <button ion-button (click)="callbackSubmit()" *ngSwitchCase="'WAITING'">取消送签</button>
-    </ion-buttons> -->
+    <ion-title *ngIf="!formData.status">{{fontContent.unSave_title}}</ion-title>
+    <ion-title *ngIf="formData.status">{{fontContent.saved_title}}</ion-title>
     <ion-buttons end >
       <button ion-button icon-only (click)="presentPopover($event)">
       <ion-icon name="more"></ion-icon>
@@ -16,18 +13,18 @@
 
 
 <ion-content class="main">
-  <div [class.layer]="['APPROVED','WAITING'].indexOf(formData.status.toUpperCase())>-1">
+  <div [class.layer]="['APPROVED','WAITING','FINISHED'].indexOf(formData.status.toUpperCase())>-1">
   </div>
   <ion-list>
     <ion-item>
-      单据状态：
+      {{fontContent.form_status}}：
       <ion-note item-right>
         {{formData.status}}
-      </ion-note><button ion-button  *ngIf="['APPROVED','WAITING'].indexOf(formData.status.toUpperCase())>-1" (click)="sign_list()">签核名单</button>
+      </ion-note><button ion-button  *ngIf="['APPROVED','WAITING','FINISHED'].indexOf(formData.status.toUpperCase())>-1" (click)="sign_list()">{{fontContent.sign_list}}</button>
     </ion-item>
 
     <ion-item>
-      单据编号：
+      {{fontContent.form_No}}：
       <ion-note item-right>
         {{formData.No}}
       </ion-note>
@@ -36,24 +33,24 @@
   <form [formGroup]="todo" *ngIf="todo" (ngSubmit)="leaveForm()">
     <ion-list>
       <ion-item>
-        <ion-label>申請取消的假單號*</ion-label>
+        <ion-label>*{{fontContent.leave_No}}</ion-label>
         <ion-input readonly formControlName="leave_No"></ion-input>
       </ion-item>
       <ion-item [class.has-error]="myValidators.reason.error" [class.has-success]="myValidators.reason.pass">
-        <ion-label>原因*</ion-label>
+        <ion-label>*{{fontContent.reason}}</ion-label>
         <ion-textarea rows="2" cols="20" formControlName="reason" class="reasonTest"></ion-textarea>
       </ion-item>
       <ion-item-divider *ngIf="myValidators.reason.error" class='alert'>{{myValidators.reason.error}}</ion-item-divider>
-      <ion-grid *ngIf="['APPROVED','WAITING'].indexOf(formData.status.toUpperCase())<0">
+      <ion-grid *ngIf="['APPROVED','WAITING','FINISHED'].indexOf(formData.status.toUpperCase())<0">
         <ion-row>
           <ion-col width-50>
             <ion-buttons left>
-              <button ion-button class="submit" type="submit" [disabled]="!todo.valid || myValidators.reason.error ">送签</button>
+              <button ion-button class="submit" type="submit" [disabled]="!todo.valid || myValidators.reason.error ">{{fontContent.sign}}</button>
             </ion-buttons>
           </ion-col>
           <ion-col width-50>
             <ion-buttons right>
-              <button ion-button type="button" [disabled]="!todo.valid || myValidators.reason.error " (click)="saveForm()">保存</button>
+              <button ion-button type="button" [disabled]="!todo.valid || myValidators.reason.error " (click)="saveForm()">{{fontContent.save}}</button>
             </ion-buttons>
           </ion-col>
         </ion-row>

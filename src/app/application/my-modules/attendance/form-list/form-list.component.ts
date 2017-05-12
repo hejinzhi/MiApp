@@ -1,14 +1,17 @@
 import { Component, OnInit } from '@angular/core';
 import { NavController, NavParams, App, Platform } from 'ionic-angular';
 
-import { TabsComponent } from '../../../../tabs/tabs.component'
-
+import { LanguageTypeConfig } from '../shared/config/language-type.config';
 
 @Component({
   selector: 'sg-form-list',
   templateUrl: 'form-list.component.html',
 })
 export class FormListComponent {
+
+  fontType:string = localStorage.getItem('languageType')
+  fontContent = LanguageTypeConfig.formListComponent[this.fontType];
+
   showList: boolean = false;
 
   type: string = '100';

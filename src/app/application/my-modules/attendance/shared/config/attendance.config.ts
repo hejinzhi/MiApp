@@ -70,4 +70,15 @@ export class AttendanceConfig {
   // 获取销假单
   static getCallbackLeaveFromUrl = EnvConfig.baseUrl + 'DelOffDuty/GetDelOffDuty?';
 
+
+  // 获取月出勤记录
+  static getAttendanceMonthUrl = EnvConfig.baseUrl + 'Attendance/GetAttendanceMonth?';
+
+  // 获取月出勤记录
+  static getSwipeNoteUrl = EnvConfig.baseUrl + 'Attendance/GetTimeCardHistory?';
+
+  // 获取出勤明细
+  static getAttendanceDetailUrl = EnvConfig.baseUrl + 'Attendance/GetAttendanceDetail?';
+
+
 }

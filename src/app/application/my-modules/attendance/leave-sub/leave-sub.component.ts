@@ -8,11 +8,16 @@ import { BusinessFormComponent } from '../business-form/business-form.component'
 import { AttendanceService } from '../shared/service/attendance.service';
 import { PluginService }   from '../../../../core/services/plugin.service';
 
+import { LanguageTypeConfig } from '../shared/config/language-type.config';
+
 @Component({
   selector:'sg-leave-sub',
   templateUrl: 'leave-sub.component.html'
 })
 export class LeaveSubComponent {
+
+  fontType:string = localStorage.getItem('languageType')
+  fontContent = LanguageTypeConfig.leaveSubComponent[this.fontType];
 
   constructor(
     public navCtrl: NavController,
@@ -33,7 +38,7 @@ export class LeaveSubComponent {
     loading.present();
     let res:any = await this.attendanceService.getCanCallbackLeaveFrom();
     loading.dismiss();
-    if(res.length === 0) return this.plugin.showToast('无可销假的假单');
+    if(res.length === 0) return this.plugin.showToast(this.fontContent.for_callback_tip);
     this.navCtrl.push(FormListComponent,{
       formData:res,
       type:'2'

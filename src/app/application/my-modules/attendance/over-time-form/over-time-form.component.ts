@@ -14,7 +14,7 @@ import { MyFormModel } from '../shared/models/my-form.model';
 import { HolidayType } from '../shared/config/holiday-type';
 
 import { AttendanceConfig } from '../shared/config/attendance.config';
-import { FontTypeConfig } from '../shared/config/font-type.config';
+import { LanguageTypeConfig } from '../shared/config/language-type.config';
 
 @Component({
   selector: 'sg-over-time-form',
@@ -35,8 +35,8 @@ export class OverTimeFormComponent {
     No:'',
     data:{}
   }
-  fontType:string = localStorage.getItem('fontType')
-  fontContent = FontTypeConfig.overTimeFormComponent[this.fontType];
+  fontType:string = localStorage.getItem('languageType')
+  fontContent = LanguageTypeConfig.overTimeFormComponent[this.fontType];
   dutyType: string;
   haveSaved:boolean;
   startHourRange:string ='';

@@ -3,6 +3,8 @@ import { NavController, NavParams } from 'ionic-angular';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 import { ValidateService }   from '../../../../core/services/validate.service';
+import { PluginService }   from '../../../../core/services/plugin.service';
+import { AttendanceService } from '../shared/service/attendance.service';
 
 import { MyValidatorModel } from '../../../../shared/models/my-validator.model';
 
@@ -28,13 +30,22 @@ export class DetailBetweenFormComponent {
   timeError:string ='';
   myValidators:{};
   MyValidatorControl: MyValidatorModel;
-  constructor(public navCtrl: NavController, public navParams: NavParams, private formBuilder: FormBuilder, private validateService: ValidateService) { }
+  constructor(
+    public navCtrl: NavController,
+    public navParams: NavParams,
+    private formBuilder: FormBuilder,
+    private validateService: ValidateService,
+    private attendanceService: AttendanceService,
+    private plugin: PluginService
+  ) { }
 
   ionViewDidLoad() {
     this.type = this.navParams.data.type;
+    let today = new Date().toISOString();
+    today = today.substr(0,today.indexOf('T'));
     this.betweenMes = {
-      startTime: '',
-      endTime: '',
+      startTime: today,
+      endTime: today,
     }
     this.todo = this.initWork(this.betweenMes);
     this.MyValidatorControl = this.initValidator();
@@ -74,14 +85,36 @@ export class DetailBetweenFormComponent {
       return Promise.resolve(this.myValidators);
     });
   }
-  leaveForm() {
+  async leaveForm() {
     let formType = new FormType()
     console.log(this.todo.value);
     if(this.type === formType.swipe_note.type) {
-      this.navCtrl.push(SwipeNoteComponent)
+      let loading = this.plugin.createLoading();
+      loading.present()
+      let res: any = await this.attendanceService.getSwipeNote(this.todo.value);
+      loading.dismiss()
+      if(!res.status) return false;
+      if(res.content && res.content instanceof Array && res.content.length>0) {
+        this.navCtrl.push(SwipeNoteComponent,{
+          swipe_note:res.content
+        })
+      } else {
+        this.plugin.showToast('没有此段时间的刷卡记录')
+      }
     }
     if(this.type === formType.attendance_detail.type) {
-      this.navCtrl.push(AttendanceDetailComponent)
+      let loading = this.plugin.createLoading();
+      loading.present()
+      let res: any = await this.attendanceService.getAttendanceDetail(this.todo.value);
+      loading.dismiss()
+      if(!res.status) return false;
+      if(res.content && res.content instanceof Array && res.content.length>0) {
+        this.navCtrl.push(AttendanceDetailComponent,{
+          attendance_detail:res.content
+        })
+      } else {
+        this.plugin.showToast('没有此段时间的考勤明细记录')
+      }
     }
     return false;
   }

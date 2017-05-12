@@ -19,7 +19,7 @@ import { MyValidatorModel } from '../../../../shared/models/my-validator.model';
 import { MyFormModel } from '../shared/models/my-form.model';
 
 import { AttendanceConfig } from '../shared/config/attendance.config';
-import { FontTypeConfig } from '../shared/config/font-type.config';
+import { LanguageTypeConfig } from '../shared/config/language-type.config';
 
 @Component({
   selector: 'sg-leave-form',
@@ -44,8 +44,8 @@ export class LeaveFormComponent {
     No: '',
     data: {}
   }
-  fontType:string = localStorage.getItem('fontType')
-  fontContent = FontTypeConfig.LeaveFormComponent[this.fontType];
+  fontType:string = localStorage.getItem('languageType')
+  fontContent = LanguageTypeConfig.LeaveFormComponent[this.fontType];
 
   startHourRange: string = '';
   endHourRange: string = '';

@@ -7,6 +7,7 @@ import { AttendanceService } from '../shared/service/attendance.service';
 import { SearchFormComponent } from '../search-form/search-form.component';
 import { CallbackLeaveFormComponent } from '../callback-leave-form/callback-leave-form.component';
 import { HoildayDetailComponent } from '../hoilday-detail/holiday-detail.component';
+import { FormListComponent } from '../form-list/form-list.component';
 
 import { MyFormModel } from '../shared/models/my-form.model';
 
@@ -38,7 +39,22 @@ export class FormMenuComponent {
     this.lastNavCtr.push(SearchFormComponent,{
       type:this.formData.type
     })
-
+  }
+  async getCallbackForm() {
+    this.viewCtrl.dismiss();
+    let loading = this.plugin.createLoading();
+    loading.present();
+    let res:any = await this.attendanceService.getCallbackLeaveFrom();
+    loading.dismiss();
+    if(!res.status) return;
+    if(res.content.length>0) {
+      this.lastNavCtr.push(FormListComponent, {
+        type: this.formData.type,
+        formData: res.content
+      })
+    } else {
+      this.plugin.showToast('没有销假单记录')
+    }
   }
   async toDetail() {
     this.viewCtrl.dismiss();
@@ -77,9 +93,9 @@ export class FormMenuComponent {
     loading.present();
     let res:any = await this.attendanceService.getCallbackLeaveFrom(this.formData.No);
     loading.dismiss();
-    if(res.length>0) {
+    if(res.content.length>0) {
       this.lastNavCtr.push(CallbackLeaveFormComponent,{
-        detailMes: res[0]
+        detailMes: res.content[0]
       })
     } else {
       this.lastNavCtr.push(CallbackLeaveFormComponent,{
