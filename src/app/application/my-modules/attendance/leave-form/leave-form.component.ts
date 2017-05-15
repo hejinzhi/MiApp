@@ -11,7 +11,6 @@ import { AttendanceService } from '../shared/service/attendance.service';
 
 import { AttendanceComponent } from '../attendance.component';
 import { FormMenuComponent } from '../form-menu/form-menu.component';
-import { SignListComponent } from '../sign-list/sign-list.component';
 
 import { HolidayType } from '../shared/config/holiday-type';
 
@@ -258,6 +257,8 @@ export class LeaveFormComponent {
     if (res.content) {
       this.hourLeave = res.content.HOURS;
       this.dayLeave = res.content.DAYS;
+      this.formData.No = res.DOCNO
+      this.formData.status = res.STATUS;
       this.haveSaved = true;
     }
     return false;
@@ -272,12 +273,8 @@ export class LeaveFormComponent {
     this.dayLeave = res.DAYS;
     this.hourLeave = res.HOURS;
     this.formData.No = res.DOCNO
+    this.formData.status = res.STATUS;
     this.haveSaved = true;
     this.plugin.showToast(this.fontContent.save_success);
-  }
-  sign_list() {
-    this.navCtrl.push(SignListComponent, {
-      formData: this.formData
-    })
   }
 }

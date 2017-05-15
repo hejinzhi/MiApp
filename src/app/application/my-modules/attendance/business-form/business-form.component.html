@@ -16,14 +16,14 @@
   <div [class.layer]="['APPROVED','WAITING'].indexOf(formData.status.toUpperCase())>-1">
   </div>
   <ion-list>
-    <ion-item>
+    <ion-item class="myForm auto">
       {{fontContent.form_status}}：
       <ion-note item-right>
         {{formData.status}}
-      </ion-note><button ion-button  *ngIf="['APPROVED','WAITING'].indexOf(formData.status.toUpperCase())>-1" (click)="sign_list()">{{fontContent.sign_list}}</button>
+      </ion-note>
     </ion-item>
 
-    <ion-item>
+    <ion-item class="myForm auto">
       {{fontContent.form_No}}：
       <ion-note item-right>
         {{formData.No}}
@@ -41,10 +41,6 @@
       <ion-item>
         <ion-label>{{fontContent.autoSet}}</ion-label>
         <ion-toggle formControlName="autoSet"></ion-toggle>
-      </ion-item>
-      <ion-item class="searchOut" [class.has-error]="myValidators.colleague.error" [class.has-success]="myValidators.colleague.pass">
-        <ion-label>*{{fontContent.colleague}}</ion-label>
-        <ion-input type="text" #name (keyup)="search(name)" formControlName="colleague" (focus)="name.Error=''" data-v-required="true" data-v-required-message="请选择代理人"></ion-input>
       </ion-item>
       <ion-item-divider *ngIf="myValidators.colleague.error" class='alert'>{{myValidators.colleague.error}}</ion-item-divider>
       <ion-item [class.has-error]="myValidators.businessTime.error" [class.has-success]="myValidators.businessTime.pass">
@@ -67,11 +63,27 @@
         ></ion-datetime>
       </ion-item>
       <ion-item-divider *ngIf="timeError " class='alert'>{{timeError}}</ion-item-divider>
-      <ion-item *ngIf="timeCount">
-        小时：
-        <ion-note item-right>
-          {{timeCount}}
-        </ion-note>
+      <ion-row *ngIf="hourCount && dayCount">
+        <ion-col width-50>
+          <ion-item class="myForm auto">
+            {{fontContent.dayCount}}：
+            <ion-note item-right>
+              {{dayCount}}
+            </ion-note>
+          </ion-item>
+        </ion-col>
+        <ion-col width-50>
+          <ion-item class="myForm auto">
+            {{fontContent.hourCount}}：
+            <ion-note item-right>
+              {{hourCount}}
+            </ion-note>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+      <ion-item class="searchOut" [class.has-error]="myValidators.colleague.error" [class.has-success]="myValidators.colleague.pass">
+        <ion-label>*{{fontContent.colleague}}</ion-label>
+        <ion-input type="text" #name (keyup)="search(name)" formControlName="colleague" (focus)="name.Error=''" data-v-required="true" data-v-required-message="请选择代理人"></ion-input>
       </ion-item>
       <ion-item [class.has-error]="myValidators.reason.error" [class.has-success]="myValidators.reason.pass">
         <ion-label>*{{fontContent.reason}}</ion-label>

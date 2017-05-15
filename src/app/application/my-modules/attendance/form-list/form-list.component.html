@@ -4,6 +4,9 @@
     <ion-buttons *ngIf="type === '100'">
       <button ion-button (click)="exit()">{{fontContent.exit}}</button>
     </ion-buttons>
+    <ion-buttons end *ngIf="+type>1 && +type<5 && !approved">
+      <button ion-button (click)="newForm()">新建{{type | sgFormType}}</button>
+    </ion-buttons>
   </ion-navbar>
 
 </ion-header>

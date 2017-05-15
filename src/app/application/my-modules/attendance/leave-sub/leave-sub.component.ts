@@ -41,7 +41,8 @@ export class LeaveSubComponent {
     if(res.length === 0) return this.plugin.showToast(this.fontContent.for_callback_tip);
     this.navCtrl.push(FormListComponent,{
       formData:res,
-      type:'2'
+      type:'2',
+      approved:true
     });
   }
 

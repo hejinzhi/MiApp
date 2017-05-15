@@ -176,7 +176,7 @@ export class OverTimeFormComponent {
     loading.dismiss()
     if(res.status) {
       this.plugin.showToast(this.fontContent.sign_success);
-      this.navCtrl.canGoBack()?this.navCtrl.popToRoot():'';
+      // this.navCtrl.canGoBack()?this.navCtrl.popToRoot():'';
     }
     if(res.content) {
       this.OTCount = res.content.HOURS;
@@ -196,10 +196,5 @@ export class OverTimeFormComponent {
     this.formData.No = res.DOCNO
     this.haveSaved = true;
     this.plugin.showToast(this.fontContent.save_success);
-  }
-  sign_list() {
-    this.navCtrl.push(SignListComponent,{
-      formData: this.formData
-    })
   }
 }

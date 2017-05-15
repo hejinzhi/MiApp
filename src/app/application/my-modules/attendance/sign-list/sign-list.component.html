@@ -8,18 +8,24 @@
 
 
 <ion-content>
-  <ion-list>
+  <ion-card>
     <ion-item-group *ngFor="let item of items;let i = index;">
-      <ion-item-divider color="light">版本： {{item.REVISION}}</ion-item-divider>
-      <ion-item *ngFor="let itemSub of item.INFO" >
-          <h2>序列: {{itemSub.SEQ}}</h2>
-          <h3>签核人： {{itemSub.APPROVER}}</h3>
-          <h3 *ngIf="itemSub.ARENT_FROM">代理人： {{itemSub.ARENT_FROM}}</h3>
-          <p>签核状态： {{itemSub.STATUS}}</p>
-          <p>送签时间： {{itemSub.IN_TIME | sgTTime | date:"yyyy/MM/dd HH:mm"}}</p>
-          <p>签核时间： {{itemSub.OUT_TIME | sgTTime | date:"yyyy/MM/dd HH:mm"}}</p>
-          <p *ngIf="itemSub.COMMENTS" >备注： {{itemSub.COMMENTS}}</p>
+      <ion-item-divider color="light" *ngIf="items.length > 1">版本： {{item.REVISION}}</ion-item-divider>
+      <ion-item *ngFor="let itemSub of item.INFO">
+        <ion-avatar item-left>
+          <img src="assets/img/face.png">
+        </ion-avatar>
+        <h3>序列: {{itemSub.SEQ}}</h3>
+        <h3>{{itemSub.APPROVER}} <p>{{itemSub.IN_TIME | sgTTime | date:"yyyy/MM/dd HH:mm"}}</p></h3>
+        <h3 *ngIf="itemSub.ARENT_FROM">代理人： {{itemSub.ARENT_FROM}}</h3>
+        <h3><p class="status" [class.waiting] ="itemSub.STATUS.toUpperCase() === 'WAITING'">{{itemSub.STATUS}}</p>
+          <p *ngIf="itemSub.STATUS.toUpperCase() !== 'WAITING'">
+          {{itemSub.OUT_TIME | sgTTime | date:"yyyy/MM/dd HH:mm"}}
+          </p>
+          <p class="waiting" *ngIf="itemSub.STATUS.toUpperCase() === 'WAITING'">已等待{{itemSub.IN_TIME | sgTTime | sgDuring}}</p>
+        </h3>
+        <p *ngIf="itemSub.COMMENTS">备注： {{itemSub.COMMENTS}}</p>
       </ion-item>
     </ion-item-group>
-  </ion-list>
+  </ion-card>
 </ion-content>

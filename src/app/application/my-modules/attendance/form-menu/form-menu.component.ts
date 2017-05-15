@@ -8,6 +8,7 @@ import { SearchFormComponent } from '../search-form/search-form.component';
 import { CallbackLeaveFormComponent } from '../callback-leave-form/callback-leave-form.component';
 import { HoildayDetailComponent } from '../hoilday-detail/holiday-detail.component';
 import { FormListComponent } from '../form-list/form-list.component';
+import { SignListComponent } from '../sign-list/sign-list.component';
 
 import { MyFormModel } from '../shared/models/my-form.model';
 
@@ -102,5 +103,11 @@ export class FormMenuComponent {
         form_No:this.formData.No
       })
     }
+  }
+  sign_list() {
+    this.viewCtrl.dismiss();
+    this.lastNavCtr.push(SignListComponent, {
+      formData: this.formData
+    })
   }
 }

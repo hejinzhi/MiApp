@@ -7,17 +7,20 @@
     <p *ngIf="+item.type<2">{{fontContent.endTime}}： {{ item.data.endTime | date:"yyyy/MM/dd HH:mm" }}</p>
     <p *ngIf="item.type === '2' ">{{fontContent.startTime}}： {{item.data.startDate +' ' + item.data.startTime.substr(3) }}</p>
     <p *ngIf="item.type === '2' ">{{fontContent.endTime}}： {{item.data.endDate +' ' + item.data.endTime.substr(3) }}</p>
-    <p *ngIf="item.type === '4'">{{fontContent.businessTime}}： {{ item.data.businessTime | date:"yyyy/MM/dd" }}</p>
+    <p *ngIf="item.type === '4'">{{fontContent.businessTime}}： {{ item.data.businessTime | date:"yyyy/MM/dd" }} {{item.data.startTime.substr(3)}}-{{item.data.endTime.substr(3)}}</p>
     <p *ngIf="item.type === '3'">{{fontContent.OTtime}}： {{ item.data.OTtime | date:"yyyy/MM/dd" }}</p>
-    <p *ngIf="item.type === '3'">{{fontContent.startTime}}： {{ item.data.startTime.substr(3) }}</p>
-    <p *ngIf="item.type === '3'">{{fontContent.endTime}}： {{ item.data.endTime.substr(3) }}</p>
-    <p>{{fontContent.type}}： {{item.data.reasonType | sgReasonType: item.type}}</p>
+    <p *ngIf="item.type === '3'">{{ item.data.startTime.substr(3) }}-{{ item.data.endTime.substr(3) }} {{item.data.count}}H</p>
+    <p *ngIf="item.type === '3'">{{fontContent.trueCount}}：{{item.data.trueCount}}H;</p>
+    <p *ngIf="item.data.reasonType">{{fontContent.type}}： {{item.data.reasonType | sgReasonType: item.type}}</p>
     <p *ngIf="item.type === '5'">{{fontContent.leave_No}}： {{item.data.leave_No}}</p>
     <p *ngIf="item.type === '5'">{{fontContent.callback_reason}}： {{item.data.reason}}</p>
-    <button ion-button outline item-right color = "secondary" *ngIf="item.status.toUpperCase() !== 'WAITING'">
+    <button ion-button outline item-right color = "secondary" *ngIf="['APPROVED','FINISHED'].indexOf(item.status.toUpperCase())>-1">
       {{item.status}}
     </button>
-    <button ion-button outline item-right color = "danger" *ngIf="item.status.toUpperCase() === 'WAITING'">
+    <button ion-button outline item-right color = "normal" *ngIf="['NEW','CANCELED'].indexOf(item.status.toUpperCase())>-1">
+      {{item.status}}
+    </button>
+    <button ion-button outline item-right color = "danger" *ngIf="['WAITING','REJECTED'].indexOf(item.status.toUpperCase())>-1">
       {{item.status}}
     </button>
   </ion-item>

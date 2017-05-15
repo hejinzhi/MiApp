@@ -29,6 +29,11 @@ export class AttendanceService {
         dateUrl = AttendanceConfig.getLeaveFormByDateUrl;
         get_fn = this.editLeaveData_get;
         break;
+      case 4:
+        docNumUrl = AttendanceConfig.getLeaveFormByNoUrl;
+        dateUrl = AttendanceConfig.getLeaveFormByDateUrl;
+        get_fn = this.editLeaveData_get;
+        break;
       case 3:
         docNumUrl = AttendanceConfig.getOverTimeFormByNoUrl;
         dateUrl = AttendanceConfig.getOverTimeFormByDateUrl;
@@ -38,11 +43,12 @@ export class AttendanceService {
         break;
     }
     if (!(docNumUrl && dateUrl && get_fn)) return Promise.resolve([])
+    let type = formData.type;
     if (formData.form_No) {
-      return this.myHttp.get(docNumUrl + `DOCNO=${formData.form_No.toUpperCase()}`).then((res) => {
+      return this.myHttp.get(docNumUrl + `TYPE=${type}&DOCNO=${formData.form_No.toUpperCase()}`).then((res) => {
         let formData = res.json();
         let list = [];
-        formData = get_fn.call(this, formData);
+        formData = get_fn.call(this, formData, type);
         list.push(formData);
         return Promise.resolve(list)
       }).catch((err) => {
@@ -53,10 +59,10 @@ export class AttendanceService {
     } else {
       dateFM = formData.startTime || this.getMinStartTime(6);
       dateTO = formData.endTime || '';
-      return this.myHttp.get(dateUrl + `dateFM=${dateFM}&dateTO=${dateTO}`).then((res) => {
+      return this.myHttp.get(dateUrl + `type=${type}&dateFM=${dateFM}&dateTO=${dateTO}`).then((res) => {
         let formData = res.json();
         formData = formData.map((item: any) => {
-          return get_fn.call(this, item)
+          return get_fn.call(this, item, type)
         })
         return Promise.resolve(formData)
       }).catch((err) => {
@@ -100,7 +106,7 @@ export class AttendanceService {
   getLeaveDuring(data: MyFormModel) {
     let sendData = this.editLeaveData_send(data);
     return this.myHttp.post(AttendanceConfig.getLeaveDuringUrl, sendData).then((res) => {
-      let newData = this.editLeaveData_get(res.json());
+      let newData = this.editLeaveData_get(res.json(),data.type);
       return Promise.resolve(newData);
     }).catch((err) => {
       console.log(err)
@@ -182,8 +188,7 @@ export class AttendanceService {
         reason: '',
         days: '',
         hours: '',
-        businessTime: '',
-        timeCount: ''
+        businessTime: ''
       }
     };
     ({
@@ -191,15 +196,16 @@ export class AttendanceService {
       DOCNO: newData.No,
       REASON: newData.data.reason,
       AGENT: newData.data.colleague,
+      DAYS: newData.data.days,
+      HOURS: newData.data.hours
     } = data);
+    console.log(data)
     switch (Number(type)) {
       case 2:
         ({
           ABSENT_CODE: newData.data.reasonType,
           DATE_FM: newData.data.startDate,
-          DATE_TO: newData.data.endDate,
-          DAYS: newData.data.days,
-          HOURS: newData.data.hours
+          DATE_TO: newData.data.endDate
         } = data);
         newData.data.startDate = newData.data.startDate.substr(0, newData.data.startDate.indexOf('T'));
         newData.data.endDate = newData.data.endDate.substr(0, newData.data.endDate.indexOf('T'));
@@ -207,8 +213,7 @@ export class AttendanceService {
       case 4:
         ({
           BEAWAYTYPE: newData.data.reasonType,
-          DATE_FM: newData.data.businessTime,
-          HOURS: newData.data.timeCount
+          DATE_FM: newData.data.businessTime
         } = data);
         newData.data.businessTime = newData.data.businessTime.substr(0, newData.data.businessTime.indexOf('T'));
         break;
@@ -267,8 +272,8 @@ export class AttendanceService {
       default:
         break;
     }
-    sendData.DETAIL.END_TIME = sendData.DETAIL.END_TIME.substr(3);
-    sendData.DETAIL.START_TIME = sendData.DETAIL.START_TIME.substr(3);
+    sendData.DETAIL.END_TIME = sendData.DETAIL.END_TIME?sendData.DETAIL.END_TIME.substr(3):'';
+    sendData.DETAIL.START_TIME = sendData.DETAIL.END_TIME?sendData.DETAIL.START_TIME.substr(3):'';
     sendData.DETAIL.AGENT_TEMPLATE = data.data.autoSet ? 'Y' : 'N';
     return sendData;
   }
@@ -356,6 +361,9 @@ export class AttendanceService {
         case 3:
           saveRes = await this.saveOverTimeForm(formData);
           break;
+        case 4:
+          saveRes = await this.saveLeaveForm(formData);
+          break;
         case 5:
           saveRes = await this.saveCallbackLeaveFrom(formData);
           break;
@@ -378,6 +386,9 @@ export class AttendanceService {
         break;
       case 3:
         sendData.KIND = 'OVERTIME';
+        break;
+      case 4:
+        sendData.KIND = 'OFFDUTY';
         break;
       case 5:
         sendData.KIND = 'DELETE_OFFDUTY';
@@ -414,6 +425,9 @@ export class AttendanceService {
         break;
       case 3:
         sendData.KIND = 'OVERTIME';
+        break;
+      case 4:
+        sendData.KIND = 'OFFDUTY';
         break;
       case 5:
         sendData.KIND = 'DELETE_OFFDUTY';
@@ -492,7 +506,8 @@ export class AttendanceService {
         endTime: '',
         reason: '',
         count: '',
-        duty_type: ''
+        duty_type: '',
+        trueCount:''
       }
     };
     ({
@@ -501,7 +516,8 @@ export class AttendanceService {
       NOTES_DETAIL: newData.data.reason,
       IDATE: newData.data.OTtime,
       HOURS: newData.data.count,
-      DUTY_KIND: newData.data.duty_type
+      DUTY_KIND: newData.data.duty_type,
+      ACT_HOURS: newData.data.trueCount,
     } = data);
     newData.data.startTime = '00:' + this.padLeft(data.TIME_HH_FM) + ':' + this.padLeft(data.TIME_MM_FM);
     newData.data.endTime = '00:' + this.padLeft(data.TIME_HH_TO) + ':' + this.padLeft(data.TIME_MM_TO);
@@ -623,7 +639,7 @@ export class AttendanceService {
   errorDeal(err: any, showAlert: boolean = false) {
     switch (err.status) {
       case 404:
-        this.plugin.showToast('未找到结果，可联系MIS处理');
+        this.plugin.showToast('未找到结果');
         break;
       case 400:
         if (showAlert) {
