@@ -199,7 +199,6 @@ export class AttendanceService {
       DAYS: newData.data.days,
       HOURS: newData.data.hours
     } = data);
-    console.log(data)
     switch (Number(type)) {
       case 2:
         ({
