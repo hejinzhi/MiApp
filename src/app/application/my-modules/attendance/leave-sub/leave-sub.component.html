@@ -1,7 +1,7 @@
 <ion-header>
 
   <ion-navbar>
-    <ion-title>假單管理</ion-title>
+    <ion-title>{{fontContent.title}}</ion-title>
   </ion-navbar>
 
 </ion-header>
@@ -10,13 +10,13 @@
 <ion-content>
   <ion-list>
     <button ion-item (click)='maintain_Leave()'>
-    请假
+    {{fontContent.for_leave}}
     </button>
     <button ion-item (click)='cancel_leave()'>
-    销假
+    {{fontContent.for_callback}}
     </button>
     <button ion-item (click)='maintain_business()'>
-    公出
+    {{fontContent.for_business}}
     </button>
   </ion-list>
 </ion-content>

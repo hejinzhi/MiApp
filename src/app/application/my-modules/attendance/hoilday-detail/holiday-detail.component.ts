@@ -3,11 +3,16 @@ import { NavController, NavParams } from 'ionic-angular';
 
 import * as echarts from 'echarts';
 
+import { LanguageTypeConfig } from '../shared/config/language-type.config';
+
 @Component({
   selector: 'sg-hoilday-detail',
   templateUrl: 'holiday-detail.component.html'
 })
 export class HoildayDetailComponent {
+
+  fontType:string = localStorage.getItem('languageType')
+  fontContent = LanguageTypeConfig.holidayDetailComponent[this.fontType];
 
   leaveDays:{STADATE:string,detail_used:{type:string,value:string}[],detail_canUse:{type:string,value:string}[]};
   constructor(

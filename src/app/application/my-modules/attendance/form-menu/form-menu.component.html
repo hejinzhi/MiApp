@@ -1,9 +1,11 @@
 <ion-list *ngIf="formData">
-  <button ion-item (click)="toSearch()">单据查询</button>
-  <button ion-item (click)="toDetail()">个人考勤现状</button>
+  <button ion-item (click)="toSearch()" *ngIf="+formData.type < 5">{{formData.type | sgFormType}}查询</button>
+  <button ion-item (click)="sign_list()" *ngIf="['APPROVED','WAITING'].indexOf(formData.status.toUpperCase())>-1">签核名单</button>
+  <button ion-item (click)="getCallbackForm()" *ngIf="formData.type === '5'">获取所有销假单</button>
+  <button ion-item (click)="toDetail()" *ngIf="formData.type === '2'">个人考勤现状</button>
   <ion-item-group *ngIf="haveSaved">
-  <button ion-item (click)="deleteForm()"  *ngIf="['APPROVED','WAITING'].indexOf(formData.status.toUpperCase())<0">删除单据</button>
+  <button ion-item (click)="deleteForm()"  *ngIf="['APPROVED','WAITING'].indexOf(formData.status.toUpperCase())<0">删除{{formData.type | sgFormType}}</button>
   <button ion-item (click)="callbackSign()" *ngIf="formData.status.toUpperCase() === 'WAITING'">取消送签</button>
   </ion-item-group>
-  <button ion-item (click)="callBack()" *ngIf="formData.status.toUpperCase() === 'APPROVED'&& formData.type === '2'">撤销单据</button>
+  <button ion-item (click)="callBack()" *ngIf="formData.status.toUpperCase() === 'APPROVED'&& formData.type === '2'">取消假單</button>
 </ion-list>

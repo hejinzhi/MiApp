@@ -1,7 +1,7 @@
 <ion-header>
 
   <ion-navbar>
-    <ion-title>个人维护详情</ion-title>
+    <ion-title>{{fontContent.title}}</ion-title>
   </ion-navbar>
 
 </ion-header>
@@ -10,13 +10,13 @@
 <ion-content>
   <ion-list *ngIf="leaveDays">
     <ion-item>
-      特休假生效日期：
+      {{fontContent.STADATE}}：
       <ion-note item-right>
         {{leaveDays.STADATE}}
       </ion-note>
     </ion-item>
     <ion-item-group>
-      <ion-item-divider color="light">可用假天数</ion-item-divider>
+      <ion-item-divider color="light">{{fontContent.canUse}}</ion-item-divider>
       <ion-item *ngFor="let item of leaveDays.detail_canUse">
         {{item.type | sgOtherType: 'leaveDayType'}}
         <ion-note item-right>
@@ -25,7 +25,7 @@
       </ion-item>
     </ion-item-group>
     <ion-item-group>
-      <ion-item-divider color="light">已用假天数</ion-item-divider>
+      <ion-item-divider color="light">{{fontContent.used}}</ion-item-divider>
       <ion-item *ngFor="let item of leaveDays.detail_used">
         {{item.type | sgOtherType: 'leaveDayType'}}
         <ion-note item-right>

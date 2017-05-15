@@ -14,6 +14,7 @@ import { MyFormModel } from '../shared/models/my-form.model';
 import { HolidayType } from '../shared/config/holiday-type';
 
 import { AttendanceConfig } from '../shared/config/attendance.config';
+import { LanguageTypeConfig } from '../shared/config/language-type.config';
 
 @Component({
   selector: 'sg-over-time-form',
@@ -34,6 +35,9 @@ export class OverTimeFormComponent {
     No:'',
     data:{}
   }
+  fontType:string = localStorage.getItem('languageType')
+  fontContent = LanguageTypeConfig.overTimeFormComponent[this.fontType];
+  dutyType: string;
   haveSaved:boolean;
   startHourRange:string ='';
   endHourRange:string ='';
@@ -53,18 +57,19 @@ export class OverTimeFormComponent {
     private plugin: PluginService
   ) { }
 
-  ionViewWillLeave() {
-    this.ionViewDidLoad();
+  ionViewWillEnter() {
+    this.init();
   }
-  ionViewDidLoad() {
+  init() {
     this.startHourRange = this.attendanceService.getTimeRange(0,37);
     this.endHourRange = this.attendanceService.getTimeRange(0,41);
     this.timeError = '';
     this.haveSaved = false;
     this.OTCount = '';
+    this.dutyType = '';
     this.formData =  {
       type:'3',
-      status:'New',
+      status:'',
       No:'',
       data:{}
     };
@@ -79,6 +84,7 @@ export class OverTimeFormComponent {
       this.formData = this.navParams.data.detailMes;
       this.OtMes = this.navParams.data.detailMes.data;
       this.OTCount = this.navParams.data.detailMes.data.count || '';
+      this.dutyType = this.navParams.data.detailMes.data.duty_type || '';
       this.haveSaved = true;
     }
     this.todo = this.initWork(this.OtMes);
@@ -87,22 +93,43 @@ export class OverTimeFormComponent {
     for (let prop in this.myValidators) {
       this.todo.controls[prop].valueChanges.subscribe((value: any) => this.check(value, prop));
     }
+    this.todo.controls['OTtime'].valueChanges.subscribe((value: any) => this.getDutyType());
+    this.setDefaultDate();
+  }
+  setDefaultDate() {
+    if(this.haveSaved) return;
+    let today = new Date();
+    this.todo.controls['OTtime'].setValue(today.toISOString().substr(0,today.toISOString().indexOf('T')));
+  }
+  async getDutyType() {
+    let values = this.todo.controls;
+    this.formData.data = {
+      reasonType: '',
+      OTtime: values.OTtime.value,
+      startTime: '',
+      endTime: '',
+      reason: ''
+    }
+    let result:any = await this.attendanceService.getOverTimeDetail(this.formData);
+    if(!result) return;
+    this.dutyType = result.data.duty_type || '';
+    this.todo.controls['startTime'].setValue(result.data.startTime);
   }
   initValidator(bind:any) {
     let newValidator = new MyValidatorModel([
-      {name:'reasonType',valiItems:[{valiName:'Required',errMessage:'请选择加班类型',valiValue:true}]},
-      {name:'OTtime',valiItems:[{valiName:'Required',errMessage:'加班日期不能为空',valiValue:true}]},
+      {name:'reasonType',valiItems:[{valiName:'Required',errMessage:this.fontContent.reason_required_err,valiValue:true}]},
+      {name:'OTtime',valiItems:[{valiName:'Required',errMessage:this.fontContent.OTtime_required_err,valiValue:true}]},
       {name:'reason',valiItems:[
-        {valiName:'Required',errMessage:'原因不能为空',valiValue:true},
-        {valiName:'Minlength',errMessage:'原因长度不能少于2位',valiValue:2}
+        {valiName:'Required',errMessage:this.fontContent.reason_required_err,valiValue:true},
+        {valiName:'Minlength',errMessage:this.fontContent.reason_minlength_err,valiValue:2}
       ]},
       {name:'startTime',valiItems:[
-        {valiName:'Required',errMessage:'开始时间不能为空',valiValue:true},
-        {valiName:'TimeSmaller',errMessage:'结束时间必须迟于开始时间',valiValue:'endTime'}
+        {valiName:'Required',errMessage:this.fontContent.startTime_required_err,valiValue:true},
+        {valiName:'TimeSmaller',errMessage:this.fontContent.startTime_timeSmaller_err,valiValue:'endTime'}
       ]},
       {name:'endTime',valiItems:[
-        {valiName:'Required',errMessage:'结束时间不能为空',valiValue:true},
-        {valiName:'TimeBigger',errMessage:'结束时间必须迟于开始时间',valiValue:'startTime'}
+        {valiName:'Required',errMessage:this.fontContent.endTime_required_err,valiValue:true},
+        {valiName:'TimeBigger',errMessage:this.fontContent.endTime_timeBigger_err,valiValue:'startTime'}
       ]}
     ],bind)
     return newValidator;
@@ -120,7 +147,6 @@ export class OverTimeFormComponent {
   //單獨輸入塊驗證
   check(value: any, name: string): Promise<any> {
     this.myValidators[name].value = value;
-    console.log(value)
     let compare = this.myValidators[name].compare ? this.myValidators[this.myValidators[name].compare] : ''
     return this.validateService.check(this.myValidators[name], this.myValidators).then((prams) => {
       this.myValidators[name].error = prams.mes;
@@ -149,8 +175,8 @@ export class OverTimeFormComponent {
     let res:any = await this.attendanceService.sendSign(this.formData);
     loading.dismiss()
     if(res.status) {
-      this.plugin.showToast('送签成功');
-      this.navCtrl.canGoBack()?this.navCtrl.popToRoot():'';
+      this.plugin.showToast(this.fontContent.sign_success);
+      // this.navCtrl.canGoBack()?this.navCtrl.popToRoot():'';
     }
     if(res.content) {
       this.OTCount = res.content.HOURS;
@@ -169,11 +195,6 @@ export class OverTimeFormComponent {
     this.OTCount = res.HOURS;
     this.formData.No = res.DOCNO
     this.haveSaved = true;
-    this.plugin.showToast('表单保存成功');
-  }
-  sign_list() {
-    this.navCtrl.push(SignListComponent,{
-      formData: this.formData
-    })
+    this.plugin.showToast(this.fontContent.save_success);
   }
 }

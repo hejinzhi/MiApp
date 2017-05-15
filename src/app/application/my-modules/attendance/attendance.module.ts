@@ -28,6 +28,8 @@ import { ReasonTypePipe } from './shared/pipe/reason-type.pipe';
 import { OtherTypePipe } from './shared/pipe/other-type.pipe';
 import { FormTypePipe } from './shared/pipe/form-type.pipe';
 import { WeekNamePipe } from './shared/pipe/week-name.pipe';
+import { TTimePipe } from './shared/pipe/t-time.pipe';
+import { DuringPipe } from './shared/pipe/during.pipe';
 
 import { AttendanceService } from './shared/service/attendance.service';
 
@@ -58,7 +60,9 @@ import { AttendanceService } from './shared/service/attendance.service';
     ReasonTypePipe,
     FormTypePipe,
     OtherTypePipe,
-    WeekNamePipe
+    WeekNamePipe,
+    TTimePipe,
+    DuringPipe
   ],
   entryComponents:[
     AttendanceComponent,

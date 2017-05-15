@@ -3,6 +3,8 @@ import { NavController, NavParams } from 'ionic-angular';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 import { ValidateService }   from '../../../../core/services/validate.service';
+import { PluginService }   from '../../../../core/services/plugin.service';
+import { AttendanceService } from '../shared/service/attendance.service';
 
 import { MyValidatorModel } from '../../../../shared/models/my-validator.model';
 
@@ -26,13 +28,24 @@ export class DetailOnFormComponent {
   timeError:string ='';
   myValidators:{};
   MyValidatorControl: MyValidatorModel;
-  constructor(public navCtrl: NavController, public navParams: NavParams, private formBuilder: FormBuilder, private validateService: ValidateService) { }
+  constructor(
+    public navCtrl: NavController,
+    public navParams: NavParams,
+    private formBuilder: FormBuilder,
+    private validateService: ValidateService,
+    private attendanceService: AttendanceService,
+    private plugin: PluginService
+  ) { }
 
   ionViewDidLoad() {
     this.type = this.navParams.data.type;
     this.betweenMes = {
       date: ''
     }
+    let today = new Date()
+    let month = today.getMonth() +1;
+    let monthString = month<10?'0'+month:month;
+    this.betweenMes.date = today.getFullYear()+'-'+ monthString;
     this.todo = this.initWork(this.betweenMes);
     this.MyValidatorControl = this.initValidator();
     this.myValidators = this.MyValidatorControl.validators;
@@ -68,10 +81,19 @@ export class DetailOnFormComponent {
       return Promise.resolve(this.myValidators);
     });
   }
-  leaveForm() {
-    let formType = new FormType()
-    console.log(this.todo.value);
-    this.navCtrl.push(AttendanceMonthComponent);
+  async leaveForm() {
+    let loading = this.plugin.createLoading();
+    loading.present()
+    let res: any = await this.attendanceService.getAttendanceMonth(this.todo.value);
+    loading.dismiss()
+    if(!res.status) return false;
+    if(!res.content) {
+      this.plugin.showToast('没有此月记录')
+    } else {
+      this.navCtrl.push(AttendanceMonthComponent,{
+        attendance_month:res.content
+      });
+    }
     return false;
   }
 }
