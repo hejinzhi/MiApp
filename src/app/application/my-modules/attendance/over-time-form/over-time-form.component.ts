@@ -114,6 +114,13 @@ export class OverTimeFormComponent {
     if(!result) return;
     this.dutyType = result.data.duty_type || '';
     this.todo.controls['startTime'].setValue(result.data.startTime);
+    let time = Date.parse('2017/1/1 '+result.data.startTime)+1000*15;
+    let date = new Date(time);
+    let minute:any = date.getUTCMinutes();
+    minute = minute<10?'0'+minute:minute;
+    let second:any = date.getSeconds();
+    second = second<10?'0'+second:second
+    this.todo.controls['endTime'].setValue('00:'+minute+':'+second);
   }
   initValidator(bind:any) {
     let newValidator = new MyValidatorModel([
@@ -162,7 +169,8 @@ export class OverTimeFormComponent {
     let popover = this.popoverCtrl.create(FormMenuComponent,{
       formData:this.formData,
       haveSaved:this.haveSaved,
-      navCtrl:this.navCtrl
+      navCtrl:this.navCtrl,
+      this:this,
     });
     popover.present({
       ev: myEvent
@@ -180,6 +188,8 @@ export class OverTimeFormComponent {
     }
     if(res.content) {
       this.OTCount = res.content.HOURS;
+      this.formData.No = res.content.DOCNO
+      this.formData.status = res.content.STATUS;
       this.haveSaved = true;
     }
     return false;
@@ -194,6 +204,7 @@ export class OverTimeFormComponent {
     if(!res) return;
     this.OTCount = res.HOURS;
     this.formData.No = res.DOCNO
+    this.formData.status = res.STATUS;
     this.haveSaved = true;
     this.plugin.showToast(this.fontContent.save_success);
   }

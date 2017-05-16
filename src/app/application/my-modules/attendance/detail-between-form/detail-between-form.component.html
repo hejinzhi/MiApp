@@ -9,14 +9,14 @@
   <form [formGroup]="todo" *ngIf="todo" (ngSubmit)="leaveForm()">
     <ion-list>
       <ion-item [class.has-error]="myValidators.startTime.error" [class.has-success]="myValidators.startTime.pass">
-        <ion-label>开始时间*</ion-label>
+        <ion-label>*日期起</ion-label>
         <ion-datetime displayFormat="YYYY/MM/DD"  #start name="start" formControlName="startTime"
         cancelText="取消" doneText="确认"
         min="2000" [max]="selectMaxYear"
         ></ion-datetime>
       </ion-item>
       <ion-item [class.has-error]="myValidators.endTime.error" [class.has-success]="myValidators.endTime.pass">
-        <ion-label>结束时间*</ion-label>
+        <ion-label>*日期起</ion-label>
         <ion-datetime displayFormat="YYYY/MM/DD"  #end name="end" formControlName="endTime"
         cancelText="取消" doneText="确认"
         min="2000" [max]="selectMaxYear"
@@ -27,7 +27,7 @@
         <ion-row>
           <ion-col width-50>
             <ion-buttons right>
-              <button ion-button class="submit" type="submit" [disabled]="!todo.valid || timeError ">提交</button>
+              <button ion-button class="submit" type="submit" [disabled]="!todo.valid || timeError ">查询</button>
             </ion-buttons>
           </ion-col>
         </ion-row>

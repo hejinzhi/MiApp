@@ -9,8 +9,8 @@
   <form [formGroup]="todo" *ngIf="todo" (ngSubmit)="leaveForm()">
     <ion-list>
       <ion-item [class.has-error]="myValidators.date.error" [class.has-success]="myValidators.date.pass">
-        <ion-label>日期*</ion-label>
-        <ion-datetime displayFormat="YYYY/MM" formControlName="date"
+        <ion-label>*年月</ion-label>
+        <ion-datetime displayFormat="YYYYMM" formControlName="date"
         cancelText="取消" doneText="确认"
         min="2000" [max]="selectMaxYear"
         ></ion-datetime>

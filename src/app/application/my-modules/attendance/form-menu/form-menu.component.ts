@@ -27,10 +27,12 @@ export class FormMenuComponent {
   formData:MyFormModel;
   haveSaved:boolean;
   lastNavCtr:any;
+  that:any;
   ionViewDidLoad(){
     this.formData = this.navParams.data.formData;
     this.haveSaved = this.navParams.data.haveSaved;
     this.lastNavCtr = this.navParams.data.navCtrl;
+    this.that = this.navParams.data.this || '';
   }
   ionViewWillEnter(){
 
@@ -76,7 +78,13 @@ export class FormMenuComponent {
     loading.dismiss();
     if(!res) return;
     this.plugin.showToast('删除表单成功');
-    return this.lastNavCtr.canGoBack()?this.lastNavCtr.popToRoot():'';
+    if(this.lastNavCtr.canGoBack()) {
+      this.lastNavCtr.popToRoot()
+    } else {
+      if(this.that) {
+        this.that.init()
+      }
+    }
   }
   async callbackSign() {
     this.viewCtrl.dismiss();

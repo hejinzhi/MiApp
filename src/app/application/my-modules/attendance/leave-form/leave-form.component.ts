@@ -257,8 +257,8 @@ export class LeaveFormComponent {
     if (res.content) {
       this.hourLeave = res.content.HOURS;
       this.dayLeave = res.content.DAYS;
-      this.formData.No = res.DOCNO
-      this.formData.status = res.STATUS;
+      this.formData.No = res.content.DOCNO
+      this.formData.status = res.content.STATUS;
       this.haveSaved = true;
     }
     return false;

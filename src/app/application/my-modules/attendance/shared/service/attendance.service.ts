@@ -106,7 +106,7 @@ export class AttendanceService {
   getLeaveDuring(data: MyFormModel) {
     let sendData = this.editLeaveData_send(data);
     return this.myHttp.post(AttendanceConfig.getLeaveDuringUrl, sendData).then((res) => {
-      let newData = this.editLeaveData_get(res.json(),data.type);
+      let newData = this.editLeaveData_get(res.json(), data.type);
       return Promise.resolve(newData);
     }).catch((err) => {
       console.log(err)
@@ -150,7 +150,7 @@ export class AttendanceService {
       case '3':
         return this.deleteOverTimeForm(formData);
       case '4':
-        return Promise.resolve('');
+        return this.deleteLeaveForm(formData);
       case '5':
         return this.deleteCallbackLeaveFrom(formData);
       default:
@@ -271,8 +271,8 @@ export class AttendanceService {
       default:
         break;
     }
-    sendData.DETAIL.END_TIME = sendData.DETAIL.END_TIME?sendData.DETAIL.END_TIME.substr(3):'';
-    sendData.DETAIL.START_TIME = sendData.DETAIL.END_TIME?sendData.DETAIL.START_TIME.substr(3):'';
+    sendData.DETAIL.END_TIME = sendData.DETAIL.END_TIME ? sendData.DETAIL.END_TIME.substr(3) : '';
+    sendData.DETAIL.START_TIME = sendData.DETAIL.END_TIME ? sendData.DETAIL.START_TIME.substr(3) : '';
     sendData.DETAIL.AGENT_TEMPLATE = data.data.autoSet ? 'Y' : 'N';
     return sendData;
   }
@@ -506,7 +506,7 @@ export class AttendanceService {
         reason: '',
         count: '',
         duty_type: '',
-        trueCount:''
+        trueCount: ''
       }
     };
     ({
@@ -634,6 +634,83 @@ export class AttendanceService {
       this.errorDeal(err);
       return Promise.resolve({ content: '', status: false })
     });
+  }
+
+  // 获取所有异常
+  getOffDutyException() {
+    return this.myHttp.get(AttendanceConfig.getOffDutyExceptionUrl).then((res) => {
+      let newData = res.json();
+      if (newData && newData instanceof Array) {
+        newData = newData.map((item) => {
+          return this.editException_get(item);
+        })
+      } else {
+        newData = [];
+      }
+      return Promise.resolve({ content: newData, status: true });
+    }).catch((err) => {
+      console.log(err)
+      this.errorDeal(err);
+      return Promise.resolve({ content: [], status: false })
+    });
+  }
+
+  // 处理异常
+  processOffDutyException(formData: MyFormModel) {
+    let sendData = this.editException_send(formData);
+    return this.myHttp.post(AttendanceConfig.processOffDutyExceptionUrl,sendData).then((res) => {
+      return Promise.resolve({ content: 'ok', status: true });
+    }).catch((err) => {
+      console.log(err)
+      this.errorDeal(err);
+      return Promise.resolve({ content: 'no', status: false })
+    });
+  }
+  editException_send(data: MyFormModel) {
+    let sendData = {
+      ID: '',
+      TYPE: '',
+      ABSENT_CODE: '',
+      REASON: '',
+      EXCEPTION_CODE: ''
+    }
+    sendData.ID = data.data.id;
+    sendData.TYPE = data.data.absentType;
+    sendData.EXCEPTION_CODE = data.data.exception_code;
+    sendData.REASON = data.data.reason;
+    sendData.ABSENT_CODE = data.data.reasonType;
+    return sendData
+  }
+  editException_get(data: any) {
+    let mydata = {
+      type: '0',
+      status: 'NEW',
+      No: '',
+      data: {
+        absentType: '',
+        reasonType: '',
+        startTime: '',
+        endTime: '',
+        reason: '',
+        days: '',
+        hours: '',
+        duty_type: '',
+        exception_code: '',
+        id: ''
+      }
+    }
+    mydata.No = data.DOCNO;
+    mydata.data.absentType = data.TYPE;
+    let date = data.IDATE.substr(0, data.IDATE.indexOf('T'));
+    mydata.data.startTime = date + ' ' + data.TIME_FM;
+    mydata.data.endTime = date + ' ' + data.TIME_TO;
+    mydata.data.reason = data.REASON;
+    mydata.data.hours = data.HOURS;
+    mydata.data.days = data.DAYS;
+    mydata.data.duty_type = data.DUTY_KIND;
+    mydata.data.exception_code = data.EXCEPTION_CODE;
+    mydata.data.id = data.ID;
+    return mydata;
   }
   errorDeal(err: any, showAlert: boolean = false) {
     switch (err.status) {

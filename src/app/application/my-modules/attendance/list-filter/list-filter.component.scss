@@ -2,7 +2,23 @@ sg-list-filter {
   .searchBar {
     position: fixed;
     top: 44px;
-    left: 0%;
+    left: 0;
     z-index: 100;
+  }
+
+  h2.myRow {
+    display: flex;
+    justify-content: space-between;
+    ion-row {
+      display: flex;
+      justify-content: space-between;
+      flex-direction: column;
+      p {
+        color: #000;
+        &.waiting {
+          color: red;
+        }
+      }
+    }
   }
 }

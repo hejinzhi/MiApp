@@ -8,10 +8,10 @@
 
 
 <ion-content>
-  <ion-card>
-    <ion-item-group *ngFor="let item of items;let i = index;">
-      <ion-item-divider color="light" *ngIf="items.length > 1">版本： {{item.REVISION}}</ion-item-divider>
-      <ion-item *ngFor="let itemSub of item.INFO">
+  <ion-item-group *ngFor="let item of items;let i = index;">
+    <ion-item-divider color="light" *ngIf="items.length > 1">版本： {{item.REVISION}}</ion-item-divider>
+    <ion-card *ngFor="let itemSub of item.INFO">
+      <ion-item>
         <ion-avatar item-left>
           <img src="assets/img/face.png">
         </ion-avatar>
@@ -26,6 +26,6 @@
         </h3>
         <p *ngIf="itemSub.COMMENTS">备注： {{itemSub.COMMENTS}}</p>
       </ion-item>
-    </ion-item-group>
-  </ion-card>
+    </ion-card>
+  </ion-item-group>
 </ion-content>

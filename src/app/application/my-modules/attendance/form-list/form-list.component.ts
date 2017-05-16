@@ -7,6 +7,9 @@ import { OverTimeFormComponent } from '../over-time-form/over-time-form.componen
 
 import { LanguageTypeConfig } from '../shared/config/language-type.config';
 
+import { PluginService }   from '../../../../core/services/plugin.service';
+import { AttendanceService } from '../shared/service/attendance.service';
+
 @Component({
   selector: 'sg-form-list',
   templateUrl: 'form-list.component.html',
@@ -21,16 +24,33 @@ export class FormListComponent {
   type: string = '100';
   formData: any = [];
   approved: boolean = false;
-  constructor(public navCtrl: NavController, public navParams: NavParams, private app: App, private platform: Platform) {
+  constructor(
+    public navCtrl: NavController,
+    public navParams: NavParams,
+    private app: App,
+    private platform: Platform,
+    private plugin: PluginService,
+    private attendanceService: AttendanceService
+  ) {
 
   }
-  ionViewDidLoad() {
+  async ionViewWillEnter() {
     this.approved = this.navParams.data.approved || false;
     this.type = this.navParams.data.type || '100';
     this.formData = this.navParams.data.formData;
+    if(!this.formData) {
+      let loading = this.plugin.createLoading();
+      loading.present();
+      let res: any = await this.attendanceService.getOffDutyException();
+      loading.dismiss();
+      if(res.status) {
+        this.formData = res.content;
+      } else {
+        this.formData =[];
+      }
+    }
     this.showList = true;
   }
-
   exit() {
     this.platform.runBackButtonAction();
   }

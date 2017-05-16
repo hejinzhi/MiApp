@@ -30,6 +30,7 @@ import { FormTypePipe } from './shared/pipe/form-type.pipe';
 import { WeekNamePipe } from './shared/pipe/week-name.pipe';
 import { TTimePipe } from './shared/pipe/t-time.pipe';
 import { DuringPipe } from './shared/pipe/during.pipe';
+import { LengthPipe } from './shared/pipe/length.pipe';
 
 import { AttendanceService } from './shared/service/attendance.service';
 
@@ -62,7 +63,8 @@ import { AttendanceService } from './shared/service/attendance.service';
     OtherTypePipe,
     WeekNamePipe,
     TTimePipe,
-    DuringPipe
+    DuringPipe,
+    LengthPipe
   ],
   entryComponents:[
     AttendanceComponent,

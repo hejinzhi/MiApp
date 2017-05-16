@@ -81,4 +81,11 @@ export class AttendanceConfig {
   static getAttendanceDetailUrl = EnvConfig.baseUrl + 'Attendance/GetAttendanceDetail?';
 
 
+
+  // 获取所有异常
+  static getOffDutyExceptionUrl = EnvConfig.baseUrl + 'OffDuty/GetOffDutyException';
+
+  // 处理异常
+  static processOffDutyExceptionUrl = EnvConfig.baseUrl + 'OffDuty/ProcessOffDutyException';
+
 }

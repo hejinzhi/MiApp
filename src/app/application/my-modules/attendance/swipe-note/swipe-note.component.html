@@ -9,13 +9,20 @@
 <ion-content>
   <ion-list>
     <ion-item *ngFor="let item of items">
-      <h2>日期： {{item.CVT_IDATE | sgTTime | date:"yyyy/MM/dd" }}</h2>
-      <p>星期{{item.WEEK}}</p>
-      <p>时间： {{item.TIME}}</p>
-      <p>类别： {{item.IDUTY | sgOtherType:'swipeType'}}</p>
-      <p>班别： {{item.DUTY_KIND}}</p>
-      <p>进/出： {{item.FLAG}}</p>
-      <p>刷卡位置： {{item.POSITION}}</p>
+      <h2 no-padding class="myRow">
+        <ion-row>
+          <p>{{ user.empno }}</p>
+          <p>{{ user.nickname }}</p>
+        </ion-row>
+        <ion-row>
+          <p>{{item.CVT_IDATE | sgTTime | date:"yyyy/MM/dd" }}</p>
+          <p>{{item.TIME}}</p>
+        </ion-row>
+        <ion-row>
+          <p>{{item.IDUTY | sgOtherType:'swipeType'}}</p>
+          <p>{{item.POSITION}}{{item.FLAG}}</p>
+        </ion-row>
+      </h2>
     </ion-item>
   </ion-list>
 </ion-content>

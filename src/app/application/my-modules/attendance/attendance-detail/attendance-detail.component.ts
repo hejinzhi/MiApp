@@ -10,10 +10,12 @@ import { FormType } from '../shared/config/form-type';
 export class AttendanceDetailComponent {
   items:any;
   type: string = '';
+  user:any;
   constructor(public navCtrl: NavController, public navParams: NavParams) {
 
   }
   ionViewDidLoad() {
+    this.user = JSON.parse(localStorage.getItem('currentUser'));
     this.type = new FormType().attendance_detail.type;
     let attendance_detail = this.navParams.data.attendance_detail;
     this.items = attendance_detail;
