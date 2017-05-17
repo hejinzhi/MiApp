@@ -2,12 +2,17 @@ import { Component, OnInit } from '@angular/core';
 import { NavController, NavParams } from 'ionic-angular';
 
 import { FormType } from '../shared/config/form-type';
+import { LanguageTypeConfig } from '../shared/config/language-type.config';
 
 @Component({
   selector: 'sg-attendance-detail',
   templateUrl: 'attendance-detail.component.html',
 })
 export class AttendanceDetailComponent {
+
+  fontType:string = localStorage.getItem('languageType')
+  fontContent = LanguageTypeConfig.attendanceDetailComponent[this.fontType];
+
   items:any;
   type: string = '';
   user:any;

@@ -123,21 +123,14 @@ export class SearchFormComponent {
     console.log(this.todo.value);
     let res: any = [];
     let loading = this.plugin.createLoading();
-    // switch(Number(this.searchMes.type)) {
-    //   case 2:
-    //     loading.present();
-    //     res = await this.attendanceService.getLeaveForm(this.todo.value);
-    //     loading.dismiss();
-    //     break;
-    //   default:
-    //     res = [];
-    //     break;
-    // }
     loading.present();
     res = await this.attendanceService.getForm(this.todo.value);
     loading.dismiss();
     console.log(res);
-    if (res.length === 0) return false;
+    if (res.length === 0) {
+      this.plugin.showToast(this.fontContent.no_result);
+      return false;
+    }
     this.navCtrl.push(FormListComponent, {
       type: this.todo.value.type,
       formData: res

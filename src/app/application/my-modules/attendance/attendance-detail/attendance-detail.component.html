@@ -1,6 +1,6 @@
 <ion-header>
   <ion-navbar>
-    <ion-title>{{type | sgFormType}}</ion-title>
+    <ion-title>{{type | sgFormType | sgChineseConv}}</ion-title>
   </ion-navbar>
 
 </ion-header>
@@ -16,7 +16,7 @@
         </ion-row>
         <ion-row>
           <p>{{item.IDATE | sgTTime | date:"MM/dd/yy"}}</p>
-          <p>星期{{item.IWEEK}}</p>
+          <p>{{fontContent.week}}{{item.IWEEK}}</p>
         </ion-row>
         <ion-row>
           <p>{{item.ACT_ITIME1}}</p>
@@ -27,8 +27,8 @@
           <p>{{item.ACT_ITIME2}}</p>
         </ion-row>
         <ion-row>
-          <p>假时:{{item.OFF_HOURS.toFixed(2)}}</p>
-          <p>工时:{{item.WORK_HOURS.toFixed(2)}}</p>
+          <p>{{fontContent.off_hour}}:{{item.OFF_HOURS.toFixed(2)}}</p>
+          <p>{{fontContent.work_hour}}:{{item.WORK_HOURS.toFixed(2)}}</p>
         </ion-row>
       </h2>
       <!-- <h2>日期： {{item.IDATE | sgTTime | date:"yyyy/MM/dd"}}</h2>

@@ -85,7 +85,12 @@ export class BusinessFormComponent {
 
     if (this.navParams.data.detailMes) {
       this.formData = this.navParams.data.detailMes;
-      this.businsessMes = this.navParams.data.detailMes.data;
+      let detail = this.navParams.data.detailMes.data;
+      for (let prop in this.businsessMes) {
+        this.businsessMes[prop] = detail[prop]
+      }
+      this.hourCount = this.navParams.data.detailMes.data.hours || '';
+      this.dayCount = this.navParams.data.detailMes.data.days || '';
       this.isSelectcolleague = true;
       this.tempcolleague = this.businsessMes.colleague;
       this.haveSaved = true;
@@ -185,16 +190,21 @@ export class BusinessFormComponent {
   }
   async askForDuring() {
     let values = this.todo.controls
-    this.formData.data = {
-      reasonType: '',
-      autoSet: false,
-      businessTime:values.businessTime.value,
-      startTime: values.startTime.value,
-      endTime: values.endTime.value,
-      colleague: '',
-      reason: ''
+    let tempData:MyFormModel = {
+      type: this.formData.type,
+      status: this.formData.status,
+      No: this.formData.No,
+      data: {
+        reasonType: '',
+        autoSet: false,
+        businessTime:values.businessTime.value,
+        startTime: values.startTime.value,
+        endTime: values.endTime.value,
+        colleague: '',
+        reason: ''
+      }
     }
-    let res: any = await this.attendanceService.getLeaveDuring(this.formData);
+    let res: any = await this.attendanceService.getLeaveDuring(tempData);
     if (!res) return;
     this.updateDuring(res);
 }
@@ -229,11 +239,8 @@ check(value: any, name: string): Promise < any > {
   });
 }
 presentPopover(myEvent:any) {
-  this.formData.data = this.todo.value
-  let popover = this.popoverCtrl.create(FormMenuComponent, {
-    formData: this.formData,
-    haveSaved: this.haveSaved,
-    navCtrl: this.navCtrl
+  let popover = this.popoverCtrl.create(FormMenuComponent,{
+    this:this,
   });
   popover.present({
     ev: myEvent
@@ -252,6 +259,7 @@ async leaveForm() {
   if (res.content) {
     this.formData.status = res.content.STATUS;
     this.hourCount = res.content.HOURS;
+    this.dayCount = res.content.DAYS
     this.haveSaved = true;
   }
   return false;
@@ -266,6 +274,7 @@ async saveForm() {
   this.formData.No = res.DOCNO
   this.formData.status = res.STATUS;
   this.hourCount = res.HOURS;
+  this.dayCount = res.DAYS
   this.haveSaved = true;
   this.plugin.showToast(this.fontContent.save_success);
 }

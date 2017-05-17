@@ -36,7 +36,7 @@
       <ion-item [class.has-error]="myValidators.reasonType.error" [class.has-success]="myValidators.reasonType.pass">
         <ion-label>*{{fontContent.reasonType}}</ion-label>
         <ion-select [cancelText]="fontContent.cancle" [okText]="fontContent.confirm" formControlName="reasonType" #type>
-          <ion-option *ngFor="let item of holidayType" [value]="item.type">{{item.name}}</ion-option>
+          <ion-option *ngFor="let item of holidayType" [value]="item.type">{{item.name | sgChineseConv}}</ion-option>
         </ion-select>
       </ion-item>
       <ion-item>
@@ -110,12 +110,12 @@
         <ion-row>
           <ion-col width-50>
             <ion-buttons left>
-              <button ion-button full class = "submit" type="submit" [disabled]="!todo.valid || myValidators.reason.error || myValidators.colleague.error || !isSelectcolleague || timeError">{{fontContent.sign}}</button>
+              <button ion-button class = "submit" type="submit" [disabled]="!todo.valid || myValidators.reason.error || myValidators.colleague.error || !isSelectcolleague || timeError">{{fontContent.sign}}</button>
             </ion-buttons>
           </ion-col>
           <ion-col width-50>
             <ion-buttons right>
-              <button ion-button full type="button" [disabled]="!todo.valid || myValidators.reason.error || myValidators.colleague.error || !isSelectcolleague || timeError" (click)="saveForm()">{{fontContent.save}}</button>
+              <button ion-button type="button" [disabled]="!todo.valid || myValidators.reason.error || myValidators.colleague.error || !isSelectcolleague || timeError" (click)="saveForm()">{{fontContent.save}}</button>
             </ion-buttons>
           </ion-col>
         </ion-row>

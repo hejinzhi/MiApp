@@ -14,12 +14,17 @@ import { AttendanceDetailComponent } from '../attendance-detail/attendance-detai
 import { SwipeNoteComponent } from '../swipe-note/swipe-note.component';
 
 import { AttendanceConfig } from '../shared/config/attendance.config';
+import { LanguageTypeConfig } from '../shared/config/language-type.config';
 
 @Component({
   selector: 'sg-detail-between-form',
   templateUrl: 'detail-between-form.component.html'
 })
 export class DetailBetweenFormComponent {
+
+  fontType:string = localStorage.getItem('languageType')
+  fontContent = LanguageTypeConfig.detailBetweenFormComponent[this.fontType];
+
   betweenMes: {
     startTime: string,
     endTime: string,
@@ -58,10 +63,10 @@ export class DetailBetweenFormComponent {
   initValidator() {
     let newValidator = new MyValidatorModel([
       {name:'startTime',valiItems:[
-        {valiName:'DateNotBigger',errMessage:'结束时间不得小于开始时间',valiValue:'endTime'}
+        {valiName:'DateNotBigger',errMessage:this.fontContent.startTime_dateNotBigger_err,valiValue:'endTime'}
       ]},
       {name:'endTime',valiItems:[
-        {valiName:'DateNotSmaller',errMessage:'结束时间不得小于开始时间',valiValue:'startTime'}
+        {valiName:'DateNotSmaller',errMessage:this.fontContent.endTime_DateNotSmaller_err,valiValue:'startTime'}
       ]}
     ])
     return newValidator;
@@ -100,7 +105,7 @@ export class DetailBetweenFormComponent {
           swipe_note:res.content
         })
       } else {
-        this.plugin.showToast('没有此段时间的刷卡记录')
+        this.plugin.showToast(this.fontContent.no_swipe)
       }
     }
     if(this.type === formType.attendance_detail.type) {
@@ -114,7 +119,7 @@ export class DetailBetweenFormComponent {
           attendance_detail:res.content
         })
       } else {
-        this.plugin.showToast('没有此段时间的考勤明细记录')
+        this.plugin.showToast(this.fontContent.no_att_detail)
       }
     }
     return false;

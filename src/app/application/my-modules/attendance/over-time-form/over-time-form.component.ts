@@ -165,11 +165,7 @@ export class OverTimeFormComponent {
     });
   }
   presentPopover(myEvent:any) {
-    this.formData.data = this.todo.value
     let popover = this.popoverCtrl.create(FormMenuComponent,{
-      formData:this.formData,
-      haveSaved:this.haveSaved,
-      navCtrl:this.navCtrl,
       this:this,
     });
     popover.present({
@@ -177,7 +173,7 @@ export class OverTimeFormComponent {
     });
   }
   async leaveForm() {
-    this.formData.data = this.todo.value
+    Object.assign(this.formData.data, this.todo.value);
     let loading = this.plugin.createLoading();
     loading.present()
     let res:any = await this.attendanceService.sendSign(this.formData);
@@ -195,7 +191,7 @@ export class OverTimeFormComponent {
     return false;
   }
   async saveForm() {
-    this.formData.data = this.todo.value
+    Object.assign(this.formData.data, this.todo.value);
     let loading = this.plugin.createLoading();
     loading.present()
     let res:any = await this.attendanceService.saveOverTimeForm(this.formData);

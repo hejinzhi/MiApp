@@ -88,4 +88,16 @@ export class AttendanceConfig {
   // 处理异常
   static processOffDutyExceptionUrl = EnvConfig.baseUrl + 'OffDuty/ProcessOffDutyException';
 
+  // 获得月或年请假天数
+  static getOffDutyTotalDaysUrl = EnvConfig.baseUrl + 'OffDuty/GetOffDutyTotalDays?';
+
+  // 获得月或年加班时数
+  static getOverTimeTotalHoursUrl = EnvConfig.baseUrl + 'OverTime/GetOverTimeTotalHours?';
+
+  // 获取某月内的请假明细
+  static getOffDutyMonthHoursUrl = EnvConfig.baseUrl + 'OffDuty/GetOffDutyMonthHours?';
+
+  // 获取某月内的加班明细
+  static getOverTimeMonthHoursUrl = EnvConfig.baseUrl + 'OverTime/GetOverTimeMonthHours?';
+
 }

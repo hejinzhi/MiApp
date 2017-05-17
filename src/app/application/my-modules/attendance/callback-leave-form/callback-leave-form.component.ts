@@ -95,11 +95,8 @@ export class CallbackLeaveFormComponent {
     });
   }
   presentPopover(myEvent:any) {
-    this.formData.data = this.todo.value
     let popover = this.popoverCtrl.create(FormMenuComponent,{
-      formData:this.formData,
-      haveSaved:this.haveSaved,
-      navCtrl:this.navCtrl
+      this:this,
     });
     popover.present({
       ev: myEvent

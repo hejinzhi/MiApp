@@ -1,6 +1,6 @@
 <ion-header>
   <ion-navbar>
-    <ion-title *ngIf="searchMes && searchMes.type">{{searchMes.type | sgFormType}}{{fontContent.title}}</ion-title>
+    <ion-title *ngIf="searchMes && searchMes.type">{{searchMes.type | sgFormType | sgChineseConv}}{{fontContent.title}}</ion-title>
   </ion-navbar>
 </ion-header>
 

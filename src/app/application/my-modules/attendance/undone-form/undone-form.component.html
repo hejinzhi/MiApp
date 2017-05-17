@@ -1,9 +1,6 @@
 <ion-header>
   <ion-navbar >
-    <ion-title>异常维护</ion-title>
-    <!-- <ion-buttons end [ngSwitch]="formData.status.toUpperCase()">
-    <button ion-button (click)="callbackSubmit()" *ngSwitchCase="'WAITING'">取消送签</button>
-    </ion-buttons> -->
+    <ion-title>{{fontContent.title}}</ion-title>
   </ion-navbar>
 </ion-header>
 
@@ -13,52 +10,52 @@
   </div>
   <ion-list>
     <ion-item class="myForm auto">
-      单据状态：
+      {{fontContent.form_status}}：
       <ion-note item-right>
         {{formData.status}}
-      </ion-note><button ion-button  *ngIf="formData.status.toUpperCase() === 'WAITING'">签核名单</button>
+      </ion-note>
     </ion-item>
 
     <ion-item class="myForm auto">
-      单据编号：
+      {{fontContent.form_No}}：
       <ion-note item-right>
         {{formData.No}}
       </ion-note>
     </ion-item>
   </ion-list>
-  <form [formGroup]="todo" *ngIf="todo" (ngSubmit)="leaveForm()">
+  <form [formGroup]="todo" *ngIf="todo">
     <ion-list>
       <ion-item [class.has-error]="myValidators.reasonType.error" [class.has-success]="myValidators.reasonType.pass">
-        <ion-label>缺席类别*</ion-label>
-        <ion-select class = "absentType" cancelText="取消" okText="確認" formControlName="absentType" #type style="width:80%">
-          <ion-option *ngFor="let item of absentType" [value]="item.type">{{item.name}}</ion-option>
+        <ion-label>*{{fontContent.absentType}}</ion-label>
+        <ion-select class = "absentType" [cancelText]="fontContent.cancle" [okText]="fontContent.confirm" formControlName="absentType" #type style="width:80%">
+          <ion-option *ngFor="let item of absentType" [value]="item.type">{{item.name | sgChineseConv}}</ion-option>
         </ion-select>
       </ion-item>
       <ion-item class="myForm auto" *ngIf="dutyType">
-        班别：
+        {{fontContent.dutyType}}：
         <ion-note item-right>
           {{dutyType}}
         </ion-note>
       </ion-item>
       <ion-item *ngIf="needReasonType" [class.has-error]="myValidators.reasonType.error" [class.has-success]="myValidators.reasonType.pass">
-        <ion-label>假别*</ion-label>
-        <ion-select cancelText="取消" okText="確認" formControlName="reasonType" #type style="width:80%">
-          <ion-option *ngFor="let item of holidayType" [value]="item.type">{{item.name}}</ion-option>
+        <ion-label>*{{fontContent.reasonType}}</ion-label>
+        <ion-select [cancelText]="fontContent.cancle" [okText]="fontContent.confirm" formControlName="reasonType" #type style="width:80%">
+          <ion-option *ngFor="let item of holidayType" [value]="item.type">{{item.name | sgChineseConv}}</ion-option>
         </ion-select>
       </ion-item>
 
       <ion-item class="myForm auto" [class.has-error]="myValidators.startTime.error" [class.has-success]="myValidators.startTime.pass">
-        <ion-label>开始时间</ion-label>
+        <ion-label>{{fontContent.startTime}}</ion-label>
         <ion-input readonly formControlName="startTime"></ion-input>
       </ion-item>
       <ion-item class="myForm auto" [class.has-error]="myValidators.endTime.error" [class.has-success]="myValidators.endTime.pass">
-        <ion-label>结束时间</ion-label>
+        <ion-label>{{fontContent.endTime}}</ion-label>
         <ion-input readonly formControlName="endTime"></ion-input>
       </ion-item>
       <ion-row>
         <ion-col width-50>
           <ion-item class="myForm auto" *ngIf="dayCount">
-            天数:
+            {{fontContent.dayCount}}:
             <ion-note item-right>
               {{dayCount}}
             </ion-note>
@@ -66,7 +63,7 @@
         </ion-col>
         <ion-col width-50>
           <ion-item class="myForm auto" *ngIf="hourCount">
-            时数:
+            {{fontContent.hourCount}}:
             <ion-note item-right>
               {{hourCount}}
             </ion-note>
@@ -74,23 +71,13 @@
         </ion-col>
       </ion-row>
       <ion-item [class.has-error]="myValidators.reason.error" [class.has-success]="myValidators.reason.pass">
-        <ion-label>原因*</ion-label>
+        <ion-label>*{{fontContent.reason}}</ion-label>
         <ion-textarea rows="2" cols="20" formControlName="reason" class="reasonTest"
          #reason
         ></ion-textarea>
       </ion-item>
       <ion-item-divider *ngIf="myValidators.reason.error" class='alert'>{{myValidators.reason.error}}</ion-item-divider>
-      <ion-grid *ngIf="formData.status.toUpperCase() === 'NEW'">
-        <ion-row>
-          <ion-col width-50>
-          </ion-col>
-          <ion-col width-50>
-            <ion-buttons right>
-              <button ion-button type="button" [disabled]="!todo.valid || myValidators.reason.error" (click)="saveForm()">保存</button>
-            </ion-buttons>
-          </ion-col>
-        </ion-row>
-      </ion-grid>
     </ion-list>
+    <button ion-button full type="button" [disabled]="!todo.valid || myValidators.reason.error" (click)="saveForm()">{{fontContent.submit}}</button>
   </form>
 </ion-content>

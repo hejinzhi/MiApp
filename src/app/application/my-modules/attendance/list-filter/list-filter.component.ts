@@ -30,6 +30,7 @@ export class ListFilterComponent implements OnInit {
   constructor(public navCtrl: NavController, public navParams: NavParams) { }
 
   ngOnInit() {
+    console.log(456)
     this.user = JSON.parse(localStorage.getItem('currentUser'))
     this.type = this.myset.type;
     this.initializeItems();

@@ -7,6 +7,7 @@ import { PluginService }   from '../../../../core/services/plugin.service';
 import { AttendanceService } from '../shared/service/attendance.service';
 
 import { HolidayType } from '../shared/config/holiday-type';
+import { LanguageTypeConfig } from '../shared/config/language-type.config';
 
 import { MyValidatorModel } from '../../../../shared/models/my-validator.model';
 import { MyFormModel } from '../shared/models/my-form.model';
@@ -16,6 +17,9 @@ import { MyFormModel } from '../shared/models/my-form.model';
   templateUrl: 'undone-form.component.html'
 })
 export class UndoneFormComponent {
+
+  fontType:string = localStorage.getItem('languageType')
+  fontContent = LanguageTypeConfig.undoneFormComponent[this.fontType];
 
   leaveMes: {
     absentType:string
@@ -83,17 +87,17 @@ export class UndoneFormComponent {
   }
   initValidator(bind:any) {
     let newValidator = new MyValidatorModel([
-      {name:'absentType',valiItems:[{valiName:'Required',errMessage:'请选择缺席类型',valiValue:true}]},
+      {name:'absentType',valiItems:[{valiName:'Required',errMessage:this.fontContent.absentType_required_err,valiValue:true}]},
       {name:'reasonType',valiItems:[]},
       {name:'reason',valiItems:[
-        {valiName:'Required',errMessage:'原因不能为空',valiValue:true},
-        {valiName:'Minlength',errMessage:'原因长度不能少于2位',valiValue:2}
+        {valiName:'Required',errMessage:this.fontContent.reason_required_err,valiValue:true},
+        {valiName:'Minlength',errMessage:this.fontContent.reason_minlength_err,valiValue:2}
       ]},
       {name:'startTime',valiItems:[
-        {valiName:'Required',errMessage:'开始时间不能为空',valiValue:true},
+        {valiName:'Required',errMessage:this.fontContent.startTime_required_err,valiValue:true},
       ]},
       {name:'endTime',valiItems:[
-        {valiName:'Required',errMessage:'结束时间不能为空',valiValue:true},
+        {valiName:'Required',errMessage:this.fontContent.endTime_required_err,valiValue:true},
       ]}
     ])
     return newValidator;
@@ -119,11 +123,6 @@ export class UndoneFormComponent {
       return Promise.resolve(this.myValidators);
     });
   }
-  leaveForm() {
-    this.formData.data = this.todo.value
-    console.log(this.formData);
-    return false;
-  }
   async saveForm() {
     Object.assign(this.formData.data, this.todo.value);
     let loading = this.plugin.createLoading();
@@ -131,7 +130,7 @@ export class UndoneFormComponent {
     let res: any = await this.attendanceService.processOffDutyException(this.formData);
     loading.dismiss()
     if(res.status) {
-      this.plugin.showToast('提交成功');
+      this.plugin.showToast(this.fontContent.submit_succ);
       this.navCtrl.popToRoot();
     }
   }

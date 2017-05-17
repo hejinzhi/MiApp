@@ -2,6 +2,9 @@ import { Component } from '@angular/core';
 import { NavController, NavParams } from 'ionic-angular';
 import * as echarts from 'echarts';
 
+import { PluginService }   from '../../../../core/services/plugin.service';
+import { AttendanceService } from '../shared/service/attendance.service';
+
 class Chart {
   name: string;
   value: number
@@ -48,56 +51,110 @@ export class StatisticsComponent {
     { name: '11月', value: 11 },
     { name: '12月', value: 12 }
   ]
-  OTday = [
-    { name: '1', value: 1 },
-    { name: '2', value: 2 },
-    { name: '3', value: 3 },
-    { name: '4', value: 7 },
-    { name: '5', value: 5 },
-    { name: '6', value: 6 },
-    { name: '7', value: 8 },
-    { name: '8', value: 8 },
-    { name: '9', value: 9 },
-    { name: '10', value: 10 },
-    { name: '11', value: 11 },
-    { name: '12', value: 12 },
-    { name: '13', value: 1 },
-    { name: '14', value: 2 },
-    { name: '15', value: 3 },
-    { name: '16', value: 4 },
-    { name: '17', value: 10 },
-    { name: '18', value: 6 },
-    { name: '19', value: 7 },
-    { name: '20', value: 8 },
-    { name: '21', value: 9 },
-    { name: '22', value: 10 },
-    { name: '23', value: 11 },
-    { name: '24', value: 12 },
-    { name: '25', value: 4 },
-    { name: '26', value: 5 },
-    { name: '27', value: 6 },
-    { name: '28', value: 7 },
-    { name: '29', value: 8 },
-    { name: '30', value: 9 },
-    { name: '31', value: 10 }
-  ]
-  constructor(public navCtrl: NavController, public navParams: NavParams) { }
+  OTday:any;
+  leaveDay:any;
+  constructor(
+    public navCtrl: NavController,
+    public navParams: NavParams,
+    private plugin: PluginService,
+    private attendanceService: AttendanceService
+  ) { }
 
-  ionViewDidLoad() {
+  async ionViewDidLoad() {
+    this.initDays();
+    let loading = this.plugin.createLoading();
+    loading.present()
+    await this.editMonthLeave();
+    await this.editMonthOT();
+    loading.dismiss()
     this.initChart2('main', '总统计');
     this.initOTMonthChart();
     this.initLeaveMonthChart();
   }
+  async editMonthLeave() {
+    let res: any = await this.attendanceService.getOffDutyTotalDays();
+    if (res.status) {
+      this.myLeave = res.content.slice(0,new Date().getMonth()+1);
+      let nowMonthLeave = this.myLeave[this.myLeave.length-1]
+      this.totalLeave.map((item) => {
+        if(item.name == '本月请假') {
+          item.value = nowMonthLeave.value;
+        } else {
+          let totalCount = 0;
+          for(let i=0;i<this.myLeave.length;i++) {
+            totalCount = totalCount + Number(this.myLeave[i].value)
+          }
+          item.value = totalCount;
+        }
+        return item;
+      })
+    }
+  }
+  initDays() {
+    let date = new Date();
+    let monthDays = new Date(date.getFullYear(),date.getMonth()+1,0).getDate();
+    let days = []
+    for(let i=0;i<monthDays+1;i++) {
+      days.push({name:i+1,value:0});
+    }
+    this.OTday = this.leaveDay = days;
+  }
+  async editMonthOT() {
+    let res: any = await this.attendanceService.getOverTimeTotalHours();
+    if (res.status) {
+      this.myOT = res.content.slice(0,new Date().getMonth()+1);
+      let nowMonthOT = this.myOT[this.myOT.length-1];
+      this.totalOT.map((item) => {
+        if(item.name == '本月加班') {
+          item.value = nowMonthOT.value;
+        } else {
+          let totalCount = 0;
+          for(let i=0;i<this.myOT.length;i++) {
+            totalCount = totalCount + Number(this.myOT[i].value)
+          }
+          item.value = totalCount;
+        }
+        return item;
+      })
+    }
+  }
   initOTMonthChart() {
     let monthChart = this.initChart1('main2', '我的加班', this.myOT, true);
     monthChart.on('click', (params: any) => {
-      this.initLineChat('main2', (params.dataIndex + 1) + '月加班', this.OTday, true, this.initOTMonthChart);
+      this.attendanceService.getOverTimeMonthHours(params.dataIndex+1).then((res) => {
+        if(res.status) {
+          let data = res.content;
+          for(let i = 0;i<data.length;i++) {
+            this.OTday = this.OTday.map((item:any) => {
+              if(item.name == data[i].name) {
+                item.value = data[i].value;
+              }
+              return item;
+            })
+          }
+          this.initLineChat('main2', (params.dataIndex + 1) + '月加班', this.OTday, true, this.initOTMonthChart);
+        }
+      })
+
     })
   }
   initLeaveMonthChart() {
     let monthChart = this.initChart1('main3', '我的请假', this.myLeave, true);
     monthChart.on('click', (params: any) => {
-      this.initLineChat('main3', (params.dataIndex + 1) + '月请假', this.OTday, true, this.initLeaveMonthChart);
+      this.attendanceService.getOffDutyMonthHours(params.dataIndex+1).then((res) => {
+        if(res.status) {
+          let data = res.content;
+          for(let i = 0;i<data.length;i++) {
+            this.leaveDay = this.leaveDay.map((item:any) => {
+              if(item.name == data[i].name) {
+                item.value = data[i].value;
+              }
+              return item;
+            })
+          }
+          this.initLineChat('main3', (params.dataIndex + 1) + '月请假', this.leaveDay, true, this.initLeaveMonthChart);
+        }
+      })
     })
   }
   initChart1(name: string, title: string, target: Chart[], showTool: boolean = false, color: string = '#3773F7', fontFamily: string[] = ['Helvetica', 'Tahoma', 'Arial', 'STXihei', '华文细黑', 'Microsoft YaHei', '微软雅黑', 'sans-serif']) {

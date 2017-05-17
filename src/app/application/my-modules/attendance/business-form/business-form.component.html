@@ -35,7 +35,7 @@
       <ion-item [class.has-error]="myValidators.reasonType.error" [class.has-success]="myValidators.reasonType.pass">
         <ion-label>*{{fontContent.reasonType}}</ion-label>
         <ion-select [cancelText]="fontContent.cancle" [okText]="fontContent.confirm" formControlName="reasonType">
-          <ion-option *ngFor="let item of businessType" [value]="item.type">{{item.name}}</ion-option>
+          <ion-option *ngFor="let item of businessType" [value]="item.type">{{item.name | sgChineseConv}}</ion-option>
         </ion-select>
       </ion-item>
       <ion-item>

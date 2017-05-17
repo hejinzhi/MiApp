@@ -9,7 +9,6 @@ import { CallbackLeaveFormComponent } from './callback-leave-form/callback-leave
 import { BusinessFormComponent } from './business-form/business-form.component';
 import { FormListComponent } from './form-list/form-list.component';
 import { UndoneFormComponent } from './undone-form/undone-form.component';
-import { SearchComponent } from './search/search.component';
 import { SearchFormComponent } from './search-form/search-form.component';
 import { FormMenuComponent } from './form-menu/form-menu.component';
 import { LeaveSubComponent } from './leave-sub/leave-sub.component';
@@ -31,6 +30,7 @@ import { WeekNamePipe } from './shared/pipe/week-name.pipe';
 import { TTimePipe } from './shared/pipe/t-time.pipe';
 import { DuringPipe } from './shared/pipe/during.pipe';
 import { LengthPipe } from './shared/pipe/length.pipe';
+import { ChineseConv } from './shared/pipe/chinese-conv.pipe';
 
 import { AttendanceService } from './shared/service/attendance.service';
 
@@ -45,7 +45,6 @@ import { AttendanceService } from './shared/service/attendance.service';
     BusinessFormComponent,
     FormListComponent,
     UndoneFormComponent,
-    SearchComponent,
     SearchFormComponent,
     HoildayDetailComponent,
     LeaveSubComponent,
@@ -64,7 +63,8 @@ import { AttendanceService } from './shared/service/attendance.service';
     WeekNamePipe,
     TTimePipe,
     DuringPipe,
-    LengthPipe
+    LengthPipe,
+    ChineseConv
   ],
   entryComponents:[
     AttendanceComponent,
@@ -75,7 +75,6 @@ import { AttendanceService } from './shared/service/attendance.service';
     BusinessFormComponent,
     FormListComponent,
     UndoneFormComponent,
-    SearchComponent,
     SearchFormComponent,
     DetailBetweenFormComponent,
     HoildayDetailComponent,
