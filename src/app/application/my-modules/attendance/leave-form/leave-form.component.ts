@@ -218,27 +218,29 @@ export class LeaveFormComponent {
   async askForDuring() {
     let values = this.todo.controls
     if (values.startDate.value && values.endDate.value) {
-      this.formData.data = {
-        reasonType: values.reasonType.value,
-        autoSet: false,
-        startDate: values.startDate.value,
-        startTime: values.startTime.value,
-        endTime: values.endTime.value,
-        endDate: values.endDate.value,
-        colleague: '',
-        reason: ''
+      let tempData:MyFormModel = {
+        type: this.formData.type,
+        status: this.formData.status,
+        No: this.formData.No,
+        data: {
+          reasonType: values.reasonType.value,
+          autoSet: false,
+          startDate: values.startDate.value,
+          startTime: values.startTime.value,
+          endTime: values.endTime.value,
+          endDate: values.endDate.value,
+          colleague: '',
+          reason: ''
+        }
       }
-      let res: any = await this.attendanceService.getLeaveDuring(this.formData);
+      let res: any = await this.attendanceService.getLeaveDuring(tempData);
       if (!res) return;
       this.updateDuring(res);
     }
   }
   async presentPopover(myEvent: any) {
-    this.formData.data = this.todo.value
-    let popover = this.popoverCtrl.create(FormMenuComponent, {
-      formData: this.formData,
-      haveSaved: this.haveSaved,
-      navCtrl: this.navCtrl
+    let popover = this.popoverCtrl.create(FormMenuComponent,{
+      this:this,
     });
     popover.present({
       ev: myEvent
@@ -257,8 +259,8 @@ export class LeaveFormComponent {
     if (res.content) {
       this.hourLeave = res.content.HOURS;
       this.dayLeave = res.content.DAYS;
-      this.formData.No = res.DOCNO
-      this.formData.status = res.STATUS;
+      this.formData.No = res.content.DOCNO
+      this.formData.status = res.content.STATUS;
       this.haveSaved = true;
     }
     return false;

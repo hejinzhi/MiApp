@@ -6,17 +6,23 @@ import { AttendanceService } from '../shared/service/attendance.service';
 
 import { SearchFormComponent } from '../search-form/search-form.component';
 import { CallbackLeaveFormComponent } from '../callback-leave-form/callback-leave-form.component';
-import { HoildayDetailComponent } from '../hoilday-detail/holiday-detail.component';
+// import { HoildayDetailComponent } from '../hoilday-detail/holiday-detail.component';
 import { FormListComponent } from '../form-list/form-list.component';
 import { SignListComponent } from '../sign-list/sign-list.component';
 
 import { MyFormModel } from '../shared/models/my-form.model';
+
+import { LanguageTypeConfig } from '../shared/config/language-type.config';
 
 @Component({
   selector: 'sg-form-menu',
   templateUrl: 'form-menu.component.html',
 })
 export class FormMenuComponent {
+
+  fontType:string = localStorage.getItem('languageType')
+  fontContent = LanguageTypeConfig.formMenuComponent[this.fontType];
+
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
@@ -27,10 +33,12 @@ export class FormMenuComponent {
   formData:MyFormModel;
   haveSaved:boolean;
   lastNavCtr:any;
+  that:any;
   ionViewDidLoad(){
-    this.formData = this.navParams.data.formData;
-    this.haveSaved = this.navParams.data.haveSaved;
-    this.lastNavCtr = this.navParams.data.navCtrl;
+    this.that = this.navParams.data.this;
+    this.formData = this.that.formData;
+    this.haveSaved = this.that.haveSaved;
+    this.lastNavCtr = this.that.navCtrl;
   }
   ionViewWillEnter(){
 
@@ -54,38 +62,46 @@ export class FormMenuComponent {
         formData: res.content
       })
     } else {
-      this.plugin.showToast('没有销假单记录')
+      this.plugin.showToast(this.fontContent.no_callback)
     }
   }
-  async toDetail() {
-    this.viewCtrl.dismiss();
-    let loading = this.plugin.createLoading();
-    loading.present();
-    let res = await this.attendanceService.getLeaveDays();
-    loading.dismiss();
-    if(!res) return;
-    this.lastNavCtr.push(HoildayDetailComponent,{
-      leaveDays:res
-    });
-  }
+  // async toDetail() {
+  //   this.viewCtrl.dismiss();
+  //   let loading = this.plugin.createLoading();
+  //   loading.present();
+  //   let res = await this.attendanceService.getLeaveDays();
+  //   loading.dismiss();
+  //   if(!res) return;
+  //   this.lastNavCtr.push(HoildayDetailComponent,{
+  //     leaveDays:res
+  //   });
+  // }
   async deleteForm() {
+    Object.assign(this.formData.data, this.that.value);
     this.viewCtrl.dismiss();
     let loading = this.plugin.createLoading();
     loading.present();
     let res = await this.attendanceService.deleteForm(this.formData);
     loading.dismiss();
     if(!res) return;
-    this.plugin.showToast('删除表单成功');
-    return this.lastNavCtr.canGoBack()?this.lastNavCtr.popToRoot():'';
+    this.plugin.showToast(this.fontContent.delete_succ);
+    if(this.lastNavCtr.canGoBack()) {
+      this.lastNavCtr.popToRoot()
+    } else {
+      if(this.that) {
+        this.that.init()
+      }
+    }
   }
   async callbackSign() {
+    Object.assign(this.formData.data, this.that.value);
     this.viewCtrl.dismiss();
     let loading = this.plugin.createLoading();
     loading.present();
     let res = await this.attendanceService.callBackSign(this.formData);
     loading.dismiss();
     if(!res) return;
-    this.plugin.showToast('取消送签成功');
+    this.plugin.showToast(this.fontContent.callbackSign_succ);
     this.lastNavCtr.popToRoot()
   }
   async callBack() {

@@ -18,7 +18,7 @@
     <ion-item-group>
       <ion-item-divider color="light">{{fontContent.canUse}}</ion-item-divider>
       <ion-item *ngFor="let item of leaveDays.detail_canUse">
-        {{item.type | sgOtherType: 'leaveDayType'}}
+        {{item.type | sgOtherType: 'leaveDayType' | sgChineseConv}}
         <ion-note item-right>
           {{item.value}}
         </ion-note>
@@ -27,7 +27,7 @@
     <ion-item-group>
       <ion-item-divider color="light">{{fontContent.used}}</ion-item-divider>
       <ion-item *ngFor="let item of leaveDays.detail_used">
-        {{item.type | sgOtherType: 'leaveDayType'}}
+        {{item.type | sgOtherType: 'leaveDayType' | sgChineseConv}}
         <ion-note item-right>
           {{item.value}}
         </ion-note>

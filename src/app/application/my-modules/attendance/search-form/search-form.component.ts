@@ -12,6 +12,7 @@ import { FormType } from '../shared/config/form-type';
 import { FormListComponent } from '../form-list/form-list.component';
 
 import { AttendanceConfig } from '../shared/config/attendance.config';
+import { LanguageTypeConfig } from '../shared/config/language-type.config';
 
 @Component({
   selector: 'sg-search-form',
@@ -24,6 +25,10 @@ export class SearchFormComponent {
     endTime: string,
     form_No: string,
   }
+
+  fontType:string = localStorage.getItem('languageType')
+  fontContent = LanguageTypeConfig.searchFormComponent[this.fontType];
+
   selectMaxYear = AttendanceConfig.SelectedMaxYear;
   todo: FormGroup;
   myformType = new FormType();
@@ -58,35 +63,35 @@ export class SearchFormComponent {
   }
   initValidator() {
     let form_No_reg = '^[Hh]{1}[Tt]{1}';
-    let form_No_reg_mes = '必须是HT开头'
+    let form_No_reg_mes = this.fontContent.form_No_reg_mes;
     switch (Number(this.searchMes.type)) {
       case 2:
         form_No_reg = '^[Hh]{1}[Tt]{1}[Ll]{1}';
-        form_No_reg_mes = '必须是HTL开头';
+        form_No_reg_mes = this.fontContent.form_No_reg_mes2;
         break;
       case 3:
         form_No_reg = '^[Hh]{1}[Tt]{1}[Oo]{1}';
-        form_No_reg_mes = '必须是HTO开头';
+        form_No_reg_mes = this.fontContent.form_No_reg_mes3;
         break;
       default:
         break;
     }
     let newValidator = new MyValidatorModel([
-      { name: 'type', valiItems: [{ valiName: 'Required', errMessage: '单号类型不能为空', valiValue: true }] },
+      { name: 'type', valiItems: [{ valiName: 'Required', errMessage: this.fontContent.type_required_err, valiValue: true }] },
       {
         name: 'form_No', valiItems: [
-          { valiName: 'Length', errMessage: '单据长度不足15位', valiValue: 15 },
+          { valiName: 'Length', errMessage: this.fontContent.form_No_length_err, valiValue: 15 },
           { valiName: 'Regex', errMessage: form_No_reg_mes, valiValue: form_No_reg }
         ]
       },
       {
         name: 'startTime', valiItems: [
-          { valiName: 'DateNotBigger', errMessage: '结束时间必须迟于开始时间', valiValue: 'endTime' }
+          { valiName: 'DateNotBigger', errMessage: this.fontContent.startTime_dateNotBigger_err, valiValue: 'endTime' }
         ]
       },
       {
         name: 'endTime', valiItems: [
-          { valiName: 'DateNotSmaller', errMessage: '结束时间必须迟于开始时间', valiValue: 'startTime' }
+          { valiName: 'DateNotSmaller', errMessage: this.fontContent.endTime_DateNotSmaller_err, valiValue: 'startTime' }
         ]
       }
     ])
@@ -118,21 +123,14 @@ export class SearchFormComponent {
     console.log(this.todo.value);
     let res: any = [];
     let loading = this.plugin.createLoading();
-    // switch(Number(this.searchMes.type)) {
-    //   case 2:
-    //     loading.present();
-    //     res = await this.attendanceService.getLeaveForm(this.todo.value);
-    //     loading.dismiss();
-    //     break;
-    //   default:
-    //     res = [];
-    //     break;
-    // }
     loading.present();
     res = await this.attendanceService.getForm(this.todo.value);
     loading.dismiss();
     console.log(res);
-    if (res.length === 0) return false;
+    if (res.length === 0) {
+      this.plugin.showToast(this.fontContent.no_result);
+      return false;
+    }
     this.navCtrl.push(FormListComponent, {
       type: this.todo.value.type,
       formData: res

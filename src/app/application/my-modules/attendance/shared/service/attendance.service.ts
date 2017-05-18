@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { MyHttpService } from '../../../../../core/services/myHttp.service';
+import {tify, sify} from 'chinese-conv';
 
 import { MyFormModel } from '../models/my-form.model'
 
@@ -106,7 +107,7 @@ export class AttendanceService {
   getLeaveDuring(data: MyFormModel) {
     let sendData = this.editLeaveData_send(data);
     return this.myHttp.post(AttendanceConfig.getLeaveDuringUrl, sendData).then((res) => {
-      let newData = this.editLeaveData_get(res.json(),data.type);
+      let newData = this.editLeaveData_get(res.json(), data.type);
       return Promise.resolve(newData);
     }).catch((err) => {
       console.log(err)
@@ -150,7 +151,7 @@ export class AttendanceService {
       case '3':
         return this.deleteOverTimeForm(formData);
       case '4':
-        return Promise.resolve('');
+        return this.deleteLeaveForm(formData);
       case '5':
         return this.deleteCallbackLeaveFrom(formData);
       default:
@@ -271,8 +272,8 @@ export class AttendanceService {
       default:
         break;
     }
-    sendData.DETAIL.END_TIME = sendData.DETAIL.END_TIME?sendData.DETAIL.END_TIME.substr(3):'';
-    sendData.DETAIL.START_TIME = sendData.DETAIL.END_TIME?sendData.DETAIL.START_TIME.substr(3):'';
+    sendData.DETAIL.END_TIME = sendData.DETAIL.END_TIME ? sendData.DETAIL.END_TIME.substr(3) : '';
+    sendData.DETAIL.START_TIME = sendData.DETAIL.END_TIME ? sendData.DETAIL.START_TIME.substr(3) : '';
     sendData.DETAIL.AGENT_TEMPLATE = data.data.autoSet ? 'Y' : 'N';
     return sendData;
   }
@@ -506,7 +507,8 @@ export class AttendanceService {
         reason: '',
         count: '',
         duty_type: '',
-        trueCount:''
+        trueCount: '',
+        true_during: ''
       }
     };
     ({
@@ -517,6 +519,7 @@ export class AttendanceService {
       HOURS: newData.data.count,
       DUTY_KIND: newData.data.duty_type,
       ACT_HOURS: newData.data.trueCount,
+      ACT_TIMES: newData.data.true_during
     } = data);
     newData.data.startTime = '00:' + this.padLeft(data.TIME_HH_FM) + ':' + this.padLeft(data.TIME_MM_FM);
     newData.data.endTime = '00:' + this.padLeft(data.TIME_HH_TO) + ':' + this.padLeft(data.TIME_MM_TO);
@@ -635,6 +638,187 @@ export class AttendanceService {
       return Promise.resolve({ content: '', status: false })
     });
   }
+
+  // 获取所有异常
+  getOffDutyException() {
+    return this.myHttp.get(AttendanceConfig.getOffDutyExceptionUrl).then((res) => {
+      let newData = res.json();
+      if (newData && newData instanceof Array) {
+        newData = newData.map((item) => {
+          return this.editException_get(item);
+        })
+      } else {
+        newData = [];
+      }
+      return Promise.resolve({ content: newData, status: true });
+    }).catch((err) => {
+      console.log(err)
+      this.errorDeal(err);
+      return Promise.resolve({ content: [], status: false })
+    });
+  }
+
+  // 处理异常
+  processOffDutyException(formData: MyFormModel) {
+    let sendData = this.editException_send(formData);
+    return this.myHttp.post(AttendanceConfig.processOffDutyExceptionUrl, sendData).then((res) => {
+      return Promise.resolve({ content: 'ok', status: true });
+    }).catch((err) => {
+      console.log(err)
+      this.errorDeal(err);
+      return Promise.resolve({ content: 'no', status: false })
+    });
+  }
+  editException_send(data: MyFormModel) {
+    let sendData = {
+      ID: '',
+      TYPE: '',
+      ABSENT_CODE: '',
+      REASON: '',
+      EXCEPTION_CODE: ''
+    }
+    sendData.ID = data.data.id;
+    sendData.TYPE = data.data.absentType;
+    sendData.EXCEPTION_CODE = data.data.exception_code;
+    sendData.REASON = data.data.reason;
+    sendData.ABSENT_CODE = data.data.reasonType;
+    return sendData
+  }
+  editException_get(data: any) {
+    let mydata = {
+      type: '0',
+      status: 'NEW',
+      No: '',
+      data: {
+        absentType: '',
+        reasonType: '',
+        startTime: '',
+        endTime: '',
+        reason: '',
+        days: '',
+        hours: '',
+        duty_type: '',
+        exception_code: '',
+        id: ''
+      }
+    }
+    mydata.No = data.DOCNO;
+    mydata.data.absentType = data.TYPE;
+    let date = data.IDATE.substr(0, data.IDATE.indexOf('T'));
+    mydata.data.startTime = date + ' ' + data.TIME_FM;
+    mydata.data.endTime = date + ' ' + data.TIME_TO;
+    mydata.data.reason = data.REASON;
+    mydata.data.hours = data.HOURS;
+    mydata.data.days = data.DAYS;
+    mydata.data.duty_type = data.DUTY_KIND;
+    mydata.data.exception_code = data.EXCEPTION_CODE;
+    mydata.data.id = data.ID;
+    return mydata;
+  }
+
+  // 获得月或年请假天数
+  getOffDutyTotalDays() {
+    let date = new Date().getFullYear();
+    return this.myHttp.get(AttendanceConfig.getOffDutyTotalDaysUrl + `date=${date}`).then((res) => {
+      let newData = res.json();
+      if (newData && newData instanceof Array) {
+        newData = newData.map((item) => {
+          return this.editOffDutyTotalDays_get(item);
+        })
+      } else {
+        newData = [];
+      }
+      return Promise.resolve({ content: newData, status: true });
+    }).catch((err) => {
+      console.log(err)
+      this.errorDeal(err);
+      return Promise.resolve({ content: [], status: false })
+    });
+  }
+  editOffDutyTotalDays_get(data: { YYMM: string, TOT_DAYS: string }) {
+    return { name: +data.YYMM.substr(4) + '月', value: data.TOT_DAYS }
+  }
+
+  // 获得月或年加班时数
+  getOverTimeTotalHours() {
+    let date = new Date().getFullYear();
+    return this.myHttp.get(AttendanceConfig.getOverTimeTotalHoursUrl + `date=${date}`).then((res) => {
+      let newData = res.json();
+      if (newData && newData instanceof Array) {
+        newData = newData.map((item) => {
+          return this.editOverTimeTotalHours_get(item);
+        })
+      } else {
+        newData = [];
+      }
+      return Promise.resolve({ content: newData, status: true });
+    }).catch((err) => {
+      console.log(err)
+      this.errorDeal(err);
+      return Promise.resolve({ content: [], status: false })
+    });
+  }
+  editOverTimeTotalHours_get(data: { YYMM: string, TOT_HOURS: string }) {
+    return { name: +data.YYMM.substr(4) + '月', value: data.TOT_HOURS }
+  }
+
+  // 获取某月内的请假明细
+  getOffDutyMonthHours(month:string) {
+    let date = new Date().getFullYear();
+    month = Number(month)<10?'0'+month:month;
+    return this.myHttp.get(AttendanceConfig.getOffDutyMonthHoursUrl + `date=${date}${month}`).then((res) => {
+      let newData = res.json();
+      if (newData && newData instanceof Array) {
+        newData = newData.map((item) => {
+          return this.editOffDutyMonthHours_get(item);
+        })
+      } else {
+        newData = [];
+      }
+      return Promise.resolve({ content: newData, status: true });
+    }).catch((err) => {
+      console.log(err)
+      this.errorDeal(err);
+      return Promise.resolve({ content: [], status: false })
+    });
+  }
+  editOffDutyMonthHours_get(data: { IDATE: string, TOT_HOURS: string }) {
+    return { name: new Date(data.IDATE).getDate()+'', value: Number(data.TOT_HOURS)/8 }
+  }
+  // 获取某月内的加班明细
+  getOverTimeMonthHours(month:string) {
+    let date = new Date().getFullYear();
+    month = Number(month)<10?'0'+month:month;
+    return this.myHttp.get(AttendanceConfig.getOverTimeMonthHoursUrl + `date=${date}${month}`).then((res) => {
+      let newData = res.json();
+      if (newData && newData instanceof Array) {
+        newData = newData.map((item) => {
+          return this.editOverTimeMonthHours_get(item);
+        })
+      } else {
+        newData = [];
+      }
+      return Promise.resolve({ content: newData, status: true });
+    }).catch((err) => {
+      console.log(err)
+      this.errorDeal(err);
+      return Promise.resolve({ content: [], status: false })
+    });
+  }
+  editOverTimeMonthHours_get(data: { IDATE: string, TOT_HOURS: string }) {
+    return { name: new Date(data.IDATE).getDate()+'', value: Number(data.TOT_HOURS) }
+  }
+  chineseConv(value:string) {
+    let fontType: string = localStorage.getItem('languageType');
+    switch (fontType) {
+      case 'simple_Chinese':
+        return sify(JSON.stringify(value)).replace(/^\"/g,'').replace(/\"$/g,'');
+      case 'traditional_Chinese':
+        return tify(JSON.stringify(value)).replace(/^\"/g,'').replace(/\"$/g,'');
+      default:
+        return value;
+    }
+  }
   errorDeal(err: any, showAlert: boolean = false) {
     switch (err.status) {
       case 404:
@@ -642,13 +826,16 @@ export class AttendanceService {
         break;
       case 400:
         if (showAlert) {
-          this.plugin.createBasicAlert(err.json().ExceptionMessage);
+          this.plugin.createBasicAlert(this.chineseConv(err.json().ExceptionMessage));
         } else {
-          this.plugin.showToast(err.json().ExceptionMessage);
+          this.plugin.showToast(this.chineseConv(err.json().ExceptionMessage));
         }
         break;
       case 0:
         this.plugin.showToast('连接服务器失败');
+        break;
+      case 500:
+        this.plugin.showToast('服务器没响应');
         break;
       default:
         this.plugin.showToast('出现未定义连接错误' + err.status);

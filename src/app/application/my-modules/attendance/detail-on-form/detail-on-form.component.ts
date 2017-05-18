@@ -13,12 +13,17 @@ import { FormType } from '../shared/config/form-type';
 import { AttendanceMonthComponent } from '../attendance-month/attendance-month.component';
 
 import { AttendanceConfig } from '../shared/config/attendance.config';
+import { LanguageTypeConfig } from '../shared/config/language-type.config';
 
 @Component({
   selector: 'sg-detail-on-form',
   templateUrl: 'detail-on-form.component.html'
 })
 export class DetailOnFormComponent {
+
+  fontType:string = localStorage.getItem('languageType')
+  fontContent = LanguageTypeConfig.detailOnFormComponent[this.fontType];
+
   betweenMes: {
     date: string
   }
@@ -56,8 +61,8 @@ export class DetailOnFormComponent {
   initValidator() {
     let newValidator = new MyValidatorModel([
       {name:'date',valiItems:[
-        {valiName:'Required',errMessage:'必须选择时间',valiValue:true},
-        {valiName:'BeforeMonth',errMessage:'不能选择本月以后的日期',valiValue:new Date().getMonth()},
+        {valiName:'Required',errMessage:this.fontContent.date_required_err,valiValue:true},
+        {valiName:'BeforeMonth',errMessage:this.fontContent.date_BeforeMonth_err,valiValue:new Date().getMonth()},
       ]}
     ])
     return newValidator;
@@ -88,7 +93,7 @@ export class DetailOnFormComponent {
     loading.dismiss()
     if(!res.status) return false;
     if(!res.content) {
-      this.plugin.showToast('没有此月记录')
+      this.plugin.showToast(this.fontContent.no_result)
     } else {
       this.navCtrl.push(AttendanceMonthComponent,{
         attendance_month:res.content

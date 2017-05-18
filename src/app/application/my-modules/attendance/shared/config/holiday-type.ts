@@ -4,6 +4,14 @@ export class HolidayType {
 
 
   }
+  absentType: { type: string, name: string }[] = [
+    { type: '1', name: '請假' },
+    { type: '2', name: '公出' },
+    { type: '5', name: '未刷' },
+    { type: '6', name: '門禁異常(正常上班)' },
+    { type: '7', name: '門禁異常(加班)' },
+    { type: '8', name: '遲到/早退' }
+  ]
   type: { type: string, name: string }[] = [
     { type: 'A', name: '年休假' },
     { type: 'B', name: '產假 - 產假【98天】' },

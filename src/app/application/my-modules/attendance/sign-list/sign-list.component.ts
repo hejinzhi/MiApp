@@ -4,11 +4,16 @@ import { NavController, NavParams } from 'ionic-angular';
 import { AttendanceService } from '../shared/service/attendance.service';
 import { PluginService }   from '../../../../core/services/plugin.service';
 
+import { LanguageTypeConfig } from '../shared/config/language-type.config';
+
 @Component({
   selector: 'sg-sign-list',
   templateUrl: 'sign-list.component.html'
 })
 export class SignListComponent {
+
+  fontType:string = localStorage.getItem('languageType')
+  fontContent = LanguageTypeConfig.signListComponent[this.fontType];
 
   type: string;
   items: any;
@@ -31,5 +36,6 @@ export class SignListComponent {
     this.items.sort((a: any, b: any) => {
       return b.version - a.version
     })
+    console.log(this.items)
   }
 }
