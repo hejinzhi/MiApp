@@ -113,7 +113,7 @@ export class ListFilterComponent implements OnInit {
   }
   toDetail(detailMes: any) {
     let targetForm: any = '';
-    switch (this.type) {
+    switch (detailMes.type) {
       case '2':
         targetForm = LeaveFormComponent;
         break;

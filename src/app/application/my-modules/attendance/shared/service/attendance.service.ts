@@ -78,7 +78,12 @@ export class AttendanceService {
     return this.myHttp.get(AttendanceConfig.getCanCallbackLeaveFromUrl).then((res) => {
       let formData = res.json();
       formData = formData === null ? [] : formData.map((item: any) => {
-        return this.editLeaveData_get(item);
+        console.log(item)
+        if(item.OFFDUTY_TYPE == '2') {
+          return this.editLeaveData_get(item,'4');
+        } else {
+          return this.editLeaveData_get(item);
+        }
       })
       return Promise.resolve(formData)
     }).catch((err) => {
@@ -374,7 +379,7 @@ export class AttendanceService {
         content: saveRes,
         status: false
       });
-      formData.No = saveRes.DOCNO;
+      formData.No = Number(formData.type) === 5?saveRes.DOCNO1:saveRes.DOCNO;
     }
     let sendData = {
       KIND: '',

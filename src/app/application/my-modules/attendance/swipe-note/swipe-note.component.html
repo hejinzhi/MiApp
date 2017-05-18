@@ -19,8 +19,8 @@
           <p>{{item.TIME}}</p>
         </ion-row>
         <ion-row>
-          <p>{{item.IDUTY | sgOtherType:'swipeType'}}</p>
-          <p>{{item.POSITION}}{{item.FLAG}}</p>
+          <p>{{item.IDUTY | sgOtherType:'swipeType' | sgChineseConv }}</p>
+          <p>{{(item.POSITION?item.POSITION:'人事补卡') | sgChineseConv }}{{item.FLAG | sgChineseConv }}</p>
         </ion-row>
       </h2>
     </ion-item>
