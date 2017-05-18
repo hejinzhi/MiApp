@@ -47,10 +47,22 @@ export class SearchFormComponent {
 
   ionViewDidLoad() {
     this.formType = this.myformType.type;
+    let date = new Date();
+    let today = date.toISOString();
+    let month = date.getMonth();
+    let year = date.getFullYear();
+    let startTime = '';
+    if(month === 0) {
+      startTime = year-1+'-'+'12'+'-'+'26';
+    } else {
+      let monthString = month<10?'0'+month:month;
+      startTime = year+'-'+ monthString +'-'+'26';
+    }
+    today = today.substr(0,today.indexOf('T'));
     this.searchMes = {
       type: '',
-      startTime: '',
-      endTime: '',
+      startTime: startTime,
+      endTime: today,
       form_No: ''
     }
     this.searchMes.type = this.navParams.data.type || '';

@@ -7,5 +7,5 @@
   <button ion-item (click)="deleteForm()"  *ngIf="['APPROVED','WAITING'].indexOf(formData.status.toUpperCase())<0">{{fontContent.deleteForm}}{{formData.type | sgFormType | sgChineseConv}}</button>
   <button ion-item (click)="callbackSign()" *ngIf="formData.status.toUpperCase() === 'WAITING'">{{fontContent.callbackSign}}</button>
   </ion-item-group>
-  <button ion-item (click)="callBack()" *ngIf="formData.status.toUpperCase() === 'APPROVED'&& formData.type === '2'">{{fontContent.callBack}}</button>
+  <button ion-item (click)="callBack()" *ngIf="formData.status.toUpperCase() === 'APPROVED'&& (formData.type === '2' || formData.type === '4')">{{fontContent.callBack}}</button>
 </ion-list>
