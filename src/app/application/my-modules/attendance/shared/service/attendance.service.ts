@@ -58,7 +58,7 @@ export class AttendanceService {
         return Promise.resolve([])
       });
     } else {
-      dateFM = formData.startTime || this.getMinStartTime(6);
+      dateFM = formData.startTime || this.getMinStartTime(1);
       dateTO = formData.endTime || '';
       return this.myHttp.get(dateUrl + `type=${type}&dateFM=${dateFM}&dateTO=${dateTO}`).then((res) => {
         let formData = res.json();
@@ -736,7 +736,7 @@ export class AttendanceService {
     });
   }
   editOffDutyTotalDays_get(data: { YYMM: string, TOT_DAYS: string }) {
-    return { name: +data.YYMM.substr(4) + '月', value: data.TOT_DAYS }
+    return { name: +data.YYMM.substr(4) + this.chineseConv('月'), value: data.TOT_DAYS }
   }
 
   // 获得月或年加班时数
@@ -759,7 +759,7 @@ export class AttendanceService {
     });
   }
   editOverTimeTotalHours_get(data: { YYMM: string, TOT_HOURS: string }) {
-    return { name: +data.YYMM.substr(4) + '月', value: data.TOT_HOURS }
+    return { name: +data.YYMM.substr(4) + this.chineseConv('月'), value: data.TOT_HOURS }
   }
 
   // 获取某月内的请假明细
@@ -822,7 +822,7 @@ export class AttendanceService {
   errorDeal(err: any, showAlert: boolean = false) {
     switch (err.status) {
       case 404:
-        this.plugin.showToast('未找到结果');
+        this.plugin.showToast(this.chineseConv('未找到结果'));
         break;
       case 400:
         if (showAlert) {
@@ -832,13 +832,13 @@ export class AttendanceService {
         }
         break;
       case 0:
-        this.plugin.showToast('连接服务器失败');
+        this.plugin.showToast(this.chineseConv('连接服务器失败'));
         break;
       case 500:
-        this.plugin.showToast('服务器没响应');
+        this.plugin.showToast(this.chineseConv('服务器没响应'));
         break;
       default:
-        this.plugin.showToast('出现未定义连接错误' + err.status);
+        this.plugin.showToast(this.chineseConv('出现未定义连接错误') + err.status);
         break;
     }
   }

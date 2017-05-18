@@ -33,15 +33,22 @@ export class ListFilterComponent implements OnInit {
     this.user = JSON.parse(localStorage.getItem('currentUser'))
     this.type = this.myset.type;
     this.initializeItems();
+    console.log(this.items)
   }
 
   sortItems(type: string) {
     switch (type) {
+      case '100':
+        this.items = this.sortByDate(this.items, 'startTime');
+        break;
       case '2':
         this.items = this.sortByDate(this.items, 'startDate');
         break;
       case '3':
         this.items = this.sortByDate(this.items, 'OTtime');
+        break;
+      case '4':
+        this.items = this.sortByDate(this.items, 'businessTime');
         break;
       default:
         break;
@@ -50,20 +57,6 @@ export class ListFilterComponent implements OnInit {
   initializeItems() {
     this.items = this.myset.formData || [];
     this.sortItems(this.type);
-    this.items.sort((a: MyFormModel, b: MyFormModel) => {
-      let first = this.getStatusPoint(a.status);
-      let second = this.getStatusPoint(b.status);
-      return second - first;
-    })
-    if (Number(this.type) === 100) {
-      this.items.sort((a: MyFormModel, b: MyFormModel) => {
-        if (b.type === a.type) {
-          return Date.parse(b.data.startTime) - Date.parse(a.data.startTime)
-        }
-        return Number(b.type) - Number(a.type);
-      })
-    }
-
   }
 
   sortByStatusAndDate(items: MyFormModel[], targetDateName: string) {

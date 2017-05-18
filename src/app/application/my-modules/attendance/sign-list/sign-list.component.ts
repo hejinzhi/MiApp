@@ -33,9 +33,14 @@ export class SignListComponent {
     loading.present();
     this.items = await this.attendanceService.getSignList(form_No);
     loading.dismiss();
+    console.log(this.items)
+    if(this.items.length === 0) {
+      this.plugin.showToast(this.fontContent.no_list);
+      return;
+    }
     this.items.sort((a: any, b: any) => {
       return b.version - a.version
     })
-    console.log(this.items)
+
   }
 }

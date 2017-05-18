@@ -180,12 +180,12 @@ export class OverTimeFormComponent {
     loading.dismiss()
     if(res.status) {
       this.plugin.showToast(this.fontContent.sign_success);
-      // this.navCtrl.canGoBack()?this.navCtrl.popToRoot():'';
+      this.formData.status = 'WAITING';
+      this.navCtrl.canGoBack()?this.navCtrl.popToRoot():'';
     }
     if(res.content) {
       this.OTCount = res.content.HOURS;
       this.formData.No = res.content.DOCNO
-      this.formData.status = res.content.STATUS;
       this.haveSaved = true;
     }
     return false;
