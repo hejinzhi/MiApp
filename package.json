@@ -28,6 +28,7 @@
     "@ionic-native/status-bar": "3.4.2",
     "@ionic/storage": "2.0.1",
     "angular2-jwt": "^0.2.0",
+    "chinese-conv": "^1.0.1",
     "echarts": "^3.5.3",
     "ionic-angular": "3.0.1",
     "ionic-native": "^2.9.0",
