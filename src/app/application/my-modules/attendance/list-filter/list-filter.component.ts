@@ -30,7 +30,6 @@ export class ListFilterComponent implements OnInit {
   constructor(public navCtrl: NavController, public navParams: NavParams) { }
 
   ngOnInit() {
-    console.log(456)
     this.user = JSON.parse(localStorage.getItem('currentUser'))
     this.type = this.myset.type;
     this.initializeItems();
@@ -51,127 +50,6 @@ export class ListFilterComponent implements OnInit {
   initializeItems() {
     this.items = this.myset.formData || [];
     this.sortItems(this.type);
-    if (this.items.length > 0) return;
-    switch (this.type) {
-      case '4':
-        this.items = [
-          {
-            type: '4',
-            status: 'New',
-            No: 'HTL021703007572',
-            data: {
-              reasonType: '20',
-              autoSet: false,
-              colleague: 'xiaomi',
-              businessTime: '2017-03-01',
-              startTime: '01:00',
-              endTime: '02:00',
-              reason: '有急事'
-            }
-          },
-          {
-            type: '4',
-            status: 'WAITING',
-            No: 'HTL021703007572',
-            data: {
-              reasonType: '20',
-              autoSet: false,
-              colleague: 'xiaomi',
-              businessTime: '2017-03-01',
-              startTime: '01:00',
-              endTime: '02:00',
-              reason: '有急事'
-            }
-          },
-          {
-            type: '4',
-            status: 'APPROVED',
-            No: 'HTL021703004572',
-            data: {
-              reasonType: '30',
-              autoSet: false,
-              colleague: 'xiaomi',
-              businessTime: '2017-01-01',
-              startTime: '18:30',
-              endTime: '21:00',
-              reason: '有急事'
-            }
-          }
-        ]
-        break;
-      case '5':
-        this.items = [
-          {
-            type: '5',
-            status: 'APPROVED',
-            No: 'HTL021703004172',
-            data: {
-              leave_No: 'HTL021703002172',
-              reason: '提早康复'
-            }
-          },
-          {
-            type: '5',
-            status: 'New',
-            No: 'HTL021704001172',
-            data: {
-              leave_No: 'HTL021703002152',
-              reason: '车票买早了'
-            }
-          },
-          {
-            type: '5',
-            status: 'WAITING',
-            No: 'HTL021704001572',
-            data: {
-              leave_No: 'HTL021703002152',
-              reason: '车票买早了'
-            }
-          }
-        ]
-        break;
-      default:
-        this.items = [
-          {
-            type: '0',
-            status: 'New',
-            No: 'HTL021703007172',
-            data: {
-              reasonType: '',
-              startTime: '2017-01-01T10:00:00Z',
-              endTime: '2017-01-01T11:00:00Z',//"2017-01-01T01:00:00Z",
-              colleague: '',
-              reason: ''
-            }
-          },
-          {
-            type: '1',
-            status: 'New',
-            No: 'HTL021703008116',
-            data: {
-              reasonType: '',
-              startTime: '2017-01-01T01:00:00Z',
-              endTime: '2017-01-05T01:00:00Z',//"2017-01-01T01:00:00Z",
-              colleague: '',
-              reason: ''
-            }
-          },
-          {
-            type: '0',
-            status: 'New',
-            No: 'HTL021703017188',
-            data: {
-              reasonType: '',
-              startTime: '2017-01-01T09:00:00Z',
-              endTime: '2017-01-01T11:00:00Z',//"2017-01-01T01:00:00Z",
-              colleague: '',
-              reason: ''
-            }
-          }
-        ];
-        break;
-
-    }
     this.items.sort((a: MyFormModel, b: MyFormModel) => {
       let first = this.getStatusPoint(a.status);
       let second = this.getStatusPoint(b.status);
