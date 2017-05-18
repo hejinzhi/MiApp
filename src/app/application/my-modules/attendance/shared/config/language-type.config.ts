@@ -61,6 +61,44 @@ export class LanguageTypeConfig {
       tab5:'统计图表'
     }
   };
+  static statisticsComponent = {
+    traditional_Chinese:{
+      title:'統計圖表',
+      totalOT_year:'本年加班',
+      totalOT_month:'本月加班',
+      totalLeave_year:'本年請假',
+      totalLeave_month:'本月請假',
+      total:'總統計',
+      my:'我的',
+      OT: '加班',
+      leave: '請假',
+      month: '月',
+      day:'天',
+      days:'天數',
+      hour:'小時',
+      this_year:'本年',
+      this_month:'本月',
+      back:'返回'
+    },
+    simple_Chinese:{
+      title:'统计图表',
+      totalOT_year:'本年加班',
+      totalOT_month:'本月加班',
+      totalLeave_year:'本年请假',
+      totalLeave_month:'本月请假',
+      total:'总统计',
+      my:'我的',
+      OT: '加班',
+      leave: '请假',
+      month: '月',
+      day:'天',
+      days:'天数',
+      hour:'小时',
+      this_year:'本年',
+      this_month:'本月',
+      back:'返回'
+    }
+  };
   static undoneFormComponent = {
     traditional_Chinese:{
       title:'異常維護',

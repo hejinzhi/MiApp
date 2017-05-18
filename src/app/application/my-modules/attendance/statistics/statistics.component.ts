@@ -5,6 +5,8 @@ import * as echarts from 'echarts';
 import { PluginService }   from '../../../../core/services/plugin.service';
 import { AttendanceService } from '../shared/service/attendance.service';
 
+import { LanguageTypeConfig } from '../shared/config/language-type.config';
+
 class Chart {
   name: string;
   value: number
@@ -15,44 +17,21 @@ class Chart {
 })
 export class StatisticsComponent {
 
+  fontType:string = localStorage.getItem('languageType')
+  fontContent = LanguageTypeConfig.statisticsComponent[this.fontType];
+
   totalOT = [
-    { name: '本月加班', value: 14 },
-    { name: '本年加班', value: 36 }
+    { name: this.fontContent.totalOT_month, value: 0 },
+    { name: this.fontContent.totalOT_year, value: 0 }
   ]
   totalLeave = [
-    { name: '本月请假', value: 2.3 },
-    { name: '本年请假', value: 15.7 }
+    { name: this.fontContent.totalLeave_month, value: 0 },
+    { name: this.fontContent.totalLeave_year, value: 0 }
   ]
-  myOT = [
-    { name: '1月', value: 1 },
-    { name: '2月', value: 2 },
-    { name: '3月', value: 3 },
-    { name: '4月', value: 4 },
-    { name: '5月', value: 5 },
-    { name: '6月', value: 6 },
-    { name: '7月', value: 7 },
-    { name: '8月', value: 8 },
-    { name: '9月', value: 9 },
-    { name: '10月', value: 10 },
-    { name: '11月', value: 11 },
-    { name: '12月', value: 12 }
-  ]
-  myLeave = [
-    { name: '1月', value: 1 },
-    { name: '2月', value: 2 },
-    { name: '3月', value: 3 },
-    { name: '4月', value: 4 },
-    { name: '5月', value: 5 },
-    { name: '6月', value: 6 },
-    { name: '7月', value: 7 },
-    { name: '8月', value: 8 },
-    { name: '9月', value: 9 },
-    { name: '10月', value: 10 },
-    { name: '11月', value: 11 },
-    { name: '12月', value: 12 }
-  ]
-  OTday:any;
-  leaveDay:any;
+  myOT:{name:string,value:number}[]
+  myLeave:{name:string,value:number}[]
+  OTday:{name:string,value:number}[];
+  leaveDay:{name:string,value:number}[];
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
@@ -67,7 +46,7 @@ export class StatisticsComponent {
     await this.editMonthLeave();
     await this.editMonthOT();
     loading.dismiss()
-    this.initChart2('main', '总统计');
+    this.initChart2('main', this.fontContent.total);
     this.initOTMonthChart();
     this.initLeaveMonthChart();
   }
@@ -77,7 +56,7 @@ export class StatisticsComponent {
       this.myLeave = res.content.slice(0,new Date().getMonth()+1);
       let nowMonthLeave = this.myLeave[this.myLeave.length-1]
       this.totalLeave.map((item) => {
-        if(item.name == '本月请假') {
+        if(item.name == this.fontContent.totalLeave_month) {
           item.value = nowMonthLeave.value;
         } else {
           let totalCount = 0;
@@ -93,9 +72,9 @@ export class StatisticsComponent {
   initDays() {
     let date = new Date();
     let monthDays = new Date(date.getFullYear(),date.getMonth()+1,0).getDate();
-    let days = []
+    let days:{name:string,value:number}[]= []
     for(let i=0;i<monthDays+1;i++) {
-      days.push({name:i+1,value:0});
+      days.push({name:i+1+'',value:0});
     }
     this.OTday = this.leaveDay = days;
   }
@@ -105,7 +84,7 @@ export class StatisticsComponent {
       this.myOT = res.content.slice(0,new Date().getMonth()+1);
       let nowMonthOT = this.myOT[this.myOT.length-1];
       this.totalOT.map((item) => {
-        if(item.name == '本月加班') {
+        if(item.name == this.fontContent.totalOT_month) {
           item.value = nowMonthOT.value;
         } else {
           let totalCount = 0;
@@ -119,7 +98,7 @@ export class StatisticsComponent {
     }
   }
   initOTMonthChart() {
-    let monthChart = this.initChart1('main2', '我的加班', this.myOT, true);
+    let monthChart = this.initChart1('main2', this.fontContent.my+this.fontContent.OT, this.myOT, true);
     monthChart.on('click', (params: any) => {
       this.attendanceService.getOverTimeMonthHours(params.dataIndex+1).then((res) => {
         if(res.status) {
@@ -132,14 +111,14 @@ export class StatisticsComponent {
               return item;
             })
           }
-          this.initLineChat('main2', (params.dataIndex + 1) + '月加班', this.OTday, true, this.initOTMonthChart);
+          this.initLineChat('main2', (params.dataIndex + 1) + this.fontContent.month+this.fontContent.OT, this.OTday, true, this.initOTMonthChart);
         }
       })
 
     })
   }
   initLeaveMonthChart() {
-    let monthChart = this.initChart1('main3', '我的请假', this.myLeave, true);
+    let monthChart = this.initChart1('main3', this.fontContent.my+this.fontContent.leave, this.myLeave, true);
     monthChart.on('click', (params: any) => {
       this.attendanceService.getOffDutyMonthHours(params.dataIndex+1).then((res) => {
         if(res.status) {
@@ -152,7 +131,7 @@ export class StatisticsComponent {
               return item;
             })
           }
-          this.initLineChat('main3', (params.dataIndex + 1) + '月请假', this.leaveDay, true, this.initLeaveMonthChart);
+          this.initLineChat('main3', (params.dataIndex + 1) + this.fontContent.month + this.fontContent.leave, this.leaveDay, true, this.initLeaveMonthChart);
         }
       })
     })
@@ -208,7 +187,7 @@ export class StatisticsComponent {
       },
       series: [
         {
-          name: '天数',
+          name: this.fontContent.days,
           type: 'bar',
           barWidth: '60%',
           data: target,
@@ -244,7 +223,7 @@ export class StatisticsComponent {
         trigger: 'axis',
       },
       legend: {
-        data: ['加班', '请假']
+        data: [this.fontContent.OT, this.fontContent.leave]
       },
       grid: {
         left: '3%',
@@ -255,7 +234,7 @@ export class StatisticsComponent {
       xAxis: [
         {
           type: 'category',
-          data: ['本月', '本年'],
+          data: [this.fontContent.this_month, this.fontContent.this_year],
           axisTick: {
             alignWithLabel: true
           }
@@ -269,7 +248,7 @@ export class StatisticsComponent {
       color: color,
       series: [
         {
-          name: '加班',
+          name: this.fontContent.OT,
           type: 'bar',
           data: this.totalOT,
           label: {
@@ -277,12 +256,12 @@ export class StatisticsComponent {
             {
               show: true,
               position: 'top',
-              formatter: '{c}小时'
+              formatter: '{c}'+this.fontContent.hour
             }
           },
         },
         {
-          name: '请假',
+          name: this.fontContent.leave,
           type: 'bar',
           data: this.totalLeave,
           label: {
@@ -290,7 +269,7 @@ export class StatisticsComponent {
             {
               show: true,
               position: 'top',
-              formatter: '{c}天'
+              formatter: '{c}'+this.fontContent.day
             }
           },
         }
@@ -345,7 +324,7 @@ export class StatisticsComponent {
           },
           myTool: {
             show: true,
-            title: '返回',
+            title: this.fontContent.back,
             icon: 'image://assets/img/back.png',
             onclick() {
               fn.apply(that);

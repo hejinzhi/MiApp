@@ -11,8 +11,8 @@
   <ion-grid>
   <ion-row>
     <ion-col *ngFor="let item of items" col-4><ion-item >
-      <p>{{item.type | sgOtherType:'attendanceMonthType'}}</p>
-      <p>{{item.value}}</p>
+      <p class="name">{{item.type | sgOtherType:'attendanceMonthType' | sgChineseConv}}</p>
+      <p class="value">{{item.value}}</p>
     </ion-item></ion-col>
   </ion-row>
 </ion-grid>
