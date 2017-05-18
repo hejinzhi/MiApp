@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { ViewController, NavController, NavParams } from 'ionic-angular';
+import { ViewController, NavController, NavParams, AlertController} from 'ionic-angular';
 
 import { PluginService }   from '../../../../core/services/plugin.service';
 import { AttendanceService } from '../shared/service/attendance.service';
@@ -26,6 +26,7 @@ export class FormMenuComponent {
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
+    public alertCtrl: AlertController,
     public viewCtrl: ViewController,
     private plugin: PluginService,
     private attendanceService: AttendanceService
@@ -77,6 +78,25 @@ export class FormMenuComponent {
   //   });
   // }
   async deleteForm() {
+    let confirm = this.alertCtrl.create({
+      title: '确定要删除此单据吗?',
+      buttons: [
+        {
+          text: '取消',
+          handler: () => {
+          }
+        },
+        {
+          text: '确定',
+          handler: () => {
+            this.toDelete();
+          }
+        }
+      ]
+    });
+    confirm.present();
+  }
+  async toDelete() {
     Object.assign(this.formData.data, this.that.value);
     this.viewCtrl.dismiss();
     let loading = this.plugin.createLoading();
@@ -102,7 +122,8 @@ export class FormMenuComponent {
     loading.dismiss();
     if(!res) return;
     this.plugin.showToast(this.fontContent.callbackSign_succ);
-    this.lastNavCtr.popToRoot()
+    this.formData.status = 'CANCELED'
+    // this.lastNavCtr.popToRoot()
   }
   async callBack() {
     this.viewCtrl.dismiss();

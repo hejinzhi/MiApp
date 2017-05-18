@@ -8,8 +8,11 @@ sg-attendance-month {
         color:#000;
       }
       &.value {
-        display: flex;
-        flex-flow: row-reverse;
+        // display: flex;
+        // flex-flow: row-reverse;
+      }
+      &.highlight {
+        color:blue
       }
     }
   }

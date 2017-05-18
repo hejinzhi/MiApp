@@ -110,10 +110,9 @@ export class CallbackLeaveFormComponent {
     loading.dismiss()
     if (res.status) {
       this.plugin.showToast(this.fontContent.sign_success);
-      this.navCtrl.popToRoot();
-    }
-    if (res.content) {
       this.haveSaved = true;
+      this.formData.status = 'WAITING'
+      // this.navCtrl.popToRoot();
     }
     return false;
   }

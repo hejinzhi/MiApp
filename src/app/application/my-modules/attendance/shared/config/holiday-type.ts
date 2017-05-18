@@ -76,8 +76,6 @@ export class HolidayType {
     { name: '停线天数', type: 'STOP_DAYS' },
     { name: '大夜班次数', type: 'NIGHT_SUBSIDY' },
     { name: '小夜班次数', type: 'NIGHT_SUBSIDY_LITTLE' },
-    { name: '上个月大夜班次数', type: 'LAST1_NS' },
-    { name: '前个月大夜班次数', type: 'LAST2_NS' },
     { name: '出勤天数(清凉津贴)', type: 'TOT_DUTY' },
     { name: '加班总时数', type: 'OVERTIME1_133' },
     { name: '周六加班时数', type: 'SAT_DAYS' },

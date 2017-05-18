@@ -46,6 +46,16 @@
         <p>{{fontContent.business}}{{item.data.days.toFixed(2)}}{{fontContent.day}}</p>
       </ion-row>
     </h2>
+    <h2 *ngIf="item.type === '5'" no-padding class="myRow">
+      <ion-row>
+        <p>{{ item.No}}</p>
+        <p>{{ user.empno }}{{ user.nickname | sgChineseConv}}</p>
+      </ion-row>
+      <ion-row>
+        <p [class.waiting]="item.status.toUpperCase() === 'WAITING'">{{item.status}}</p>
+        <p>{{'取消假单' | sgChineseConv }}{{item.data.leave_No}}</p>
+      </ion-row>
+    </h2>
     <h2 *ngIf="+item.type<2" no-padding class="myRow">
       <ion-row>
         <p>{{ item.No}}</p>

@@ -152,7 +152,8 @@ export class LanguageTypeConfig {
       SEQ:'序列',
       ARENT_FROM:'代理人',
       waiting:'已等待',
-      COMMENTS:'備註'
+      COMMENTS:'備註',
+      no_list:'暫無簽核名單產生,請稍等後重試'
     },
     simple_Chinese:{
       title:'签核历史记录',
@@ -160,14 +161,15 @@ export class LanguageTypeConfig {
       SEQ:'序列',
       ARENT_FROM:'代理人',
       waiting:'已等待',
-      COMMENTS:'备注'
+      COMMENTS:'备注',
+      no_list:'暂无签核名单产生,请稍等后重试'
     }
   };
   static formMenuComponent = {
     traditional_Chinese:{
       search:'查詢',
       sign_list:'簽核名單',
-      getCallbackForm:'獲取所有銷假單',
+      getCallbackForm:'銷假單查詢',
       deleteForm:'刪除',
       callbackSign:'取消送簽',
       callBack: '取消假單',
@@ -178,7 +180,7 @@ export class LanguageTypeConfig {
     simple_Chinese:{
       search:'查询',
       sign_list:'签核名单',
-      getCallbackForm:'获取所有销假单',
+      getCallbackForm:'销假单查询',
       deleteForm:'删除',
       callbackSign:'取消送签',
       callBack: '取消假單',
@@ -190,13 +192,13 @@ export class LanguageTypeConfig {
   static attendanceDetailComponent = {
     traditional_Chinese:{
       week:'星期',
-      work_hour:'假時',
-      off_hour:'工時'
+      work_hour:'工時',
+      off_hour:'假时'
     },
     simple_Chinese:{
       week:'星期',
-      work_hour:'假时',
-      off_hour:'工时'
+      work_hour:'工時',
+      off_hour:'假时'
     }
   };
   static detailBetweenFormComponent = {
@@ -284,13 +286,13 @@ export class LanguageTypeConfig {
   static holidayDetailComponent = {
     traditional_Chinese:{
       title:'個人維護詳情',
-      STADATE:'特休假生效日期',
+      STADATE:'年休假生效日',
       canUse:'可用假天數',
       used:'已用假天數'
     },
     simple_Chinese:{
       title:'个人维护详情',
-      STADATE:'特休假生效日期',
+      STADATE:'年休假生效日',
       canUse:'可用假天数',
       used:'已用假天数'
     }
@@ -301,14 +303,14 @@ export class LanguageTypeConfig {
       swipe_note:'刷卡記錄',
       attendance_month:'出勤月檔',
       attendance_detail:'出勤狀況明細',
-      to_detail: '個人考勤現狀'
+      to_detail: '可休/已休假'
     },
     simple_Chinese:{
       title:'考勤查詢',
       swipe_note:'刷卡记录',
       attendance_month:'出勤月档',
       attendance_detail:'出勤状况明细',
-      to_detail: '个人考勤现状'
+      to_detail: '可休/已休假'
     }
   };
   static listFilterComponent = {

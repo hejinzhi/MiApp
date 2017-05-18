@@ -46,10 +46,20 @@ export class DetailBetweenFormComponent {
 
   ionViewDidLoad() {
     this.type = this.navParams.data.type;
-    let today = new Date().toISOString();
+    let date = new Date();
+    let today = date.toISOString();
+    let month = date.getMonth();
+    let year = date.getFullYear();
+    let startTime = '';
+    if(month === 0) {
+      startTime = year-1+'-'+'12'+'-'+'26';
+    } else {
+      let monthString = month<10?'0'+month:month;
+      startTime = year+'-'+ monthString +'-'+'26';
+    }
     today = today.substr(0,today.indexOf('T'));
     this.betweenMes = {
-      startTime: today,
+      startTime: startTime,
       endTime: today,
     }
     this.todo = this.initWork(this.betweenMes);
