@@ -496,7 +496,8 @@ export class LanguageTypeConfig {
       startTime_required_err:'開始時間不能為空',
       startTime_timeSmaller_err:'結束時間必須遲於開始時間',
       endTime_required_err:'結束時間不能為空',
-      endTime_timeBigger_err:'結束時間必須遲於開始時間'
+      endTime_timeBigger_err:'結束時間必須遲於開始時間',
+      reset:'重置'
     },
     simple_Chinese:{
       unSave_title:'新建加班单',
@@ -524,7 +525,8 @@ export class LanguageTypeConfig {
       startTime_required_err:'开始时间不能为空',
       startTime_timeSmaller_err:'结束时间必须迟于开始时间',
       endTime_required_err:'结束时间不能为空',
-      endTime_timeBigger_err:'结束时间必须迟于开始时间'
+      endTime_timeBigger_err:'结束时间必须迟于开始时间',
+      reset:'重置'
     }
   };
 

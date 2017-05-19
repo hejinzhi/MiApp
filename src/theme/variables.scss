@@ -90,6 +90,12 @@ ion-select {
 .myForm.auto {
   background-color: lighten(#CFCFD1, 17%);
   color: #8B8B8B;
+  &.item-block .item-inner {
+    border-bottom: none;
+  }
+  &.item-block.first .item-inner {
+    border-bottom: 1px solid #c8c7cc;
+  }
 }
 ion-alert div.alert-wrapper{
   min-width: 300px;
@@ -118,7 +124,10 @@ ion-app .alert-ios .alert-wrapper {
     background-color: #fff;
 }
 
-ion-list.myList .item-block .item-inner {
+// ion-list.myList .item-block .item-inner {
+//     border-bottom: 1px solid #c8c7cc;
+// }
+ion-list.list-ios .item-block .item-inner {
     border-bottom: 1px solid #c8c7cc;
 }
 ion-list.myList .item-block:last-child{

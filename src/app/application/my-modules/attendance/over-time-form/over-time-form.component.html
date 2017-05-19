@@ -5,7 +5,7 @@
     <ion-title *ngIf="formData.status">{{fontContent.saved_title}}</ion-title>
     <ion-buttons end >
       <button ion-button icon-only (click)="presentPopover($event)">
-      <ion-icon name="more"></ion-icon>
+      <ion-icon name="add"></ion-icon>
     </button>
     </ion-buttons>
   </ion-navbar>
@@ -16,15 +16,15 @@
   <div [class.layer]="['APPROVED','WAITING'].indexOf(formData.status.toUpperCase())>-1">
   </div>
   <ion-list class="myList">
-    <ion-item class="myForm auto">
-      {{fontContent.form_status}}：
+    <ion-item class="myForm auto first">
+      {{fontContent.form_status}}
       <ion-note item-right>
         {{formData.status}}
       </ion-note>
     </ion-item>
 
     <ion-item class="myForm auto">
-      {{fontContent.form_No}}：
+      {{fontContent.form_No}}
       <ion-note item-right>
         {{formData.No}}
       </ion-note>
@@ -32,8 +32,8 @@
   </ion-list>
   <form [formGroup]="todo" *ngIf="todo" (ngSubmit)="leaveForm()">
     <ion-list class="myList">
-      <ion-item *ngIf="dutyType" class="myForm auto">
-        {{fontContent.duty_type}}：
+      <ion-item *ngIf="dutyType" class="myForm auto first">
+        {{fontContent.duty_type}}
         <ion-note item-right>
           {{dutyType}}
         </ion-note>
@@ -59,7 +59,7 @@
       </ion-item>
       <ion-item-divider *ngIf="timeError " class='alert'>{{timeError}}</ion-item-divider>
       <ion-item class="myForm auto" *ngIf="OTCount" class="myForm auto">
-        {{fontContent.OTCount}}：
+        {{fontContent.OTCount}}
         <ion-note item-right>
           {{OTCount}}
         </ion-note>
@@ -80,13 +80,16 @@
         <ion-row>
           <ion-col width-50>
             <ion-buttons left>
-              <button ion-button class = "submit" type="submit" [disabled]="!todo.valid || myValidators.reason.error || timeError">{{fontContent.sign}}</button>
+              <button ion-button type="button" (click)="init()">{{fontContent.reset}}</button>
             </ion-buttons>
           </ion-col>
           <ion-col width-50>
             <ion-buttons right>
-              <button ion-button type = "button" [disabled]="!todo.valid || myValidators.reason.error || timeError" (click)="saveForm()">{{fontContent.save}}</button>
+              <button ion-button class = "submit" type="submit" [disabled]="!todo.valid || myValidators.reason.error || timeError">{{fontContent.sign}}</button>
             </ion-buttons>
+            <!-- <ion-buttons right>
+              <button ion-button type = "button" [disabled]="!todo.valid || myValidators.reason.error || timeError" (click)="saveForm()">{{fontContent.save}}</button>
+            </ion-buttons> -->
           </ion-col>
         </ion-row>
       </ion-grid>

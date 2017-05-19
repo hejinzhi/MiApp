@@ -9,15 +9,15 @@
   <div [class.layer]="!(formData.status.toUpperCase() === 'NEW')">
   </div>
   <ion-list>
-    <ion-item class="myForm auto">
-      {{fontContent.form_status}}：
+    <ion-item class="myForm auto first">
+      {{fontContent.form_status}}
       <ion-note item-right>
         {{formData.status}}
       </ion-note>
     </ion-item>
 
     <ion-item class="myForm auto">
-      {{fontContent.form_No}}：
+      {{fontContent.form_No}}
       <ion-note item-right>
         {{formData.No}}
       </ion-note>
@@ -32,7 +32,7 @@
         </ion-select>
       </ion-item>
       <ion-item class="myForm auto" *ngIf="dutyType">
-        {{fontContent.dutyType}}：
+        {{fontContent.dutyType}}
         <ion-note item-right>
           {{dutyType}}
         </ion-note>
@@ -55,7 +55,7 @@
       <ion-row>
         <ion-col width-50>
           <ion-item class="myForm auto" *ngIf="dayCount">
-            {{fontContent.dayCount}}:
+            {{fontContent.dayCount}}
             <ion-note item-right>
               {{dayCount}}
             </ion-note>
@@ -63,7 +63,7 @@
         </ion-col>
         <ion-col width-50>
           <ion-item class="myForm auto" *ngIf="hourCount">
-            {{fontContent.hourCount}}:
+            {{fontContent.hourCount}}
             <ion-note item-right>
               {{hourCount}}
             </ion-note>

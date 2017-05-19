@@ -57,7 +57,7 @@ export class OverTimeFormComponent {
     private plugin: PluginService
   ) { }
 
-  ionViewWillEnter() {
+  ionViewDidLoad() {
     this.init();
   }
   init() {

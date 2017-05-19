@@ -5,7 +5,7 @@
     <ion-title *ngIf="formData.status">{{fontContent.saved_title}}</ion-title>
     <ion-buttons end >
       <button ion-button icon-only (click)="presentPopover($event)">
-      <ion-icon name="more"></ion-icon>
+      <ion-icon name="add"></ion-icon>
     </button>
     </ion-buttons>
   </ion-navbar>
@@ -16,15 +16,15 @@
   <div [class.layer]="['APPROVED','WAITING','FINISHED'].indexOf(formData.status.toUpperCase())>-1">
   </div>
   <ion-list class="myList">
-    <ion-item>
-      {{fontContent.form_status}}：
+    <ion-item class="myForm auto first">
+      {{fontContent.form_status}}
       <ion-note item-right>
         {{formData.status}}
       </ion-note>
     </ion-item>
 
-    <ion-item>
-      {{fontContent.form_No}}：
+    <ion-item class="myForm auto">
+      {{fontContent.form_No}}
       <ion-note item-right>
         {{formData.No}}
       </ion-note>
