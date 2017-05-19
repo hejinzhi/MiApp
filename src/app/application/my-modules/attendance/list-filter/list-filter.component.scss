@@ -1,11 +1,8 @@
 sg-list-filter {
-  .searchBar {
-    position: fixed;
-    top: 44px;
-    left: 0;
-    z-index: 100;
+  ion-list.myList {
+    height: 90%;
+    overflow: scroll;
   }
-
   h2.myRow {
     display: flex;
     justify-content: space-between;

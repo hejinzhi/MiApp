@@ -7,7 +7,7 @@
 
 <ion-content>
   <form [formGroup]="todo" *ngIf="todo" (ngSubmit)="leaveForm()">
-    <ion-list>
+    <ion-list class="myList">
       <ion-item [class.has-error]="myValidators.type.error" [class.has-success]="myValidators.type.pass" style="display:none">
         <ion-label>*{{fontContent.form_type}}</ion-label>
         <ion-select [cancelText]="fontContent.cancle" [okText]="fontContent.confirm" formControlName="type">

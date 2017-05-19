@@ -1,4 +1,4 @@
-<ion-list *ngIf="formData">
+<ion-list *ngIf="formData" class="myList">
   <button ion-item (click)="toSearch()" *ngIf="+formData.type < 5">{{formData.type | sgFormType | sgChineseConv}}{{fontContent.search}}</button>
   <button ion-item (click)="sign_list()" *ngIf="['APPROVED','WAITING'].indexOf(formData.status.toUpperCase())>-1">{{fontContent.sign_list}}</button>
   <button ion-item (click)="getCallbackForm()" *ngIf="formData.type === '5'">{{fontContent.getCallbackForm}}</button>

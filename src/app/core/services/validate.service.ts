@@ -133,8 +133,9 @@ export class ValidateService {
       }
     },
     BeforeMonth: function(){
-      console.log(new Date(this.value).getMonth());
-      console.log(this.dataset['vBeforeMonth'])
+      if(new Date(this.value).getFullYear() < new Date().getFullYear()) {
+        return true
+      }
       return +new Date(this.value).getMonth()<= +this.dataset['vBeforeMonth'];
     }
   };

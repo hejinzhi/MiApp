@@ -31,16 +31,18 @@ export class SignListComponent {
   async getSignList(form_No:string){
     let loading = this.plugin.createLoading()
     loading.present();
-    this.items = await this.attendanceService.getSignList(form_No);
+    let res = await this.attendanceService.getSignList(form_No);
     loading.dismiss();
-    console.log(this.items)
-    if(this.items.length === 0) {
-      this.plugin.showToast(this.fontContent.no_list);
-      return;
+    if(res.status) {
+      this.items = res.content;
+      console.log(this.items)
+      if(this.items.length === 0) {
+        this.plugin.showToast(this.fontContent.no_list);
+        return;
+      }
+      this.items.sort((a: any, b: any) => {
+        return b.version - a.version
+      })
     }
-    this.items.sort((a: any, b: any) => {
-      return b.version - a.version
-    })
-
   }
 }
