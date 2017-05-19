@@ -349,10 +349,10 @@ export class AttendanceService {
   // 获得签核名单
   getSignList(form_No: string) {
     return this.myHttp.get(AttendanceConfig.getSignListUrl + form_No).then((res) => {
-      return Promise.resolve(res.json())
+      return Promise.resolve({content:res.json(),status:true})
     }).catch((err) => {
       this.errorDeal(err);
-      return Promise.resolve([])
+      return Promise.resolve({content:[],status:false})
     });
   }
   // 送签

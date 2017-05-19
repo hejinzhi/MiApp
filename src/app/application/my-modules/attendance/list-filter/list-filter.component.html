@@ -1,5 +1,5 @@
 <ion-searchbar (ionInput)="getItems($event)" [placeholder]="fontContent.search_placeholder" class="searchBar"></ion-searchbar>
-<ion-list>
+<ion-list class="myList">
   <ion-item *ngFor="let item of items" (click)="toDetail(item)">
     <h2 *ngIf="item.type === '3'" no-padding class="myRow">
       <ion-row>

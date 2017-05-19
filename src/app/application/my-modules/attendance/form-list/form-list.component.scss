@@ -1,6 +1,5 @@
 sg-form-list {
-  ion-header {
-    height: 94px;
-    z-index: 1;
+  .scroll-content {
+    overflow-y: hidden;
   }
 }

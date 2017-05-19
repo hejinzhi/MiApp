@@ -7,7 +7,7 @@
 
 <ion-content>
   <form [formGroup]="todo" *ngIf="todo" (ngSubmit)="leaveForm()">
-    <ion-list>
+    <ion-list class="myList">
       <ion-item [class.has-error]="myValidators.startTime.error" [class.has-success]="myValidators.startTime.pass">
         <ion-label>*{{fontContent.startTime}}</ion-label>
         <ion-datetime displayFormat="YYYY/MM/DD"  #start name="start" formControlName="startTime"

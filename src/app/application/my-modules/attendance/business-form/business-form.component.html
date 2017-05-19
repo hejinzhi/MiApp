@@ -15,7 +15,7 @@
 <ion-content class="main">
   <div [class.layer]="['APPROVED','WAITING'].indexOf(formData.status.toUpperCase())>-1">
   </div>
-  <ion-list>
+  <ion-list class="myList">
     <ion-item class="myForm auto">
       {{fontContent.form_status}}：
       <ion-note item-right>
@@ -31,7 +31,7 @@
     </ion-item>
   </ion-list>
   <form [formGroup]="todo" *ngIf="todo" (ngSubmit)="leaveForm()">
-    <ion-list>
+    <ion-list class="myList">
       <ion-item [class.has-error]="myValidators.reasonType.error" [class.has-success]="myValidators.reasonType.pass">
         <ion-label>*{{fontContent.reasonType}}</ion-label>
         <ion-select [cancelText]="fontContent.cancle" [okText]="fontContent.confirm" formControlName="reasonType">

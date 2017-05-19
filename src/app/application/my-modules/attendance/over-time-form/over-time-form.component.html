@@ -15,7 +15,7 @@
 <ion-content class="main">
   <div [class.layer]="['APPROVED','WAITING'].indexOf(formData.status.toUpperCase())>-1">
   </div>
-  <ion-list>
+  <ion-list class="myList">
     <ion-item class="myForm auto">
       {{fontContent.form_status}}：
       <ion-note item-right>
@@ -31,7 +31,7 @@
     </ion-item>
   </ion-list>
   <form [formGroup]="todo" *ngIf="todo" (ngSubmit)="leaveForm()">
-    <ion-list>
+    <ion-list class="myList">
       <ion-item *ngIf="dutyType" class="myForm auto">
         {{fontContent.duty_type}}：
         <ion-note item-right>
