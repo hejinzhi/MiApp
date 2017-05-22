@@ -15,7 +15,8 @@
 <ion-content class="main">
   <div [class.layer]="['APPROVED','WAITING'].indexOf(formData.status.toUpperCase())>-1">
   </div>
-  <ion-list class="myList">
+  <ion-item-divider class='alert error' *ngIf="errTip">{{errTip}}</ion-item-divider>
+  <ion-list  *ngIf="formData.status && formData.No">
     <ion-item class="myForm auto first">
       {{fontContent.form_status}}
       <ion-note item-right>
@@ -38,10 +39,12 @@
           <ion-option *ngFor="let item of businessType" [value]="item.type">{{item.name | sgChineseConv}}</ion-option>
         </ion-select>
       </ion-item>
-      <ion-item>
+      <div class="myitem">
         <ion-label>{{fontContent.autoSet}}</ion-label>
-        <ion-toggle formControlName="autoSet"></ion-toggle>
-      </ion-item>
+        <div class="myToggle">
+          <ion-toggle formControlName="autoSet"></ion-toggle>
+        </div>
+      </div>
       <ion-item-divider *ngIf="myValidators.colleague.error" class='alert'>{{myValidators.colleague.error}}</ion-item-divider>
       <ion-item [class.has-error]="myValidators.businessTime.error" [class.has-success]="myValidators.businessTime.pass">
         <ion-label>*{{fontContent.businessTime}}</ion-label>
@@ -85,6 +88,12 @@
         <ion-label>*{{fontContent.colleague}}</ion-label>
         <ion-input type="text" #name (keyup)="search(name)" formControlName="colleague" (focus)="name.Error=''" data-v-required="true" data-v-required-message="请选择代理人"></ion-input>
       </ion-item>
+      <div class="searchOut">
+        <ul class="list-group" [class.search]="colleague">
+          <li *ngFor="let person of colleague | async" (click)="getcolleague(person.AGENT_NAME)"
+              class="search-result list-group-item">{{person.AGENT_NAME}}</li>
+        </ul>
+      </div>
       <ion-item [class.has-error]="myValidators.reason.error" [class.has-success]="myValidators.reason.pass">
         <ion-label>*{{fontContent.reason}}</ion-label>
         <ion-textarea rows="2" cols="20" formControlName="reason" class="reasonTest"></ion-textarea>
@@ -106,8 +115,4 @@
       </ion-grid>
     </ion-list>
   </form>
-  <ul class="list-group" [class.search]="colleague">
-    <li *ngFor="let person of colleague | async" (click)="getcolleague(person.AGENT_NAME)"
-        class="search-result list-group-item">{{person.AGENT_NAME}}</li>
-  </ul>
 </ion-content>

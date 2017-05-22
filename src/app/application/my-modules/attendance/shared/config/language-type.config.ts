@@ -175,7 +175,8 @@ export class LanguageTypeConfig {
       callBack: '取消假單',
       no_callback: '沒有銷假單記錄',
       delete_succ: '刪除表單成功',
-      callbackSign_succ: '取消送簽成功'
+      callbackSign_succ: '取消送簽成功',
+      callbackSign_err: '操作過於繁忙,請稍等'
     },
     simple_Chinese:{
       search:'查询',
@@ -186,7 +187,8 @@ export class LanguageTypeConfig {
       callBack: '取消假單',
       no_callback: '没有销假单记录',
       delete_succ: '删除表单成功',
-      callbackSign_succ: '取消送签成功'
+      callbackSign_succ: '取消送签成功',
+      callbackSign_err: '操作过于繁忙,请稍等'
     }
   };
   static attendanceDetailComponent = {
@@ -384,6 +386,8 @@ export class LanguageTypeConfig {
       sign_list:'簽核名單',
       leave_No:'取消假單 ',
       reason:'取消原因',
+      sign_success:'送簽成功',
+      save_success:'表單保存成功',
       leave_No_required_err:'請假單號不能為空',
       reason_required_err:'原因不能為空',
       reason_minlength_err:'原因長度不能少於2位',
@@ -400,6 +404,8 @@ export class LanguageTypeConfig {
       sign_list:'签核名单',
       leave_No:'取消假单 ',
       reason:'取消原因',
+      sign_success:'送签成功',
+      save_success:'表单保存成功',
       leave_No_required_err:'请假单号不能为空',
       reason_required_err:'原因不能為空',
       reason_minlength_err:'原因長度不能少於2位',

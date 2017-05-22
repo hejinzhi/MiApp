@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectorRef } from '@angular/core';
 import { NavController, NavParams, PopoverController } from 'ionic-angular';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
@@ -48,6 +48,7 @@ export class BusinessFormComponent {
 
   startHourRange: string = '';
   endHourRange: string = '';
+  errTip: string = '';
   selectMaxYear = AttendanceConfig.SelectedMaxYear;
   haveSaved: boolean = false;
   isSelectcolleague: boolean = false;   // todo 判断是否正确选择代理人
@@ -55,7 +56,7 @@ export class BusinessFormComponent {
   colleague: any;// 搜索得到的候选代理人
   timeError: string = '';
   hourCount: string = '';
-  dayCount: string ='';
+  dayCount: string = '';
   todo: FormGroup;
   myValidators: {};
   MyValidatorControl: MyValidatorModel;
@@ -63,6 +64,7 @@ export class BusinessFormComponent {
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
+    private ref: ChangeDetectorRef,
     public popoverCtrl: PopoverController,
     private formBuilder: FormBuilder,
     private validateService: ValidateService,
@@ -122,7 +124,7 @@ export class BusinessFormComponent {
   }
   addSubcribe() {
     for (let prop in this.myValidators) {
-      if(['startTime', 'endTime'].indexOf(prop) <0) {
+      if (['startTime', 'endTime'].indexOf(prop) < 0) {
         this.todo.controls[prop].valueChanges.subscribe((value: any) => this.check(value, prop));
       }
     }
@@ -130,12 +132,12 @@ export class BusinessFormComponent {
     for (let i = 0; i < timeCheck.length; i++) {
       let check = timeCheck[i];
       this.todo.controls[check].valueChanges.subscribe((value: any) => {
-        this.check(value,check).then(() => {
-          if(!this.timeError) {
+        this.check(value, check).then(() => {
+          if (!this.timeError) {
             this.askForDuring()
           }
         })
-        })
+      })
     }
   }
   initValidator(bind: any) {
@@ -190,14 +192,14 @@ export class BusinessFormComponent {
   }
   async askForDuring() {
     let values = this.todo.controls
-    let tempData:MyFormModel = {
+    let tempData: MyFormModel = {
       type: this.formData.type,
       status: this.formData.status,
       No: this.formData.No,
       data: {
         reasonType: '',
         autoSet: false,
-        businessTime:values.businessTime.value,
+        businessTime: values.businessTime.value,
         startTime: values.startTime.value,
         endTime: values.endTime.value,
         colleague: '',
@@ -205,77 +207,91 @@ export class BusinessFormComponent {
       }
     }
     let res: any = await this.attendanceService.getLeaveDuring(tempData);
-    if (!res) return;
-    this.updateDuring(res);
-}
-// keyup觸發的方法
-search(item: any) {
-  // todo 判断是否正确选择代理人
-  if (this.tempcolleague) {
-    this.isSelectcolleague = item.value != this.tempcolleague ? false : true;
+    if (!res.status) {
+      this.errTip = res.content;
+    } else {
+      this.errTip = '';
+      this.updateDuring(res.content);
+    };
   }
-  this.searchTerms.next(item.value);
-}
-// 选取上级
-getcolleague(name: string) {
-
-  this.isSelectcolleague = true;
-  this.tempcolleague = name;
-  this.searchTerms.next('')
-  this.todo.controls['colleague'].setValue(name);
-}
-
-//單獨輸入塊驗證
-check(value: any, name: string): Promise < any > {
-  this.myValidators[name].value = value;
-  let compare = this.myValidators[name].compare ? this.myValidators[this.myValidators[name].compare] : ''
-    return this.validateService.check(this.myValidators[name], this.myValidators).then((prams) => {
-    this.myValidators[name].error = prams.mes;
-    this.myValidators[name].pass = !prams.mes;
-    if (name === 'startTime' || name === 'endTime') {
-      this.timeError = prams.mes;
+  // keyup觸發的方法
+  search(item: any) {
+    // todo 判断是否正确选择代理人
+    if (this.tempcolleague) {
+      this.isSelectcolleague = item.value != this.tempcolleague ? false : true;
     }
-    return Promise.resolve(this.myValidators);
-  });
-}
-presentPopover(myEvent:any) {
-  let popover = this.popoverCtrl.create(FormMenuComponent,{
-    this:this,
-  });
-  popover.present({
-    ev: myEvent
-  });
-}
-async leaveForm() {
-  this.formData.data = this.todo.value
-  let loading = this.plugin.createLoading();
-  loading.present()
-  let res: any = await this.attendanceService.sendSign(this.formData);
-  loading.dismiss()
-  if (res.status) {
-    this.plugin.showToast(this.fontContent.sign_success);
-    this.navCtrl.popToRoot();
+    this.searchTerms.next(item.value);
   }
-  if (res.content) {
-    this.formData.status = res.content.STATUS;
-    this.hourCount = res.content.HOURS;
-    this.dayCount = res.content.DAYS
-    this.haveSaved = true;
+  // 选取上级
+  getcolleague(name: string) {
+
+    this.isSelectcolleague = true;
+    this.tempcolleague = name;
+    this.searchTerms.next('')
+    this.todo.controls['colleague'].setValue(name);
   }
-  return false;
-}
-async saveForm() {
-  this.formData.data = this.todo.value
-  let loading = this.plugin.createLoading();
-  loading.present()
-  let res: any = await this.attendanceService.saveLeaveForm(this.formData);
-  loading.dismiss()
-  if (!res) return;
-  this.formData.No = res.DOCNO
-  this.formData.status = res.STATUS;
-  this.hourCount = res.HOURS;
-  this.dayCount = res.DAYS
-  this.haveSaved = true;
-  this.plugin.showToast(this.fontContent.save_success);
-}
+
+  //單獨輸入塊驗證
+  check(value: any, name: string): Promise<any> {
+    this.myValidators[name].value = value;
+    let compare = this.myValidators[name].compare ? this.myValidators[this.myValidators[name].compare] : ''
+    return this.validateService.check(this.myValidators[name], this.myValidators).then((prams) => {
+      this.myValidators[name].error = prams.mes;
+      this.myValidators[name].pass = !prams.mes;
+      if (name === 'startTime' || name === 'endTime') {
+        this.timeError = prams.mes;
+      }
+      return Promise.resolve(this.myValidators);
+    });
+  }
+  presentPopover(myEvent: any) {
+    let popover = this.popoverCtrl.create(FormMenuComponent, {
+      this: this,
+    });
+    popover.present({
+      ev: myEvent
+    });
+  }
+  async leaveForm() {
+    this.formData.data = this.todo.value
+    let loading = this.plugin.createLoading();
+    loading.present()
+    let res: any = await this.attendanceService.sendSign(this.formData);
+    loading.dismiss()
+    if (res.status) {
+      this.plugin.showToast(this.fontContent.sign_success);
+      this.formData.status = 'WAITING';
+      // this.navCtrl.popToRoot();
+      let content = res.content;
+      if (content) {
+        this.errTip = ''
+        this.formData.status = content.STATUS;
+        this.hourCount = content.HOURS;
+        this.dayCount = content.DAYS
+        this.haveSaved = true;
+      }
+    } else {
+      this.errTip = res.content;
+    }
+    return false;
+  }
+  async saveForm() {
+    this.formData.data = this.todo.value
+    let loading = this.plugin.createLoading();
+    loading.present()
+    let res: any = await this.attendanceService.saveLeaveForm(this.formData);
+    loading.dismiss()
+    if (!res.status) {
+      this.errTip = res.content;
+    } else {
+      this.errTip = '';
+      let data = res.content
+      this.formData.No = data.DOCNO
+      this.formData.status = data.STATUS;
+      this.hourCount = data.HOURS;
+      this.dayCount = data.DAYS
+      this.haveSaved = true;
+      this.plugin.showToast(this.fontContent.save_success);
+    }
+  };
 }

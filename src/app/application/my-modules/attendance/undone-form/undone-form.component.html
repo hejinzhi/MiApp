@@ -31,7 +31,7 @@
           <ion-option *ngFor="let item of absentType" [value]="item.type">{{item.name | sgChineseConv}}</ion-option>
         </ion-select>
       </ion-item>
-      <ion-item class="myForm auto" *ngIf="dutyType">
+      <ion-item class="myForm auto first" *ngIf="dutyType">
         {{fontContent.dutyType}}
         <ion-note item-right>
           {{dutyType}}
@@ -44,11 +44,11 @@
         </ion-select>
       </ion-item>
 
-      <ion-item class="myForm auto" [class.has-error]="myValidators.startTime.error" [class.has-success]="myValidators.startTime.pass">
+      <ion-item class="myForm auto first" [class.has-error]="myValidators.startTime.error" [class.has-success]="myValidators.startTime.pass">
         <ion-label>{{fontContent.startTime}}</ion-label>
         <ion-input readonly formControlName="startTime"></ion-input>
       </ion-item>
-      <ion-item class="myForm auto" [class.has-error]="myValidators.endTime.error" [class.has-success]="myValidators.endTime.pass">
+      <ion-item class="myForm auto first" [class.has-error]="myValidators.endTime.error" [class.has-success]="myValidators.endTime.pass">
         <ion-label>{{fontContent.endTime}}</ion-label>
         <ion-input readonly formControlName="endTime"></ion-input>
       </ion-item>

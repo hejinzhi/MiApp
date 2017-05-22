@@ -334,7 +334,7 @@ export class StatisticsComponent {
       },
       series: [
         {
-          type: 'line',
+          type: 'scatter',
           data: target
         }
       ],

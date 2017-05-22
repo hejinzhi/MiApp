@@ -48,6 +48,7 @@ export class LeaveFormComponent {
 
   startHourRange: string = '';
   endHourRange: string = '';
+  errTip:string ='';
   selectMaxYear = AttendanceConfig.SelectedMaxYear;
   haveSaved: boolean = false;
   todo: FormGroup;
@@ -234,8 +235,12 @@ export class LeaveFormComponent {
         }
       }
       let res: any = await this.attendanceService.getLeaveDuring(tempData);
-      if (!res) return;
-      this.updateDuring(res);
+      if (!res.status) {
+        this.errTip = res.content;
+      } else {
+        this.errTip = '';
+        this.updateDuring(res.content);
+      };
     }
   }
   async presentPopover(myEvent: any) {
@@ -254,15 +259,20 @@ export class LeaveFormComponent {
     loading.dismiss()
     if (res.status) {
       this.plugin.showToast(this.fontContent.sign_success);
-      this.navCtrl.popToRoot();
+      // this.navCtrl.popToRoot();
+      let content = res.content;
+      this.formData.status = 'WAITING';
+      if (content) {
+        this.errTip = ''
+        this.hourLeave = content.HOURS;
+        this.dayLeave = content.DAYS;
+        this.formData.No = content.DOCNO
+        this.haveSaved = true;
+      }
+    } else {
+      this.errTip = res.content;
     }
-    if (res.content) {
-      this.hourLeave = res.content.HOURS;
-      this.dayLeave = res.content.DAYS;
-      this.formData.No = res.content.DOCNO
-      this.formData.status = res.content.STATUS;
-      this.haveSaved = true;
-    }
+
     return false;
   }
   async saveForm() {
@@ -271,12 +281,18 @@ export class LeaveFormComponent {
     loading.present()
     let res: any = await this.attendanceService.saveLeaveForm(this.formData);
     loading.dismiss()
-    if (!res) return;
-    this.dayLeave = res.DAYS;
-    this.hourLeave = res.HOURS;
-    this.formData.No = res.DOCNO
-    this.formData.status = res.STATUS;
-    this.haveSaved = true;
-    this.plugin.showToast(this.fontContent.save_success);
+    if (!res.status) {
+      this.errTip = res.content;
+    } else {
+      this.errTip = '';
+      let data = res.content
+      this.dayLeave = data.DAYS;
+      this.hourLeave = data.HOURS;
+      this.formData.No = data.DOCNO
+      this.formData.status = data.STATUS;
+      this.haveSaved = true;
+      this.plugin.showToast(this.fontContent.save_success);
+    };
+
   }
 }

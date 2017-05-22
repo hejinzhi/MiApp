@@ -87,16 +87,6 @@ ion-select {
   overflow: hidden;
   max-width: 100%;
 }
-.myForm.auto {
-  background-color: lighten(#CFCFD1, 17%);
-  color: #8B8B8B;
-  &.item-block .item-inner {
-    border-bottom: none;
-  }
-  &.item-block.first .item-inner {
-    border-bottom: 1px solid #c8c7cc;
-  }
-}
 ion-alert div.alert-wrapper{
   min-width: 300px;
   .alert-radio-group {
@@ -124,11 +114,28 @@ ion-app .alert-ios .alert-wrapper {
     background-color: #fff;
 }
 
-// ion-list.myList .item-block .item-inner {
-//     border-bottom: 1px solid #c8c7cc;
-// }
-ion-list.list-ios .item-block .item-inner {
+// 考勤模块的
+.myForm.auto {
+  background-color: lighten(#CFCFD1, 17%);
+  color: #8B8B8B;
+  &.item-block .item-inner {
+    border-bottom: none;
+  }
+  &.item-block.first .item-inner {
     border-bottom: 1px solid #c8c7cc;
+  }
+  &.item-block:last-child{
+      border-bottom: 1px solid #c8c7cc;
+  }
+  &.item-block:first-child {
+      border-top: 0px solid #c8c7cc;
+  }
+}
+ion-list.myList .item-block .item-inner {
+    border-bottom: 1px solid #c8c7cc;
+}
+ion-list.myList .item-block:first-child {
+    border-top: 1px solid #c8c7cc;
 }
 ion-list.myList .item-block:last-child{
     border-bottom: 1px solid #c8c7cc;

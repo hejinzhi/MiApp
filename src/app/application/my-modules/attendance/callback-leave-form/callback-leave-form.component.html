@@ -15,7 +15,8 @@
 <ion-content class="main">
   <div [class.layer]="['APPROVED','WAITING','FINISHED'].indexOf(formData.status.toUpperCase())>-1">
   </div>
-  <ion-list class="myList">
+  <ion-item-divider class='alert error' *ngIf="errTip">{{errTip}}</ion-item-divider>
+  <ion-list *ngIf="formData.status && formData.No">
     <ion-item class="myForm auto first">
       {{fontContent.form_status}}
       <ion-note item-right>
