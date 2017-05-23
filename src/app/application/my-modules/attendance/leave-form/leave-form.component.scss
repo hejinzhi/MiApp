@@ -1,7 +1,10 @@
 sg-leave-form {
+  .searchOut {
+    position: relative;
+    overflow:visible;
+  }
   .search {
     position: absolute;
-    top: 506px;
     left: 20%;
     z-index: 1000;
     width: 100%;
@@ -25,6 +28,25 @@ sg-leave-form {
     background-color: #fff;
     border: 1px solid #ddd;
   }
+  .myitem {
+    position: relative;
+    min-height: 4.4rem;
+    width: 100%;
+    padding: 7px 10px 0px 0px;
+    margin-left: 16px;
+    border-bottom: 1px solid #c8c7cc;
+    overflow: visible;
+    ion-label {
+      position: absolute;
+      top: 0%;
+      left: 0;
+      font-size: 1.7rem;
+    }
+    .myToggle {
+      margin-left: 80%;
+      // padding-top: 5px;
+    }
+  }
   .main{
     position:relative;
     .layer{
@@ -42,8 +64,5 @@ sg-leave-form {
   }
   // ion-label,ion-note,ion-select,ion-datetime,ion-input,ion-item{
   //   font-size: 16px;
-  // }
-  // .item-block {
-  //   min-height: 4.0rem;
   // }
 }

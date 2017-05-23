@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { NavController, NavParams, PopoverController } from 'ionic-angular';
+import { NavController, NavParams, PopoverController, AlertController} from 'ionic-angular';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms'
 ;
 import { ValidateService }   from '../../../../core/services/validate.service';
@@ -39,8 +39,10 @@ export class OverTimeFormComponent {
   fontContent = LanguageTypeConfig.overTimeFormComponent[this.fontType];
   dutyType: string;
   haveSaved:boolean;
+  showReset:boolean;
   startHourRange:string ='';
   endHourRange:string ='';
+  errTip:string ='';
   todo: FormGroup;
   timeError: string;
   OTCount: string;
@@ -51,19 +53,22 @@ export class OverTimeFormComponent {
     public navCtrl: NavController,
     public navParams: NavParams,
     public popoverCtrl: PopoverController,
+    public alertCtrl: AlertController,
     private formBuilder: FormBuilder,
     private validateService: ValidateService,
     private attendanceService: AttendanceService,
     private plugin: PluginService
   ) { }
 
-  ionViewWillEnter() {
+  ionViewDidLoad() {
     this.init();
   }
   init() {
     this.startHourRange = this.attendanceService.getTimeRange(0,37);
     this.endHourRange = this.attendanceService.getTimeRange(0,41);
     this.timeError = '';
+    this.errTip = '';
+    this.showReset = true;
     this.haveSaved = false;
     this.OTCount = '';
     this.dutyType = '';
@@ -81,6 +86,7 @@ export class OverTimeFormComponent {
       reason: ''
     }
     if(this.navParams.data.detailMes) {
+      this.showReset = false;
       this.formData = this.navParams.data.detailMes;
       this.OtMes = this.navParams.data.detailMes.data;
       this.OTCount = this.navParams.data.detailMes.data.count || '';
@@ -95,6 +101,25 @@ export class OverTimeFormComponent {
     }
     this.todo.controls['OTtime'].valueChanges.subscribe((value: any) => this.getDutyType());
     this.setDefaultDate();
+  }
+  reSet() {
+    let confirm = this.alertCtrl.create({
+      title: '确定要重置此单据吗?',
+      buttons: [
+        {
+          text: '取消',
+          handler: () => {
+          }
+        },
+        {
+          text: '确定',
+          handler: () => {
+            this.init();
+          }
+        }
+      ]
+    });
+    confirm.present();
   }
   setDefaultDate() {
     if(this.haveSaved) return;
@@ -114,13 +139,7 @@ export class OverTimeFormComponent {
     if(!result) return;
     this.dutyType = result.data.duty_type || '';
     this.todo.controls['startTime'].setValue(result.data.startTime);
-    let time = Date.parse('2017/1/1 '+result.data.startTime)+1000*15;
-    let date = new Date(time);
-    let minute:any = date.getUTCMinutes();
-    minute = minute<10?'0'+minute:minute;
-    let second:any = date.getSeconds();
-    second = second<10?'0'+second:second
-    this.todo.controls['endTime'].setValue('00:'+minute+':'+second);
+    this.todo.controls['endTime'].setValue(result.data.endTime);
   }
   initValidator(bind:any) {
     let newValidator = new MyValidatorModel([
@@ -181,12 +200,17 @@ export class OverTimeFormComponent {
     if(res.status) {
       this.plugin.showToast(this.fontContent.sign_success);
       this.formData.status = 'WAITING';
-      this.navCtrl.canGoBack()?this.navCtrl.popToRoot():'';
-    }
-    if(res.content) {
-      this.OTCount = res.content.HOURS;
-      this.formData.No = res.content.DOCNO
-      this.haveSaved = true;
+      // this.navCtrl.canGoBack()?this.navCtrl.popToRoot():'';
+      let content = res.content;
+      if (content) {
+        this.errTip = '';
+        this.OTCount = content.HOURS;
+        this.formData.No = content.DOCNO;
+        this.haveSaved = true;
+      }
+    } else {
+      console.log(res)
+      this.errTip = res.content;
     }
     return false;
   }
@@ -197,11 +221,16 @@ export class OverTimeFormComponent {
     let res:any = await this.attendanceService.saveOverTimeForm(this.formData);
     loading.dismiss()
     console.log(res)
-    if(!res) return;
-    this.OTCount = res.HOURS;
-    this.formData.No = res.DOCNO
-    this.formData.status = res.STATUS;
-    this.haveSaved = true;
-    this.plugin.showToast(this.fontContent.save_success);
+    if (!res.status) {
+      this.errTip = res.content;
+    } else {
+      this.errTip = '';
+      let data = res.content
+      this.OTCount = data.HOURS;
+      this.formData.No = data.DOCNO
+      this.formData.status = data.STATUS;
+      this.haveSaved = true;
+      this.plugin.showToast(this.fontContent.save_success);
+    };
   }
 }

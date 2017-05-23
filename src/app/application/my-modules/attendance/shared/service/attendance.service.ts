@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { Subject }    from 'rxjs/Subject';
 import { MyHttpService } from '../../../../../core/services/myHttp.service';
-import {tify, sify} from 'chinese-conv';
+import { tify, sify } from 'chinese-conv';
 
 import { MyFormModel } from '../models/my-form.model'
 
@@ -13,6 +14,7 @@ import { PluginService }   from '../../../../../core/services/plugin.service';
 @Injectable()
 export class AttendanceService {
 
+  public updateFormList = new Subject<boolean>();
   constructor(
     private myHttp: MyHttpService,
     private plugin: PluginService
@@ -113,11 +115,11 @@ export class AttendanceService {
     let sendData = this.editLeaveData_send(data);
     return this.myHttp.post(AttendanceConfig.getLeaveDuringUrl, sendData).then((res) => {
       let newData = this.editLeaveData_get(res.json(), data.type);
-      return Promise.resolve(newData);
+      return Promise.resolve({content:newData,status:true});
     }).catch((err) => {
       console.log(err)
-      this.errorDeal(err, false);
-      return Promise.resolve('');
+      let errTip = this.errorDeal(err, false);
+      return Promise.resolve({content:errTip,status:false});
     });
   }
 
@@ -137,11 +139,11 @@ export class AttendanceService {
   saveLeaveForm(data: MyFormModel) {
     let sendData = this.editLeaveData_send(data);
     return this.myHttp.post(AttendanceConfig.saveLeaveUrl, sendData).then((res) => {
-      return Promise.resolve(res.json())
+      return Promise.resolve({content:res.json(),status:true})
     }).catch((err) => {
       console.log(err)
-      this.errorDeal(err);
-      return Promise.resolve('')
+      let errTip = this.errorDeal(err);
+      return Promise.resolve({content:errTip,status:false})
     });
   }
   // 删除表单
@@ -342,6 +344,7 @@ export class AttendanceService {
   // 获得代理人
   getAgent(name: string): Observable<any> {
     let emp_name = name.toUpperCase();
+    emp_name = tify(emp_name).replace(/^\"/g,'').replace(/\"$/g,'')
     return Observable.fromPromise(this.myHttp.get(AttendanceConfig.getAgentUrl + `emp_name=${emp_name}`)).map((r) => {
       return r.json();
     });
@@ -375,11 +378,8 @@ export class AttendanceService {
         default:
           break;
       }
-      if (!saveRes) return Promise.resolve({
-        content: saveRes,
-        status: false
-      });
-      formData.No = Number(formData.type) === 5?saveRes.DOCNO1:saveRes.DOCNO;
+      if (!saveRes.status) return Promise.resolve(saveRes);
+      formData.No = Number(formData.type) === 5?saveRes.content.DOCNO1:saveRes.content.DOCNO;
     }
     let sendData = {
       KIND: '',
@@ -404,15 +404,15 @@ export class AttendanceService {
     ({ No: sendData.DOCNO } = formData);
     return this.myHttp.post(AttendanceConfig.sendSignUrl, sendData).then((res) => {
       let result = {
-        content: saveRes,
+        content: saveRes.content,
         status: true
       }
       return Promise.resolve(result)
     }).catch((err) => {
       console.log(err)
-      this.errorDeal(err);
+      let errTip = this.errorDeal(err);
       let result = {
-        content: saveRes,
+        content: errTip,
         status: false
       }
       return Promise.resolve(result)
@@ -472,11 +472,11 @@ export class AttendanceService {
   saveOverTimeForm(formData: MyFormModel) {
     let send = this.editOverTime_send(formData);
     return this.myHttp.post(AttendanceConfig.saveOverTimeUrl, send).then((res) => {
-      return Promise.resolve(res.json())
+      return Promise.resolve({content:res.json(),status:true})
     }).catch((err) => {
       console.log(err)
-      this.errorDeal(err);
-      return Promise.resolve('')
+      let errTip = this.errorDeal(err);
+      return Promise.resolve({content:errTip,status:false})
     });
   }
   // 对发送的加班单数据进行加工
@@ -552,11 +552,11 @@ export class AttendanceService {
     send.OFFDUTY_DOCNO = formData.data.leave_No;
     send.NEREAON = formData.data.reason
     return this.myHttp.post(AttendanceConfig.saveCallbackLeaveFromUrl, send).then((res) => {
-      return Promise.resolve(res.json())
+      return Promise.resolve({content:res.json(),status:true})
     }).catch((err) => {
       console.log(err)
-      this.errorDeal(err);
-      return Promise.resolve('')
+      let errTip = this.errorDeal(err);
+      return Promise.resolve({content:errTip,status:false})
     });
   }
 
@@ -806,8 +806,8 @@ export class AttendanceService {
       return Promise.resolve({ content: newData, status: true });
     }).catch((err) => {
       console.log(err)
-      this.errorDeal(err);
-      return Promise.resolve({ content: [], status: false })
+      let errTip = this.errorDeal(err);
+      return Promise.resolve({ content: errTip, status: false })
     });
   }
   editOverTimeMonthHours_get(data: { IDATE: string, TOT_HOURS: string }) {
@@ -825,16 +825,18 @@ export class AttendanceService {
     }
   }
   errorDeal(err: any, showAlert: boolean = false) {
+    let errTip = '';
     switch (err.status) {
       case 404:
         this.plugin.showToast(this.chineseConv('未找到结果'));
         break;
       case 400:
-        if (showAlert) {
-          this.plugin.createBasicAlert(this.chineseConv(err.json().ExceptionMessage));
-        } else {
-          this.plugin.showToast(this.chineseConv(err.json().ExceptionMessage));
-        }
+        // if (showAlert) {
+        //   this.plugin.createBasicAlert(this.chineseConv(err.json().ExceptionMessage));
+        // } else {
+        //   this.plugin.showToast(this.chineseConv(err.json().ExceptionMessage));
+        // }
+        errTip = this.chineseConv(err.json().ExceptionMessage);
         break;
       case 0:
         this.plugin.showToast(this.chineseConv('连接服务器失败'));
@@ -846,5 +848,6 @@ export class AttendanceService {
         this.plugin.showToast(this.chineseConv('出现未定义连接错误') + err.status);
         break;
     }
+    return errTip
   }
 }

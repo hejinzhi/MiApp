@@ -35,21 +35,25 @@ export class FormListComponent {
 
   }
   async ionViewWillEnter() {
+    this.showList = false;
     this.approved = this.navParams.data.approved || false;
     this.type = this.navParams.data.type || '100';
     this.formData = this.navParams.data.formData;
     if(!this.formData) {
-      let loading = this.plugin.createLoading();
-      loading.present();
-      let res: any = await this.attendanceService.getOffDutyException();
-      loading.dismiss();
-      if(res.status) {
-        this.formData = res.content;
-      } else {
-        this.formData =[];
-      }
+      await this.getOffDutyException();
     }
     this.showList = true;
+  }
+  async getOffDutyException() {
+    let loading = this.plugin.createLoading();
+    loading.present();
+    let res: any = await this.attendanceService.getOffDutyException();
+    loading.dismiss();
+    if(res.status) {
+      this.formData = res.content;
+    } else {
+      this.formData =[];
+    }
   }
   exit() {
     this.platform.runBackButtonAction();

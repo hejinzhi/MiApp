@@ -12,7 +12,7 @@
   <ion-row>
     <ion-col *ngFor="let item of items" col-4><ion-item >
       <p class="name">{{item.type | sgOtherType:'attendanceMonthType' | sgChineseConv}}</p>
-      <p class="value" [class.highlight] = "item.type === 'NEED_DAY'">{{item.value}}</p>
+      <p class="value" [class.highlight] = "item.type === 'PRESENT_DAY'">{{item.value}}</p>
     </ion-item></ion-col>
   </ion-row>
 </ion-grid>
