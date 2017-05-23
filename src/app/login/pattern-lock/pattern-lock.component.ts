@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { NavController, NavParams } from 'ionic-angular';
 import { LoginComponent } from '../login.component';
 import { TabsComponent } from '../../tabs/tabs.component';
@@ -16,7 +16,7 @@ import { LoginConfig } from '../shared/config/login.config';
 export class PatternLockComponent implements OnInit {
 
   mySubcribe:any;
-  isLandscape:boolean = false;
+  isLandscape:boolean;
 
   needNineCode: boolean;
   user: any;
@@ -38,7 +38,8 @@ export class PatternLockComponent implements OnInit {
     public navParams: NavParams,
     public myHttp: MyHttpService,
     private jmessageService: JMessageService,
-    private plugin: PluginService
+    private plugin: PluginService,
+    private ref: ChangeDetectorRef
   ) {
     // 判定是否是进行验证功能还是更改功能
     // this.needNineCode = localStorage.getItem('needPassNineCode') == 'true' ? true : false;
@@ -90,6 +91,9 @@ export class PatternLockComponent implements OnInit {
     this.message = this.isReSet ? '请设置手势密码' : this.message;
 
     this.canvas = document.getElementById("lockCanvas");
+    let orientation = this.plugin.getScreenOrientation();
+    this.isLandscape = orientation.type.indexOf('landscape') > -1? true:false;
+    this.ref.detectChanges();
   }
 
   // 忘记手势密码
@@ -135,7 +139,8 @@ export class PatternLockComponent implements OnInit {
     this.canvasWidth = document.body.offsetWidth;//网页可见区域宽
     let leftHeight = document.body.offsetHeight - this.headHeight+ 80;
     if(this.isVal) {
-      this.canvasHeight = (this.headHeight==265)?leftHeight-200:this.headHeight / 0.35 * 0.65 - 80;
+      console.log(this.headHeight)
+      this.canvasHeight = (Math.min(this.headHeight,265) / 0.35 * 0.65 - 80);
     } else {
       this.canvasHeight = this.headHeight / 0.18 * 0.6 - 80;
     }
@@ -158,11 +163,11 @@ export class PatternLockComponent implements OnInit {
     this.Draw(cxt, this.circleArr, [], null);
   }
   ionViewWillEnter() {
-    this.initCode();
     let orientation = this.plugin.getScreenOrientation();
-    this.isLandscape = orientation.type.indexOf('landscape') > -1? true:false;
+    this.initCode();
     this.mySubcribe = orientation.onChange().subscribe((value) => {
       this.isLandscape = orientation.type.indexOf('landscape') > -1? true:false;
+      this.ref.detectChanges();
       this.circleArr =[];
       this.canvas.height=this.canvas.height;
       setTimeout(() => {

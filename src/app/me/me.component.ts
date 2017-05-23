@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectorRef } from '@angular/core';
 import { NavController } from 'ionic-angular';
 import { SetComponent } from './set/set.component'
 import { BarcodeScanner } from '@ionic-native/barcode-scanner';
@@ -15,7 +15,12 @@ export class MeComponent {
   mySubcribe:any;
   user:any;
   isLandscape:boolean = false;
-  constructor(public navCtrl: NavController, private barcodeScanner: BarcodeScanner, private plugin: PluginService) {
+  constructor(
+    public navCtrl: NavController,
+    private barcodeScanner: BarcodeScanner,
+    private plugin: PluginService,
+    private ref: ChangeDetectorRef
+  ) {
 
   }
 
@@ -25,6 +30,7 @@ export class MeComponent {
     this.isLandscape = orientation.type.indexOf('landscape') > -1? true:false;
     this.mySubcribe = orientation.onChange().subscribe((value) => {
       this.isLandscape = orientation.type.indexOf('landscape') > -1? true:false;
+      this.ref.detectChanges();
     })
   }
   ionViewWillLeave() {
