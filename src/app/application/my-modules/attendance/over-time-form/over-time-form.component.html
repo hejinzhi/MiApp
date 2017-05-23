@@ -12,9 +12,7 @@
 </ion-header>
 
 
-<ion-content class="main">
-  <div [class.layer]="['APPROVED','WAITING'].indexOf(formData.status.toUpperCase())>-1">
-  </div>
+<ion-content>
   <ion-item-divider class='alert error' *ngIf="errTip">{{errTip}}</ion-item-divider>
   <ion-list *ngIf="formData.status && formData.No">
     <ion-item class="myForm auto first">
@@ -31,7 +29,9 @@
       </ion-note>
     </ion-item>
   </ion-list>
-  <form [formGroup]="todo" *ngIf="todo" (ngSubmit)="leaveForm()">
+  <form [formGroup]="todo" *ngIf="todo" (ngSubmit)="leaveForm()" class="main">
+    <div [class.layer]="['APPROVED','WAITING'].indexOf(formData.status.toUpperCase())>-1">
+    </div>
     <ion-list class="myList">
       <ion-item *ngIf="dutyType" class="myForm auto first">
         {{fontContent.duty_type}}
