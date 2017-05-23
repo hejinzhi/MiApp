@@ -39,7 +39,10 @@ export class StatisticsComponent {
     private attendanceService: AttendanceService
   ) { }
 
-  async ionViewDidLoad() {
+  ionViewDidLoad() {
+    this.reFresh();
+  }
+  async reFresh() {
     this.initDays();
     let loading = this.plugin.createLoading();
     loading.present()
@@ -162,7 +165,7 @@ export class StatisticsComponent {
       title: {
         text: title, top: '3%', textStyle: {
           fontFamily: fontFamily,
-          fontSize: 25
+          fontSize: 18
         }
       },
       tooltip: {
@@ -232,14 +235,18 @@ export class StatisticsComponent {
       title: {
         text: title, top: '3%', textStyle: {
           fontFamily: fontFamily,
-          fontSize: 25
+          fontSize: 18
         }
       },
       tooltip: {
         trigger: 'axis'
       },
       legend: {
-        data: [this.fontContent.OT, this.fontContent.leave]
+        data: [this.fontContent.OT, this.fontContent.leave],
+        textStyle: {
+          fontFamily: fontFamily,
+          fontSize: 16
+        }
       },
       grid: {
         left: '3%',
@@ -309,7 +316,7 @@ export class StatisticsComponent {
       title: {
         text: title, top: '3%', textStyle: {
           fontFamily: fontFamily,
-          fontSize: 25
+          fontSize: 18
         }
       },
       tooltip: {
