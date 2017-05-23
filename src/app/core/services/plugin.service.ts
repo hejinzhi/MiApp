@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { ToastController, LoadingController, AlertController } from 'ionic-angular';
 import { BarcodeScanner } from '@ionic-native/barcode-scanner';
 import { Camera, CameraOptions } from '@ionic-native/camera';
+import { ScreenOrientation } from '@ionic-native/screen-orientation';
 
 @Injectable()
 export class PluginService {
@@ -10,6 +11,7 @@ export class PluginService {
     private loadingCtrl: LoadingController,
     private alertCtrl: AlertController,
     private barcodeScanner: BarcodeScanner,
+    private screenOrientation: ScreenOrientation,
     private camera: Camera
   ) { }
 
@@ -19,7 +21,9 @@ export class PluginService {
       console.log(err)
     })
   }
-
+  getScreenOrientation() {
+    return this.screenOrientation;
+  }
   getBarcode(): Promise<string> {
     return this.barcodeScanner.scan().then((barcodeData) => {
       Promise.resolve(barcodeData)

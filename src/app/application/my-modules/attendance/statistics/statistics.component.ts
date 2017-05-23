@@ -32,6 +32,7 @@ export class StatisticsComponent {
   myLeave:{name:string,value:number}[]
   OTday:{name:string,value:number}[];
   leaveDay:{name:string,value:number}[];
+  mySubcribe:any;
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
@@ -40,10 +41,23 @@ export class StatisticsComponent {
   ) { }
 
   ionViewDidLoad() {
+    this.initDays();
     this.reFresh();
   }
+  ionViewWillEnter() {
+    let orientation = this.plugin.getScreenOrientation();
+    this.mySubcribe = orientation.onChange().subscribe((value) => {
+      setTimeout(() => {
+        this.initChart2('main', this.fontContent.total);
+        this.initOTMonthChart();
+        this.initLeaveMonthChart();
+      },100)
+    })
+  }
+  ionViewWillLeave() {
+    this.mySubcribe.unsubscribe();
+  }
   async reFresh() {
-    this.initDays();
     let loading = this.plugin.createLoading();
     loading.present()
     await this.editMonthLeave();
