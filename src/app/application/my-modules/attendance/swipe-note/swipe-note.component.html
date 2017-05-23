@@ -1,0 +1,28 @@
+<ion-header>
+  <ion-navbar>
+    <ion-title>{{type | sgFormType | sgChineseConv}}</ion-title>
+  </ion-navbar>
+
+</ion-header>
+
+
+<ion-content>
+  <ion-list class="myList">
+    <ion-item *ngFor="let item of items">
+      <h2 no-padding class="myRow">
+        <ion-row>
+          <p>{{ user.empno }}</p>
+          <p>{{ user.nickname }}</p>
+        </ion-row>
+        <ion-row>
+          <p>{{item.CVT_IDATE | sgTTime | date:"yyyy/MM/dd" }}</p>
+          <p>{{item.TIME}}</p>
+        </ion-row>
+        <ion-row>
+          <p>{{item.IDUTY | sgOtherType:'swipeType' | sgChineseConv }}</p>
+          <p>{{(item.POSITION?item.POSITION:'人事补卡') | sgChineseConv }}{{item.FLAG | sgChineseConv }}</p>
+        </ion-row>
+      </h2>
+    </ion-item>
+  </ion-list>
+</ion-content>

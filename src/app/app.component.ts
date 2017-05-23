@@ -1,14 +1,14 @@
 import { Component, ViewChild } from '@angular/core';
-import { Platform, Nav, Keyboard, IonicApp, MenuController } from 'ionic-angular';
+import { Platform, Nav, Keyboard, IonicApp, MenuController, App } from 'ionic-angular';
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 
 import { LoginComponent } from './login/login.component';
+import { TabsComponent } from './tabs/tabs.component';
+import { AttendanceComponent } from './application/my-modules/attendance/attendance.component'
 import { PatternLockComponent } from './login/pattern-lock/pattern-lock.component';
-import { MessageService } from './message/shared/service/message.service'
-
-// test
-import { BookCardComponent } from './application/my-modules/book-library/book-card/book-card.component';
+import { MessageService } from './message/shared/service/message.service';
+import { PluginService } from './core/services/plugin.service';
 
 declare var cordova: any;
 
@@ -17,6 +17,7 @@ declare var cordova: any;
 })
 export class MyAppComponent {
   rootPage: any = LoginComponent;
+  backButtonPressed: boolean = false;  //用于判断返回键是否触发
   @ViewChild(Nav) nav: Nav;
 
   constructor(private platform: Platform,
@@ -25,7 +26,11 @@ export class MyAppComponent {
     private keyboard: Keyboard,
     private ionicApp: IonicApp,
     private menuCtrl: MenuController,
-    private messageservice: MessageService) {
+
+    private messageservice: MessageService,
+    private plugin: PluginService,
+    private app: App
+  ) {
 
     this.appInit();
     platform.ready().then(() => {
@@ -34,29 +39,49 @@ export class MyAppComponent {
       this.messageservice.getContacts();
       this.messageservice.history = this.messageservice.getLocalMessageHistory() ? this.messageservice.getLocalMessageHistory() : [];
     });
-    this.registerBackButtonAction();
+
+    let original = platform.runBackButtonAction;
+    let __this = this;
+    platform.runBackButtonAction = function (): void {
+      if (__this.keyboard.isOpen()) {//如果键盘开启则隐藏键盘
+        __this.keyboard.close();
+        return;
+      }
+      let activePortal = __this.ionicApp._toastPortal.getActive()
+        || __this.ionicApp._loadingPortal.getActive()
+        || __this.ionicApp._overlayPortal.getActive()
+        || __this.ionicApp._modalPortal.getActive();
+      if (activePortal) {
+        activePortal.dismiss();
+        return;
+      }
+      let activeVC = __this.nav.getActive();
+      if (activeVC.instance instanceof LoginComponent) {
+        platform.exitApp();
+      } else if (activeVC.instance instanceof PatternLockComponent) {
+        platform.exitApp();
+      } else {
+        let tabs = activeVC.instance.tabRef;
+        let activeNav = tabs.getSelected();
+        return activeNav.canGoBack() ? original.apply(platform) : cordova.plugins.backgroundMode.moveToBackground();
+      }
+    }
   }
 
 
   appInit() {
-    //第一次安装app后设置手势密码页面为登录验证
-    if (!localStorage.getItem('needPassNineCode')) {
-      localStorage.setItem('needPassNineCode', 'true');
-    }
-
     let user = JSON.parse(localStorage.getItem('currentUser'));
-    if (user && (localStorage.getItem('needPassNineCode') == 'true')) {
+    if (user && user.myNineCode) {
       // 已经有用户信息和设定为要验证手势密码
       this.rootPage = PatternLockComponent;
     } else {
       this.rootPage = LoginComponent;
-      // this.rootPage = BookCardComponent
     }
-
-    if (localStorage.getItem('toValiPassword')) {
-      localStorage.removeItem('toValiPassword')
+    if(!localStorage.getItem('languageType')) {
+      localStorage.setItem('languageType','simple_Chinese');
     }
   }
+
 
 
   registerBackButtonAction() {
@@ -79,12 +104,29 @@ export class MyAppComponent {
         return;
       }
       let activeVC = this.nav.getActive();
+      console.log(activeVC);
+
       if (activeVC.instance instanceof LoginComponent) {
         this.platform.exitApp();
+      } else if (activeVC.instance instanceof PatternLockComponent) {
+        this.platform.exitApp();
+      } else {
+        let tabs = activeVC.instance.tabRef;
+        let activeNav = tabs.getSelected();
+        console.log(activeNav);
+        return activeNav.canGoBack() ? activeNav.pop() : cordova.plugins.backgroundMode.moveToBackground();
       }
-      let tabs = activeVC.instance.tabRef;
-      let activeNav = tabs.getSelected();
-      return activeNav.canGoBack() ? activeNav.pop() : cordova.plugins.backgroundMode.moveToBackground();
     }, 1);
+  }
+
+  //双击退出功能模块并返回主界面
+  showExit() {
+    if (this.backButtonPressed) { //当触发标志为true时，即2秒内双击返回按键则返回主界面
+      this.app.getRootNav().setRoot(TabsComponent);
+    } else {
+      this.backButtonPressed = true;
+      this.plugin.showToast('再按一次返回主界面');
+      setTimeout(() => this.backButtonPressed = false, 2000);//2秒内没有再次点击返回则将触发标志标记为false
+    }
   }
 }

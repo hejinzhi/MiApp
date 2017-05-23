@@ -1,15 +1,23 @@
-import { Component } from '@angular/core';
-import { NavController, NavParams } from 'ionic-angular';
+import { Component, ChangeDetectorRef } from '@angular/core';
+import { NavController, NavParams, PopoverController } from 'ionic-angular';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 import { Observable }        from 'rxjs/Observable';
 import { Subject }           from 'rxjs/Subject';
 
+import { FormMenuComponent } from '../form-menu/form-menu.component';
+import { SignListComponent } from '../sign-list/sign-list.component';
+
 import { ValidateService }   from '../../../../core/services/validate.service';
 import { PluginService }   from '../../../../core/services/plugin.service';
+import { AttendanceService } from '../shared/service/attendance.service';
 
 import { MyFormModel } from '../shared/models/my-form.model';
 import { MyValidatorModel } from '../../../../shared/models/my-validator.model';
+import { HolidayType } from '../shared/config/holiday-type';
+
+import { AttendanceConfig } from '../shared/config/attendance.config';
+import { LanguageTypeConfig } from '../shared/config/language-type.config';
 
 @Component({
   selector: 'sg-business-form',
@@ -20,75 +28,85 @@ export class BusinessFormComponent {
   private searchTerms = new Subject<string>();
 
   businsessMes: {
-    type: string,
+    reasonType: string,
     autoSet: boolean,
-    boss: string,
+    colleague: string,
     businessTime: string,
     startTime: string,
     endTime: string,
     reason: string
   }
-  formData:MyFormModel = {
-    type:'4',
-    status:'New',
-    No:'HTL021703007172',
-    data:{}
+  formData: MyFormModel = {
+    type: '4',
+    status: '',
+    No: '',
+    data: {}
   }
-  haveSaved:boolean = false;
-  isSelectBoss: boolean = false;   // todo 判断是否正确选择代理人
-  tempBoss: string = ''; // 临时作保存的中间代理人
+
+  fontType: string = localStorage.getItem('languageType')
+  fontContent = LanguageTypeConfig.businessFormComponent[this.fontType];
+
+  startHourRange: string = '';
+  endHourRange: string = '';
+  errTip: string = '';
+  selectMaxYear = AttendanceConfig.SelectedMaxYear;
+  haveSaved: boolean = false;
+  isSelectcolleague: boolean = false;   // todo 判断是否正确选择代理人
+  tempcolleague: string = ''; // 临时作保存的中间代理人
   colleague: any;// 搜索得到的候选代理人
   timeError: string = '';
-  timeCount: string = '0';
+  hourCount: string = '';
+  dayCount: string = '';
   todo: FormGroup;
-  myValidators:{};
+  myValidators: {};
   MyValidatorControl: MyValidatorModel;
-  businessType = [
-    {type:'10',name:'新員工招聘室簽署合同'},
-    {type:'20',name:'前往招聘辦公室處理公務'},
-    {type:'30',name:'前往醫務室婦檢'},
-    {type:'40',name:'因公外出（出差、過磅、辦證、政府部門及銀行辦理業務等)'},
-    {type:'50',name:'受訓、開會'},
-    {type:'60',name:'出差期間加班時數計算'},
-    {type:'70',name:'陪同客戶外出、用餐等'},
-    {type:'80',name:'其它'}
-  ]
+  businessType = new HolidayType().businessType;
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
+    private ref: ChangeDetectorRef,
+    public popoverCtrl: PopoverController,
     private formBuilder: FormBuilder,
     private validateService: ValidateService,
-    private plugin: PluginService
+    private plugin: PluginService,
+    private attendanceService: AttendanceService
   ) { }
 
-  ionViewDidLoad() {
+  async ionViewDidLoad() {
+    this.startHourRange = this.attendanceService.getTimeRange(0, 37);
+    this.endHourRange = this.attendanceService.getTimeRange(0, 41);
     this.businsessMes = {
-      type: '',
+      reasonType: '',
       autoSet: false,
-      boss: '',
+      colleague: '',
       businessTime: '',
       startTime: '',
       endTime: '',
       reason: ''
     }
 
-    if(this.navParams.data.detailMes){
+    if (this.navParams.data.detailMes) {
       this.formData = this.navParams.data.detailMes;
-      this.businsessMes = this.navParams.data.detailMes.data;
-      this.isSelectBoss = true;
-      this.tempBoss = this.businsessMes.boss;
+      let detail = this.navParams.data.detailMes.data;
+      for (let prop in this.businsessMes) {
+        this.businsessMes[prop] = detail[prop]
+      }
+      this.hourCount = this.navParams.data.detailMes.data.hours || '';
+      this.dayCount = this.navParams.data.detailMes.data.days || '';
+      this.isSelectcolleague = true;
+      this.tempcolleague = this.businsessMes.colleague;
       this.haveSaved = true;
     }
 
     this.todo = this.initWork(this.businsessMes);
-    this.MyValidatorControl = this.initValidator();
+    this.MyValidatorControl = this.initValidator(this.businsessMes);
     this.myValidators = this.MyValidatorControl.validators;
     this.colleague = this.searchTerms
       .debounceTime(300)        // wait for 300ms pause in events
       .distinctUntilChanged()   // ignore if next search term is same as previous
       .switchMap(term => {
-        if (term) {
-          return Observable.of<any>([{ name: 'xiaomi' }, { name: 'xiaodong' }])
+        if (term.length > 0) {
+          return this.attendanceService.getAgent(term);
         } else {
           return Observable.of<any>([])
         }
@@ -97,73 +115,120 @@ export class BusinessFormComponent {
         // TODO: real error handling
         return Observable.of<string>(error);
       });
+    if (!this.haveSaved && !this.todo.controls['businessTime'].value) {
+      let day = new Date().toISOString()
+      this.todo.controls['businessTime'].setValue(day.substr(0, day.indexOf('T')));
+      this.askForDuring();
+    }
+    this.addSubcribe();
+  }
+  addSubcribe() {
     for (let prop in this.myValidators) {
-      this.todo.controls[prop].valueChanges.subscribe((value: any) => this.check(value, prop));
+      if (['startTime', 'endTime'].indexOf(prop) < 0) {
+        this.todo.controls[prop].valueChanges.subscribe((value: any) => this.check(value, prop));
+      }
     }
-    this.calculateTime(this.timeError);
-  }
-  //检查
-  calculateTime(error:string) {
-    if(error) {
-      this.timeCount= '0';
-      return;
-    }
-    let startTime = this.todo.controls['startTime'].value;
-    let endTime = this.todo.controls['endTime'].value;
-    let pre = '2017/01/01 ';
-    if(startTime && endTime) {
-      let interval = Date.parse(pre+endTime) - Date.parse(pre+startTime)
-      this.timeCount = (interval / (1000 * 60 * 60)).toFixed(1);
+    let timeCheck = ['businessTime', 'startTime', 'endTime']
+    for (let i = 0; i < timeCheck.length; i++) {
+      let check = timeCheck[i];
+      this.todo.controls[check].valueChanges.subscribe((value: any) => {
+        this.check(value, check).then(() => {
+          if (!this.timeError) {
+            this.askForDuring()
+          }
+        })
+      })
     }
   }
-  initValidator() {
+  initValidator(bind: any) {
     let newValidator = new MyValidatorModel([
-      {name:'type',valiItems:[{valiName:'Required',errMessage:'请选择加班类型',valiValue:true}]},
-      {name:'autoSet',valiItems:[]},
-      {name:'boss',valiItems:[{valiName:'Required',errMessage:'请选择代理人',valiValue:true}]},
-      {name:'businessTime',valiItems:[{valiName:'Required',errMessage:'公出日期不能为空',valiValue:true}]},
-      {name:'reason',valiItems:[
-        {valiName:'Required',errMessage:'原因不能为空',valiValue:true},
-        {valiName:'Minlength',errMessage:'原因长度不能少于2位',valiValue:2}
-      ]},
-      {name:'startTime',valiItems:[
-        {valiName:'Required',errMessage:'开始时间不能为空',valiValue:true},
-        {valiName:'TimeSmaller',errMessage:'结束时间必须迟于开始时间',valiValue:'endTime'}
-      ]},
-      {name:'endTime',valiItems:[
-        {valiName:'Required',errMessage:'结束时间不能为空',valiValue:true},
-        {valiName:'TimeBigger',errMessage:'结束时间必须迟于开始时间',valiValue:'startTime'}
-      ]}
-    ])
+      { name: 'reasonType', valiItems: [{ valiName: 'Required', errMessage: this.fontContent.reasonType_required_err, valiValue: true }] },
+      { name: 'autoSet', valiItems: [] },
+      { name: 'colleague', valiItems: [{ valiName: 'Required', errMessage: this.fontContent.colleague_required_err, valiValue: true }] },
+      { name: 'businessTime', valiItems: [{ valiName: 'Required', errMessage: this.fontContent.businessTime_required_err, valiValue: true }] },
+      {
+        name: 'reason', valiItems: [
+          { valiName: 'Required', errMessage: this.fontContent.reason_required_err, valiValue: true },
+          { valiName: 'Minlength', errMessage: this.fontContent.reason_minlength_err, valiValue: 2 }
+        ]
+      },
+      {
+        name: 'startTime', valiItems: [
+          { valiName: 'Required', errMessage: this.fontContent.startTime_required_err, valiValue: true },
+          { valiName: 'TimeSmaller', errMessage: this.fontContent.startTime_timeSmaller_err, valiValue: 'endTime' }
+        ]
+      },
+      {
+        name: 'endTime', valiItems: [
+          { valiName: 'Required', errMessage: this.fontContent.endTime_required_err, valiValue: true },
+          { valiName: 'TimeBigger', errMessage: this.fontContent.endTime_timeBigger_err, valiValue: 'startTime' }
+        ]
+      }
+    ], bind)
     return newValidator;
   }
   //初始化原始數據
   initWork(work: any): FormGroup {
     return this.formBuilder.group({
-      type: [work.type, Validators.required],
+      reasonType: [work.reasonType, Validators.required],
       autoSet: [work.autoSet],
-      boss: [work.boss, Validators.required],
+      colleague: [work.colleague, Validators.required],
       startTime: [work.startTime, Validators.required],
       endTime: [work.endTime, Validators.required],
       businessTime: [work.businessTime, Validators.required],
       reason: [work.reason, Validators.required],
     });
   }
+  updateDuring(data: MyFormModel) {
+    this.hourCount = data.data.hours || '';
+    this.dayCount = data.data.days || '';
+    this.myValidators['startTime'].value = data.data.startTime;
+    this.myValidators['endTime'].value = data.data.endTime;
+    Object.assign(this.businsessMes, this.todo.value);
+    this.businsessMes.startTime = data.data.startTime;
+    this.businsessMes.endTime = data.data.endTime;
+    this.todo = this.initWork(this.businsessMes);
+    this.addSubcribe();
+  }
+  async askForDuring() {
+    let values = this.todo.controls
+    let tempData: MyFormModel = {
+      type: this.formData.type,
+      status: this.formData.status,
+      No: this.formData.No,
+      data: {
+        reasonType: '',
+        autoSet: false,
+        businessTime: values.businessTime.value,
+        startTime: values.startTime.value,
+        endTime: values.endTime.value,
+        colleague: '',
+        reason: ''
+      }
+    }
+    let res: any = await this.attendanceService.getLeaveDuring(tempData);
+    if (!res.status) {
+      this.errTip = res.content;
+    } else {
+      this.errTip = '';
+      this.updateDuring(res.content);
+    };
+  }
   // keyup觸發的方法
   search(item: any) {
     // todo 判断是否正确选择代理人
-    if (this.tempBoss) {
-      this.isSelectBoss = item.value != this.tempBoss ? false : true;
+    if (this.tempcolleague) {
+      this.isSelectcolleague = item.value != this.tempcolleague ? false : true;
     }
     this.searchTerms.next(item.value);
   }
   // 选取上级
-  getBoss(name: string) {
+  getcolleague(name: string) {
 
-    this.isSelectBoss = true;
-    this.tempBoss = name;
+    this.isSelectcolleague = true;
+    this.tempcolleague = name;
     this.searchTerms.next('')
-    this.todo.controls['boss'].setValue(name);
+    this.todo.controls['colleague'].setValue(name);
   }
 
   //單獨輸入塊驗證
@@ -175,33 +240,58 @@ export class BusinessFormComponent {
       this.myValidators[name].pass = !prams.mes;
       if (name === 'startTime' || name === 'endTime') {
         this.timeError = prams.mes;
-        this.calculateTime(this.timeError);
       }
       return Promise.resolve(this.myValidators);
     });
   }
-  leaveForm() {
+  presentPopover(myEvent: any) {
+    let popover = this.popoverCtrl.create(FormMenuComponent, {
+      this: this,
+    });
+    popover.present({
+      ev: myEvent
+    });
+  }
+  async leaveForm() {
     this.formData.data = this.todo.value
-    console.log(this.formData);
+    let loading = this.plugin.createLoading();
+    loading.present()
+    let res: any = await this.attendanceService.sendSign(this.formData);
+    loading.dismiss()
+    if (res.status) {
+      this.plugin.showToast(this.fontContent.sign_success);
+      this.formData.status = 'WAITING';
+      // this.navCtrl.popToRoot();
+      let content = res.content;
+      if (content) {
+        this.errTip = ''
+        this.formData.status = content.STATUS;
+        this.hourCount = content.HOURS;
+        this.dayCount = content.DAYS
+        this.haveSaved = true;
+      }
+    } else {
+      this.errTip = res.content;
+    }
     return false;
   }
-
-  saveForm() {
-    setTimeout(() => {
-      this.plugin.showToast('表单保存成功');
+  async saveForm() {
+    this.formData.data = this.todo.value
+    let loading = this.plugin.createLoading();
+    loading.present()
+    let res: any = await this.attendanceService.saveLeaveForm(this.formData);
+    loading.dismiss()
+    if (!res.status) {
+      this.errTip = res.content;
+    } else {
+      this.errTip = '';
+      let data = res.content
+      this.formData.No = data.DOCNO
+      this.formData.status = data.STATUS;
+      this.hourCount = data.HOURS;
+      this.dayCount = data.DAYS
       this.haveSaved = true;
-    },1000)
-  }
-  cancelForm() {
-    setTimeout(() => {
-      this.plugin.showToast('表单删除成功');
-      setTimeout(() => {
-        this.navCtrl.pop();
-      },1000)
-    },1000)
-  }
-
-  callbackSubmit() {
-
-  }
+      this.plugin.showToast(this.fontContent.save_success);
+    }
+  };
 }

@@ -1,5 +1,5 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
-import { ApplicationItem } from '../models/application-item.model';
+import { ApplicationItem } from '../../shared/models/application-item.model';
 
 // 该组件用于“应用”页面，显示功能模块
 @Component({

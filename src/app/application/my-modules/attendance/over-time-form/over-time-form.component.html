@@ -1,85 +1,96 @@
 <ion-header>
 
   <ion-navbar>
-    <ion-title>创建加班单</ion-title>
-    <ion-buttons end [ngSwitch]="formData.status.toUpperCase()" *ngIf="haveSaved" >
-    <button ion-button (click)="cancelForm()" *ngSwitchCase="'NEW'">删除单据</button>
-    <button ion-button (click)="callbackSubmit()" *ngSwitchCase="'WAITING'">取消送签</button>
+    <ion-title *ngIf="!formData.status">{{fontContent.unSave_title}}</ion-title>
+    <ion-title *ngIf="formData.status">{{fontContent.saved_title}}</ion-title>
+    <ion-buttons end >
+      <button ion-button icon-only (click)="presentPopover($event)">
+      <ion-icon name="add"></ion-icon>
+    </button>
     </ion-buttons>
   </ion-navbar>
 </ion-header>
 
 
-<ion-content class="main">
-  <div [class.layer]="!(formData.status.toUpperCase() === 'NEW')">
-  </div>
-  <ion-list>
-    <ion-item>
-      状态：
+<ion-content>
+  <ion-item-divider class='alert error' *ngIf="errTip">{{errTip}}</ion-item-divider>
+  <ion-list *ngIf="formData.status && formData.No">
+    <ion-item class="myForm auto first">
+      {{fontContent.form_status}}
       <ion-note item-right>
         {{formData.status}}
       </ion-note>
     </ion-item>
 
-    <ion-item>
-      单据编号：
+    <ion-item class="myForm auto">
+      {{fontContent.form_No}}
       <ion-note item-right>
         {{formData.No}}
       </ion-note>
     </ion-item>
   </ion-list>
-  <form [formGroup]="todo" *ngIf="todo" (ngSubmit)="leaveForm()">
-    <ion-list>
-      <ion-item [class.has-error]="myValidators.type.error" [class.has-success]="myValidators.type.pass">
-        <ion-label>工作纪要*</ion-label>
-        <ion-select cancelText="取消" okText="確認" formControlName="type">
-          <ion-option *ngFor="let item of jobType" [value]="item.type">{{item.name}}</ion-option>
-        </ion-select>
+  <form [formGroup]="todo" *ngIf="todo" (ngSubmit)="leaveForm()" class="main">
+    <div [class.layer]="['APPROVED','WAITING'].indexOf(formData.status.toUpperCase())>-1">
+    </div>
+    <ion-list class="myList">
+      <ion-item *ngIf="dutyType" class="myForm auto first">
+        {{fontContent.duty_type}}
+        <ion-note item-right>
+          {{dutyType}}
+        </ion-note>
       </ion-item>
-
       <ion-item [class.has-error]="myValidators.OTtime.error" [class.has-success]="myValidators.OTtime.pass">
-        <ion-label>加班日期*</ion-label>
+        <ion-label>*{{fontContent.OTtime}}</ion-label>
         <ion-datetime displayFormat="YYYY/MM/DD" formControlName="OTtime"
-        cancelText="取消" doneText="确认"
-        yearValues="2017,2018"
+        [cancelText]="fontContent.cancle" [doneText]="fontContent.confirm"
+        min="2000" [max]="selectMaxYear"
         ></ion-datetime>
       </ion-item>
       <ion-item [class.has-error]="myValidators.startTime.error" [class.has-success]="myValidators.startTime.pass">
-        <ion-label>开始时间*</ion-label>
-        <ion-datetime displayFormat="HH:mm" formControlName="startTime"
-        cancelText="取消" doneText="确认"
+        <ion-label>*{{fontContent.startTime}}</ion-label>
+        <ion-datetime displayFormat="mm:ss" pickerFormat="HH:mm:ss" formControlName="startTime"
+        [cancelText]="fontContent.cancle" [doneText]="fontContent.confirm" hourValues ="0" [minuteValues]="startHourRange"
         ></ion-datetime>
       </ion-item>
       <ion-item [class.has-error]="myValidators.endTime.error" [class.has-success]="myValidators.endTime.pass">
-        <ion-label>结束时间*</ion-label>
-        <ion-datetime displayFormat="HH:mm" formControlName="endTime"
-        cancelText="取消" doneText="确认"
+        <ion-label>*{{fontContent.endTime}}</ion-label>
+        <ion-datetime displayFormat="mm:ss" pickerFormat="HH:mm:ss" formControlName="endTime" [minuteValues]="endHourRange"
+        [cancelText]="fontContent.cancle" [doneText]="fontContent.confirm" hourValues ="0"
         ></ion-datetime>
       </ion-item>
       <ion-item-divider *ngIf="timeError " class='alert'>{{timeError}}</ion-item-divider>
-      <ion-item>
-        小时：
+      <ion-item class="myForm auto first" *ngIf="OTCount">
+        {{fontContent.OTCount}}
         <ion-note item-right>
           {{OTCount}}
         </ion-note>
       </ion-item>
+      <ion-item [class.has-error]="myValidators.reasonType.error" [class.has-success]="myValidators.reasonType.pass">
+        <ion-label>*{{fontContent.reasonType}}</ion-label>
+        <ion-select [cancelText]="fontContent.cancle" [okText]="fontContent.confirm" formControlName="reasonType">
+          <ion-option *ngFor="let item of jobType" [value]="item.type">{{item.name | sgChineseConv}}</ion-option>
+        </ion-select>
+      </ion-item>
       <ion-item [class.has-error]="myValidators.reason.error" [class.has-success]="myValidators.reason.pass">
-        <ion-label>原因*</ion-label>
+        <ion-label>*{{fontContent.reason}}</ion-label>
         <ion-textarea rows="2" cols="20" formControlName="reason" class="reasonTest"
         ></ion-textarea>
       </ion-item>
       <ion-item-divider *ngIf="myValidators.reason.error" class='alert'>{{myValidators.reason.error}}</ion-item-divider>
-      <ion-grid *ngIf="formData.status.toUpperCase() === 'NEW'">
+      <ion-grid>
         <ion-row>
           <ion-col width-50>
-            <ion-buttons left>
-              <button ion-button class = "submit" type="submit" [disabled]="!todo.valid || myValidators.reason.error || timeError">提交</button>
+            <ion-buttons left *ngIf="showReset">
+              <button ion-button type="button" (click)="reSet()">{{fontContent.reset}}</button>
             </ion-buttons>
           </ion-col>
           <ion-col width-50>
-            <ion-buttons right>
-              <button ion-button [disabled]="!todo.valid || myValidators.reason.error || timeError" (click)="saveForm()">保存</button>
+            <ion-buttons right *ngIf="['APPROVED','WAITING'].indexOf(formData.status.toUpperCase())<0">
+              <button ion-button class = "submit" type="submit" [disabled]="!todo.valid || myValidators.reason.error || timeError">{{fontContent.sign}}</button>
             </ion-buttons>
+            <!-- <ion-buttons right>
+              <button ion-button type = "button" [disabled]="!todo.valid || myValidators.reason.error || timeError" (click)="saveForm()">{{fontContent.save}}</button>
+            </ion-buttons> -->
           </ion-col>
         </ion-row>
       </ion-grid>

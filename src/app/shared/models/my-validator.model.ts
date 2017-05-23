@@ -2,7 +2,7 @@ class ValiItem {valiName:string;errMessage:string;valiValue:any}
 
 export class MyValidatorModel{
   validators:any ={};
-  constructor(target:{name:string,valiItems:ValiItem[]}[]) {
+  constructor(target:{name:string,valiItems:ValiItem[]}[],bind:any={}) {
     for(let i =0;i<target.length;i++){
       this.validators[target[i].name] = {
         error: '',
@@ -10,6 +10,9 @@ export class MyValidatorModel{
         dataset: {},
         value:''};
       this.addValidators(target[i].name,target[i].valiItems);
+    }
+    for(let prop in this.validators) {
+      this.validators[prop].value = bind[prop] || '';
     }
   }
   addValidator(name:string,valiItem:ValiItem):void{

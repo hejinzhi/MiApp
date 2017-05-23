@@ -1,0 +1,27 @@
+<ion-header>
+
+  <ion-navbar>
+    <ion-title>{{type | sgFormType | sgChineseConv}}</ion-title>
+  </ion-navbar>
+
+</ion-header>
+
+
+<ion-content>
+  <ion-grid>
+  <ion-row>
+    <ion-col *ngFor="let item of items" col-4><ion-item >
+      <p class="name">{{item.type | sgOtherType:'attendanceMonthType' | sgChineseConv}}</p>
+      <p class="value" [class.highlight] = "item.type === 'PRESENT_DAY'">{{item.value}}</p>
+    </ion-item></ion-col>
+  </ion-row>
+</ion-grid>
+  <!-- <ion-list>
+    <ion-item *ngFor="let item of items">
+      {{item.type | sgOtherType:'attendanceMonthType'}}
+      <ion-note item-right>
+        {{item.value}}
+      </ion-note>
+    </ion-item>
+  </ion-list> -->
+</ion-content>

@@ -3,11 +3,16 @@ import { NavController, NavParams } from 'ionic-angular';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 import { ValidateService }   from '../../../../core/services/validate.service';
+import { AttendanceService } from '../shared/service/attendance.service';
+import { PluginService }   from '../../../../core/services/plugin.service';
 
 import { MyValidatorModel } from '../../../../shared/models/my-validator.model';
 import { FormType } from '../shared/config/form-type';
 
 import { FormListComponent } from '../form-list/form-list.component';
+
+import { AttendanceConfig } from '../shared/config/attendance.config';
+import { LanguageTypeConfig } from '../shared/config/language-type.config';
 
 @Component({
   selector: 'sg-search-form',
@@ -15,29 +20,52 @@ import { FormListComponent } from '../form-list/form-list.component';
 })
 export class SearchFormComponent {
   searchMes: {
-    type:string,
+    type: string,
     startTime: string,
     endTime: string,
     form_No: string,
   }
+
+  fontType:string = localStorage.getItem('languageType')
+  fontContent = LanguageTypeConfig.searchFormComponent[this.fontType];
+
+  selectMaxYear = AttendanceConfig.SelectedMaxYear;
   todo: FormGroup;
   myformType = new FormType();
-  timeError:string ='';
-  myValidators:{};
+  timeError: string = '';
+  myValidators: {};
   MyValidatorControl: MyValidatorModel;
-  formType:{type:string,name:string} []=[];
-  constructor(public navCtrl: NavController, public navParams: NavParams, private formBuilder: FormBuilder, private validateService: ValidateService) { }
+  formType: { type: string, name: string }[] = [];
+  constructor(
+    public navCtrl: NavController,
+    public navParams: NavParams,
+    private formBuilder: FormBuilder,
+    private validateService: ValidateService,
+    private attendanceService: AttendanceService,
+    private plugin: PluginService,
+  ) { }
 
   ionViewDidLoad() {
-    for(let prop in this.myformType){
-      this.formType.push(this.myformType[prop]);
+    this.formType = this.myformType.type;
+    let date = new Date();
+    let today = date.toISOString();
+    let month = date.getMonth();
+    let year = date.getFullYear();
+    let startTime = '';
+    if(month === 0) {
+      startTime = year-1+'-'+'12'+'-'+'26';
+    } else {
+      let monthString = month<10?'0'+month:month;
+      startTime = year+'-'+ monthString +'-'+'26';
     }
+    today = today.substr(0,today.indexOf('T'));
     this.searchMes = {
-      type:'',
-      startTime: '',
-      endTime: '',
+      type: '',
+      startTime: startTime,
+      endTime: today,
       form_No: ''
     }
+    this.searchMes.type = this.navParams.data.type || '';
     this.todo = this.initWork(this.searchMes);
     this.MyValidatorControl = this.initValidator();
     this.myValidators = this.MyValidatorControl.validators;
@@ -46,18 +74,38 @@ export class SearchFormComponent {
     }
   }
   initValidator() {
+    let form_No_reg = '^[Hh]{1}[Tt]{1}';
+    let form_No_reg_mes = this.fontContent.form_No_reg_mes;
+    switch (Number(this.searchMes.type)) {
+      case 2:
+        form_No_reg = '^[Hh]{1}[Tt]{1}[Ll]{1}';
+        form_No_reg_mes = this.fontContent.form_No_reg_mes2;
+        break;
+      case 3:
+        form_No_reg = '^[Hh]{1}[Tt]{1}[Oo]{1}';
+        form_No_reg_mes = this.fontContent.form_No_reg_mes3;
+        break;
+      default:
+        break;
+    }
     let newValidator = new MyValidatorModel([
-      {name:'type',valiItems:[{valiName:'Required',errMessage:'单号类型不能为空',valiValue:true}]},
-      {name:'form_No',valiItems:[
-        {valiName:'Length',errMessage:'单据长度不足15位',valiValue:15},
-        {valiName:'Regex',errMessage:'必须是HTL开头并后面加数字组成',valiValue:'[H]{1}[T]{1}[L]{1}[0-9]+'}
-      ]},
-      {name:'startTime',valiItems:[
-        {valiName:'TimeSmaller',errMessage:'结束时间必须迟于开始时间',valiValue:'endTime'}
-      ]},
-      {name:'endTime',valiItems:[
-        {valiName:'TimeBigger',errMessage:'结束时间必须迟于开始时间',valiValue:'startTime'}
-      ]}
+      { name: 'type', valiItems: [{ valiName: 'Required', errMessage: this.fontContent.type_required_err, valiValue: true }] },
+      {
+        name: 'form_No', valiItems: [
+          { valiName: 'Length', errMessage: this.fontContent.form_No_length_err, valiValue: 15 },
+          { valiName: 'Regex', errMessage: form_No_reg_mes, valiValue: form_No_reg }
+        ]
+      },
+      {
+        name: 'startTime', valiItems: [
+          { valiName: 'DateNotBigger', errMessage: this.fontContent.startTime_dateNotBigger_err, valiValue: 'endTime' }
+        ]
+      },
+      {
+        name: 'endTime', valiItems: [
+          { valiName: 'DateNotSmaller', errMessage: this.fontContent.endTime_DateNotSmaller_err, valiValue: 'startTime' }
+        ]
+      }
     ])
     return newValidator;
   }
@@ -83,10 +131,21 @@ export class SearchFormComponent {
       return Promise.resolve(this.myValidators);
     });
   }
-  leaveForm() {
+  async leaveForm() {
     console.log(this.todo.value);
+    let res: any = [];
+    let loading = this.plugin.createLoading();
+    loading.present();
+    res = await this.attendanceService.getForm(this.todo.value);
+    loading.dismiss();
+    console.log(res);
+    if (res.length === 0) {
+      this.plugin.showToast(this.fontContent.no_result);
+      return false;
+    }
     this.navCtrl.push(FormListComponent, {
-      type: this.todo.value.type
+      type: this.todo.value.type,
+      formData: res
     })
     return false;
   }

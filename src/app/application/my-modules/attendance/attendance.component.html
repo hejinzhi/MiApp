@@ -1,37 +1,7 @@
-<ion-header>
-
-  <ion-navbar>
-    <ion-title>考勤维护作业</ion-title>
-    <ion-buttons end>
-      <button ion-button (click)="search()">查询</button>
-    </ion-buttons>
-  </ion-navbar>
-
-</ion-header>
-
-
-<ion-content>
-  <ion-list>
-    <button ion-item (click)='maintain_OT()'>
-    加班单维护(个人)
-    </button>
-    <button ion-item (click)='maintain_leave()'>
-    请假单维护
-    </button>
-    <button ion-item (click)='maintain_undone(0)'>
-    门禁异常处理(个人)
-    </button>
-    <button ion-item (click)='maintain_undone(1)'>
-    未刷卡假别更改
-    </button>
-    <button ion-item (click)='cancel_leave()'>
-    销假申请
-    </button>
-    <button ion-item (click)='maintain_business()'>
-    公出作业
-    </button>
-    <button ion-item>
-    刷卡符号维护
-    </button>
-  </ion-list>
-</ion-content>
+<ion-tabs #attendance>
+  <ion-tab [root]="tab1Root" [tabTitle]="fontContent.tab1" tabIcon="pricetags"></ion-tab>
+  <ion-tab [root]="tab2Root" [tabTitle]="fontContent.tab2" tabIcon="hammer"></ion-tab>
+  <ion-tab [root]="tab3Root" [tabTitle]="fontContent.tab3" tabIcon="create"></ion-tab>
+  <ion-tab [root]="tab4Root" [tabTitle]="fontContent.tab4" tabIcon="globe"></ion-tab>
+  <ion-tab [root]="tab5Root" [tabTitle]="fontContent.tab5" tabIcon="stats"></ion-tab>
+</ion-tabs>

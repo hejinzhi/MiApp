@@ -1,0 +1,15 @@
+sg-sign-list {
+  h3 {
+    display: flex;
+    justify-content:space-between;
+    p.status {
+      color:green;
+      &.waiting {
+        color: red;
+      }
+    }
+    p.waiting {
+      color: red;
+    }
+  }
+}

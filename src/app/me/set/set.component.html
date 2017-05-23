@@ -1,13 +1,10 @@
-
-<ion-header color="mac">
-  <ion-navbar color="mac">
+<ion-header>
+  <ion-navbar>
     <ion-title>设置</ion-title>
   </ion-navbar>
 </ion-header>
-
-
 <ion-content>
-  <ion-list>
+  <ion-list class="myList">
     <button ion-item class="function-message">
       <ion-icon name="swap" color="mac"></ion-icon>
         &nbsp;流程信息提醒
@@ -41,12 +38,16 @@
       <ion-icon name="trash" color="mac"></ion-icon>
         &nbsp;清空缓存
     </button>
+    <button ion-item class="function-message" (click)="changeFont()">
+      <ion-icon name="git-compare" color="mac"></ion-icon>
+        &nbsp;语言版本切换
+    </button>
     <button ion-item class="function-message">
       <ion-icon name="search" color="mac"></ion-icon>
         &nbsp;关于
     </button>
     <ion-item-divider color="light"></ion-item-divider>
-    <button ion-item class="function-message" (click) = "exit()">
+    <button ion-item class="function-message" (click)="logout()">
       <ion-icon name="disc" color="mac"></ion-icon>
         &nbsp;注销
     </button>

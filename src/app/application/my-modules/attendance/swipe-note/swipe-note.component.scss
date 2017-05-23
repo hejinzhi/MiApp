@@ -1,0 +1,14 @@
+sg-swipe-note {
+  h2.myRow {
+    display: flex;
+    justify-content: space-between;
+    ion-row {
+      display: flex;
+      justify-content: space-between;
+      flex-direction: column;
+      p {
+        color: #000;
+      }
+    }
+  }
+}
