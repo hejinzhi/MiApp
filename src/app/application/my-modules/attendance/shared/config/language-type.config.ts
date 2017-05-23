@@ -175,7 +175,8 @@ export class LanguageTypeConfig {
       callBack: '取消假單',
       no_callback: '沒有銷假單記錄',
       delete_succ: '刪除表單成功',
-      callbackSign_succ: '取消送簽成功'
+      callbackSign_succ: '取消送簽成功',
+      callbackSign_err: '操作過於繁忙,請稍等'
     },
     simple_Chinese:{
       search:'查询',
@@ -186,7 +187,8 @@ export class LanguageTypeConfig {
       callBack: '取消假單',
       no_callback: '没有销假单记录',
       delete_succ: '删除表单成功',
-      callbackSign_succ: '取消送签成功'
+      callbackSign_succ: '取消送签成功',
+      callbackSign_err: '操作过于繁忙,请稍等'
     }
   };
   static attendanceDetailComponent = {
@@ -384,6 +386,8 @@ export class LanguageTypeConfig {
       sign_list:'簽核名單',
       leave_No:'取消假單 ',
       reason:'取消原因',
+      sign_success:'送簽成功',
+      save_success:'表單保存成功',
       leave_No_required_err:'請假單號不能為空',
       reason_required_err:'原因不能為空',
       reason_minlength_err:'原因長度不能少於2位',
@@ -400,6 +404,8 @@ export class LanguageTypeConfig {
       sign_list:'签核名单',
       leave_No:'取消假单 ',
       reason:'取消原因',
+      sign_success:'送签成功',
+      save_success:'表单保存成功',
       leave_No_required_err:'请假单号不能为空',
       reason_required_err:'原因不能為空',
       reason_minlength_err:'原因長度不能少於2位',
@@ -427,6 +433,7 @@ export class LanguageTypeConfig {
       reason:'公出原因',
       sign_success:'送簽成功',
       save_success:'表單保存成功',
+      colleague_placeholder:'請輸入關鍵字查詢',
       reasonType_required_err:'請選擇公出類型',
       businessTime_required_err:'公出日期不能為空',
       reason_required_err:'原因不能為空',
@@ -458,6 +465,7 @@ export class LanguageTypeConfig {
       reason:'公出原因',
       sign_success:'送签成功',
       save_success:'表单保存成功',
+      colleague_placeholder:'请输入关键字查询',
       reasonType_required_err:'请选择公出类型',
       businessTime_required_err:'公出日期不能为空',
       reason_required_err:'原因不能为空',
@@ -496,7 +504,8 @@ export class LanguageTypeConfig {
       startTime_required_err:'開始時間不能為空',
       startTime_timeSmaller_err:'結束時間必須遲於開始時間',
       endTime_required_err:'結束時間不能為空',
-      endTime_timeBigger_err:'結束時間必須遲於開始時間'
+      endTime_timeBigger_err:'結束時間必須遲於開始時間',
+      reset:'重置'
     },
     simple_Chinese:{
       unSave_title:'新建加班单',
@@ -524,7 +533,8 @@ export class LanguageTypeConfig {
       startTime_required_err:'开始时间不能为空',
       startTime_timeSmaller_err:'结束时间必须迟于开始时间',
       endTime_required_err:'结束时间不能为空',
-      endTime_timeBigger_err:'结束时间必须迟于开始时间'
+      endTime_timeBigger_err:'结束时间必须迟于开始时间',
+      reset:'重置'
     }
   };
 
@@ -554,7 +564,7 @@ export class LanguageTypeConfig {
       sign_success:'送簽成功',
       save_success:'表單保存成功',
       time_err:'開始時間必須早於結束時間',
-      colleague_placeholder:'請輸入2位以上的工號進行查詢',
+      colleague_placeholder:'請輸入關鍵字查詢',
       confirm:'確認',
       cancle:'取消'
     },
@@ -583,7 +593,7 @@ export class LanguageTypeConfig {
       sign_success:'送签成功',
       save_success:'表单保存成功',
       time_err:'开始时间必须早于结束时间',
-      colleague_placeholder:'请输入2位以上的工号进行查询',
+      colleague_placeholder:'请输入关键字查询',
       confirm:'确认',
       cancle:'取消'
     }

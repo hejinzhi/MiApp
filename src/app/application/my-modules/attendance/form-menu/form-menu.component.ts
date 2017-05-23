@@ -120,7 +120,10 @@ export class FormMenuComponent {
     loading.present();
     let res = await this.attendanceService.callBackSign(this.formData);
     loading.dismiss();
-    if(!res) return;
+    if(!res) {
+      this.plugin.showToast(this.fontContent.callbackSign_err)
+      return
+    };
     this.plugin.showToast(this.fontContent.callbackSign_succ);
     this.formData.status = 'CANCELED'
     // this.lastNavCtr.popToRoot()

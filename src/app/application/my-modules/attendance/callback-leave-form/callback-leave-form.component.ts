@@ -33,6 +33,7 @@ export class CallbackLeaveFormComponent {
   fontContent = LanguageTypeConfig.callbackLeaveFormComponent[this.fontType];
 
   haveSaved:boolean = false;
+  errTip:string ='';
   todo: FormGroup;
   myValidators:{};
   MyValidatorControl: MyValidatorModel;
@@ -111,11 +112,13 @@ export class CallbackLeaveFormComponent {
     if (res.status) {
       this.plugin.showToast(this.fontContent.sign_success);
       this.haveSaved = true;
-      this.formData.status = 'WAITING'
-    if(res.content) {
-      this.formData.No = res.content.DOCNO1
-    }
+      this.formData.status = 'WAITING';
+      if(res.content) {
+        this.formData.No = res.content.DOCNO1
+      }
       // this.navCtrl.popToRoot();
+    } else {
+      this.errTip = res.content;
     }
     return false;
   }
@@ -125,11 +128,16 @@ export class CallbackLeaveFormComponent {
     loading.present()
     let res: any = await this.attendanceService.saveCallbackLeaveFrom(this.formData);
     loading.dismiss()
-    if (!res) return;
-    this.formData.status = res.STATUS;
-    this.formData.No = res.DOCNO1
-    this.haveSaved = true;
-    this.plugin.showToast(this.fontContent.save_success);
+    if (!res.status) {
+      this.errTip = res.content
+    } else {
+      this.errTip = '';
+      let data = res.content
+      this.formData.status = data.STATUS;
+      this.formData.No = data.DOCNO1
+      this.haveSaved = true;
+      this.plugin.showToast(this.fontContent.save_success);
+    };
   }
   sign_list() {
     this.navCtrl.push(SignListComponent,{

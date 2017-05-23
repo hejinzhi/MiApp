@@ -5,7 +5,7 @@
     <ion-title *ngIf="formData.status">{{fontContent.saved_title}}</ion-title>
     <ion-buttons end >
       <button ion-button icon-only (click)="presentPopover($event)">
-      <ion-icon name="more"></ion-icon>
+      <ion-icon name="add"></ion-icon>
     </button>
     </ion-buttons>
   </ion-navbar>
@@ -15,16 +15,17 @@
 <ion-content class="main">
   <div [class.layer]="['APPROVED','WAITING'].indexOf(formData.status.toUpperCase())>-1">
   </div>
-  <ion-list class="myList">
-    <ion-item class="myForm auto">
-      {{fontContent.form_status}}：
+  <ion-item-divider class='alert error' *ngIf="errTip">{{errTip}}</ion-item-divider>
+  <ion-list  *ngIf="formData.status && formData.No">
+    <ion-item class="myForm auto first">
+      {{fontContent.form_status}}
       <ion-note item-right>
         {{formData.status}}
       </ion-note>
     </ion-item>
 
     <ion-item class="myForm auto">
-      {{fontContent.form_No}}：
+      {{fontContent.form_No}}
       <ion-note item-right>
         {{formData.No}}
       </ion-note>
@@ -38,11 +39,12 @@
           <ion-option *ngFor="let item of businessType" [value]="item.type">{{item.name | sgChineseConv}}</ion-option>
         </ion-select>
       </ion-item>
-      <ion-item>
+      <div class="myitem">
         <ion-label>{{fontContent.autoSet}}</ion-label>
-        <ion-toggle formControlName="autoSet"></ion-toggle>
-      </ion-item>
-      <ion-item-divider *ngIf="myValidators.colleague.error" class='alert'>{{myValidators.colleague.error}}</ion-item-divider>
+        <div class="myToggle">
+          <ion-toggle formControlName="autoSet"></ion-toggle>
+        </div>
+      </div>
       <ion-item [class.has-error]="myValidators.businessTime.error" [class.has-success]="myValidators.businessTime.pass">
         <ion-label>*{{fontContent.businessTime}}</ion-label>
         <ion-datetime displayFormat="YYYY/MM/DD" formControlName="businessTime"
@@ -66,7 +68,7 @@
       <ion-row *ngIf="hourCount && dayCount">
         <ion-col width-50>
           <ion-item class="myForm auto">
-            {{fontContent.dayCount}}：
+            {{fontContent.dayCount}}
             <ion-note item-right>
               {{dayCount}}
             </ion-note>
@@ -74,7 +76,7 @@
         </ion-col>
         <ion-col width-50>
           <ion-item class="myForm auto">
-            {{fontContent.hourCount}}：
+            {{fontContent.hourCount}}
             <ion-note item-right>
               {{hourCount}}
             </ion-note>
@@ -83,8 +85,15 @@
       </ion-row>
       <ion-item class="searchOut" [class.has-error]="myValidators.colleague.error" [class.has-success]="myValidators.colleague.pass">
         <ion-label>*{{fontContent.colleague}}</ion-label>
-        <ion-input type="text" #name (keyup)="search(name)" formControlName="colleague" (focus)="name.Error=''" data-v-required="true" data-v-required-message="请选择代理人"></ion-input>
+        <ion-input type="text" #name (keyup)="search(name)" [placeholder]="fontContent.colleague_placeholder" formControlName="colleague" (focus)="name.Error=''" data-v-required="true" data-v-required-message="请选择代理人"></ion-input>
       </ion-item>
+      <ion-item-divider *ngIf="myValidators.colleague.error" class='alert'>{{myValidators.colleague.error}}</ion-item-divider>
+      <div class="searchOut">
+        <ul class="list-group" [class.search]="colleague">
+          <li *ngFor="let person of colleague | async" (click)="getcolleague(person.AGENT_NAME)"
+              class="search-result list-group-item">{{person.AGENT_NAME}}</li>
+        </ul>
+      </div>
       <ion-item [class.has-error]="myValidators.reason.error" [class.has-success]="myValidators.reason.pass">
         <ion-label>*{{fontContent.reason}}</ion-label>
         <ion-textarea rows="2" cols="20" formControlName="reason" class="reasonTest"></ion-textarea>
@@ -106,8 +115,4 @@
       </ion-grid>
     </ion-list>
   </form>
-  <ul class="list-group" [class.search]="colleague">
-    <li *ngFor="let person of colleague | async" (click)="getcolleague(person.AGENT_NAME)"
-        class="search-result list-group-item">{{person.AGENT_NAME}}</li>
-  </ul>
 </ion-content>

@@ -39,7 +39,10 @@ export class StatisticsComponent {
     private attendanceService: AttendanceService
   ) { }
 
-  async ionViewDidLoad() {
+  ionViewDidLoad() {
+    this.reFresh();
+  }
+  async reFresh() {
     this.initDays();
     let loading = this.plugin.createLoading();
     loading.present()
@@ -54,6 +57,7 @@ export class StatisticsComponent {
     let res: any = await this.attendanceService.getOffDutyTotalDays();
     if (res.status) {
       this.myLeave = res.content.slice(0,new Date().getMonth()+1);
+      this.myLeave = this.zeroNotShow(this.myLeave);
       let nowMonthLeave = this.myLeave[this.myLeave.length-1]
       this.totalLeave.map((item) => {
         if(item.name == this.fontContent.totalLeave_month) {
@@ -69,6 +73,19 @@ export class StatisticsComponent {
       })
     }
   }
+  zeroNotShow(data:{name:string,value:number}[]) {
+    return data.map((item:any) => {
+      if(item.value == 0) {
+        item.label={
+          normal:{}
+        },
+        item.label.normal = {
+          show:false
+        }
+      }
+      return item;
+    })
+  }
   initDays() {
     let date = new Date();
     let monthDays = new Date(date.getFullYear(),date.getMonth()+1,0).getDate();
@@ -82,6 +99,7 @@ export class StatisticsComponent {
     let res: any = await this.attendanceService.getOverTimeTotalHours();
     if (res.status) {
       this.myOT = res.content.slice(0,new Date().getMonth()+1);
+      this.myOT = this.zeroNotShow(this.myOT);
       let nowMonthOT = this.myOT[this.myOT.length-1];
       this.totalOT.map((item) => {
         if(item.name == this.fontContent.totalOT_month) {
@@ -98,7 +116,7 @@ export class StatisticsComponent {
     }
   }
   initOTMonthChart() {
-    let monthChart = this.initChart1('main2', this.fontContent.my+this.fontContent.OT, this.myOT, true);
+    let monthChart = this.initChart1('main2', this.fontContent.my+this.fontContent.OT, this.myOT, true, this.fontContent.hour);
     monthChart.on('click', (params: any) => {
       this.attendanceService.getOverTimeMonthHours(params.dataIndex+1).then((res) => {
         if(res.status) {
@@ -111,14 +129,14 @@ export class StatisticsComponent {
               return item;
             })
           }
-          this.initLineChat('main2', (params.dataIndex + 1) + this.fontContent.month+this.fontContent.OT, this.OTday, true, this.initOTMonthChart);
+          this.initLineChat('main2', (params.dataIndex + 1) + this.fontContent.month+this.fontContent.OT, this.OTday, true, this.initOTMonthChart, this.fontContent.hour);
         }
       })
 
     })
   }
   initLeaveMonthChart() {
-    let monthChart = this.initChart1('main3', this.fontContent.my+this.fontContent.leave, this.myLeave, true);
+    let monthChart = this.initChart1('main3', this.fontContent.my+this.fontContent.leave, this.myLeave, true,'天');
     monthChart.on('click', (params: any) => {
       this.attendanceService.getOffDutyMonthHours(params.dataIndex+1).then((res) => {
         if(res.status) {
@@ -131,12 +149,12 @@ export class StatisticsComponent {
               return item;
             })
           }
-          this.initLineChat('main3', (params.dataIndex + 1) + this.fontContent.month + this.fontContent.leave, this.leaveDay, true, this.initLeaveMonthChart);
+          this.initLineChat('main3', (params.dataIndex + 1) + this.fontContent.month + this.fontContent.leave, this.leaveDay, true, this.initLeaveMonthChart,'天');
         }
       })
     })
   }
-  initChart1(name: string, title: string, target: Chart[], showTool: boolean = false, color: string = '#3773F7', fontFamily: string[] = ['Helvetica', 'Tahoma', 'Arial', 'STXihei', '华文细黑', 'Microsoft YaHei', '微软雅黑', 'sans-serif']) {
+  initChart1(name: string, title: string, target: Chart[], showTool: boolean = false, unit:string, color: string = '#3773F7', fontFamily: string[] = ['Helvetica', 'Tahoma', 'Arial', 'STXihei', '华文细黑', 'Microsoft YaHei', '微软雅黑', 'sans-serif']) {
     let dataName = target.map((item) => {
       return item.name
     })
@@ -147,11 +165,12 @@ export class StatisticsComponent {
       title: {
         text: title, top: '3%', textStyle: {
           fontFamily: fontFamily,
-          fontSize: 25
+          fontSize: 18
         }
       },
       tooltip: {
         trigger: 'axis',
+        formatter: "{b} <br/>{a} : {c}"+unit,
       },
       grid: {
         left: '3%',
@@ -187,7 +206,7 @@ export class StatisticsComponent {
       },
       series: [
         {
-          name: this.fontContent.days,
+          name: title.substr(2),
           type: 'bar',
           barWidth: '60%',
           data: target,
@@ -196,7 +215,7 @@ export class StatisticsComponent {
             normal:
             {
               show: true,
-              position: 'top',
+              position: 'top'
             }
           },
         }
@@ -216,14 +235,18 @@ export class StatisticsComponent {
       title: {
         text: title, top: '3%', textStyle: {
           fontFamily: fontFamily,
-          fontSize: 25
+          fontSize: 18
         }
       },
       tooltip: {
-        trigger: 'axis',
+        trigger: 'axis'
       },
       legend: {
-        data: [this.fontContent.OT, this.fontContent.leave]
+        data: [this.fontContent.OT, this.fontContent.leave],
+        textStyle: {
+          fontFamily: fontFamily,
+          fontSize: 16
+        }
       },
       grid: {
         left: '3%',
@@ -282,7 +305,7 @@ export class StatisticsComponent {
     return myChart;
   }
 
-  initLineChat(name: string, title: string, target: Chart[], showTool: boolean = false, fn:any,color: string[] = ['#3773F7', '#EEB174'], fontFamily: string[] = ['Helvetica', 'Tahoma', 'Arial', 'STXihei', '华文细黑', 'Microsoft YaHei', '微软雅黑', 'sans-serif']) {
+  initLineChat(name: string, title: string, target: Chart[], showTool: boolean = false, fn:any,unit:string,color: string[] = ['#3773F7', '#EEB174'], fontFamily: string[] = ['Helvetica', 'Tahoma', 'Arial', 'STXihei', '华文细黑', 'Microsoft YaHei', '微软雅黑', 'sans-serif']) {
     let dataName = target.map((item) => {
       return item.name
     })
@@ -293,11 +316,12 @@ export class StatisticsComponent {
       title: {
         text: title, top: '3%', textStyle: {
           fontFamily: fontFamily,
-          fontSize: 25
+          fontSize: 18
         }
       },
       tooltip: {
-        trigger: 'item'
+        trigger: 'axis',
+        formatter: "{b}日 <br/>{a} : {c}天"
       },
       xAxis: [
         {
@@ -334,7 +358,8 @@ export class StatisticsComponent {
       },
       series: [
         {
-          type: 'line',
+          name: title.substr(2),
+          type: 'bar',
           data: target
         }
       ],

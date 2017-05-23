@@ -5,35 +5,36 @@
     <ion-title *ngIf="formData.status">{{fontContent.saved_title}}</ion-title>
     <ion-buttons end >
       <button ion-button icon-only (click)="presentPopover($event)">
-      <ion-icon name="more"></ion-icon>
+      <ion-icon name="add"></ion-icon>
     </button>
     </ion-buttons>
   </ion-navbar>
 </ion-header>
 
 
-<ion-content class="main">
-  <div [class.layer]="['APPROVED','WAITING'].indexOf(formData.status.toUpperCase())>-1">
-  </div>
-  <ion-list class="myList">
-    <ion-item class="myForm auto">
-      {{fontContent.form_status}}：
+<ion-content>
+  <ion-item-divider class='alert error' *ngIf="errTip">{{errTip}}</ion-item-divider>
+  <ion-list *ngIf="formData.status && formData.No">
+    <ion-item class="myForm auto first">
+      {{fontContent.form_status}}
       <ion-note item-right>
         {{formData.status}}
       </ion-note>
     </ion-item>
 
     <ion-item class="myForm auto">
-      {{fontContent.form_No}}：
+      {{fontContent.form_No}}
       <ion-note item-right>
         {{formData.No}}
       </ion-note>
     </ion-item>
   </ion-list>
-  <form [formGroup]="todo" *ngIf="todo" (ngSubmit)="leaveForm()">
+  <form [formGroup]="todo" *ngIf="todo" (ngSubmit)="leaveForm()" class="main">
+    <div [class.layer]="['APPROVED','WAITING'].indexOf(formData.status.toUpperCase())>-1">
+    </div>
     <ion-list class="myList">
-      <ion-item *ngIf="dutyType" class="myForm auto">
-        {{fontContent.duty_type}}：
+      <ion-item *ngIf="dutyType" class="myForm auto first">
+        {{fontContent.duty_type}}
         <ion-note item-right>
           {{dutyType}}
         </ion-note>
@@ -58,8 +59,8 @@
         ></ion-datetime>
       </ion-item>
       <ion-item-divider *ngIf="timeError " class='alert'>{{timeError}}</ion-item-divider>
-      <ion-item class="myForm auto" *ngIf="OTCount" class="myForm auto">
-        {{fontContent.OTCount}}：
+      <ion-item class="myForm auto first" *ngIf="OTCount">
+        {{fontContent.OTCount}}
         <ion-note item-right>
           {{OTCount}}
         </ion-note>
@@ -76,17 +77,20 @@
         ></ion-textarea>
       </ion-item>
       <ion-item-divider *ngIf="myValidators.reason.error" class='alert'>{{myValidators.reason.error}}</ion-item-divider>
-      <ion-grid *ngIf="['APPROVED','WAITING'].indexOf(formData.status.toUpperCase())<0">
+      <ion-grid>
         <ion-row>
           <ion-col width-50>
-            <ion-buttons left>
-              <button ion-button class = "submit" type="submit" [disabled]="!todo.valid || myValidators.reason.error || timeError">{{fontContent.sign}}</button>
+            <ion-buttons left *ngIf="showReset">
+              <button ion-button type="button" (click)="reSet()">{{fontContent.reset}}</button>
             </ion-buttons>
           </ion-col>
           <ion-col width-50>
-            <ion-buttons right>
-              <button ion-button type = "button" [disabled]="!todo.valid || myValidators.reason.error || timeError" (click)="saveForm()">{{fontContent.save}}</button>
+            <ion-buttons right *ngIf="['APPROVED','WAITING'].indexOf(formData.status.toUpperCase())<0">
+              <button ion-button class = "submit" type="submit" [disabled]="!todo.valid || myValidators.reason.error || timeError">{{fontContent.sign}}</button>
             </ion-buttons>
+            <!-- <ion-buttons right>
+              <button ion-button type = "button" [disabled]="!todo.valid || myValidators.reason.error || timeError" (click)="saveForm()">{{fontContent.save}}</button>
+            </ion-buttons> -->
           </ion-col>
         </ion-row>
       </ion-grid>
