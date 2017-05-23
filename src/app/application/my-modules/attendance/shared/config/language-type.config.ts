@@ -433,6 +433,7 @@ export class LanguageTypeConfig {
       reason:'公出原因',
       sign_success:'送簽成功',
       save_success:'表單保存成功',
+      colleague_placeholder:'請輸入關鍵字查詢',
       reasonType_required_err:'請選擇公出類型',
       businessTime_required_err:'公出日期不能為空',
       reason_required_err:'原因不能為空',
@@ -464,6 +465,7 @@ export class LanguageTypeConfig {
       reason:'公出原因',
       sign_success:'送签成功',
       save_success:'表单保存成功',
+      colleague_placeholder:'请输入关键字查询',
       reasonType_required_err:'请选择公出类型',
       businessTime_required_err:'公出日期不能为空',
       reason_required_err:'原因不能为空',
@@ -562,7 +564,7 @@ export class LanguageTypeConfig {
       sign_success:'送簽成功',
       save_success:'表單保存成功',
       time_err:'開始時間必須早於結束時間',
-      colleague_placeholder:'請輸入2位以上的工號進行查詢',
+      colleague_placeholder:'請輸入關鍵字查詢',
       confirm:'確認',
       cancle:'取消'
     },
@@ -591,7 +593,7 @@ export class LanguageTypeConfig {
       sign_success:'送签成功',
       save_success:'表单保存成功',
       time_err:'开始时间必须早于结束时间',
-      colleague_placeholder:'请输入2位以上的工号进行查询',
+      colleague_placeholder:'请输入关键字查询',
       confirm:'确认',
       cancle:'取消'
     }

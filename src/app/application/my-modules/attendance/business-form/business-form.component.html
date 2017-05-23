@@ -45,7 +45,6 @@
           <ion-toggle formControlName="autoSet"></ion-toggle>
         </div>
       </div>
-      <ion-item-divider *ngIf="myValidators.colleague.error" class='alert'>{{myValidators.colleague.error}}</ion-item-divider>
       <ion-item [class.has-error]="myValidators.businessTime.error" [class.has-success]="myValidators.businessTime.pass">
         <ion-label>*{{fontContent.businessTime}}</ion-label>
         <ion-datetime displayFormat="YYYY/MM/DD" formControlName="businessTime"
@@ -86,8 +85,9 @@
       </ion-row>
       <ion-item class="searchOut" [class.has-error]="myValidators.colleague.error" [class.has-success]="myValidators.colleague.pass">
         <ion-label>*{{fontContent.colleague}}</ion-label>
-        <ion-input type="text" #name (keyup)="search(name)" formControlName="colleague" (focus)="name.Error=''" data-v-required="true" data-v-required-message="请选择代理人"></ion-input>
+        <ion-input type="text" #name (keyup)="search(name)" [placeholder]="fontContent.colleague_placeholder" formControlName="colleague" (focus)="name.Error=''" data-v-required="true" data-v-required-message="请选择代理人"></ion-input>
       </ion-item>
+      <ion-item-divider *ngIf="myValidators.colleague.error" class='alert'>{{myValidators.colleague.error}}</ion-item-divider>
       <div class="searchOut">
         <ul class="list-group" [class.search]="colleague">
           <li *ngFor="let person of colleague | async" (click)="getcolleague(person.AGENT_NAME)"

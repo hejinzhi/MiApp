@@ -105,7 +105,7 @@ export class BusinessFormComponent {
       .debounceTime(300)        // wait for 300ms pause in events
       .distinctUntilChanged()   // ignore if next search term is same as previous
       .switchMap(term => {
-        if (term.length > 2) {
+        if (term.length > 0) {
           return this.attendanceService.getAgent(term);
         } else {
           return Observable.of<any>([])
