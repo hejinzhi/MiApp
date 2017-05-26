@@ -138,14 +138,15 @@ export class SearchFormComponent {
     loading.present();
     res = await this.attendanceService.getForm(this.todo.value);
     loading.dismiss();
+    if(!res.status) return;
     console.log(res);
-    if (res.length === 0) {
+    if (res.content.length === 0) {
       this.plugin.showToast(this.fontContent.no_result);
       return false;
     }
     this.navCtrl.push(FormListComponent, {
       type: this.todo.value.type,
-      formData: res
+      formData: res.content
     })
     return false;
   }

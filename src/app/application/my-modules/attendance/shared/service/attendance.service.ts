@@ -53,11 +53,11 @@ export class AttendanceService {
         let list = [];
         formData = get_fn.call(this, formData, type);
         list.push(formData);
-        return Promise.resolve(list)
+        return Promise.resolve({content:list,status:true})
       }).catch((err) => {
         console.log(err)
         this.errorDeal(err);
-        return Promise.resolve([])
+        return Promise.resolve({content:[],status:false})
       });
     } else {
       dateFM = formData.startTime || this.getMinStartTime(1);
@@ -67,11 +67,11 @@ export class AttendanceService {
         formData = formData.map((item: any) => {
           return get_fn.call(this, item, type)
         })
-        return Promise.resolve(formData)
+        return Promise.resolve({content:formData,status:true})
       }).catch((err) => {
         console.log(err)
         this.errorDeal(err);
-        return Promise.resolve([])
+        return Promise.resolve({content:[],status:false})
       });
     }
   }
