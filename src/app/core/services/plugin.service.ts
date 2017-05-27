@@ -1,25 +1,30 @@
 import { Injectable } from '@angular/core';
-import { ToastController, LoadingController } from 'ionic-angular';
+import { ToastController, LoadingController, AlertController } from 'ionic-angular';
 import { BarcodeScanner } from '@ionic-native/barcode-scanner';
 import { Camera, CameraOptions } from '@ionic-native/camera';
+import { ScreenOrientation } from '@ionic-native/screen-orientation';
 
 @Injectable()
 export class PluginService {
   constructor(
     private toastCtrl: ToastController,
     private loadingCtrl: LoadingController,
+    private alertCtrl: AlertController,
     private barcodeScanner: BarcodeScanner,
+    private screenOrientation: ScreenOrientation,
     private camera: Camera
-  ) {  }
+  ) { }
 
-  setBarcode(content:string) {
-    this.barcodeScanner.encode('TEXT_TYPE',content).then((res) => {
+  setBarcode(content: string) {
+    this.barcodeScanner.encode('TEXT_TYPE', content).then((res) => {
     }, (err) => {
       console.log(err)
     })
   }
-
-  getBarcode(): Promise<string>{
+  getScreenOrientation() {
+    return this.screenOrientation;
+  }
+  getBarcode(): Promise<void> {
     return this.barcodeScanner.scan().then((barcodeData) => {
       Promise.resolve(barcodeData)
     }, (err) => {
@@ -27,8 +32,16 @@ export class PluginService {
     });
   }
 
-  getNewPhoto(type: number, size: number): Promise<string>{
-    let options:CameraOptions = {
+  createBasicAlert(subText: string) {
+    let alert = this.alertCtrl.create({
+      title: '错误',
+      subTitle: subText,
+      buttons: ['确定']
+    });
+    alert.present();
+  }
+  getNewPhoto(type: number, size: number): Promise<string> {
+    let options: CameraOptions = {
       //这些参数可能要配合着使用，比如选择了sourcetype是0，destinationtype要相应的设置
       quality: 100,                                            //相片质量0-100
       allowEdit: true,                                        //在选择之前允许修改截图
@@ -49,7 +62,7 @@ export class PluginService {
     });
   }
 
-  showToast(content:string,position:string = 'top',duration:number=2000) {
+  showToast(content: string, position: string = 'top', duration: number = 2000) {
     this.toastCtrl.create({
       message: content,
       duration: duration,
@@ -57,9 +70,9 @@ export class PluginService {
     }).present()
   }
 
-  createLoading(content:string ='Please wait...') {
+  createLoading(content: string = 'Please wait...') {
     return this.loadingCtrl.create({
-        content: content
+      content: content
     });
   }
 }

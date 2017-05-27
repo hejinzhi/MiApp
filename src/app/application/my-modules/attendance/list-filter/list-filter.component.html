@@ -1,14 +1,97 @@
-<ion-searchbar (ionInput)="getItems($event)" placeholder="单据号筛选"></ion-searchbar>
-<ion-list>
+<ion-searchbar (ionInput)="getItems($event)" [placeholder]="fontContent.search_placeholder" class="searchBar"></ion-searchbar>
+<ion-list class="myList">
   <ion-item *ngFor="let item of items" (click)="toDetail(item)">
-    <h2>单号： {{ item.No }}</h2>
-    <p *ngIf="+item.type>1">状态： {{item.status}}</p>
-    <p *ngIf="+item.type<3">开始时间： {{ item.data.startTime | date:"yyyy/MM/dd HH:mm" }}</p>
-    <p *ngIf="+item.type<3">结束时间： {{ item.data.endTime | date:"yyyy/MM/dd HH:mm" }}</p>
-    <p *ngIf="item.type === '4'">出差日期： {{ item.data.businessTime | date:"yyyy/MM/dd" }}</p>
-    <p *ngIf="item.type === '3'">加班日期： {{ item.data.OTtime | date:"yyyy/MM/dd" }}</p>
-    <p>类别： {{item.data.reasonType | sgReasonType: item.type}}</p>
-    <p *ngIf="item.type === '5'">请假单据号： {{item.data.leave_No}}</p>
-    <p *ngIf="item.type === '5'">销假原因： {{item.data.reason}}</p>
+    <h2 *ngIf="item.type === '3'" no-padding class="myRow">
+      <ion-row>
+        <p>{{ item.No}}</p>
+        <p>{{ user.empno }}</p>
+        <p>{{ user.nickname | sgChineseConv }}</p>
+      </ion-row>
+      <ion-row>
+        <p>{{item.data.OTtime | date:"MM/dd/yy" }}</p>
+        <p>{{ item.data.startTime.substr(3) }}-{{ item.data.endTime.substr(3) }}</p>
+        <p *ngIf="item.data.true_during.length>3">{{ item.data.true_during }}</p>
+      </ion-row>
+      <ion-row>
+        <p [class.waiting]="item.status.toUpperCase() === 'WAITING'">{{item.status}}</p>
+        <p>{{fontContent.ask_for_overTime}}:{{item.data.count.toFixed(2)}}H</p>
+        <p *ngIf="+item.data.trueCount>0">{{fontContent.trueCount}}:{{item.data.trueCount.toFixed(2)}}H</p>
+      </ion-row>
+    </h2>
+    <h2 *ngIf="item.type === '2'" no-padding class="myRow">
+      <ion-row>
+        <p>{{ item.No}}</p>
+        <p>{{ user.empno }}{{ user.nickname | sgChineseConv}}</p>
+      </ion-row>
+      <ion-row>
+        <p>{{item.data.startDate | date:"MM/dd/yy" }}-{{item.data.endDate | date:"MM/dd" }}</p>
+        <p>{{ item.data.startTime.substr(3) }}-{{ item.data.endTime.substr(3) }}</p>
+      </ion-row>
+      <ion-row>
+        <p [class.waiting]="item.status.toUpperCase() === 'WAITING'">{{item.status}}</p>
+        <p>{{item.data.reasonType | sgReasonType: item.type |sgLength: 2 | sgChineseConv}}{{item.data.days.toFixed(2)}}天</p>
+      </ion-row>
+    </h2>
+    <h2 *ngIf="item.type === '4'" no-padding class="myRow">
+      <ion-row>
+        <p>{{ item.No}}</p>
+        <p>{{ user.empno }}{{ user.nickname | sgChineseConv}}</p>
+      </ion-row>
+      <ion-row>
+        <p>{{item.data.businessTime | date:"MM/dd/yy" }}</p>
+        <p>{{ item.data.startTime.substr(3) }}-{{ item.data.endTime.substr(3) }}</p>
+      </ion-row>
+      <ion-row>
+        <p [class.waiting]="item.status.toUpperCase() === 'WAITING'">{{item.status}}</p>
+        <p>{{fontContent.business}}{{item.data.days.toFixed(2)}}{{fontContent.day}}</p>
+      </ion-row>
+    </h2>
+    <h2 *ngIf="item.type === '5'" no-padding class="myRow">
+      <ion-row>
+        <p>{{ item.No}}</p>
+        <p>{{ user.empno }}{{ user.nickname | sgChineseConv}}</p>
+      </ion-row>
+      <ion-row>
+        <p [class.waiting]="item.status.toUpperCase() === 'WAITING'">{{item.status}}</p>
+        <p>{{'取消假单' | sgChineseConv }}{{item.data.leave_No}}</p>
+      </ion-row>
+    </h2>
+    <h2 *ngIf="+item.type<2" no-padding class="myRow">
+      <ion-row>
+        <p>{{ item.No}}</p>
+        <p>{{ user.empno }}{{ user.nickname | sgChineseConv}}</p>
+      </ion-row>
+      <ion-row>
+        <p>{{item.data.startTime | date:"MM/dd/yy" }}-{{item.data.endTime | date:"MM/dd" }}</p>
+        <p>{{item.data.startTime | date:"HH:mm" }}-{{item.data.endTime | date:"HH:mm" }}</p>
+      </ion-row>
+      <ion-row>
+        <p [class.waiting]="item.status.toUpperCase() === 'WAITING'">{{item.status}}</p>
+        <p>{{item.data.absentType | sgOtherType: 'absentType' | sgLength: 2 | sgChineseConv}}{{item.data.hours.toFixed(2)}}H</p>
+      </ion-row>
+    </h2>
+    <!-- <h2><p>{{ item.No }}</p><p>{{ item.data.OTtime | date:"yyyy/MM/dd" }}</p><p>{{item.status}}</p></h2>  -->
+    <!-- <h2>{{fontContent.form_No}}： {{ item.No }}</h2>
+    <p *ngIf="+item.type<2">{{fontContent.startTime}}： {{ item.data.startTime | date:"yyyy/MM/dd HH:mm" }}</p>
+    <p *ngIf="+item.type<2">{{fontContent.endTime}}： {{ item.data.endTime | date:"yyyy/MM/dd HH:mm" }}</p>
+    <p *ngIf="+item.type<2">{{item.type | sgFormType}}</p>
+    <p *ngIf="item.type === '2' ">{{fontContent.startTime}}： {{item.data.startDate +' ' + item.data.startTime.substr(3) }}</p>
+    <p *ngIf="item.type === '2' ">{{fontContent.endTime}}： {{item.data.endDate +' ' + item.data.endTime.substr(3) }}</p>
+    <p *ngIf="item.type === '4'">{{fontContent.businessTime}}： {{ item.data.businessTime | date:"yyyy/MM/dd" }} {{item.data.startTime.substr(3)}}-{{item.data.endTime.substr(3)}}</p>
+    <p *ngIf="item.type === '3'">{{fontContent.OTtime}}： {{ item.data.OTtime | date:"yyyy/MM/dd" }}</p>
+    <p *ngIf="item.type === '3'">{{ item.data.startTime.substr(3) }}-{{ item.data.endTime.substr(3) }} {{item.data.count}}H</p>
+    <p *ngIf="item.type === '3'">{{fontContent.trueCount}}：{{item.data.trueCount}}H;</p>
+    <p *ngIf="item.data.reasonType">{{fontContent.type}}： {{item.data.reasonType | sgReasonType: item.type}}</p>
+    <p *ngIf="item.type === '5'">{{fontContent.leave_No}}： {{item.data.leave_No}}</p>
+    <p *ngIf="item.type === '5'">{{fontContent.callback_reason}}： {{item.data.reason}}</p> -->
+    <!-- <button ion-button outline item-right color = "secondary" *ngIf="['APPROVED','FINISHED'].indexOf(item.status.toUpperCase())>-1">
+      {{item.status}}
+    </button>
+    <button ion-button outline item-right color = "normal" *ngIf="['NEW','CANCELED'].indexOf(item.status.toUpperCase())>-1">
+      {{item.status}}
+    </button>
+    <button ion-button outline item-right color = "danger" *ngIf="['WAITING','REJECTED'].indexOf(item.status.toUpperCase())>-1">
+      {{item.status}}
+    </button> -->
   </ion-item>
 </ion-list>

@@ -1,10 +1,24 @@
 sg-book-library {
+  .hidden {
+    width: 100%;
+    height: ($navbar-ios-height)*2;
+    display: flex;
+    position: relative;
+    margin-left: 100%;
+    overflow: hidden;
+    transition: all .4s;
+  }
+  .searchOut {
+    display: flex;
+    margin-left: 0;
+  }
   .page {
     background-color: #fbf9fe;
   }
   .searchbar {
-    position: fixed;
-    top: ($navbar-ios-height);
+    position: absolute;
+    width: 100%;
+    top: ($navbar-ios-height)/2;
     left: 0;
     background-color: #c9c7cb;
     z-index: 999;

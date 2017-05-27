@@ -1,3 +1,22 @@
 sg-list-filter {
-
+  ion-list.myList {
+    height: 90%;
+    overflow: scroll;
+  }
+  h2.myRow {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    ion-row {
+      display: flex;
+      justify-content: space-between;
+      flex-direction: column;
+      p {
+        color: #000;
+        &.waiting {
+          color: red;
+        }
+      }
+    }
+  }
 }

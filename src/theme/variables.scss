@@ -14,7 +14,7 @@ $font-path: "../assets/fonts";
 // to match your app's branding. Ionic uses a Sass map of
 // colors so you can add, rename and remove colors as needed.
 // The "primary" color is the only required color in the map.
-$colors: ( primary: #387ef5, secondary: #32db64, danger: #f53d3d, light: #f4f4f4, dark: #222, keep: #EA986C, sao: #1296DB, advice: #EEB174, mac: #3773F7); // App iOS Variables
+$colors: ( primary: #387ef5, secondary: #32db64, danger: #f53d3d, light: #f4f4f4, normal: #000, dark: #222, keep: #EA986C, sao: #1296DB, advice: #EEB174, mac: #3773F7); // App iOS Variables
 // --------------------------------------------------
 // iOS only Sass variables can go here
 // App Material Design Variables
@@ -77,7 +77,7 @@ ion-picker-cmp {
   color: #a94442!important;
 }
 .has-success ion-label{
-  color: #387ef5!important;
+  color: #000!important;
 }
 //重设select宽度样式
 ion-select {
@@ -86,4 +86,57 @@ ion-select {
   display: flex;
   overflow: hidden;
   max-width: 100%;
+}
+ion-alert div.alert-wrapper{
+  min-width: 300px;
+  .alert-radio-group {
+    max-height: 380px;
+  }
+  .button-inner {
+    color: #000;
+  }
+}
+ion-picker-cmp .picker-wrapper {
+  flex-direction:column-reverse;
+  .picker-toolbar-button {
+    text-align: center;
+    border-top: 0.55px solid #dbdbdf;
+    border-left: 0.55px solid #dbdbdf;
+    .button-inner {
+      color: #000;
+    }
+    &.picker-toolbar-cancel {
+      border-left:none;
+    }
+  }
+}
+ion-app .alert-ios .alert-wrapper {
+    background-color: #fff;
+}
+
+// 考勤模块的
+.myForm.auto {
+  background-color: lighten(#CFCFD1, 17%);
+  color: #8B8B8B;
+  &.item-block .item-inner {
+    border-bottom: none;
+  }
+  &.item-block.first .item-inner {
+    border-bottom: 1px solid #c8c7cc;
+  }
+  &.item-block:last-child{
+      border-bottom: 1px solid #c8c7cc;
+  }
+  &.item-block:first-child {
+      border-top: 0px solid #c8c7cc;
+  }
+}
+ion-list.myList .item-block .item-inner {
+    border-bottom: 1px solid #c8c7cc;
+}
+ion-list.myList .item-block:first-child {
+    border-top: 1px solid #c8c7cc;
+}
+ion-list.myList .item-block:last-child{
+    border-bottom: 1px solid #c8c7cc;
 }

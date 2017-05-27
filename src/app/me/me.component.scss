@@ -1,8 +1,14 @@
 sg-me{
   .head{
-    height:40%;
+    height:35%;
+    // min-height: 265px;
+    max-height: 260px;
     color: #fff;
-    font-size: 150%;
+    font-size: 110%;
+    &.landscape {
+      max-height:none;
+      min-height: 245px;
+    }
   }
   .nav-head{
     height:100%;
@@ -22,7 +28,7 @@ sg-me{
       border-radius: 2*$headImgSize3;
       margin-left: -$headImgSize3/2;
       position: absolute;
-      top: 11%;
+      top: 9%;
       left:50%;
       border: solid 2px #fff;
       img{
@@ -40,7 +46,7 @@ sg-me{
   }
   @media screen and (max-width:500px) {
   	.head{
-      font-size: 130%;
+      // font-size: 130%;
       .nav-head{
         .person{
           width:$headImgSize;
@@ -53,7 +59,7 @@ sg-me{
   }
   @media screen and (max-width:360px) {
   	.head{
-      font-size: 130%;
+      // font-size: 130%;
       .nav-head{
         .person{
           width:$headImgSize;
@@ -66,7 +72,7 @@ sg-me{
   }
   @media screen and (max-width:320px) {
   	.head{
-      font-size: 110%;
+      // font-size: 110%;
       .nav-head{
         .person{
           width:$headImgSize1;
@@ -87,7 +93,7 @@ sg-me{
         height:18%;
       }
       .function-message{
-        font-size: 150%;
+        // font-size: 150%;
       }
     }
   }

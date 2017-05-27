@@ -1,15 +1,18 @@
 <ion-header>
-  <ion-navbar>
-    <ion-title>{{type | sgFormType}}</ion-title>
+  <ion-navbar id="navbar">
+    <ion-title>{{type | sgFormType | sgChineseConv}}</ion-title>
     <ion-buttons *ngIf="type === '100'">
-      <button ion-button (click)="exit()">退出</button>
+      <button ion-button (click)="exit()">{{fontContent.exit}}</button>
+    </ion-buttons>
+    <ion-buttons end *ngIf="+type>1 && +type<5 && !approved">
+      <button ion-button (click)="newForm()">{{fontContent.new}}{{type | sgFormType}}</button>
     </ion-buttons>
   </ion-navbar>
 
 </ion-header>
 
 
-<ion-content>
+<ion-content no-padding>
   <!-- <ion-searchbar (ionInput)="getItems($event)" placeholder="帅选"></ion-searchbar>
   <ion-list>
     <ion-item *ngFor="let item of items" (click)="toDetail(item)">
@@ -17,5 +20,5 @@
       <ion-badge item-right color="mac">{{item.status}}</ion-badge>
     </ion-item>
   </ion-list> -->
-  <sg-list-filter [myset]="{type:type,showApproved:showApproved,formData:formData}" *ngIf="showList"></sg-list-filter>
+  <sg-list-filter [myset]="{type:type,formData:formData}" *ngIf="showList"></sg-list-filter>
 </ion-content>

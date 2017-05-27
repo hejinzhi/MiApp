@@ -1,22 +1,25 @@
 <ion-header>
 
   <ion-navbar>
-    <ion-title>考勤查詢</ion-title>
+    <ion-title>{{fontContent.title}}</ion-title>
   </ion-navbar>
 
 </ion-header>
 
 
 <ion-content>
-  <ion-list>
+  <ion-list class="myList">
     <button ion-item (click)='swipe_note()'>
-    刷卡记录
+    {{fontContent.swipe_note}}
     </button>
     <button ion-item (click)='attendance_month()'>
-    出勤月档
+    {{fontContent.attendance_month}}
     </button>
     <button ion-item (click)='attendance_detail()'>
-    出勤状况明细
+    {{fontContent.attendance_detail}}
+    </button>
+    <button ion-item (click)='to_detail()'>
+    {{fontContent.to_detail}}
     </button>
   </ion-list>
 </ion-content>

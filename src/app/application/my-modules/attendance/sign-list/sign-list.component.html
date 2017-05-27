@@ -1,25 +1,31 @@
 <ion-header>
 
   <ion-navbar>
-    <ion-title>簽核歷史記錄</ion-title>
+    <ion-title>{{fontContent.title}}</ion-title>
   </ion-navbar>
 
 </ion-header>
 
 
 <ion-content>
-  <ion-list>
-    <ion-item-group *ngFor="let item of items;let i = index;">
-      <ion-item-divider color="light">版本： {{item.REVISION}}</ion-item-divider>
-      <ion-item *ngFor="let itemSub of item.INFO" >
-          <h2>序列: {{itemSub.SEQ}}</h2>
-          <h3>签核人： {{itemSub.APPROVER}}</h3>
-          <h3 *ngIf="itemSub.ARENT_FROM">代理人： {{itemSub.ARENT_FROM}}</h3>
-          <p>签核状态： {{itemSub.STATUS}}</p>
-          <p>送签时间： {{itemSub.IN_TIME | date:"yyyy/MM/dd HH:mm"}}</p>
-          <p>签核时间： {{itemSub.OUT_TIME | date:"yyyy/MM/dd HH:mm"}}</p>
-          <p>备注： {{itemSub.COMMENTS}}</p>
+  <ion-item-group *ngFor="let item of items;let i = index;">
+    <ion-item-divider color="light" *ngIf="items.length > 1">{{fontContent.REVISION}}： {{item.REVISION}}</ion-item-divider>
+    <ion-card *ngFor="let itemSub of item.INFO">
+      <ion-item>
+        <ion-avatar item-left>
+          <img src="assets/img/face.png">
+        </ion-avatar>
+        <h3>{{fontContent.SEQ}}: {{itemSub.SEQ}}</h3>
+        <h3>{{itemSub.APPROVER}} <p *ngIf="itemSub.IN_TIME">{{itemSub.IN_TIME.replace('T',' ') | date:"yyyy/MM/dd HH:mm"}}</p></h3>
+        <h3 *ngIf="itemSub.ARENT_FROM">{{fontContent.ARENT_FROM}}： {{itemSub.ARENT_FROM}}</h3>
+        <h3 *ngIf="itemSub.STATUS"><p class="status" [class.waiting] ="itemSub.STATUS.toUpperCase() === 'WAITING'">{{itemSub.STATUS}}</p>
+          <p *ngIf="itemSub.STATUS.toUpperCase() !== 'WAITING'">
+          {{itemSub.OUT_TIME.replace('T',' ') | date:"yyyy/MM/dd HH:mm"}}
+          </p>
+          <p class="waiting" *ngIf="itemSub.STATUS.toUpperCase() === 'WAITING'">{{fontContent.waiting}}{{itemSub.IN_TIME.replace('T',' ') | sgDuring}}</p>
+        </h3>
+        <p *ngIf="itemSub.COMMENTS">{{fontContent.COMMENTS}}： {{itemSub.COMMENTS}}</p>
       </ion-item>
-    </ion-item-group>
-  </ion-list>
+    </ion-card>
+  </ion-item-group>
 </ion-content>

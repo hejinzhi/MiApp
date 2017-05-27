@@ -1,18 +1,18 @@
 <ion-header>
   <ion-navbar>
-    <ion-title>{{type | sgFormType}}</ion-title>
+    <ion-title>{{type | sgFormType | sgChineseConv}}</ion-title>
   </ion-navbar>
 </ion-header>
 
 
 <ion-content>
   <form [formGroup]="todo" *ngIf="todo" (ngSubmit)="leaveForm()">
-    <ion-list>
+    <ion-list class="myList">
       <ion-item [class.has-error]="myValidators.date.error" [class.has-success]="myValidators.date.pass">
-        <ion-label>日期*</ion-label>
-        <ion-datetime displayFormat="YYYY/MM" formControlName="date"
-        cancelText="取消" doneText="确认"
-        yearValues="2017"
+        <ion-label>*{{fontContent.date}}</ion-label>
+        <ion-datetime displayFormat="YYYYMM" formControlName="date"
+        [cancelText]="fontContent.cancle" [doneText]="fontContent.confirm"
+        min="2000" [max]="selectMaxYear"
         ></ion-datetime>
       </ion-item>
       <ion-item-divider *ngIf="myValidators.date.error " class='alert'>{{myValidators.date.error}}</ion-item-divider>
@@ -20,7 +20,7 @@
         <ion-row>
           <ion-col width-50>
             <ion-buttons right>
-              <button ion-button class="submit" type="submit" [disabled]="!todo.valid || myValidators.date.error">提交</button>
+              <button ion-button class="submit" type="submit" [disabled]="!todo.valid || myValidators.date.error">{{fontContent.submit}}</button>
             </ion-buttons>
           </ion-col>
         </ion-row>

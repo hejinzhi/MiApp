@@ -1,3 +1,19 @@
 sg-attendance-month {
-
+  ion-col ion-item ion-label {
+    overflow: visible;
+  }
+  ion-item {
+    p {
+      &.name {
+        color:#000;
+      }
+      &.value {
+        // display: flex;
+        // flex-flow: row-reverse;
+      }
+      &.highlight {
+        color:blue
+      }
+    }
+  }
 }

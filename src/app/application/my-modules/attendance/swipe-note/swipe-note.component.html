@@ -1,21 +1,28 @@
 <ion-header>
   <ion-navbar>
-    <ion-title>{{type | sgFormType}}</ion-title>
+    <ion-title>{{type | sgFormType | sgChineseConv}}</ion-title>
   </ion-navbar>
 
 </ion-header>
 
 
 <ion-content>
-  <ion-list>
+  <ion-list class="myList">
     <ion-item *ngFor="let item of items">
-      <h2>日期： {{item.date}}</h2>
-      <p>{{item.date | sgWeekName}}</p>
-      <p>时间： {{item.time}}</p>
-      <p>类别： {{item.type | sgOtherType:'swipeType'}}</p>
-      <p>班别： {{item.workType}}</p>
-      <p>进/出： {{item.inOrOut}}</p>
-      <p>刷卡位置： {{item.wipeSite}}</p>
+      <h2 no-padding class="myRow">
+        <ion-row>
+          <p>{{ user.empno }}</p>
+          <p>{{ user.nickname }}</p>
+        </ion-row>
+        <ion-row>
+          <p>{{item.CVT_IDATE | sgTTime | date:"yyyy/MM/dd" }}</p>
+          <p>{{item.TIME}}</p>
+        </ion-row>
+        <ion-row>
+          <p>{{item.IDUTY | sgOtherType:'swipeType' | sgChineseConv }}</p>
+          <p>{{(item.POSITION?item.POSITION:'人事补卡') | sgChineseConv }}{{item.FLAG | sgChineseConv }}</p>
+        </ion-row>
+      </h2>
     </ion-item>
   </ion-list>
 </ion-content>

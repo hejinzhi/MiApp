@@ -1,46 +1,37 @@
 <ion-header>
 
   <ion-navbar>
-    <ion-title>个人维护详情</ion-title>
+    <ion-title>{{fontContent.title}}</ion-title>
   </ion-navbar>
 
 </ion-header>
 
 
 <ion-content>
-  <ion-list>
-    <ion-item-group *ngIf="myAvailableHoliday">
-      <ion-item-divider color="light">可用假天数</ion-item-divider>
-    <ion-item *ngFor="let item of myAvailableHoliday" >
-        {{item.name}}
+  <ion-list *ngIf="leaveDays" class="myList">
+    <ion-item>
+      {{fontContent.STADATE}}：
+      <ion-note item-right>
+        {{leaveDays.STADATE}}
+      </ion-note>
+    </ion-item>
+    <ion-item-group>
+      <ion-item-divider color="light">{{fontContent.canUse}}</ion-item-divider>
+      <ion-item *ngFor="let item of leaveDays.detail_canUse">
+        {{item.type | sgOtherType: 'leaveDayType' | sgChineseConv}}
         <ion-note item-right>
           {{item.value}}
         </ion-note>
-    </ion-item>
-  </ion-item-group>
-  <ion-item-group *ngIf="uesdHoliday">
-    <ion-item-divider color="light">已用假天数</ion-item-divider>
-  <ion-item *ngFor="let item of uesdHoliday" >
-    {{item.name}}
-    <ion-note item-right>
-      {{item.value}}
-    </ion-note>
-  </ion-item>
-</ion-item-group>
-<ion-item-group *ngIf="OTCount">
-  <ion-item-divider color="light">加班信息</ion-item-divider>
-<ion-item>
-  {{OTCount.name}}
-  <ion-note item-right>
-    {{OTCount.name}}
-  </ion-note>
-</ion-item>
-</ion-item-group>
+      </ion-item>
+    </ion-item-group>
+    <ion-item-group>
+      <ion-item-divider color="light">{{fontContent.used}}</ion-item-divider>
+      <ion-item *ngFor="let item of leaveDays.detail_used">
+        {{item.type | sgOtherType: 'leaveDayType' | sgChineseConv}}
+        <ion-note item-right>
+          {{item.value}}
+        </ion-note>
+      </ion-item>
+    </ion-item-group>
   </ion-list>
-  <!-- <div id="main" style="width: 100%;height:48%;">
-
-  </div>
-  <div id="main2" style="width: 100%;height:48%;">
-
-  </div> -->
 </ion-content>

@@ -6,12 +6,17 @@ sg-over-time-form {
       top: 10%;
       left: 0;
       right: 0;
-      bottom: 0;
+      bottom: 10%;
       z-index: 100;
     }
   }
   //重设select宽度样式
   ion-select {
     max-width: 80%;
+  }
+  .myForm.auto {
+    &.item-block:first-child {
+        border-top: 1px solid #c8c7cc;
+    }
   }
 }

@@ -1,79 +1,153 @@
 import { Component } from '@angular/core';
-import { ViewController, NavController, NavParams } from 'ionic-angular';
+import { ViewController, NavController, NavParams, AlertController} from 'ionic-angular';
 
 import { PluginService }   from '../../../../core/services/plugin.service';
+import { AttendanceService } from '../shared/service/attendance.service';
 
 import { SearchFormComponent } from '../search-form/search-form.component';
 import { CallbackLeaveFormComponent } from '../callback-leave-form/callback-leave-form.component';
-import { HoildayDetailComponent } from '../hoilday-detail/holiday-detail.component';
+// import { HoildayDetailComponent } from '../hoilday-detail/holiday-detail.component';
+import { FormListComponent } from '../form-list/form-list.component';
+import { SignListComponent } from '../sign-list/sign-list.component';
 
 import { MyFormModel } from '../shared/models/my-form.model';
+
+import { LanguageTypeConfig } from '../shared/config/language-type.config';
 
 @Component({
   selector: 'sg-form-menu',
   templateUrl: 'form-menu.component.html',
 })
 export class FormMenuComponent {
+
+  fontType:string = localStorage.getItem('languageType')
+  fontContent = LanguageTypeConfig.formMenuComponent[this.fontType];
+
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
+    public alertCtrl: AlertController,
     public viewCtrl: ViewController,
     private plugin: PluginService,
+    private attendanceService: AttendanceService
   ) {}
   formData:MyFormModel;
   haveSaved:boolean;
-  isforward:boolean = false;
   lastNavCtr:any;
+  that:any;
   ionViewDidLoad(){
-    this.formData = this.navParams.data.formData;
-    this.haveSaved = this.navParams.data.haveSaved;
-    this.lastNavCtr = this.navParams.data.navCtrl;
+    this.that = this.navParams.data.this;
+    this.formData = this.that.formData;
+    this.haveSaved = this.that.haveSaved;
+    this.lastNavCtr = this.that.navCtrl;
   }
   ionViewWillEnter(){
-    if(this.isforward){
-      this.viewCtrl.dismiss();
-      this.isforward = false;
-    }
-  }
-  close() {
-    console.log(this.viewCtrl)
-    console.log(this.navParams)
-    this.viewCtrl.dismiss();
-  }
 
+  }
   toSearch() {
     this.viewCtrl.dismiss()
     this.lastNavCtr.push(SearchFormComponent,{
       type:this.formData.type
     })
-
   }
-  toDetail() {
+  async getCallbackForm() {
     this.viewCtrl.dismiss();
-    this.lastNavCtr.push(HoildayDetailComponent);
+    let loading = this.plugin.createLoading();
+    loading.present();
+    let res:any = await this.attendanceService.getCallbackLeaveFrom();
+    loading.dismiss();
+    if(!res.status) return;
+    if(res.content.length>0) {
+      this.lastNavCtr.push(FormListComponent, {
+        type: this.formData.type,
+        formData: res.content
+      })
+    } else {
+      this.plugin.showToast(this.fontContent.no_callback)
+    }
   }
-  async cancelForm() {
-    this.viewCtrl.dismiss();
-    await setTimeout(() => {
-      this.plugin.showToast('表单删除成功');
-    },1000);
-    setTimeout(() => {
-      this.lastNavCtr.pop();
-    },1000)
+  // async toDetail() {
+  //   this.viewCtrl.dismiss();
+  //   let loading = this.plugin.createLoading();
+  //   loading.present();
+  //   let res = await this.attendanceService.getLeaveDays();
+  //   loading.dismiss();
+  //   if(!res) return;
+  //   this.lastNavCtr.push(HoildayDetailComponent,{
+  //     leaveDays:res
+  //   });
+  // }
+  async deleteForm() {
+    let confirm = this.alertCtrl.create({
+      title: '确定要删除此单据吗?',
+      buttons: [
+        {
+          text: '取消',
+          handler: () => {
+          }
+        },
+        {
+          text: '确定',
+          handler: () => {
+            this.toDelete();
+          }
+        }
+      ]
+    });
+    confirm.present();
   }
-  callbackSubmit() {
+  async toDelete() {
+    Object.assign(this.formData.data, this.that.value);
     this.viewCtrl.dismiss();
-    setTimeout(() => {
-      this.plugin.showToast('取消送签成功');
-      setTimeout(() => {
-        this.lastNavCtr.pop();
-      },1000)
-    },1000)
+    let loading = this.plugin.createLoading();
+    loading.present();
+    let res = await this.attendanceService.deleteForm(this.formData);
+    loading.dismiss();
+    if(!res) return;
+    this.plugin.showToast(this.fontContent.delete_succ);
+    if(this.lastNavCtr.canGoBack()) {
+      this.lastNavCtr.popToRoot()
+    } else {
+      if(this.that) {
+        this.that.init()
+      }
+    }
   }
-  callBack() {
+  async callbackSign() {
+    Object.assign(this.formData.data, this.that.value);
     this.viewCtrl.dismiss();
-    this.lastNavCtr.push(CallbackLeaveFormComponent,{
-      number:this.formData.No
+    let loading = this.plugin.createLoading();
+    loading.present();
+    let res = await this.attendanceService.callBackSign(this.formData);
+    loading.dismiss();
+    if(!res) {
+      this.plugin.showToast(this.fontContent.callbackSign_err)
+      return
+    };
+    this.plugin.showToast(this.fontContent.callbackSign_succ);
+    this.formData.status = 'CANCELED'
+    // this.lastNavCtr.popToRoot()
+  }
+  async callBack() {
+    this.viewCtrl.dismiss();
+    let loading = this.plugin.createLoading();
+    loading.present();
+    let res:any = await this.attendanceService.getCallbackLeaveFrom(this.formData.No);
+    loading.dismiss();
+    if(res.content.length>0) {
+      this.lastNavCtr.push(CallbackLeaveFormComponent,{
+        detailMes: res.content[0]
+      })
+    } else {
+      this.lastNavCtr.push(CallbackLeaveFormComponent,{
+        form_No:this.formData.No
+      })
+    }
+  }
+  sign_list() {
+    this.viewCtrl.dismiss();
+    this.lastNavCtr.push(SignListComponent, {
+      formData: this.formData
     })
   }
 }

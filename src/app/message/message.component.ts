@@ -39,12 +39,15 @@ export class MessageComponent implements OnInit {
 
     // this.jmessageService.jmessageHandler = this.jmessageService.onReceiveMessage().subscribe(res => {
 
+
     //   let _content: string;
     //   if (res.contentType === 'text') {
     //     _content = res.content.text;
     //   } else if (res.contentType === 'image') {
     //     _content = res.content.localThumbnailPath;
     //   }
+
+
 
     //   let msg: Message = {
     //     toUserName: res.targetInfo.userName,
@@ -55,6 +58,7 @@ export class MessageComponent implements OnInit {
     //     type: 'dialogue',
     //     unread: true
     //   };
+
 
     //   this.messageService.history.push(msg);
 
