@@ -24,7 +24,7 @@ export class PluginService {
   getScreenOrientation() {
     return this.screenOrientation;
   }
-  getBarcode(): Promise<string> {
+  getBarcode(): Promise<void> {
     return this.barcodeScanner.scan().then((barcodeData) => {
       Promise.resolve(barcodeData)
     }, (err) => {

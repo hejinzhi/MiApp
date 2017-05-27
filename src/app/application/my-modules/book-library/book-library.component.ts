@@ -2,6 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { NavController, ModalController, MenuController, AlertController, LoadingController, App } from 'ionic-angular';
 import { BarcodeScanner } from '@ionic-native/barcode-scanner';
 import { Observable } from 'rxjs/Rx';
+import BScroll from 'better-scroll';
 
 import { BookLibraryService } from './shared/service/book-library.service';
 import { BookDetailComponent } from './book-detail/book-detail.component';
@@ -28,6 +29,7 @@ export class BookLibraryComponent implements OnInit {
     ) { }
 
     books: any[];
+    showSearch: boolean;
     booksBackup: any[]; // 用于备份books的信息。当点击进入明细页面时备份，从明细页面返回时恢复
     user: any;
     firstIn: boolean = true; // 记录是否第一次打开这个页面，如果是，则显示loading提示框，否则不显示
@@ -37,11 +39,42 @@ export class BookLibraryComponent implements OnInit {
     @ViewChild('maincontent') mainContent: any;
     @ViewChild('bookInput') bookInput: any;
 
+    heightTest: number = 100;
+    scroll: any;
+
     ngOnInit() {
         this.user = JSON.parse(localStorage.getItem('currentUser'));
+
+
+    }
+
+    ionViewWillLeave() {
+        this.showSearch = false;
+    }
+
+    // test() {
+    //     console.log(this.mySearchbar);
+    //     console.log(document.getElementsByClassName('mySearchbar')[0]);
+    //     console.log(window.innerHeight);
+    // }
+
+    // test2() {
+    //     // this.mySearchbar.nativeElement.clientTop += this.heightTest;
+    //     // console.log(this.mySearchbar.nativeElement.clientTop);
+    //     this.mySearchbar.nativeElement.style.top = this.mySearchbar.nativeElement.offsetTop + this.heightTest + 'px';
+    // }
+
+    onScroll(event: any) {
+        console.log(event);
+        // let searchDiv = this.mySearchbar.nativeElement;
+        // searchDiv.style.top = 44 + 'px';
+        // searchDiv.style.top = (event.scrollTop) + 'px';
+        // searchDiv.style.top = (window.innerHeight + event.scrollTop - 44) + 'px';
+        // console.log(searchDiv.style.top);
     }
 
     async ionViewWillEnter() {
+        this.showSearch = true;
         let loading = this.loadingCtrl.create({
             content: 'Please wait...'
         });
