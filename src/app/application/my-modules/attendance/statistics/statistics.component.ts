@@ -32,6 +32,7 @@ export class StatisticsComponent {
   myLeave:{name:string,value:number}[]
   OTday:{name:string,value:number}[];
   leaveDay:{name:string,value:number}[];
+  mySubcribe:any;
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
@@ -40,10 +41,23 @@ export class StatisticsComponent {
   ) { }
 
   ionViewDidLoad() {
+    this.leaveDay = this.OTday = this.initDays();
     this.reFresh();
   }
+  ionViewWillEnter() {
+    let orientation = this.plugin.getScreenOrientation();
+    this.mySubcribe = orientation.onChange().subscribe((value) => {
+      setTimeout(() => {
+        this.initChart2('main', this.fontContent.total);
+        this.initOTMonthChart();
+        this.initLeaveMonthChart();
+      },100)
+    })
+  }
+  ionViewWillLeave() {
+    this.mySubcribe.unsubscribe();
+  }
   async reFresh() {
-    this.initDays();
     let loading = this.plugin.createLoading();
     loading.present()
     await this.editMonthLeave();
@@ -93,7 +107,7 @@ export class StatisticsComponent {
     for(let i=0;i<monthDays+1;i++) {
       days.push({name:i+1+'',value:0});
     }
-    this.OTday = this.leaveDay = days;
+    return days;
   }
   async editMonthOT() {
     let res: any = await this.attendanceService.getOverTimeTotalHours();
@@ -121,6 +135,7 @@ export class StatisticsComponent {
       this.attendanceService.getOverTimeMonthHours(params.dataIndex+1).then((res) => {
         if(res.status) {
           let data = res.content;
+          this.OTday = this.initDays();
           for(let i = 0;i<data.length;i++) {
             this.OTday = this.OTday.map((item:any) => {
               if(item.name == data[i].name) {
@@ -141,6 +156,7 @@ export class StatisticsComponent {
       this.attendanceService.getOffDutyMonthHours(params.dataIndex+1).then((res) => {
         if(res.status) {
           let data = res.content;
+          this.leaveDay = this.initDays();
           for(let i = 0;i<data.length;i++) {
             this.leaveDay = this.leaveDay.map((item:any) => {
               if(item.name == data[i].name) {

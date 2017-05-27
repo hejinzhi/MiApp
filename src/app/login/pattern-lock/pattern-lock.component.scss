@@ -2,16 +2,20 @@ sg-pattern-lock {
   .tip{
     color:yellow;
     font-size: 75%;
-    margin-top: 6% !important;
+    margin-top: 1% !important;
   }
   .secHead{
     // padding-bottom: 20%;
   }
   .head{
-    height:40%;
-    min-height: 215px;
+    height:35%;
+    max-height: 265px;
     color: #fff;
     font-size: 150%;
+    &.landscape {
+      max-height:none;
+      min-height: 265px;
+    }
   }
   .nav-head{
     height:100%;
@@ -46,7 +50,7 @@ sg-pattern-lock {
       height:98%;
       width:100%;
       .message{
-        margin-top: 1%;
+        // margin-top: 1%;
       }
     }
   }

@@ -5,6 +5,10 @@ sg-me{
     max-height: 260px;
     color: #fff;
     font-size: 110%;
+    &.landscape {
+      max-height:none;
+      min-height: 245px;
+    }
   }
   .nav-head{
     height:100%;
