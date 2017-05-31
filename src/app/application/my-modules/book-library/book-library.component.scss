@@ -1,16 +1,6 @@
 sg-book-library {
-  .hidden {
-    width: 100%;
-    height: ($navbar-ios-height)*2;
-    display: flex;
-    position: relative;
-    margin-left: 100%;
-    overflow: hidden;
-    transition: all .4s;
-  }
-  .searchOut {
-    display: flex;
-    margin-left: 0;
+  .scroll-content {
+    overflow-y: hidden;
   }
   .page {
     background-color: #fbf9fe;
@@ -18,13 +8,16 @@ sg-book-library {
   .searchbar {
     position: absolute;
     width: 100%;
-    top: ($navbar-ios-height)/2;
+    top: 0;
     left: 0;
     background-color: #c9c7cb;
     z-index: 999;
   }
-  .book-list:first-child {
+  .book-list {
     margin-top: ($navbar-ios-height);
+    overflow-y: scroll;
+    overflow-x: hidden;
+    height: 90%;
   }
   .avatar-img {
     width: 100%;
