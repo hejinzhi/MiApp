@@ -29,7 +29,6 @@ export class BookLibraryComponent implements OnInit {
     ) { }
 
     books: any[];
-    showSearch: boolean;
     booksBackup: any[]; // 用于备份books的信息。当点击进入明细页面时备份，从明细页面返回时恢复
     user: any;
     firstIn: boolean = true; // 记录是否第一次打开这个页面，如果是，则显示loading提示框，否则不显示
@@ -38,8 +37,9 @@ export class BookLibraryComponent implements OnInit {
     @ViewChild('searchbar') mySearchbar: any;
     @ViewChild('maincontent') mainContent: any;
     @ViewChild('bookInput') bookInput: any;
+    @ViewChild('booklist') bookList: any;
 
-    heightTest: number = 100;
+    LastScrollTop: number = 0;
     scroll: any;
 
     ngOnInit() {
@@ -48,15 +48,29 @@ export class BookLibraryComponent implements OnInit {
 
     }
 
-    ionViewWillLeave() {
-        this.showSearch = false;
+    test() {
+        this.bookList.nativeElement.scrollTop = 0;
     }
 
-    // test() {
-    //     console.log(this.mySearchbar);
-    //     console.log(document.getElementsByClassName('mySearchbar')[0]);
-    //     console.log(window.innerHeight);
-    // }
+    bookListScroll(event: any) {
+        let bookListHeight: number = window.innerHeight - 44;  // 窗口高度-header 高度 
+        // 30px的偏移（距离底部30px开始加载数据）
+        if ((((event.srcElement.scrollTop + bookListHeight + 30 - this.LastScrollTop) / bookListHeight) > 1) && !this.lastPageReached) {
+            this.scrollAddData();
+            this.LastScrollTop = event.srcElement.scrollTop + bookListHeight;
+        }
+    }
+    async scrollAddData() {
+        this.pageIndex++;
+        let res = await this.bookService.getBooksByPage(this.pageIndex, BookLibraryConfig.pageCount);
+        let nextPageBooks: any[] = res.json();
+        nextPageBooks.forEach((book) => {
+            this.books.push(book);
+        })
+        if (nextPageBooks.length < BookLibraryConfig.pageCount) {
+            this.lastPageReached = true;
+        }
+    }
 
     // test2() {
     //     // this.mySearchbar.nativeElement.clientTop += this.heightTest;
@@ -74,7 +88,7 @@ export class BookLibraryComponent implements OnInit {
     }
 
     async ionViewWillEnter() {
-        this.showSearch = true;
+
         let loading = this.loadingCtrl.create({
             content: 'Please wait...'
         });
@@ -176,11 +190,15 @@ export class BookLibraryComponent implements OnInit {
                 if (res) {
                     this.pageIndex = 1;
                     this.lastPageReached = true;
+                    this.LastScrollTop = 0;
+                    this.bookList.nativeElement.scrollTop = 0;
                     return this.bookService.getBooksByTitle(res);
                 }
                 else {
                     this.pageIndex = 1;
                     this.lastPageReached = false;
+                    this.LastScrollTop = 0;
+                    this.bookList.nativeElement.scrollTop = 0;
                     return this.bookService.getBooksByPage(1, BookLibraryConfig.pageCount);
                 }
 
