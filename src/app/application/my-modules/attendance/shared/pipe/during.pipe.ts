@@ -4,11 +4,14 @@ import { Pipe, PipeTransform } from '@angular/core';
 export class DuringPipe implements PipeTransform {
   transform(value: string): string {
     if(value === null) return value;
+    let during = 0;
     if(Date.parse(value.replace('T',' '))) {
       value = value.replace('T',' ')
+      during = Date.parse(new Date().toString()) - Date.parse(value);
+    } else {
+      during = Date.parse(new Date().toString()) - Date.parse(value) + 8*60*60*1000;
     }
     let res = '';
-    let during = Date.parse(new Date().toString()) - Date.parse(value);
     if(during<1000*60*60) {
       res = Math.ceil(during/(1000*60)) +'分钟'
     } else {
