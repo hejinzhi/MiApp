@@ -66,9 +66,11 @@
   <div class="searchbar">
     <ion-searchbar (ionInput)="queryBooks($event)" #bookInput></ion-searchbar>
   </div>
-  <!--<button ion-button block (click)="addBook()" style="margin-top: 40px">新增图书</button>-->
-  <sg-book-list [books]="books" (onClick)="goToDetailPage($event)" class="book-list"></sg-book-list>
-  <ion-infinite-scroll (ionInfinite)="doInfinite($event)" *ngIf="!isLastPageReached()">
+  <!--<button (click)="test()" ion-button block></button>-->
+  <div class="book-list" (scroll)="bookListScroll($event)" #booklist>
+    <sg-book-list [books]="books" (onClick)="goToDetailPage($event)"></sg-book-list>
+  </div>
+  <!--<ion-infinite-scroll (ionInfinite)="doInfinite($event)" *ngIf="!isLastPageReached()">
     <ion-infinite-scroll-content></ion-infinite-scroll-content>
-  </ion-infinite-scroll>
+  </ion-infinite-scroll>-->
 </ion-content>

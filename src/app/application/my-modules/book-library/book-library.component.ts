@@ -2,6 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { NavController, ModalController, MenuController, AlertController, LoadingController, App } from 'ionic-angular';
 import { BarcodeScanner } from '@ionic-native/barcode-scanner';
 import { Observable } from 'rxjs/Rx';
+import BScroll from 'better-scroll';
 
 import { BookLibraryService } from './shared/service/book-library.service';
 import { BookDetailComponent } from './book-detail/book-detail.component';
@@ -36,12 +37,58 @@ export class BookLibraryComponent implements OnInit {
     @ViewChild('searchbar') mySearchbar: any;
     @ViewChild('maincontent') mainContent: any;
     @ViewChild('bookInput') bookInput: any;
+    @ViewChild('booklist') bookList: any;
+
+    LastScrollTop: number = 0;
+    scroll: any;
 
     ngOnInit() {
         this.user = JSON.parse(localStorage.getItem('currentUser'));
+
+
+    }
+
+    test() {
+        this.bookList.nativeElement.scrollTop = 0;
+    }
+
+    bookListScroll(event: any) {
+        let bookListHeight: number = window.innerHeight - 44;  // 窗口高度-header 高度 
+        // 30px的偏移（距离底部30px开始加载数据）
+        if ((((event.srcElement.scrollTop + bookListHeight + 30 - this.LastScrollTop) / bookListHeight) > 1) && !this.lastPageReached) {
+            this.scrollAddData();
+            this.LastScrollTop = event.srcElement.scrollTop + bookListHeight;
+        }
+    }
+    async scrollAddData() {
+        this.pageIndex++;
+        let res = await this.bookService.getBooksByPage(this.pageIndex, BookLibraryConfig.pageCount);
+        let nextPageBooks: any[] = res.json();
+        nextPageBooks.forEach((book) => {
+            this.books.push(book);
+        })
+        if (nextPageBooks.length < BookLibraryConfig.pageCount) {
+            this.lastPageReached = true;
+        }
+    }
+
+    // test2() {
+    //     // this.mySearchbar.nativeElement.clientTop += this.heightTest;
+    //     // console.log(this.mySearchbar.nativeElement.clientTop);
+    //     this.mySearchbar.nativeElement.style.top = this.mySearchbar.nativeElement.offsetTop + this.heightTest + 'px';
+    // }
+
+    onScroll(event: any) {
+        console.log(event);
+        // let searchDiv = this.mySearchbar.nativeElement;
+        // searchDiv.style.top = 44 + 'px';
+        // searchDiv.style.top = (event.scrollTop) + 'px';
+        // searchDiv.style.top = (window.innerHeight + event.scrollTop - 44) + 'px';
+        // console.log(searchDiv.style.top);
     }
 
     async ionViewWillEnter() {
+
         let loading = this.loadingCtrl.create({
             content: 'Please wait...'
         });
@@ -143,11 +190,15 @@ export class BookLibraryComponent implements OnInit {
                 if (res) {
                     this.pageIndex = 1;
                     this.lastPageReached = true;
+                    this.LastScrollTop = 0;
+                    this.bookList.nativeElement.scrollTop = 0;
                     return this.bookService.getBooksByTitle(res);
                 }
                 else {
                     this.pageIndex = 1;
                     this.lastPageReached = false;
+                    this.LastScrollTop = 0;
+                    this.bookList.nativeElement.scrollTop = 0;
                     return this.bookService.getBooksByPage(1, BookLibraryConfig.pageCount);
                 }
 

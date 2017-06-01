@@ -1,8 +1,13 @@
 sg-book-detail {
+  .scroll-content {
+    overflow-y: hidden;
+  }
   .main-wrapper {
+    height: 100%;
+    overflow: scroll;
     .book-list-wrapper {
-      position: fixed;
-      top: ($navbar-ios-height);
+      position: absolute;
+      top: 0;
       width: 100%;
       background-color: white;
     }
