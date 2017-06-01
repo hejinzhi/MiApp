@@ -4,6 +4,9 @@ import { Pipe, PipeTransform } from '@angular/core';
 export class DuringPipe implements PipeTransform {
   transform(value: string): string {
     if(value === null) return value;
+    if(Date.parse(value.replace('T',' '))) {
+      value = value.replace('T',' ')
+    }
     let res = '';
     let during = Date.parse(new Date().toString()) - Date.parse(value);
     if(during<1000*60*60) {
