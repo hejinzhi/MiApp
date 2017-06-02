@@ -15,12 +15,12 @@
           <p>{{ user.nickname }}</p>
         </ion-row>
         <ion-row>
-          <p>{{item.CVT_IDATE | sgTTime | date:"yyyy/MM/dd" }}</p>
+          <p>{{item.CVT_IDATE.substr(0,10) }}</p>
           <p>{{item.TIME}}</p>
         </ion-row>
         <ion-row>
           <p>{{item.IDUTY | sgOtherType:'swipeType' | sgChineseConv }}</p>
-          <p>{{(item.POSITION?item.POSITION:'人事补卡') | sgChineseConv }}{{item.FLAG | sgChineseConv }}</p>
+          <p>{{(item.POSITION?item.POSITION:'人事补卡').substr(0,4) | sgChineseConv }}{{item.FLAG | sgChineseConv }}</p>
         </ion-row>
       </h2>
     </ion-item>
