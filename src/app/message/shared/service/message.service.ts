@@ -1,18 +1,23 @@
-import { Injectable } from '@angular/core';
-
+import { Injectable, EventEmitter } from '@angular/core';
+import { Observable, Subscription, Subject } from 'rxjs/Rx';
 import { JMessageService } from '../../../core/services/jmessage.service';
 import { Message } from '../classes/Message';
 
 @Injectable()
 export class MessageService {
-    constructor(
-        private jmessage: JMessageService
-    ) { }
-
-
     userInfo: any;// 当前登录用户的信息
     allUserInfo: any;
     history: Message[];  // 历史消息
+    messageEventEmitter: Subject<string>;  // message接收消息后通知dialogue页面刷新数据
+
+    constructor(
+        private jmessage: JMessageService
+    ) {
+        this.messageEventEmitter = new Subject();
+    }
+
+
+
 
     getLocalMessageHistory() {
         return JSON.parse(localStorage.getItem('localMessageHistory'));

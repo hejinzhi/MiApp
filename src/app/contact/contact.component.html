@@ -11,38 +11,44 @@
 </ion-header>
 <ion-content>
   <ion-searchbar placeholder="请输入姓名/首字母/电话"></ion-searchbar>
-  <ion-grid>
-    <ion-row>
-      <ion-col class="col">
-        <img src="assets/icon/person.ico" class="col-img">
-        <span class="desc">同部门</span>
-      </ion-col>
-      <ion-col class="col">
-        <img src="assets/icon/department.ico" class="col-img">
-        <span class="desc">组织</span>
-      </ion-col>
-    </ion-row>
-    <ion-row>
-      <ion-col class="col">
-        <img src="assets/icon/xiashu.ico" class="col-img">
-        <span class="desc">我的下属</span>
-      </ion-col>
-      <ion-col class="col">
-        <img src="assets/icon/group.ico" class="col-img">
-        <span class="desc">常用组</span>
-      </ion-col>
-    </ion-row>
-    <ion-row>
-      <ion-col class="col">
-        <img src="assets/icon/all.ico" class="col-img">
-        <span class="desc">所有人</span>
-      </ion-col>
-      <ion-col class="col">
-        <img src="assets/icon/chat.ico" class="col-img">
-        <span class="desc">群聊</span>
-      </ion-col>
-    </ion-row>
-  </ion-grid>
+  <div class="department-group">
+    <ion-grid>
+      <ion-row>
+        <ion-col class="col">
+          <img src="assets/icon/person.ico" class="col-img">
+          <span class="desc">同部门</span>
+        </ion-col>
+        <ion-col class="col">
+          <img src="assets/icon/department.ico" class="col-img">
+          <span class="desc">组织</span>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col class="col">
+          <img src="assets/icon/xiashu.ico" class="col-img">
+          <span class="desc">我的下属</span>
+        </ion-col>
+        <!--<ion-col class="col">
+          <img src="assets/icon/group.ico" class="col-img">
+          <span class="desc">常用组</span>
+        </ion-col>-->
+        <ion-col class="col">
+          <img src="assets/icon/all.ico" class="col-img">
+          <span class="desc">所有人</span>
+        </ion-col>
+      </ion-row>
+      <!--<ion-row>
+        <ion-col class="col">
+          <img src="assets/icon/all.ico" class="col-img">
+          <span class="desc">所有人</span>
+        </ion-col>
+        <ion-col class="col">
+          <img src="assets/icon/chat.ico" class="col-img">
+          <span class="desc">群聊</span>
+        </ion-col>
+      </ion-row>-->
+    </ion-grid>
+  </div>
   <div class="contacter">
     <div class="contacter-header">
       最近
@@ -50,14 +56,14 @@
     <div class="contacter-content" *ngFor="let item of contacter">
       <ion-grid>
         <ion-row class="row">
-          <ion-col width-10>
+          <ion-col col-2>
             <span class="avatar">{{item.name}}</span>
           </ion-col>
-          <ion-col width-20 offset-10>
+          <ion-col col-4>
             <ion-row class="name">{{item.full_name}}</ion-row>
             <ion-row class="company">{{item.company}}</ion-row>
           </ion-col>
-          <ion-col offset-10>
+          <ion-col>
             <ion-row class="position">{{item.position}}</ion-row>
             <ion-row class="department">{{item.department}}</ion-row>
           </ion-col>

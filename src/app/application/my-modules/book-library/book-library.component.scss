@@ -1,22 +1,20 @@
 sg-book-library {
-  .scroll-content {
-    overflow-y: hidden;
-  }
   .page {
     background-color: #fbf9fe;
+    // .scroll-content {
+    //   overflow-y: hidden;
+    // }
   }
   .searchbar {
-    position: absolute;
+    // position: absolute;
     width: 100%;
-    top: 0;
-    left: 0;
+    // top: 0;
+    // left: 0;
     background-color: #c9c7cb;
-    z-index: 999;
+    // z-index: 999;
   }
   .book-list {
-    margin-top: ($navbar-ios-height);
-    overflow-y: scroll;
-    overflow-x: hidden;
+    // margin-top: ($navbar-ios-height);
     height: 90%;
   }
   .avatar-img {
