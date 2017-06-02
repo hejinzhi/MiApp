@@ -4,9 +4,12 @@ import { Subscription } from 'rxjs/Rx';
 import { NavParams } from 'ionic-angular';
 import { Camera, CameraOptions } from '@ionic-native/camera';
 import { Keyboard } from '@ionic-native/keyboard';
+import { PhotoViewer } from '@ionic-native/photo-viewer';
 
 import { MessageService } from '../shared/service/message.service';
 import { JMessageService } from '../../core/services/jmessage.service';
+import { PluginService } from '../../core/services/plugin.service';
+
 
 
 @Component({
@@ -25,7 +28,14 @@ export class DialogueComponent implements OnInit, AfterViewChecked {
 
     jmessageHandler: Subscription; //接收句柄，再view被关闭的时候取消订阅，否则对已关闭的view进行数据脏检查会报错
 
-    constructor(private messageservice: MessageService, public params: NavParams, private jmessageservice: JMessageService, private ref: ChangeDetectorRef, public keyboard: Keyboard, public camera: Camera) {
+    constructor(private messageservice: MessageService,
+        public params: NavParams,
+        private jmessageservice: JMessageService,
+        private plugin: PluginService,
+        private ref: ChangeDetectorRef,
+        public keyboard: Keyboard,
+        public photoViewer: PhotoViewer,
+        public camera: Camera) {
 
         this.userName = params.get('username');
         this.userNickName = params.get('userNickName');
@@ -58,7 +68,7 @@ export class DialogueComponent implements OnInit, AfterViewChecked {
 
     ngAfterViewChecked() {
         var div = document.getElementsByClassName('scroll-content');
-        div[2].scrollTop = div[2].scrollHeight;
+        div[1].scrollTop = div[1].scrollHeight;
     }
 
     isEmpty() {
@@ -73,8 +83,13 @@ export class DialogueComponent implements OnInit, AfterViewChecked {
         this.onPlus = false;
         this.keyboard.onKeyboardShow().subscribe(() => {
             var div = document.getElementsByClassName('scroll-content');
-            div[2].scrollTop = div[2].scrollHeight;
+            div[1].scrollTop = div[1].scrollHeight;
         })
+    }
+
+    showphoto(url: any) {
+        console.log(url);
+        this.photoViewer.show(url);
     }
 
     async loadMessage() {
@@ -84,22 +99,7 @@ export class DialogueComponent implements OnInit, AfterViewChecked {
 
     //type: 1是文字，2是圖片
     sendMessage(type: number, content: string) {
-        // let history = this.dataService.history;
-        // let msg = [{
-        //   "toUserName": this.userName,
-        //   "fromUserName": this.userinfo.username,
-        //   "content": this.input_text,
-        //   "time": +new Date(),
-        //   "type": "dialogue",
-        //   "unread": true
-        // }];
-        // this.jmessage.sendSingleTextMessage(this.userName, this.input_text);
-        // msg = this.dataService.leftJoin(msg, this.dataService.usersInfo);
 
-        // history.push(msg[0]);
-        // this.dataService.setLocalMessageHistory(history);
-        // this.list.push(msg[0])
-        // this.input_text = '';
         let contentType: string;
 
         if (type === 1) {
@@ -140,14 +140,13 @@ export class DialogueComponent implements OnInit, AfterViewChecked {
             destinationType: this.camera.DestinationType.FILE_URI,
             sourceType: type,                                         //从哪里选择图片：PHOTOLIBRARY=0，相机拍照=1，SAVEDPHOTOALBUM=2。0和1其实都是本地图库
             encodingType: this.camera.EncodingType.JPEG,                   //保存的图片格式： JPEG = 0, PNG = 1
-            targetWidth: 200,                                        //照片宽度
-            targetHeight: 200,                                       //照片高度
+            targetWidth: 800,                                        //照片宽度
+            targetHeight: 800,                                       //照片高度
             mediaType: 0,                                             //可选媒体类型：圖片=0，只允许选择图片將返回指定DestinationType的参数。 視頻格式=1，允许选择视频，最终返回 FILE_URI。ALLMEDIA= 2，允许所有媒体类型的选择。
             cameraDirection: 0,                                       //枪后摄像头类型：Back= 0,Front-facing = 1
             saveToPhotoAlbum: true                                   //保存进手机相册
         };
         this.camera.getPicture(options).then((imageData) => {
-            // imageData is a base64 encoded string
             this.sendMessage(2, imageData);
         }, (err) => {
             console.log(err);

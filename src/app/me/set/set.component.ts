@@ -50,8 +50,8 @@ export class SetComponent {
     alert.addButton('取消');
     alert.addButton({
       text: '确认',
-      handler: (data:string) => {
-        localStorage.setItem('languageType',data);
+      handler: (data: string) => {
+        localStorage.setItem('languageType', data);
         this.plugin.showToast('已切换语言版本,重启可获得最佳体验')
       }
     });
@@ -60,7 +60,8 @@ export class SetComponent {
   // 注销用户
   logout(): void {
     let confirm = this.alertCtrl.create({
-      title: '确定退出',
+      title: '注销',
+      message: '注销后将收不到推送消息，确认要退出吗?',
       buttons: [
         {
           text: '取消',

@@ -53,6 +53,7 @@ export class BookLibraryComponent implements OnInit {
     }
 
     bookListScroll(event: any) {
+        console.log(window.innerHeight);
         let bookListHeight: number = window.innerHeight - 44;  // 窗口高度-header 高度 
         // 30px的偏移（距离底部30px开始加载数据）
         if ((((event.srcElement.scrollTop + bookListHeight + 30 - this.LastScrollTop) / bookListHeight) > 1) && !this.lastPageReached) {

@@ -2,18 +2,18 @@ sg-dialogue {
     $fontcolor: #7b7b7b;
     $activecolor: #13b113;
     .msg-content {
-        .scroll-content {
-            height: 93.5%;
-            padding: 16px 16px 0 16px;
-        }
+        padding: 10px 16px 0 16px;
         &.up {
-            .scroll-content {
-                height: 79%
+            .last {
+                margin-bottom: 42%;
             }
         }
     }
     .msgarea {
         padding: 10px 0px;
+        .last {
+            margin-bottom: 14%;
+        }
         .clearfix:after {
             content: ".";
             display: block;
@@ -106,7 +106,7 @@ sg-dialogue {
         z-index: 999;
         bottom: 0;
         left: 0px;
-        height: 40px;
+        height: 6%;
         width: 100%;
         border-top: 1px solid #d8d8d8;
         background-color: #ededed;
@@ -140,7 +140,7 @@ sg-dialogue {
                 line-height: 30px;
                 height: 30px;
                 width: 63%;
-                font-size: 24px;
+                font-size: 18px;
                 color: #000;
             }
             .send {

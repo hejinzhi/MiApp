@@ -1,5 +1,6 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, EventEmitter } from '@angular/core';
 import { NavController, NavParams, AlertController, Platform, App, Loading } from 'ionic-angular';
+import { Observable, Subscription, Subject } from 'rxjs/Rx';
 import { MessageModel } from '../shared/models/message.model';
 
 import { JMessageService } from '../core/services/jmessage.service';
@@ -19,6 +20,7 @@ export class MessageComponent implements OnInit {
   msgListItem: MessageModel[] = [];
   historyMsg: any[] = []; // 在app.component.ts被赋值
   messageListItem: any;
+  onSyncOfflineMessageHandler: Subscription;
 
   constructor(public navCtrl: NavController,
     public navParams: NavParams,
@@ -37,38 +39,65 @@ export class MessageComponent implements OnInit {
 
   ngOnInit() {
 
-    // this.jmessageService.jmessageHandler = this.jmessageService.onReceiveMessage().subscribe(res => {
+    this.onSyncOfflineMessageHandler = this.jmessageService.onSyncOfflineMessage().subscribe(res => {
+      for (let i = 0; i < res.messageList.length; i++) {
+        let _content: string;
+        if (res.messageList[i].contentType === 'text') {
+          _content = res.messageList[i].content.text;
+        } else if (res.contentType === 'image') {
+          _content = res.messageList[i].content.localThumbnailPath;
+        }
+
+        let msg: Message = {
+          toUserName: res.messageList[i].targetInfo.userName,
+          fromUserName: res.messageList[i].fromName,
+          content: _content,
+          contentType: res.messageList[i].contentType,
+          time: res.messageList[i].createTimeInMillis,
+          type: 'dialogue',
+          unread: true
+        };
+
+        this.messageService.history.push(msg);
+      }
+
+      this.messageService.setLocalMessageHistory(this.messageService.history);
+      this.jmessageService.setSingleConversationUnreadMessageCount(res.fromName, '', 0);
+
+      this.messageListItem = this.messageService.getMessageHistory();
+      this.ref.detectChanges();
+    });
 
 
-    //   let _content: string;
-    //   if (res.contentType === 'text') {
-    //     _content = res.content.text;
-    //   } else if (res.contentType === 'image') {
-    //     _content = res.content.localThumbnailPath;
-    //   }
+    this.jmessageService.jmessageHandler = this.jmessageService.onReceiveMessage().subscribe(res => {
+      console.log('message');
+      let _content: string;
+      if (res.contentType === 'text') {
+        _content = res.content.text;
+      } else if (res.contentType === 'image') {
+        _content = res.content.localThumbnailPath;
+      }
+
+      let msg: Message = {
+        toUserName: res.targetInfo.userName,
+        fromUserName: res.fromName,
+        content: _content,
+        contentType: res.contentType,
+        time: res.createTimeInMillis,
+        type: 'dialogue',
+        unread: true
+      };
 
 
+      this.messageService.history.push(msg);
 
-    //   let msg: Message = {
-    //     toUserName: res.targetInfo.userName,
-    //     fromUserName: res.fromName,
-    //     content: _content,
-    //     contentType: res.contentType,
-    //     time: res.createTimeInMillis,
-    //     type: 'dialogue',
-    //     unread: true
-    //   };
+      this.messageService.setLocalMessageHistory(this.messageService.history);
+      this.jmessageService.setSingleConversationUnreadMessageCount(res.fromName, '', 0);
 
-
-    //   this.messageService.history.push(msg);
-
-    //   this.messageService.setLocalMessageHistory(this.messageService.history);
-    //   this.jmessageService.setSingleConversationUnreadMessageCount(res.fromName, '', 0);
-
-    //   this.messageListItem = this.messageService.getMessageHistory();
-    //   this.ref.detectChanges();
-
-    // });
+      this.messageListItem = this.messageService.getMessageHistory();
+      this.ref.detectChanges();
+      this.messageService.messageEventEmitter.next('messageChange');
+    });
 
     // setTimeout(() => this.loadUnreadMessage(), 3000);
   }
@@ -118,7 +147,7 @@ export class MessageComponent implements OnInit {
   }
 
   ionViewWillEnter() {
-    // this.refreshData();
+    this.refreshData();
   }
 
   refreshData() {
@@ -150,4 +179,11 @@ export class MessageComponent implements OnInit {
     });
     alert.present(prompt);
   }
+
+  // ionViewWillLeave() {
+  //   this.jmessageService.jmessageHandler.unsubscribe();
+  //   this.onSyncOfflineMessageHandler.unsubscribe();
+  // }
+
+
 }
