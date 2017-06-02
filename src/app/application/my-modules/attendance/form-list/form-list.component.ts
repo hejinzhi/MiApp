@@ -45,10 +45,10 @@ export class FormListComponent {
     this.showList = true;
   }
   async getOffDutyException() {
-    let loading = this.plugin.createLoading();
-    loading.present();
+    // let loading = this.plugin.createLoading();
+    // loading.present();
     let res: any = await this.attendanceService.getOffDutyException();
-    loading.dismiss();
+    // loading.dismiss();
     if(res.status) {
       this.formData = res.content;
     } else {
