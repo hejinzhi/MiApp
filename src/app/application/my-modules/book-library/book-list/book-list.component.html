@@ -1,5 +1,5 @@
 <div>
-  <div class="book-list" *ngFor="let book of books" (click)="goToDetailPage(book)">
+  <button class="book-list" *ngFor="let book of books" (click)="goToDetailPage(book)">
     <div class="book-image">
       <img [src]="book.IMAGE">
     </div>
@@ -17,7 +17,7 @@
         <div *ngIf="showActualBackDate">归还时间: {{book.ACTUAL_PAYBACK_DATE | date:"y-MM-dd"}}</div>
       </div>
     </div>
-  </div>
+  </button>
   <div class="line"></div>
 </div>
 <!--[(ngModel)]="addBookQty"-->

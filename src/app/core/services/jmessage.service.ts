@@ -103,12 +103,12 @@ export class JMessageService {
         });
     };
 
-   //  發送單聊圖片
+    //  發送單聊圖片
     sendSingleImageMessage(username: string, imageUrl: string, appKey?: string): Promise<any> {
         return new Promise((resolve, reject) => {
-            this.jmessagePlugin.sendSingleImageMessage(username, imageUrl, appKey, (suc) => {
+            this.jmessagePlugin.sendSingleImageMessage(username, imageUrl, appKey, (suc: any) => {
                 resolve(suc);
-            }, (err) => {
+            }, (err: any) => {
                 reject(err);
             })
         });
@@ -117,6 +117,10 @@ export class JMessageService {
     // 监听receive事件
     onReceiveMessage(): Observable<any> {
         return this.wrapEventObservable('jmessage.onReceiveMessage');
+    }
+
+    onSyncOfflineMessage(): Observable<any> {
+        return this.wrapEventObservable('jmessage.onSyncOfflineMessage');
     }
 
     // 监听点击消息栏打开消息事件
@@ -162,7 +166,7 @@ export class JMessageService {
     getConversationList(): Promise<any> {
         return new Promise((resolve, reject) => {
             this.jmessagePlugin.getConversationList((suc: any) => {
-                console.log(JSON.parse(suc),666);
+                console.log(JSON.parse(suc), 666);
                 resolve(suc);
             }, (err: any) => {
                 reject(err);

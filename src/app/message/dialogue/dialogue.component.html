@@ -4,30 +4,30 @@
     </ion-navbar>
 </ion-header>
 <ion-content class='pag-content' id='pag-content'>
-    <ion-content class='msg-content' [ngClass]="onPlus?'up':'down'" (click)="isPlus()">
-        <div *ngFor="let item of list">
+    <div class='msg-content' (click)="isPlus()" [ngClass]="onPlus?'up':'down'">
+        <div *ngFor="let item of list let i=index">
             <div class="msgarea">
-                <div [ngClass]="item.toUserName === userinfo.username ? 'other' : 'me'" [ngSwitch]="item.contentType">
+                <div [ngClass]="item.toUserName === userinfo.username ? 'other' : 'me'" [ngSwitch]="item.contentType" [class.last]="i === list.length - 1">
                     <img class="icon" [src]="item.fromUserAvatarSrc">
                     <template [ngSwitchCase]="'text'"><div class="msg">
                         <span [ngClass]="item.toUserName === userinfo.username ? ' arrow_l_int' : ' arrow_r_int'"></span>
                         <span [ngClass]="item.toUserName === userinfo.username ? ' arrow_l_out' : ' arrow_r_out'"></span>{{item.content}} </div>
                     </template >
-                    <template  [ngSwitchCase]="'image'"><img src={{item.content}} class='img_content'></template >
+                    <template  [ngSwitchCase]="'image'"><img src={{item.content}} class='img_content' (click)="showphoto(item.content)"></template >
                     <div class="clearfix"></div>
                </div>
             </div>
         </div>
-    </ion-content>
+    </div>
     <div class="input" id="input" [ngClass]="onPlus?'up':'down'">
         <div class="input_layout">
             <img class="input_icon voice" src="assets/img/voice.png">
             <img class="input_icon face" src="assets/img/face.png">
             <img class="input_icon plus" src="assets/img/plus.png" (click)="onPlus=!onPlus">
             <input class="input_text" [(ngModel)]="input_text" name="input_text" (focus) = "isPlus()">
-            <div [hidden]="isEmpty()" class="send" (click)="sendMessage(1,input_text)" tappable>發送</div>
+            <div *ngIf="input_text" class="send" (click)="sendMessage(1,input_text)" tappable>發送</div>
         </div>
-        <div class="button-bar">
+        <div class="button-bar" *ngIf="onPlus">
             <div class="btt">
                 <button ion-button color="light" class="button-ion" large icon-only (click)=getPhoto(0)>
                    <ion-icon name='image' class="icon-img" ></ion-icon>
