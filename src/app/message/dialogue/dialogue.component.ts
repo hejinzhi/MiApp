@@ -1,7 +1,7 @@
 
 import { Component, OnInit, ChangeDetectorRef, AfterViewChecked } from '@angular/core';
 import { Subscription } from 'rxjs/Rx';
-import { NavParams } from 'ionic-angular';
+import { NavParams, Events } from 'ionic-angular';
 import { Camera, CameraOptions } from '@ionic-native/camera';
 import { Keyboard } from '@ionic-native/keyboard';
 import { PhotoViewer } from '@ionic-native/photo-viewer';
@@ -35,7 +35,9 @@ export class DialogueComponent implements OnInit, AfterViewChecked {
         private ref: ChangeDetectorRef,
         public keyboard: Keyboard,
         public photoViewer: PhotoViewer,
-        public camera: Camera) {
+        public camera: Camera,
+        private events: Events
+    ) {
 
         this.userName = params.get('username');
         this.userNickName = params.get('userNickName');
@@ -46,7 +48,14 @@ export class DialogueComponent implements OnInit, AfterViewChecked {
     }
 
     ionViewDidEnter() {
-        this.jmessageHandler = this.jmessageservice.onReceiveMessage().subscribe(res => {
+        // this.jmessageHandler = this.jmessageservice.onReceiveMessage().subscribe(res => {
+        //     this.messageservice.getMessageHistoryByID(this.userName).then((res => {
+        //         this.list = res;
+        //         this.ref.detectChanges();
+        //     }));
+        // });
+        this.events.subscribe('msg.onReceiveMessage', () => {
+            console.log('dialogue');
             this.messageservice.getMessageHistoryByID(this.userName).then((res => {
                 this.list = res;
                 this.ref.detectChanges();
@@ -57,7 +66,8 @@ export class DialogueComponent implements OnInit, AfterViewChecked {
     }
 
     ionViewWillLeave() {
-        this.jmessageHandler.unsubscribe();
+        // this.jmessageHandler.unsubscribe();
+        this.events.unsubscribe('msg.onReceiveMessage');
         this.messageservice.setUnreadToZeroByUserName(this.userName);
         this.jmessageservice.setSingleConversationUnreadMessageCount(this.userName, null, 0);
         this.jmessageservice.exitConversation();
@@ -67,8 +77,9 @@ export class DialogueComponent implements OnInit, AfterViewChecked {
 
 
     ngAfterViewChecked() {
-        var div = document.getElementsByClassName('scroll-content');
-        div[1].scrollTop = div[1].scrollHeight;
+        // console.log('ngAfterViewChecked');
+        // var div = document.getElementsByClassName('scroll-content');
+        // div[1].scrollTop = div[1].scrollHeight;
     }
 
     isEmpty() {

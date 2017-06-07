@@ -3,56 +3,53 @@
     <ion-title>{{userNickName}}</ion-title>
   </ion-navbar>
 </ion-header>
-<ion-content class='pag-content' id='pag-content'>
-  <div class='msg-content' (click)="isPlus()" [ngClass]="onPlus?'up':'down'">
-    <div *ngFor="let item of list let i=index">
-      <div class="msgarea">
-        <div [ngClass]="item.toUserName === userinfo.username ? 'other' : 'me'" [ngSwitch]="item.contentType" [class.last]="i === list.length - 1">
-          <img class="icon" [src]="item.fromUserAvatarSrc">
-          <ng-template [ngSwitchCase]="'text'">
-            <div class="msg">
-              <span [ngClass]="item.toUserName === userinfo.username ? ' arrow_l_int' : ' arrow_r_int'"></span>
-              <span [ngClass]="item.toUserName === userinfo.username ? ' arrow_l_out' : ' arrow_r_out'"></span>{{item.content}}
-              </div>
-          </ng-template>
-          <ng-template [ngSwitchCase]="'image'"><img src={{item.content}} class='img_content' (click)="showphoto(item.content)"></ng-template>
-          <div class="clearfix"></div>
+<ion-content padding class="chatArea" [class.up]="addS">
+  <div *ngFor="let item of list;let i=index">
+    <div class="msgarea">
+      <div [ngClass]="item.toUserName === userinfo.username ? 'other' : 'me'" [class.last]="i === list.length - 1">
+        <!--<img class="icon" src={{item.avatarSrc}}>-->
+        <img class="icon" [src]="item.fromUserAvatarSrc">
+        <div class="msg" [class.img]="item.contentType === 'image'">
+          <span *ngIf=" item.contentType != 'image' " [ngClass]="item.toUserName === userinfo.username ? ' arrow_l_int' : ' arrow_r_int'"></span>
+          <span *ngIf=" item.contentType != 'image' " [ngClass]="item.toUserName === userinfo.username ? ' arrow_l_out' : ' arrow_r_out'"></span>
+          <span *ngIf="item.unSend">!</span><span *ngIf="item.contentType === 'text'">{{item.content}}</span>
+          <img *ngIf=" item.contentType === 'image' " [src]="frontBas64 + item.content" alt="">
         </div>
+        <div class="clearfix"></div>
       </div>
     </div>
   </div>
-  <div class="input" id="input" [ngClass]="onPlus?'up':'down'">
-    <div class="input_layout">
-      <img class="input_icon voice" src="assets/img/voice.png">
-      <img class="input_icon face" src="assets/img/face.png">
-      <img class="input_icon plus" src="assets/img/plus.png" (click)="onPlus=!onPlus">
-      <input class="input_text" [(ngModel)]="input_text" name="input_text" (focus)="isPlus()">
-      <div *ngIf="input_text" class="send" (click)="sendMessage(1,input_text)" tappable>發送</div>
-    </div>
-    <div class="button-bar" *ngIf="onPlus">
-      <div class="btt">
-        <button ion-button color="light" class="button-ion" large icon-only (click)=getPhoto(0)>
-                   <ion-icon name='image' class="icon-img" ></ion-icon>
-                </button>
-        <div class="icon-content">照片</div>
+  <div class="input" *ngIf="list" [class.addS]="addS">
+    <ion-grid>
+      <ion-row align-items-start>
+        <ion-col>
+          <span class="iconfontyyy">&#xe68b;</span>
+        </ion-col>
+        <ion-col>
+          <input class="input_text" [(ngModel)]="input_text" name="input_text" (focus)="inputFocus()" (input)="sendStatus('writing')"
+            (blur)="sendStatus('blur')">
+        </ion-col>
+        <ion-col>
+          <span class="iconfontyyy smile">&#xe61e;</span>
+        </ion-col>
+        <ion-col>
+          <span class="iconfontyyy add" *ngIf="!input_text" (click)="addS = !addS">&#xe649;</span>
+          <button ion-button class="send" (click)="sendMes()" *ngIf="input_text">发送</button>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+    <div class="box" *ngIf="addS">
+      <button ion-button class="item" (click)="sendPicture()">
+        图片
+      </button>
+      <button ion-button class="item" (click)="clearM()">
+        清空
+      </button>
+      <div class="item">
+        3434
       </div>
-      <div class="btt">
-        <button ion-button color="light" class="button-ion" large icon-only (click)=getPhoto(1)>
-                    <ion-icon name='camera' class="icon-img" ></ion-icon>
-                </button>
-        <div class="icon-content">拍攝</div>
-      </div>
-      <div class="btt">
-        <button ion-button color="light" class="button-ion" large icon-only>
-                   <ion-icon name='person' class="icon-img" ></ion-icon>
-                </button>
-        <div class="icon-content">個人名片</div>
-      </div>
-      <div class="btt">
-        <button ion-button color="light" class="button-ion" large icon-only>
-                   <ion-icon name='pin' class="icon-img" ></ion-icon>
-                </button>
-        <div class="icon-content">位置</div>
+      <div class="item">
+        3434
       </div>
     </div>
   </div>

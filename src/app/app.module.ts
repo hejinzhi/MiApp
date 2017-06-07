@@ -24,7 +24,7 @@ import { CoreModule } from './core/core.module';
   ],
   imports: [
     BrowserModule,
-    IonicModule.forRoot(MyAppComponent, { tabsHideOnSubPages: true, backButtonText: '返回', }),
+    IonicModule.forRoot(MyAppComponent, { tabsHideOnSubPages: true, mode: 'ios', backButtonText: '返回', }),
     LoginModule,
     ApplicationModule,
     MeModule,

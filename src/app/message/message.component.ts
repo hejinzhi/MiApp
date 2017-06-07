@@ -1,5 +1,5 @@
 import { Component, OnInit, ChangeDetectorRef, EventEmitter } from '@angular/core';
-import { NavController, NavParams, AlertController, Platform, App, Loading } from 'ionic-angular';
+import { NavController, NavParams, AlertController, Platform, App, Loading, Events } from 'ionic-angular';
 import { Observable, Subscription, Subject } from 'rxjs/Rx';
 import { MessageModel } from '../shared/models/message.model';
 
@@ -30,7 +30,8 @@ export class MessageComponent implements OnInit {
     private messageService: MessageService,
     private platform: Platform,
     public appCtrl: App,
-    private myHttp: MyHttpService
+    private myHttp: MyHttpService,
+    private events: Events
   ) {
   }
 
@@ -96,7 +97,7 @@ export class MessageComponent implements OnInit {
 
     //   this.messageListItem = this.messageService.getMessageHistory();
     //   this.ref.detectChanges();
-    //   this.messageService.messageEventEmitter.next('messageChange');
+    //   this.events.publish('msg.onReceiveMessage');
     // });
 
   }
