@@ -14,12 +14,12 @@
         <div class="badge" *ngIf="item.unreadCount > 0">{{item.unreadCount}}</div>
       </div>
       <h2 class="name">{{item.userNickName}}</h2>
-      <template [ngSwitchCase]="'text'">
+      <ng-template [ngSwitchCase]="'text'">
         <p class="msg">{{item.lastmsg}}</p>
-      </template>
-      <template [ngSwitchCase]="'image'">
+      </ng-template>
+      <ng-template [ngSwitchCase]="'image'">
         <p>[图片]</p>
-      </template>
+      </ng-template>
       <ion-note item-right>{{item.timedesc}}</ion-note>
     </ion-item>
   </ion-list>

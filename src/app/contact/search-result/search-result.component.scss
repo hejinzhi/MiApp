@@ -1,0 +1,43 @@
+sg-search-result {
+  .contacter {
+    .contacter-content {
+      .row {
+        border-bottom: 1px solid #ccc;
+        .avatar {
+          display: inline-block;
+          // margin-left: 15px;
+          width: 40px;
+          height: 40px;
+          line-height: 40px;
+          text-align: center;
+          border-radius: 20px;
+          background-color: #6396E2;
+          color: #fff;
+          font-size: 14px;
+        }
+        .name {
+          font-weight: 600;
+          font-size: 15px;
+          border-bottom: none;
+        }
+        .company {
+          margin-top: 5px;
+          color: #909090;
+          font-size: 12px;
+          border-bottom: none;
+        }
+        .position {
+          color: #909090;
+          font-size: 15px;
+          border-bottom: none;
+        }
+        .department {
+          margin-top: 5px;
+          color: #909090;
+          font-size: 12px;
+          border-bottom: none;
+        }
+      }
+    }
+  }
+}
