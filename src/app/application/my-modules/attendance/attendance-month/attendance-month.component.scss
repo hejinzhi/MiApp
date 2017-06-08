@@ -2,6 +2,9 @@ sg-attendance-month {
   ion-col ion-item ion-label {
     overflow: visible;
   }
+  .myForm.auto {
+    background-color: #fff;
+  }
   ion-item {
     p {
       &.name {

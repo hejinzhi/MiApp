@@ -34,6 +34,7 @@ export class UndoneFormComponent {
     No:'HTL021703007172',
     data:{}
   }
+  errTip: string;
   hourCount:string;
   dayCount:string;
   dutyType:string;
@@ -130,8 +131,11 @@ export class UndoneFormComponent {
     let res: any = await this.attendanceService.processOffDutyException(this.formData);
     loading.dismiss()
     if(res.status) {
+      this.errTip = '';
       this.plugin.showToast(this.fontContent.submit_succ);
       this.navCtrl.popToRoot();
+    } else {
+      this.errTip = res.content;
     }
   }
 }

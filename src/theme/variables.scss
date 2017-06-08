@@ -92,6 +92,10 @@ ion-alert div.alert-wrapper{
   .alert-radio-group {
     max-height: 380px;
   }
+  .alert-button-group button{
+    border-top: 1px solid #dbdbdf;
+    border-right: 1px solid #dbdbdf;
+  }
   .button-inner {
     color: #000;
   }
@@ -100,8 +104,8 @@ ion-picker-cmp .picker-wrapper {
   flex-direction:column-reverse;
   .picker-toolbar-button {
     text-align: center;
-    border-top: 0.55px solid #dbdbdf;
-    border-left: 0.55px solid #dbdbdf;
+    border-top: 1px solid #dbdbdf;
+    border-left: 1px solid #dbdbdf;
     .button-inner {
       color: #000;
     }

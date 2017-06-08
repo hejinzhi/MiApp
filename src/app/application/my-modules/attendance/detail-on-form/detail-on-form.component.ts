@@ -48,7 +48,7 @@ export class DetailOnFormComponent {
       date: ''
     }
     let today = new Date()
-    let month = today.getMonth() +1;
+    let month = today.getMonth();
     let monthString = month<10?'0'+month:month;
     this.betweenMes.date = today.getFullYear()+'-'+ monthString;
     this.todo = this.initWork(this.betweenMes);

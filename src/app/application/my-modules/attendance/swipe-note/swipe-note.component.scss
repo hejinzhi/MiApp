@@ -1,4 +1,8 @@
 sg-swipe-note {
+  .myList{
+    min-width: 330px;
+    overflow-x: scroll;
+  }
   h2.myRow {
     display: flex;
     justify-content: space-between;

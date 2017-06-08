@@ -249,7 +249,7 @@ export class StatisticsComponent {
     // 绘制图表
     myChart.setOption({
       title: {
-        text: title, top: '3%', textStyle: {
+        text: title, top: '1%', textStyle: {
           fontFamily: fontFamily,
           fontSize: 18
         }
@@ -272,18 +272,39 @@ export class StatisticsComponent {
       },
       xAxis: [
         {
-          type: 'category',
-          data: [this.fontContent.this_month, this.fontContent.this_year],
-          axisTick: {
-            alignWithLabel: true
-          }
+            type: 'category',
+            boundaryGap: true,
+            data:[this.fontContent.this_month, this.fontContent.this_year],
         }
-      ],
-      yAxis: [
+    ],
+    yAxis: [
         {
-          type: 'value'
+            type: 'value',
+            scale: true,
+            name: this.fontContent.OT,
+            min: 0,
+            interval:Math.ceil(this.totalOT[1].value/4),
+            max: Math.ceil(this.totalOT[1].value/4)*5,
+            boundaryGap: [0.2, 0.2],
+            nameTextStyle: {
+              fontFamily: fontFamily,
+              fontSize: 14
+            }
+        },
+        {
+            type: 'value',
+            scale: true,
+            name: this.fontContent.leave,
+            nameTextStyle: {
+              fontFamily: fontFamily,
+              fontSize: 14
+            },
+            min: 0,
+            interval: Math.ceil(this.totalLeave[1].value/4),
+            max: Math.ceil(this.totalLeave[1].value/4)*5,
+            boundaryGap: [0.2, 0.2]
         }
-      ],
+    ],
       color: color,
       series: [
         {
@@ -302,6 +323,7 @@ export class StatisticsComponent {
         {
           name: this.fontContent.leave,
           type: 'bar',
+          yAxisIndex: 1,
           data: this.totalLeave,
           label: {
             normal:

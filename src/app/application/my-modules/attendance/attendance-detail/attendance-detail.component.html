@@ -19,12 +19,12 @@
           <p>{{fontContent.week}}{{item.IWEEK}}</p>
         </ion-row>
         <ion-row>
-          <p>{{item.ACT_ITIME1}}</p>
-          <p>{{item.ACT_ITIME4}}</p>
+          <p>{{item.ACT_ITIME1?item.ACT_ITIME1:'没有记录'| sgChineseConv}}</p>
+          <p>{{item.ACT_ITIME4?item.ACT_ITIME4:'没有记录'| sgChineseConv}}</p>
         </ion-row>
         <ion-row>
-          <p>{{item.ACT_ITIME3}}</p>
-          <p>{{item.ACT_ITIME2}}</p>
+          <p>{{item.ACT_ITIME3?item.ACT_ITIME3:'没有记录'| sgChineseConv}}</p>
+          <p>{{item.ACT_ITIME2?item.ACT_ITIME2:'没有记录'| sgChineseConv}}</p>
         </ion-row>
         <ion-row>
           <p>{{fontContent.off_hour}}:{{item.OFF_HOURS.toFixed(2)}}</p>
