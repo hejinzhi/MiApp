@@ -19,10 +19,10 @@
         <h3>{{itemSub.APPROVER}} <p *ngIf="itemSub.IN_TIME">{{itemSub.IN_TIME.replace('T',' ').substr(0,16)}}</p></h3>
         <h3 *ngIf="itemSub.ARENT_FROM">{{fontContent.ARENT_FROM}}： {{itemSub.ARENT_FROM}}</h3>
         <h3 *ngIf="itemSub.STATUS"><p class="status" [class.waiting] ="itemSub.STATUS.toUpperCase() === 'WAITING'">{{itemSub.STATUS}}</p>
-          <p *ngIf="itemSub.STATUS.toUpperCase() !== 'WAITING'">
+          <p *ngIf="itemSub.OUT_TIME && itemSub.STATUS.toUpperCase() !== 'WAITING'">
           {{itemSub.OUT_TIME.replace('T',' ').substr(0,16)}}
           </p>
-          <p class="waiting" *ngIf="itemSub.STATUS.toUpperCase() === 'WAITING'">{{fontContent.waiting}}{{itemSub.IN_TIME | sgDuring}}</p>
+          <p class="waiting" *ngIf="itemSub.IN_TIME && itemSub.STATUS.toUpperCase() === 'WAITING'">{{fontContent.waiting}}{{itemSub.IN_TIME | sgDuring}}</p>
         </h3>
         <p *ngIf="itemSub.COMMENTS">{{fontContent.COMMENTS}}： {{itemSub.COMMENTS}}</p>
       </ion-item>

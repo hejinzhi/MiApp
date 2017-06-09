@@ -53,10 +53,10 @@ export class HolidayType {
     { type: '04', name: 'OTHERS' }
   ];
   swipeType = [
-    { type: '+', name: '上班' },
+    { type: '+', name: '正式上班' },
     { type: '$', name: '中午下班' },
     { type: '@', name: '中午上班' },
-    { type: '-', name: '下班' }
+    { type: '-', name: '正式下班' }
   ];
   attendanceMonthType =[
     { name: '计薪天数', type: 'SA_DAYS' },

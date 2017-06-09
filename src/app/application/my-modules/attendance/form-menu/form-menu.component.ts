@@ -35,8 +35,10 @@ export class FormMenuComponent {
   haveSaved:boolean;
   lastNavCtr:any;
   that:any;
+  showReset:boolean;
   ionViewDidLoad(){
     this.that = this.navParams.data.this;
+    this.showReset = this.that.showReset || false;
     this.formData = this.that.formData;
     this.haveSaved = this.that.haveSaved;
     this.lastNavCtr = this.that.navCtrl;
@@ -50,6 +52,12 @@ export class FormMenuComponent {
       type:this.formData.type
     })
   }
+
+  reSet() {
+    this.viewCtrl.dismiss()
+    this.that.init();
+  }
+
   async getCallbackForm() {
     this.viewCtrl.dismiss();
     let loading = this.plugin.createLoading();

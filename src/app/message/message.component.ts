@@ -48,7 +48,6 @@ export class MessageComponent implements OnInit {
     //     } else if (res.contentType === 'image') {
     //       _content = res.messageList[i].content.localThumbnailPath;
     //     }
-
     //     let msg: Message = {
     //       toUserName: res.messageList[i].targetInfo.userName,
     //       fromUserName: res.messageList[i].fromName,
@@ -68,8 +67,6 @@ export class MessageComponent implements OnInit {
     //   this.messageListItem = this.messageService.getMessageHistory();
     //   this.ref.detectChanges();
     // });
-
-
     // this.jmessageService.jmessageHandler = this.jmessageService.onReceiveMessage().subscribe(res => {
     //   console.log('message');
     //   let _content: string;

@@ -670,8 +670,8 @@ export class AttendanceService {
       return Promise.resolve({ content: 'ok', status: true });
     }).catch((err) => {
       console.log(err)
-      this.errorDeal(err);
-      return Promise.resolve({ content: 'no', status: false })
+      let errTip = this.errorDeal(err);
+      return Promise.resolve({ content: errTip, status: false })
     });
   }
   editException_send(data: MyFormModel) {
