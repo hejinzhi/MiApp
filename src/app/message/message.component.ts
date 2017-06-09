@@ -48,11 +48,6 @@ export class MessageComponent implements OnInit {
     //     } else if (res.contentType === 'image') {
     //       _content = res.messageList[i].content.localThumbnailPath;
     //     }
-<<<<<<< HEAD
-    //
-=======
-
->>>>>>> refs/remotes/origin/master
     //     let msg: Message = {
     //       toUserName: res.messageList[i].targetInfo.userName,
     //       fromUserName: res.messageList[i].fromName,
@@ -62,20 +57,6 @@ export class MessageComponent implements OnInit {
     //       type: 'dialogue',
     //       unread: true
     //     };
-<<<<<<< HEAD
-    //
-    //     this.messageService.history.push(msg);
-    //   }
-    //
-    //   this.messageService.setLocalMessageHistory(this.messageService.history);
-    //   this.jmessageService.setSingleConversationUnreadMessageCount(res.fromName, '', 0);
-    //
-    //   this.messageListItem = this.messageService.getMessageHistory();
-    //   this.ref.detectChanges();
-    // });
-    //
-    //
-=======
 
     //     this.messageService.history.push(msg);
     //   }
@@ -86,9 +67,6 @@ export class MessageComponent implements OnInit {
     //   this.messageListItem = this.messageService.getMessageHistory();
     //   this.ref.detectChanges();
     // });
-
-
->>>>>>> refs/remotes/origin/master
     // this.jmessageService.jmessageHandler = this.jmessageService.onReceiveMessage().subscribe(res => {
     //   console.log('message');
     //   let _content: string;
@@ -97,11 +75,7 @@ export class MessageComponent implements OnInit {
     //   } else if (res.contentType === 'image') {
     //     _content = res.content.localThumbnailPath;
     //   }
-<<<<<<< HEAD
-    //
-=======
 
->>>>>>> refs/remotes/origin/master
     //   let msg: Message = {
     //     toUserName: res.targetInfo.userName,
     //     fromUserName: res.fromName,
@@ -111,18 +85,6 @@ export class MessageComponent implements OnInit {
     //     type: 'dialogue',
     //     unread: true
     //   };
-<<<<<<< HEAD
-    //
-    //
-    //   this.messageService.history.push(msg);
-    //
-    //   this.messageService.setLocalMessageHistory(this.messageService.history);
-    //   this.jmessageService.setSingleConversationUnreadMessageCount(res.fromName, '', 0);
-    //
-    //   this.messageListItem = this.messageService.getMessageHistory();
-    //   this.ref.detectChanges();
-    //   this.messageService.messageEventEmitter.next('messageChange');
-=======
 
 
     //   this.messageService.history.push(msg);
@@ -133,7 +95,6 @@ export class MessageComponent implements OnInit {
     //   this.messageListItem = this.messageService.getMessageHistory();
     //   this.ref.detectChanges();
     //   this.events.publish('msg.onReceiveMessage');
->>>>>>> refs/remotes/origin/master
     // });
 
   }
