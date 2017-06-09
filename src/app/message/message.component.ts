@@ -1,5 +1,5 @@
 import { Component, OnInit, ChangeDetectorRef, EventEmitter } from '@angular/core';
-import { NavController, NavParams, AlertController, Platform, App, Loading } from 'ionic-angular';
+import { NavController, NavParams, AlertController, Platform, App, Loading, Events } from 'ionic-angular';
 import { Observable, Subscription, Subject } from 'rxjs/Rx';
 import { MessageModel } from '../shared/models/message.model';
 
@@ -30,7 +30,8 @@ export class MessageComponent implements OnInit {
     private messageService: MessageService,
     private platform: Platform,
     public appCtrl: App,
-    private myHttp: MyHttpService
+    private myHttp: MyHttpService,
+    private events: Events
   ) {
   }
 
@@ -47,7 +48,11 @@ export class MessageComponent implements OnInit {
     //     } else if (res.contentType === 'image') {
     //       _content = res.messageList[i].content.localThumbnailPath;
     //     }
+<<<<<<< HEAD
     //
+=======
+
+>>>>>>> refs/remotes/origin/master
     //     let msg: Message = {
     //       toUserName: res.messageList[i].targetInfo.userName,
     //       fromUserName: res.messageList[i].fromName,
@@ -57,6 +62,7 @@ export class MessageComponent implements OnInit {
     //       type: 'dialogue',
     //       unread: true
     //     };
+<<<<<<< HEAD
     //
     //     this.messageService.history.push(msg);
     //   }
@@ -69,6 +75,20 @@ export class MessageComponent implements OnInit {
     // });
     //
     //
+=======
+
+    //     this.messageService.history.push(msg);
+    //   }
+
+    //   this.messageService.setLocalMessageHistory(this.messageService.history);
+    //   this.jmessageService.setSingleConversationUnreadMessageCount(res.fromName, '', 0);
+
+    //   this.messageListItem = this.messageService.getMessageHistory();
+    //   this.ref.detectChanges();
+    // });
+
+
+>>>>>>> refs/remotes/origin/master
     // this.jmessageService.jmessageHandler = this.jmessageService.onReceiveMessage().subscribe(res => {
     //   console.log('message');
     //   let _content: string;
@@ -77,7 +97,11 @@ export class MessageComponent implements OnInit {
     //   } else if (res.contentType === 'image') {
     //     _content = res.content.localThumbnailPath;
     //   }
+<<<<<<< HEAD
     //
+=======
+
+>>>>>>> refs/remotes/origin/master
     //   let msg: Message = {
     //     toUserName: res.targetInfo.userName,
     //     fromUserName: res.fromName,
@@ -87,6 +111,7 @@ export class MessageComponent implements OnInit {
     //     type: 'dialogue',
     //     unread: true
     //   };
+<<<<<<< HEAD
     //
     //
     //   this.messageService.history.push(msg);
@@ -97,9 +122,20 @@ export class MessageComponent implements OnInit {
     //   this.messageListItem = this.messageService.getMessageHistory();
     //   this.ref.detectChanges();
     //   this.messageService.messageEventEmitter.next('messageChange');
+=======
+
+
+    //   this.messageService.history.push(msg);
+
+    //   this.messageService.setLocalMessageHistory(this.messageService.history);
+    //   this.jmessageService.setSingleConversationUnreadMessageCount(res.fromName, '', 0);
+
+    //   this.messageListItem = this.messageService.getMessageHistory();
+    //   this.ref.detectChanges();
+    //   this.events.publish('msg.onReceiveMessage');
+>>>>>>> refs/remotes/origin/master
     // });
 
-    // setTimeout(() => this.loadUnreadMessage(), 3000);
   }
 
   // 当用户点击登录后，先去检查它是否有未收到的信息，如果有，往本地写入这些信息，这样message才能显示完成

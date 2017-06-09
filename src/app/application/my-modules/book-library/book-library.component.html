@@ -67,12 +67,13 @@
   </ion-navbar>
 </ion-header>
 <ion-content class="page" #maincontent>
-  <div class="searchbar">
+  <!--<div class="searchbar">
     <ion-searchbar (ionInput)="queryBooks($event)" #bookInput></ion-searchbar>
-  </div>
+  </div>-->
   <!--<div class="book-list" (scroll)="bookListScroll($event)" #booklist>
     <sg-book-list [books]="books" (onClick)="goToDetailPage($event)"></sg-book-list>
   </div>-->
+  <ion-searchbar (ionInput)="queryBooks($event)" #bookInput></ion-searchbar>
   <div class="book-list" #booklist>
     <sg-book-list [books]="books" (onClick)="goToDetailPage($event)"></sg-book-list>
   </div>
