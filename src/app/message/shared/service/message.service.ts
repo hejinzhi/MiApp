@@ -8,12 +8,10 @@ export class MessageService {
     userInfo: any;// 当前登录用户的信息
     allUserInfo: any;
     history: Message[];  // 历史消息
-    messageEventEmitter: Subject<string>;  // message接收消息后通知dialogue页面刷新数据
-
     constructor(
         private jmessage: JMessageService
     ) {
-        this.messageEventEmitter = new Subject();
+
     }
 
 
