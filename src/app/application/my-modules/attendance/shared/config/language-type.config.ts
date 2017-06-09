@@ -289,14 +289,14 @@ export class LanguageTypeConfig {
     traditional_Chinese:{
       title:'個人維護詳情',
       STADATE:'年休假生效日',
-      canUse:'可用假天數',
-      used:'已用假天數'
+      canUse:'可休假天數',
+      used:'已休假天數'
     },
     simple_Chinese:{
       title:'个人维护详情',
       STADATE:'年休假生效日',
-      canUse:'可用假天数',
-      used:'已用假天数'
+      canUse:'可休假天数',
+      used:'已休假天数'
     }
   };
   static leaveMessageMenuComponent = {

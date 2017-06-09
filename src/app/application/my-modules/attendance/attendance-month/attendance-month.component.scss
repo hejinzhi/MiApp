@@ -4,6 +4,18 @@ sg-attendance-month {
   }
   .myForm.auto {
     background-color: #fff;
+    &.item-block .item-inner {
+      border-bottom: none;
+    }
+    &.item-block.first .item-inner {
+      border-bottom: 1px solid #c8c7cc;
+    }
+    &.item-block:last-child{
+        border-bottom: 1px solid #c8c7cc;
+    }
+    &.item-block:first-child {
+        border-top: 0px solid #c8c7cc;
+    }
   }
   ion-item {
     p {

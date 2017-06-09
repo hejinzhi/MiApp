@@ -4,7 +4,7 @@ sg-list-filter {
     width: 100%;
     overflow: scroll;
     ion-item {
-      min-width: 350px;
+      min-width: 355px;
       overflow-x: scroll
     }
   }
@@ -15,6 +15,22 @@ sg-list-filter {
       display: flex;
       justify-content: space-between;
       flex-direction: column;
+      p {
+        color: #000;
+        &.waiting {
+          color: red;
+        }
+      }
+    }
+  }
+  ion-row.myRow {
+    ion-col {
+      display: flex;
+      justify-content: space-between;
+      flex-direction: column;
+      &.margin {
+        transform: translateX(5%);
+      }
       p {
         color: #000;
         &.waiting {
