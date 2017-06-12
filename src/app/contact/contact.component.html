@@ -23,7 +23,7 @@
             <img src="assets/icon/department.ico" class="col-img">
             <span class="desc">组织</span>
           </ion-col>
-          <ion-col class="col">
+          <ion-col class="col" (click)="goToSearchDetail('all')">
             <img src="assets/icon/all.ico" class="col-img">
             <span class="desc">所有人</span>
           </ion-col>
@@ -34,23 +34,10 @@
       <div class="contacter-header">
         最近
       </div>
-      <div class="contacter-content" *ngFor="let item of contacter">
-        <ion-grid>
-          <ion-row class="row">
-            <ion-col col-2>
-              <span class="avatar">{{item.name}}</span>
-            </ion-col>
-            <ion-col col-4>
-              <ion-row class="name">{{item.full_name}}</ion-row>
-              <ion-row class="company">{{item.company}}</ion-row>
-            </ion-col>
-            <ion-col>
-              <ion-row class="position">{{item.position}}</ion-row>
-              <ion-row class="department">{{item.department}}</ion-row>
-            </ion-col>
-          </ion-row>
-        </ion-grid>
-      </div>
+      <sg-contact-list [contacter]="contacter" (onClick)="goToDetailPage($event)"></sg-contact-list>
     </div>
+  </div>
+  <div *ngIf="searchFilter">
+    <sg-contact-list [contacter]="searchResult" (onClick)="goToDetailPage($event)"></sg-contact-list>
   </div>
 </ion-content>

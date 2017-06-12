@@ -22,10 +22,13 @@ export class JMessageService {
     }
 
     // 初始化
-    init(): Promise<any> {
-        return new Promise((resolve, reject) => {
-            this.jmessagePlugin.init();
-        });
+    // init(): Promise<any> {
+    //     return new Promise((resolve, reject) => {
+    //         this.jmessagePlugin.init();
+    //     });
+    // };
+    init() {
+        this.jmessagePlugin.init();
     };
 
     // 注册
