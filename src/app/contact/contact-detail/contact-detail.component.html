@@ -1,0 +1,80 @@
+<ion-header>
+  <ion-navbar>
+    <ion-title></ion-title>
+  </ion-navbar>
+</ion-header>
+<ion-content>
+  <div class="main-wrapper">
+    <div class="top-half">
+      <div class="avatar">{{personData.NICK_NAME.substr(-2)}}</div>
+      <div class="name">{{personData.NICK_NAME}}</div>
+      <div class="job-title">{{personData.JOB_TITLE}}</div>
+      <div class="actions">
+        <div class="tel">
+          <div class="icon">
+            <ion-icon name="ios-call-outline"></ion-icon>
+          </div>
+          <div class="my-text">
+            打电话
+          </div>
+        </div>
+        <span class="line"></span>
+        <div class="tel">
+          <div class="icon">
+            <ion-icon name="ios-chatboxes-outline"></ion-icon>
+          </div>
+          <div class="my-text">
+            发短信
+          </div>
+        </div>
+        <span class="line"></span>
+        <div class="tel">
+          <div class="icon">
+            <ion-icon name="ios-mail-outline"></ion-icon>
+          </div>
+          <div class="my-text">
+            写邮件
+          </div>
+        </div>
+        <span class="line"></span>
+        <div class="tel">
+          <div class="icon">
+            <ion-icon name="ios-calendar-outline"></ion-icon>
+          </div>
+          <div class="my-text">
+            建日程
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="space"></div>
+    <div class="bottom-half">
+      <ion-list>
+        <ion-item>
+          <div class="left">英文名</div>
+          <div class="right">{{personData.USER_NAME}}</div>
+        </ion-item>
+        <ion-item>
+          <div class="left">手机</div>
+          <div class="right">{{personData.MOBILE}}</div>
+        </ion-item>
+        <ion-item>
+          <div class="left">电话</div>
+          <div class="right">{{personData.TELEPHONE}}</div>
+        </ion-item>
+        <ion-item>
+          <div class="left">邮箱</div>
+          <div class="right">{{personData.EMAIL}}</div>
+        </ion-item>
+        <ion-item>
+          <div class="left">职称</div>
+          <div class="right">{{personData.JOB_TITLE}}</div>
+        </ion-item>
+        <ion-item>
+          <div class="left">部门</div>
+          <div class="right">{{personData.DEPT_NAME}}</div>
+        </ion-item>
+      </ion-list>
+    </div>
+  </div>
+</ion-content>

@@ -59,6 +59,7 @@ export class SetComponent {
   }
   // 注销用户
   logout(): void {
+    let that = this;
     let confirm = this.alertCtrl.create({
       title: '注销',
       message: '注销后将收不到推送消息，确认要退出吗?',
@@ -73,8 +74,7 @@ export class SetComponent {
           text: '确定',
           handler: () => {
             localStorage.removeItem('currentUser');
-            // localStorage.removeItem('myNineCode');
-            // localStorage.setItem('needPassNineCode','true');
+            that.jmessage.loginOut();
             this.app.getRootNav().setRoot(LoginComponent);
           }
         }
@@ -98,7 +98,7 @@ export class SetComponent {
           text: '是',
           handler: () => {
             // that.jmessage.jmessageHandler.unsubscribe();
-            // that.jmessage.loginOut();
+            that.jmessage.loginOut();
             that.platform.exitApp();
           }
         }

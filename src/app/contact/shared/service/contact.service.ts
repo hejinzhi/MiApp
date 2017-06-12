@@ -39,4 +39,12 @@ export class ContactService {
     public getLocalStorage(type: string) {
         return JSON.parse(localStorage.getItem('contact_' + type));
     }
+
+    public getPersonByName(filter: string, site: string) {
+        return this.myHttp.get(ContactConfig.getPersonByNameUrl + `?emp_name=${filter}&site=${site}`);
+    }
+
+    public getAllPersonByPage(site: string, pageIndex: number, pageSize: number) {
+        return this.myHttp.get(ContactConfig.getAllPersonByPageUrl + `?site=${site}&pageIndex=${pageIndex}&pageSize=${pageSize}`);
+    }
 }

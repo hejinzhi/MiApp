@@ -58,20 +58,16 @@ export class MessageComponent implements OnInit {
     //       type: 'dialogue',
     //       unread: true
     //     };
-
     //     this.messageService.history.push(msg);
     //   }
-
     //   this.messageService.setLocalMessageHistory(this.messageService.history);
     //   this.jmessageService.setSingleConversationUnreadMessageCount(res.fromName, '', 0);
-
     //   this.messageListItem = this.messageService.getMessageHistory();
     //   this.ref.detectChanges();
     // });
 
 
     // this.jmessageService.jmessageHandler = this.jmessageService.onReceiveMessage().subscribe(res => {
-    //   console.log('message');
     //   let _content: string;
     //   if (res.contentType === 'text') {
     //     _content = res.content.text;
@@ -88,13 +84,9 @@ export class MessageComponent implements OnInit {
     //     type: 'dialogue',
     //     unread: true
     //   };
-
-
     //   this.messageService.history.push(msg);
-
     //   this.messageService.setLocalMessageHistory(this.messageService.history);
     //   this.jmessageService.setSingleConversationUnreadMessageCount(res.fromName, '', 0);
-
     //   this.messageListItem = this.messageService.getMessageHistory();
     //   this.ref.detectChanges();
     //   this.events.publish('msg.onReceiveMessage');

@@ -13,4 +13,12 @@ export class ContactConfig {
 
     // 获取下属信息
     static getSubordinateUrl = EnvConfig.baseUrl + 'Guid/GetUnderUserView';
+
+    // 根据工号姓名AD查询信息
+    static getPersonByNameUrl = EnvConfig.baseUrl + 'Guid/GetUserLike';
+
+    // 分页查询所有员工信息
+    static getAllPersonByPageUrl = EnvConfig.baseUrl + 'Guid/GetAllUserByPage';
+
+    static pageSize = 30;
 }
