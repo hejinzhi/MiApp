@@ -21,25 +21,25 @@ export class ContactComponent {
     public navCtrl: NavController,
     public contactService: ContactService
   ) {
-    this.contacter = [{
-      NICK_NAME: '何锦枝',
-      USER_NAME: 'jinzhi.he',
-      JOB_TITLE: '工程师',
-      DEPT_NAME: '电子商务部'
-    },
-    {
-      NICK_NAME: '梁铭辉',
-      USER_NAME: 'hugh.liang',
-      JOB_TITLE: '工程师',
-      DEPT_NAME: '电子商务部'
-    }];
+    // this.contacter = [{
+    //   NICK_NAME: '何锦枝',
+    //   USER_NAME: 'jinzhi.he',
+    //   JOB_TITLE: '工程师',
+    //   DEPT_NAME: '电子商务部'
+    // },
+    // {
+    //   NICK_NAME: '梁铭辉',
+    //   USER_NAME: 'hugh.liang',
+    //   JOB_TITLE: '工程师',
+    //   DEPT_NAME: '电子商务部'
+    // }];
   }
 
-  // test() {
-  //   this.contactService.getDeptInfo('MSL').then((res) => {
-  //     console.log(res);
-  //   })
-  // }
+  ionViewWillEnter() {
+    this.contacter = this.contactService.getLocalStorage('viewHistory');
+  }
+
+
 
   // 取得searchbar的值
   async getItems(event: any) {
@@ -72,5 +72,6 @@ export class ContactComponent {
 
   goToDetailPage(event: any) {
     this.navCtrl.push(ContactDetailComponent, { data: event });
+    this.contactService.writeViewHistory(event);
   }
 }

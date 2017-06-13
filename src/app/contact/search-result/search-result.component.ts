@@ -24,7 +24,9 @@ export class SearchResultComponent implements OnInit {
         public navCtrl: NavController,
         public navParams: NavParams,
         public contactService: ContactService
-    ) { }
+    ) {
+
+    }
 
     async ngOnInit() {
         this.type = this.navParams.get('type');
@@ -93,6 +95,7 @@ export class SearchResultComponent implements OnInit {
 
     goToDetailPage(event: any) {
         this.navCtrl.push(ContactDetailComponent, { data: event });
+        this.contactService.writeViewHistory(event);
     }
 
     // 下拉加载数据
