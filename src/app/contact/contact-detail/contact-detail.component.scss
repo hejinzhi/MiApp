@@ -1,0 +1,94 @@
+sg-contact-detail {
+  .main-wrapper {
+    height: 100%;
+    width: 100%;
+    .top-half {
+      height: 36%;
+      @media screen and (orientation: portrait) {
+        height: 36%;
+      }
+      @media screen and (orientation: landscape) {
+        height: 70%;
+      }
+      background-color: #1fb2e8;
+      padding-top: 10px;
+      .avatar {
+        margin: 0 auto;
+        width: 80px;
+        height: 80px;
+        line-height: 80px;
+        text-align: center;
+        border-radius: 40px;
+        background-color: #6396E2;
+        color: #fff;
+        font-size: 20px;
+        border: 2px solid #fff;
+      }
+      .name {
+        width: 200px;
+        height: 25px;
+        line-height: 25px;
+        text-align: center;
+        margin: 0 auto;
+        color: #fff;
+      }
+      .job-title {
+        width: 200px;
+        text-align: center;
+        margin: 0 auto;
+        color: #fff;
+        font-size: 10px;
+      }
+      .actions {
+        width: 100%;
+        margin-top: 18px;
+        text-align: center;
+        height: 90px;
+        .tel {
+          // height: 45px;
+          float: left;
+          width: 24%;
+          .icon {
+            height: 45px;
+            font-size: 45px;
+            color: white;
+          }
+          .my-text {
+            // height: 45px;
+            color: white;
+          }
+        }
+        .line {
+          margin-top: 15px;
+          margin-bottom: 10px;
+          float: left;
+          height: 40px;
+          border: 1px solid #fff;
+        }
+      }
+    }
+    .space {
+      height: 12px;
+      width: 100%;
+      background-color: #f5f5f5;
+    }
+    .bottom-half {
+      .list-ios>.item-block:first-child {
+        border-top: hidden;
+      }
+      .list-ios>.item-block:last-child {
+        border-top: hidden;
+      }
+      .left {
+        display: inline-block;
+        width: 25%;
+        color: #b6b6b6;
+      }
+      .right {
+        display: inline-block;
+        color: #b6b6b6;
+        width: 75%;
+      }
+    }
+  }
+}

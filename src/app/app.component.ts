@@ -10,6 +10,8 @@ import { PatternLockComponent } from './login/pattern-lock/pattern-lock.componen
 import { MessageService } from './message/shared/service/message.service';
 import { PluginService } from './core/services/plugin.service';
 
+import { ContactDetailComponent } from './contact/contact-detail/contact-detail.component';
+
 declare var cordova: any;
 
 @Component({
@@ -74,11 +76,13 @@ export class MyAppComponent {
     if (user && user.myNineCode) {
       // 已经有用户信息和设定为要验证手势密码
       this.rootPage = PatternLockComponent;
+      // this.rootPage = ContactDetailComponent;
     } else {
       this.rootPage = LoginComponent;
+      // this.rootPage = ContactDetailComponent;
     }
-    if(!localStorage.getItem('languageType')) {
-      localStorage.setItem('languageType','simple_Chinese');
+    if (!localStorage.getItem('languageType')) {
+      localStorage.setItem('languageType', 'simple_Chinese');
     }
   }
 

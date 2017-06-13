@@ -1,0 +1,21 @@
+<div class="contacter">
+  <div class="contacter-content" *ngFor="let item of contacter">
+    <button class="my-button" (click)="goToDetailPage(item)"> 
+    <ion-grid>
+      <ion-row class="row">
+        <ion-col col-2>
+          <span class="avatar">{{item.NICK_NAME.substr(-2)}}</span>
+        </ion-col>
+        <ion-col col-4>
+          <ion-row class="name">{{item.NICK_NAME}}</ion-row>
+          <ion-row class="company">{{item.USER_NAME}}</ion-row>
+        </ion-col>
+        <ion-col>
+          <ion-row class="position">{{item.JOB_TITLE}}</ion-row>
+          <ion-row class="department">{{item.DEPT_NAME}}</ion-row>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+    </button>
+  </div>
+</div>
