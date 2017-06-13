@@ -1,6 +1,6 @@
 <ion-searchbar (ionInput)="getItems($event)" [placeholder]="fontContent.search_placeholder" class="searchBar"></ion-searchbar>
 <ion-list class="myList">
-  <ion-item *ngFor="let item of items;trackBy:trackByItems" (click)="toDetail(item)">
+  <button ion-item *ngFor="let item of items;trackBy:trackByItems" (click)="toDetail(item)">
     <ion-row *ngIf="item.type === '3'" no-padding class="myRow">
       <ion-col col-5>
         <p>{{ item.No}}</p>
@@ -70,28 +70,5 @@
         <p>{{item.data.absentType | sgOtherType: 'absentType' | sgLength: 2 | sgChineseConv}}{{item.data.hours.toFixed(2)}}H</p>
       </ion-row>
     </h2>
-    <!-- <h2><p>{{ item.No }}</p><p>{{ item.data.OTtime | date:"yyyy/MM/dd" }}</p><p>{{item.status}}</p></h2>  -->
-    <!-- <h2>{{fontContent.form_No}}： {{ item.No }}</h2>
-    <p *ngIf="+item.type<2">{{fontContent.startTime}}： {{ item.data.startTime | date:"yyyy/MM/dd HH:mm" }}</p>
-    <p *ngIf="+item.type<2">{{fontContent.endTime}}： {{ item.data.endTime | date:"yyyy/MM/dd HH:mm" }}</p>
-    <p *ngIf="+item.type<2">{{item.type | sgFormType}}</p>
-    <p *ngIf="item.type === '2' ">{{fontContent.startTime}}： {{item.data.startDate +' ' + item.data.startTime.substr(3) }}</p>
-    <p *ngIf="item.type === '2' ">{{fontContent.endTime}}： {{item.data.endDate +' ' + item.data.endTime.substr(3) }}</p>
-    <p *ngIf="item.type === '4'">{{fontContent.businessTime}}： {{ item.data.businessTime | date:"yyyy/MM/dd" }} {{item.data.startTime.substr(3)}}-{{item.data.endTime.substr(3)}}</p>
-    <p *ngIf="item.type === '3'">{{fontContent.OTtime}}： {{ item.data.OTtime | date:"yyyy/MM/dd" }}</p>
-    <p *ngIf="item.type === '3'">{{ item.data.startTime.substr(3) }}-{{ item.data.endTime.substr(3) }} {{item.data.count}}H</p>
-    <p *ngIf="item.type === '3'">{{fontContent.trueCount}}：{{item.data.trueCount}}H;</p>
-    <p *ngIf="item.data.reasonType">{{fontContent.type}}： {{item.data.reasonType | sgReasonType: item.type}}</p>
-    <p *ngIf="item.type === '5'">{{fontContent.leave_No}}： {{item.data.leave_No}}</p>
-    <p *ngIf="item.type === '5'">{{fontContent.callback_reason}}： {{item.data.reason}}</p> -->
-    <!-- <button ion-button outline item-right color = "secondary" *ngIf="['APPROVED','FINISHED'].indexOf(item.status.toUpperCase())>-1">
-      {{item.status}}
-    </button>
-    <button ion-button outline item-right color = "normal" *ngIf="['NEW','CANCELED'].indexOf(item.status.toUpperCase())>-1">
-      {{item.status}}
-    </button>
-    <button ion-button outline item-right color = "danger" *ngIf="['WAITING','REJECTED'].indexOf(item.status.toUpperCase())>-1">
-      {{item.status}}
-    </button> -->
-  </ion-item>
+  </button>
 </ion-list>

@@ -1,13 +1,10 @@
 import { Component } from '@angular/core';
-import { NavController, NavParams, PopoverController, AlertController} from 'ionic-angular';
+import { NavController, NavParams, PopoverController, AlertController, IonicPage} from 'ionic-angular';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms'
 ;
 import { ValidateService }   from '../../../../core/services/validate.service';
 import { PluginService }   from '../../../../core/services/plugin.service';
 import { AttendanceService } from '../shared/service/attendance.service';
-
-import { FormMenuComponent } from '../form-menu/form-menu.component';
-import { SignListComponent } from '../sign-list/sign-list.component';
 
 import { MyValidatorModel } from '../../../../shared/models/my-validator.model';
 import { MyFormModel } from '../shared/models/my-form.model';
@@ -16,6 +13,7 @@ import { HolidayType } from '../shared/config/holiday-type';
 import { AttendanceConfig } from '../shared/config/attendance.config';
 import { LanguageTypeConfig } from '../shared/config/language-type.config';
 
+@IonicPage()
 @Component({
   selector: 'sg-over-time-form',
   templateUrl: 'over-time-form.component.html'
@@ -184,7 +182,7 @@ export class OverTimeFormComponent {
     });
   }
   presentPopover(myEvent:any) {
-    let popover = this.popoverCtrl.create(FormMenuComponent,{
+    let popover = this.popoverCtrl.create('FormMenuComponent',{
       this:this,
     });
     popover.present({

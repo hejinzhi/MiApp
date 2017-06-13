@@ -4,7 +4,6 @@ import { Tabs } from 'ionic-angular'
 import { MessageComponent } from '../message/message.component';
 import { ContactComponent } from '../contact/contact.component';
 import { ApplicationComponent } from '../application/application.component';
-import { MeComponent } from '../me/me.component';
 
 
 
@@ -17,7 +16,7 @@ export class TabsComponent {
   tab1Root = MessageComponent;
   tab2Root = ApplicationComponent;
   tab3Root = ContactComponent;
-  tab4Root = MeComponent;
+  tab4Root = 'MeComponent';
 
   constructor() {
 

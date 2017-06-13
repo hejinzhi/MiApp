@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { NavController, NavParams } from 'ionic-angular';
+import { NavController, NavParams, IonicPage } from 'ionic-angular';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 import { ValidateService }   from '../../../../core/services/validate.service';
@@ -12,6 +12,7 @@ import { LanguageTypeConfig } from '../shared/config/language-type.config';
 import { MyValidatorModel } from '../../../../shared/models/my-validator.model';
 import { MyFormModel } from '../shared/models/my-form.model';
 
+@IonicPage()
 @Component({
   selector: 'sg-undone-form',
   templateUrl: 'undone-form.component.html'

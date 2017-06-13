@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { NavController, NavParams } from 'ionic-angular';
+import { NavController, NavParams, IonicPage } from 'ionic-angular';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 import { ValidateService }   from '../../../../core/services/validate.service';
@@ -9,11 +9,10 @@ import { PluginService }   from '../../../../core/services/plugin.service';
 import { MyValidatorModel } from '../../../../shared/models/my-validator.model';
 import { FormType } from '../shared/config/form-type';
 
-import { FormListComponent } from '../form-list/form-list.component';
-
 import { AttendanceConfig } from '../shared/config/attendance.config';
 import { LanguageTypeConfig } from '../shared/config/language-type.config';
 
+@IonicPage()
 @Component({
   selector: 'sg-search-form',
   templateUrl: 'search-form.component.html'
@@ -144,7 +143,7 @@ export class SearchFormComponent {
       this.plugin.showToast(this.fontContent.no_result);
       return false;
     }
-    this.navCtrl.push(FormListComponent, {
+    this.navCtrl.push('FormListComponent', {
       type: this.todo.value.type,
       formData: res.content
     })

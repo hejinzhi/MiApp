@@ -1,19 +1,14 @@
 import { Component } from '@angular/core';
-import { ViewController, NavController, NavParams, AlertController} from 'ionic-angular';
+import { ViewController, NavController, NavParams, AlertController, IonicPage} from 'ionic-angular';
 
 import { PluginService }   from '../../../../core/services/plugin.service';
 import { AttendanceService } from '../shared/service/attendance.service';
-
-import { SearchFormComponent } from '../search-form/search-form.component';
-import { CallbackLeaveFormComponent } from '../callback-leave-form/callback-leave-form.component';
-// import { HoildayDetailComponent } from '../hoilday-detail/holiday-detail.component';
-import { FormListComponent } from '../form-list/form-list.component';
-import { SignListComponent } from '../sign-list/sign-list.component';
 
 import { MyFormModel } from '../shared/models/my-form.model';
 
 import { LanguageTypeConfig } from '../shared/config/language-type.config';
 
+@IonicPage()
 @Component({
   selector: 'sg-form-menu',
   templateUrl: 'form-menu.component.html',
@@ -48,7 +43,7 @@ export class FormMenuComponent {
   }
   toSearch() {
     this.viewCtrl.dismiss()
-    this.lastNavCtr.push(SearchFormComponent,{
+    this.lastNavCtr.push('SearchFormComponent',{
       type:this.formData.type
     })
   }
@@ -66,7 +61,7 @@ export class FormMenuComponent {
     loading.dismiss();
     if(!res.status) return;
     if(res.content.length>0) {
-      this.lastNavCtr.push(FormListComponent, {
+      this.lastNavCtr.push('FormListComponent', {
         type: this.formData.type,
         formData: res.content
       })
@@ -143,18 +138,18 @@ export class FormMenuComponent {
     let res:any = await this.attendanceService.getCallbackLeaveFrom(this.formData.No);
     loading.dismiss();
     if(res.content.length>0) {
-      this.lastNavCtr.push(CallbackLeaveFormComponent,{
+      this.lastNavCtr.push('CallbackLeaveFormComponent',{
         detailMes: res.content[0]
       })
     } else {
-      this.lastNavCtr.push(CallbackLeaveFormComponent,{
+      this.lastNavCtr.push('CallbackLeaveFormComponent',{
         form_No:this.formData.No
       })
     }
   }
   sign_list() {
     this.viewCtrl.dismiss();
-    this.lastNavCtr.push(SignListComponent, {
+    this.lastNavCtr.push('SignListComponent', {
       formData: this.formData
     })
   }

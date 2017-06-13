@@ -1,9 +1,6 @@
 import { Component } from '@angular/core';
-import { NavController, NavParams, PopoverController } from 'ionic-angular';
+import { NavController, NavParams, PopoverController, IonicPage } from 'ionic-angular';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-
-import { SignListComponent } from '../sign-list/sign-list.component';
-import { FormMenuComponent } from '../form-menu/form-menu.component';
 
 import { ValidateService }   from '../../../../core/services/validate.service';
 import { PluginService }   from '../../../../core/services/plugin.service';
@@ -14,6 +11,7 @@ import { MyFormModel } from '../shared/models/my-form.model';
 
 import { LanguageTypeConfig } from '../shared/config/language-type.config';
 
+@IonicPage()
 @Component({
   selector: 'sg-callback-leave-form',
   templateUrl: 'callback-leave-form.component.html'
@@ -96,7 +94,7 @@ export class CallbackLeaveFormComponent {
     });
   }
   presentPopover(myEvent:any) {
-    let popover = this.popoverCtrl.create(FormMenuComponent,{
+    let popover = this.popoverCtrl.create('FormMenuComponent',{
       this:this,
     });
     popover.present({
@@ -140,7 +138,7 @@ export class CallbackLeaveFormComponent {
     };
   }
   sign_list() {
-    this.navCtrl.push(SignListComponent,{
+    this.navCtrl.push('SignListComponent',{
       formData: this.formData
     })
   }
