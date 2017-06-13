@@ -1,12 +1,12 @@
 import { Component } from '@angular/core';
-import { NavController, NavParams } from 'ionic-angular';
+import { NavController, NavParams, IonicPage } from 'ionic-angular';
 
 import { AttendanceService } from '../shared/service/attendance.service';
 import { PluginService }   from '../../../../core/services/plugin.service';
 
 import { LanguageTypeConfig } from '../shared/config/language-type.config';
 
-// @IonicPage()
+@IonicPage()
 @Component({
   selector: 'sg-sign-list',
   templateUrl: 'sign-list.component.html'

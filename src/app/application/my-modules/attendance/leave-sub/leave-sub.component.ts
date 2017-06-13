@@ -1,16 +1,12 @@
 import { Component } from '@angular/core';
 import { NavController, NavParams, IonicPage } from 'ionic-angular';
 
-import { LeaveFormComponent } from '../leave-form/leave-form.component';
-import { FormListComponent } from '../form-list/form-list.component';
-import { BusinessFormComponent } from '../business-form/business-form.component';
-
 import { AttendanceService } from '../shared/service/attendance.service';
 import { PluginService }   from '../../../../core/services/plugin.service';
 
 import { LanguageTypeConfig } from '../shared/config/language-type.config';
 
-// @IonicPage()
+@IonicPage()
 @Component({
   selector:'sg-leave-sub',
   templateUrl: 'leave-sub.component.html'
@@ -31,7 +27,7 @@ export class LeaveSubComponent {
   }
 
   maintain_Leave() {
-    this.navCtrl.push(LeaveFormComponent);
+    this.navCtrl.push('LeaveFormComponent');
   }
 
   async cancel_leave(){
@@ -40,7 +36,7 @@ export class LeaveSubComponent {
     let res:any = await this.attendanceService.getCanCallbackLeaveFrom();
     loading.dismiss();
     if(res.length === 0) return this.plugin.showToast(this.fontContent.for_callback_tip);
-    this.navCtrl.push(FormListComponent,{
+    this.navCtrl.push('FormListComponent',{
       formData:res,
       type:'2',
       approved:true
@@ -48,6 +44,6 @@ export class LeaveSubComponent {
   }
 
   maintain_business():void{
-    this.navCtrl.push(BusinessFormComponent);
+    this.navCtrl.push('BusinessFormComponent');
   }
 }

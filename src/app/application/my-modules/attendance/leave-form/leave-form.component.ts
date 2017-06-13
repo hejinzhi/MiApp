@@ -9,9 +9,6 @@ import { ValidateService }   from '../../../../core/services/validate.service';
 import { PluginService }   from '../../../../core/services/plugin.service';
 import { AttendanceService } from '../shared/service/attendance.service';
 
-import { AttendanceComponent } from '../attendance.component';
-import { FormMenuComponent } from '../form-menu/form-menu.component';
-
 import { HolidayType } from '../shared/config/holiday-type';
 
 import { MyValidatorModel } from '../../../../shared/models/my-validator.model';
@@ -20,7 +17,7 @@ import { MyFormModel } from '../shared/models/my-form.model';
 import { AttendanceConfig } from '../shared/config/attendance.config';
 import { LanguageTypeConfig } from '../shared/config/language-type.config';
 
-// @IonicPage()
+@IonicPage()
 @Component({
   selector: 'sg-leave-form',
   templateUrl: 'leave-form.component.html'
@@ -245,7 +242,7 @@ export class LeaveFormComponent {
     }
   }
   async presentPopover(myEvent: any) {
-    let popover = this.popoverCtrl.create(FormMenuComponent,{
+    let popover = this.popoverCtrl.create('FormMenuComponent',{
       this:this,
     });
     popover.present({

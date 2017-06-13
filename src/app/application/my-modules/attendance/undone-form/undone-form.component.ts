@@ -12,7 +12,7 @@ import { LanguageTypeConfig } from '../shared/config/language-type.config';
 import { MyValidatorModel } from '../../../../shared/models/my-validator.model';
 import { MyFormModel } from '../shared/models/my-form.model';
 
-// @IonicPage()
+@IonicPage()
 @Component({
   selector: 'sg-undone-form',
   templateUrl: 'undone-form.component.html'

@@ -10,12 +10,10 @@ import { MyValidatorModel } from '../../../../shared/models/my-validator.model';
 
 import { FormType } from '../shared/config/form-type';
 
-import { AttendanceMonthComponent } from '../attendance-month/attendance-month.component';
-
 import { AttendanceConfig } from '../shared/config/attendance.config';
 import { LanguageTypeConfig } from '../shared/config/language-type.config';
 
-// @IonicPage()
+@IonicPage()
 @Component({
   selector: 'sg-detail-on-form',
   templateUrl: 'detail-on-form.component.html'
@@ -96,7 +94,7 @@ export class DetailOnFormComponent {
     if(!res.content) {
       this.plugin.showToast(this.fontContent.no_result)
     } else {
-      this.navCtrl.push(AttendanceMonthComponent,{
+      this.navCtrl.push('AttendanceMonthComponent',{
         attendance_month:res.content
       });
     }

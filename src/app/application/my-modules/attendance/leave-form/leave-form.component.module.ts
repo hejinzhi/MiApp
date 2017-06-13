@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { LeaveFormComponent } from './statistics.component';
+import { LeaveFormComponent } from './leave-form.component';
 import { IonicPageModule } from 'ionic-angular';
 import { PipesModule } from '../shared/pipe/pipes.module';
 

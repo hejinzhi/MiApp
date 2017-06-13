@@ -12,7 +12,7 @@ class Chart {
   value: number
 }
 
-// @IonicPage()
+@IonicPage()
 @Component({
   selector: 'sg-statistics',
   templateUrl: 'statistics.component.html'

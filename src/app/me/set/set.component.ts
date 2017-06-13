@@ -1,11 +1,12 @@
 import { Component } from '@angular/core';
-import { NavController, NavParams, AlertController, App, Platform } from 'ionic-angular';
-import { PatternLockComponent } from '../../login/pattern-lock/pattern-lock.component';
-import { LoginComponent } from '../../login/login.component';
+import { NavController, NavParams, AlertController, App, Platform, IonicPage } from 'ionic-angular';
 
+import { LoginComponent } from '../../login/login.component';
+import { PatternLockComponent } from '../../login/pattern-lock/pattern-lock.component';
 import { JMessageService } from '../../core/services/jmessage.service'
 import { PluginService } from '../../core/services/plugin.service'
 
+@IonicPage()
 @Component({
   selector: 'sg-set',
   templateUrl: 'set.component.html'

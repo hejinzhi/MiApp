@@ -5,7 +5,7 @@ import { ComponentsModule } from './components.module';
 
 @NgModule({
   declarations: [AttendanceComponent],
-  imports: [IonicPageModule.forChild(AttendanceComponent), ComponentsModule ],
+  imports: [IonicPageModule.forChild(AttendanceComponent)],
   entryComponents: [
     AttendanceComponent
   ]

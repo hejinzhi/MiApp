@@ -10,13 +10,10 @@ import { MyValidatorModel } from '../../../../shared/models/my-validator.model';
 
 import { FormType } from '../shared/config/form-type';
 
-import { AttendanceDetailComponent } from '../attendance-detail/attendance-detail.component';
-import { SwipeNoteComponent } from '../swipe-note/swipe-note.component';
-
 import { AttendanceConfig } from '../shared/config/attendance.config';
 import { LanguageTypeConfig } from '../shared/config/language-type.config';
 
-// @IonicPage()
+@IonicPage()
 @Component({
   selector: 'sg-detail-between-form',
   templateUrl: 'detail-between-form.component.html'
@@ -112,7 +109,7 @@ export class DetailBetweenFormComponent {
       loading.dismiss()
       if(!res.status) return false;
       if(res.content && res.content instanceof Array && res.content.length>0) {
-        this.navCtrl.push(SwipeNoteComponent,{
+        this.navCtrl.push('SwipeNoteComponent',{
           swipe_note:res.content
         })
       } else {
@@ -126,7 +123,7 @@ export class DetailBetweenFormComponent {
       loading.dismiss()
       if(!res.status) return false;
       if(res.content && res.content instanceof Array && res.content.length>0) {
-        this.navCtrl.push(AttendanceDetailComponent,{
+        this.navCtrl.push('AttendanceDetailComponent',{
           attendance_detail:res.content
         })
       } else {

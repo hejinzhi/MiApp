@@ -1,11 +1,11 @@
 import { Component, ChangeDetectorRef } from '@angular/core';
-import { NavController } from 'ionic-angular';
-import { SetComponent } from './set/set.component'
+import { NavController, IonicPage } from 'ionic-angular';
+
 import { BarcodeScanner } from '@ionic-native/barcode-scanner';
-import { MeDetailComponent } from './me-detail/me-detail.component';
 
 import { PluginService }   from '../core/services/plugin.service';
 
+@IonicPage()
 @Component({
   selector: 'sg-me',
   templateUrl: 'me.component.html'
@@ -37,13 +37,13 @@ export class MeComponent {
     this.mySubcribe.unsubscribe();
   }
   goSetting(): void {
-    this.navCtrl.push(SetComponent, {
+    this.navCtrl.push('SetComponent', {
 
     });
   }
 
   goToMyDetail(): void {
-    this.navCtrl.push(MeDetailComponent, { user: this.user });
+    this.navCtrl.push('MeDetailComponent', { user: this.user });
   }
 
   // 获取二维码信息

@@ -3,7 +3,7 @@ import { NavController, NavParams, IonicPage } from 'ionic-angular';
 
 import { LanguageTypeConfig } from '../shared/config/language-type.config';
 
-// @IonicPage()
+@IonicPage()
 @Component({
   selector: 'sg-hoilday-detail',
   templateUrl: 'holiday-detail.component.html'

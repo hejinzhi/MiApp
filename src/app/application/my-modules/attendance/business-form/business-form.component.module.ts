@@ -1,13 +1,13 @@
 import { NgModule } from '@angular/core';
-import { StatisticsComponent } from './statistics.component';
+import { BusinessFormComponent } from './business-form.component';
 import { IonicPageModule } from 'ionic-angular';
 import { PipesModule } from '../shared/pipe/pipes.module';
 
 @NgModule({
-  declarations: [StatisticsComponent],
-  imports: [IonicPageModule.forChild(StatisticsComponent), PipesModule],
+  declarations: [BusinessFormComponent],
+  imports: [IonicPageModule.forChild(BusinessFormComponent), PipesModule],
   entryComponents: [
-    StatisticsComponent
+    BusinessFormComponent
   ]
 })
-export class StatisticsComponentModule { }
+export class BusinessFormComponentModule { }

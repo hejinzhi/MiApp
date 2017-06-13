@@ -1,15 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { NavController, NavParams, App, Platform, IonicPage } from 'ionic-angular';
 
-import { LeaveFormComponent } from '../leave-form/leave-form.component';
-import { BusinessFormComponent } from '../business-form/business-form.component';
-import { OverTimeFormComponent } from '../over-time-form/over-time-form.component';
-
 import { LanguageTypeConfig } from '../shared/config/language-type.config';
 
 import { PluginService }   from '../../../../core/services/plugin.service';
 import { AttendanceService } from '../shared/service/attendance.service';
 
+@IonicPage()
 @Component({
   selector: 'sg-form-list',
   templateUrl: 'form-list.component.html',
@@ -63,13 +60,13 @@ export class FormListComponent {
     let component: any = ''
     switch (Number(this.type)) {
       case 2:
-        component = LeaveFormComponent;
+        component = 'LeaveFormComponent';
         break;
       case 3:
-        component = OverTimeFormComponent;
+        component = 'OverTimeFormComponent';
         break;
       case 4:
-        component = BusinessFormComponent;
+        component = 'BusinessFormComponent';
         break;
       default:
         break;
