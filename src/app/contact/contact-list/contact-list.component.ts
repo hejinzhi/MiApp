@@ -17,4 +17,5 @@ export class ContactListComponent implements OnInit {
     goToDetailPage(item: any) {
         this.onClick.emit(item);
     }
+
 }

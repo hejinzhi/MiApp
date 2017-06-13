@@ -5,12 +5,9 @@ import { SplashScreen } from '@ionic-native/splash-screen';
 
 import { LoginComponent } from './login/login.component';
 import { TabsComponent } from './tabs/tabs.component';
-import { AttendanceComponent } from './application/my-modules/attendance/attendance.component'
 import { PatternLockComponent } from './login/pattern-lock/pattern-lock.component';
 import { MessageService } from './message/shared/service/message.service';
 import { PluginService } from './core/services/plugin.service';
-
-import { ContactDetailComponent } from './contact/contact-detail/contact-detail.component';
 
 declare var cordova: any;
 

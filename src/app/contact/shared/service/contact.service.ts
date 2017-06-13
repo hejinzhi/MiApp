@@ -6,8 +6,10 @@ import { ContactConfig } from '../../config/contact.config';
 
 @Injectable()
 export class ContactService {
-
-    constructor(private myHttp: MyHttpService) { }
+    username: string;
+    constructor(private myHttp: MyHttpService) {
+        this.username = JSON.parse(localStorage.getItem('currentUser')).username;
+    }
 
     // public moveAppToMorePage(moduleID) {
     //     return this.myHttp.post(ApplicationConfig.updateModuleDisplayUrl + `?moduleID=${moduleID}&display=N`, {});
@@ -33,11 +35,11 @@ export class ContactService {
     }
 
     public setLocalStorage(type: string, value: any) {
-        localStorage.setItem('contact_' + type, JSON.stringify(value));
+        localStorage.setItem(this.username + '_' + 'contact_' + type, JSON.stringify(value));
     }
 
     public getLocalStorage(type: string) {
-        return JSON.parse(localStorage.getItem('contact_' + type));
+        return JSON.parse(localStorage.getItem(this.username + '_' + 'contact_' + type));
     }
 
     public getPersonByName(filter: string, site: string) {
@@ -46,5 +48,32 @@ export class ContactService {
 
     public getAllPersonByPage(site: string, pageIndex: number, pageSize: number) {
         return this.myHttp.get(ContactConfig.getAllPersonByPageUrl + `?site=${site}&pageIndex=${pageIndex}&pageSize=${pageSize}`);
+    }
+
+    public writeViewHistory(personData: any) {
+        let historyData: any[] = this.getLocalStorage('viewHistory') ? this.getLocalStorage('viewHistory') : [];
+        let length = historyData.length;
+        if (length <= 9) {
+            historyData.forEach((value, index) => {
+                if (value.USER_NAME === personData.USER_NAME) {
+                    historyData.splice(index, 1);
+                }
+            });
+            historyData.splice(0, 0, personData);
+            this.setLocalStorage('viewHistory', historyData);
+        }
+        else {
+
+            historyData.forEach((value, index) => {
+                if (value.USER_NAME === personData.USER_NAME) {
+                    historyData.splice(index, 1);
+                }
+            });
+            historyData.splice(0, 0, personData);
+            if (historyData.length > 10) {
+                historyData.pop();
+            }
+            this.setLocalStorage('viewHistory', historyData);
+        }
     }
 }
