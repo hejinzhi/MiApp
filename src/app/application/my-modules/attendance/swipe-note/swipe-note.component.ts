@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { NavController, NavParams } from 'ionic-angular';
+import { NavController, NavParams, IonicPage } from 'ionic-angular';
 
 import { FormType } from '../shared/config/form-type';
 
+// @IonicPage()
 @Component({
   selector: 'sg-swipe-note',
   templateUrl: 'swipe-note.component.html',

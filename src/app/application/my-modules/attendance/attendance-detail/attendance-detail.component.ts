@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { NavController, NavParams } from 'ionic-angular';
+import { NavController, NavParams, IonicPage } from 'ionic-angular';
 
 import { FormType } from '../shared/config/form-type';
 import { LanguageTypeConfig } from '../shared/config/language-type.config';
 
+// @IonicPage()
 @Component({
   selector: 'sg-attendance-detail',
   templateUrl: 'attendance-detail.component.html',

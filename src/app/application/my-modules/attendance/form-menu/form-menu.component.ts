@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { ViewController, NavController, NavParams, AlertController} from 'ionic-angular';
+import { ViewController, NavController, NavParams, AlertController, IonicPage} from 'ionic-angular';
 
 import { PluginService }   from '../../../../core/services/plugin.service';
 import { AttendanceService } from '../shared/service/attendance.service';
@@ -14,6 +14,7 @@ import { MyFormModel } from '../shared/models/my-form.model';
 
 import { LanguageTypeConfig } from '../shared/config/language-type.config';
 
+// @IonicPage()
 @Component({
   selector: 'sg-form-menu',
   templateUrl: 'form-menu.component.html',

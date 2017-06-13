@@ -1,5 +1,5 @@
 import { Component, ChangeDetectorRef } from '@angular/core';
-import { NavController, NavParams, PopoverController } from 'ionic-angular';
+import { NavController, NavParams, PopoverController, IonicPage } from 'ionic-angular';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 import { Observable }        from 'rxjs/Observable';
@@ -19,6 +19,7 @@ import { HolidayType } from '../shared/config/holiday-type';
 import { AttendanceConfig } from '../shared/config/attendance.config';
 import { LanguageTypeConfig } from '../shared/config/language-type.config';
 
+// @IonicPage()
 @Component({
   selector: 'sg-business-form',
   templateUrl: 'business-form.component.html'

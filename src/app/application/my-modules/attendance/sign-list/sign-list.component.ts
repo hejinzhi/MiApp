@@ -6,6 +6,7 @@ import { PluginService }   from '../../../../core/services/plugin.service';
 
 import { LanguageTypeConfig } from '../shared/config/language-type.config';
 
+// @IonicPage()
 @Component({
   selector: 'sg-sign-list',
   templateUrl: 'sign-list.component.html'

@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { NavController, NavParams } from 'ionic-angular';
+import { NavController, NavParams, IonicPage } from 'ionic-angular';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 import { ValidateService }   from '../../../../core/services/validate.service';
@@ -15,6 +15,7 @@ import { AttendanceMonthComponent } from '../attendance-month/attendance-month.c
 import { AttendanceConfig } from '../shared/config/attendance.config';
 import { LanguageTypeConfig } from '../shared/config/language-type.config';
 
+// @IonicPage()
 @Component({
   selector: 'sg-detail-on-form',
   templateUrl: 'detail-on-form.component.html'

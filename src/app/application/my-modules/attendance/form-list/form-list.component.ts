@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { NavController, NavParams, App, Platform } from 'ionic-angular';
+import { NavController, NavParams, App, Platform, IonicPage } from 'ionic-angular';
 
 import { LeaveFormComponent } from '../leave-form/leave-form.component';
 import { BusinessFormComponent } from '../business-form/business-form.component';

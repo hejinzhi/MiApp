@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { NavController, NavParams, PopoverController, AlertController} from 'ionic-angular';
+import { NavController, NavParams, PopoverController, AlertController, IonicPage} from 'ionic-angular';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms'
 ;
 import { ValidateService }   from '../../../../core/services/validate.service';
@@ -16,6 +16,7 @@ import { HolidayType } from '../shared/config/holiday-type';
 import { AttendanceConfig } from '../shared/config/attendance.config';
 import { LanguageTypeConfig } from '../shared/config/language-type.config';
 
+// @IonicPage()
 @Component({
   selector: 'sg-over-time-form',
   templateUrl: 'over-time-form.component.html'

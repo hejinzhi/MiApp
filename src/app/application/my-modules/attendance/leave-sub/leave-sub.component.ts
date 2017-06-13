@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { NavController, NavParams } from 'ionic-angular';
+import { NavController, NavParams, IonicPage } from 'ionic-angular';
 
 import { LeaveFormComponent } from '../leave-form/leave-form.component';
 import { FormListComponent } from '../form-list/form-list.component';
@@ -10,6 +10,7 @@ import { PluginService }   from '../../../../core/services/plugin.service';
 
 import { LanguageTypeConfig } from '../shared/config/language-type.config';
 
+// @IonicPage()
 @Component({
   selector:'sg-leave-sub',
   templateUrl: 'leave-sub.component.html'

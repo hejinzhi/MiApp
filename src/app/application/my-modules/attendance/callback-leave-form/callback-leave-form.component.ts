@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { NavController, NavParams, PopoverController } from 'ionic-angular';
+import { NavController, NavParams, PopoverController, IonicPage } from 'ionic-angular';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 import { SignListComponent } from '../sign-list/sign-list.component';
@@ -14,6 +14,7 @@ import { MyFormModel } from '../shared/models/my-form.model';
 
 import { LanguageTypeConfig } from '../shared/config/language-type.config';
 
+// @IonicPage()
 @Component({
   selector: 'sg-callback-leave-form',
   templateUrl: 'callback-leave-form.component.html'

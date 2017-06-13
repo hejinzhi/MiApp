@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { NavController, NavParams } from 'ionic-angular';
+import { NavController, NavParams, IonicPage } from 'ionic-angular';
 
 import { DetailBetweenFormComponent } from '../detail-between-form/detail-between-form.component';
 import { DetailOnFormComponent } from '../detail-on-form/detail-on-form.component';
@@ -11,6 +11,7 @@ import { LanguageTypeConfig } from '../shared/config/language-type.config';
 import { AttendanceService } from '../shared/service/attendance.service';
 import { PluginService }   from '../../../../core/services/plugin.service';
 
+// @IonicPage()
 @Component({
   selector:'sg-leave-message-menu',
   templateUrl: 'leave-message-menu.component.html'

@@ -1,7 +1,6 @@
 import { NgModule }      from '@angular/core';
-import { CommonModule }  from '@angular/common';
 import { IonicModule } from 'ionic-angular';
-import { AttendanceComponent } from './attendance.component';
+
 import { LeaveFormComponent } from './leave-form/leave-form.component';
 import { OverTimeFormComponent } from './over-time-form/over-time-form.component';
 import { HoildayDetailComponent } from './hoilday-detail/holiday-detail.component';
@@ -28,9 +27,8 @@ import { PipesModule } from './shared/pipe/pipes.module';
 import { AttendanceService } from './shared/service/attendance.service';
 
 @NgModule({
-  imports:      [ CommonModule, IonicModule, PipesModule ],
+  imports:      [ IonicModule, PipesModule ],
   declarations: [
-    AttendanceComponent,
     LeaveFormComponent,
     FormMenuComponent,
     OverTimeFormComponent,
@@ -52,7 +50,6 @@ import { AttendanceService } from './shared/service/attendance.service';
     StatisticsComponent
   ],
   entryComponents:[
-    AttendanceComponent,
     LeaveFormComponent,
     FormMenuComponent,
     OverTimeFormComponent,
@@ -74,4 +71,4 @@ import { AttendanceService } from './shared/service/attendance.service';
   ],
   providers:    [ AttendanceService ]
 })
-export class AttendanceModule {}
+export class ComponentsModule {}

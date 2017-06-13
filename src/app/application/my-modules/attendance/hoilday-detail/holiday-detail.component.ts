@@ -1,10 +1,9 @@
 import { Component } from '@angular/core';
-import { NavController, NavParams } from 'ionic-angular';
-
-import * as echarts from 'echarts';
+import { NavController, NavParams, IonicPage } from 'ionic-angular';
 
 import { LanguageTypeConfig } from '../shared/config/language-type.config';
 
+// @IonicPage()
 @Component({
   selector: 'sg-hoilday-detail',
   templateUrl: 'holiday-detail.component.html'

@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { NavController, NavParams } from 'ionic-angular';
+import { NavController, NavParams, IonicPage } from 'ionic-angular';
 import * as echarts from 'echarts';
 
 import { PluginService }   from '../../../../core/services/plugin.service';
@@ -11,6 +11,8 @@ class Chart {
   name: string;
   value: number
 }
+
+// @IonicPage()
 @Component({
   selector: 'sg-statistics',
   templateUrl: 'statistics.component.html'
