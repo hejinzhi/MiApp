@@ -1,8 +1,10 @@
 import { Component } from '@angular/core';
-import { NavController, NavParams } from 'ionic-angular';
+import { NavController, NavParams, IonicPage } from 'ionic-angular';
 
 import { FormType } from '../shared/config/form-type';
 import { HolidayType } from '../shared/config/holiday-type';
+
+@IonicPage()
 @Component({
   selector: 'sg-attendance-month',
   templateUrl: 'attendance-month.component.html'

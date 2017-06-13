@@ -1,4 +1,8 @@
 sg-sign-list {
+  ion-card {
+    min-width: 300px;
+    overflow-x: scroll;
+  }
   h3 {
     display: flex;
     justify-content:space-between;

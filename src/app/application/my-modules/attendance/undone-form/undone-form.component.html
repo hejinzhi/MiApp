@@ -8,6 +8,7 @@
 <ion-content class="main">
   <div [class.layer]="!(formData.status.toUpperCase() === 'NEW')">
   </div>
+  <ion-item-divider class='alert error' *ngIf="errTip">{{errTip}}</ion-item-divider>
   <ion-list>
     <ion-item class="myForm auto first">
       {{fontContent.form_status}}

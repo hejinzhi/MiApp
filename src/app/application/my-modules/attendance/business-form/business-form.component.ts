@@ -1,12 +1,9 @@
 import { Component, ChangeDetectorRef } from '@angular/core';
-import { NavController, NavParams, PopoverController } from 'ionic-angular';
+import { NavController, NavParams, PopoverController, IonicPage } from 'ionic-angular';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 import { Observable }        from 'rxjs/Observable';
 import { Subject }           from 'rxjs/Subject';
-
-import { FormMenuComponent } from '../form-menu/form-menu.component';
-import { SignListComponent } from '../sign-list/sign-list.component';
 
 import { ValidateService }   from '../../../../core/services/validate.service';
 import { PluginService }   from '../../../../core/services/plugin.service';
@@ -19,6 +16,7 @@ import { HolidayType } from '../shared/config/holiday-type';
 import { AttendanceConfig } from '../shared/config/attendance.config';
 import { LanguageTypeConfig } from '../shared/config/language-type.config';
 
+@IonicPage()
 @Component({
   selector: 'sg-business-form',
   templateUrl: 'business-form.component.html'
@@ -245,7 +243,7 @@ export class BusinessFormComponent {
     });
   }
   presentPopover(myEvent: any) {
-    let popover = this.popoverCtrl.create(FormMenuComponent, {
+    let popover = this.popoverCtrl.create('FormMenuComponent', {
       this: this,
     });
     popover.present({

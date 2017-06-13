@@ -10,7 +10,6 @@ import { MyAppComponent } from './app.component';
 import { ApplicationModule } from './application/application.module';
 import { MessageModule } from './message/message.module';
 import { ContactModule } from './contact/contact.module';
-import { MeModule } from './me/me.module';
 import { TabsComponent } from './tabs/tabs.component';
 import { LoginModule } from './login/login.module';
 import { SharedModule } from './shared/shared.module';
@@ -27,7 +26,6 @@ import { CoreModule } from './core/core.module';
     IonicModule.forRoot(MyAppComponent, { tabsHideOnSubPages: true, mode:'ios', backButtonText: '返回', }),
     LoginModule,
     ApplicationModule,
-    MeModule,
     MessageModule,
     ContactModule,
     SharedModule,

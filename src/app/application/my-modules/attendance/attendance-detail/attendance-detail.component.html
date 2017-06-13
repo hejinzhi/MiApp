@@ -8,7 +8,7 @@
 
 <ion-content>
   <ion-list class="myList">
-    <ion-item *ngFor="let item of items">
+    <button ion-item *ngFor="let item of items">
       <h2 no-padding class="myRow">
         <ion-row>
           <p>{{ user.empno }}</p>
@@ -19,27 +19,18 @@
           <p>{{fontContent.week}}{{item.IWEEK}}</p>
         </ion-row>
         <ion-row>
-          <p>{{item.ACT_ITIME1}}</p>
-          <p>{{item.ACT_ITIME4}}</p>
+          <p>{{item.ACT_ITIME1?item.ACT_ITIME1:'没有记录'| sgChineseConv}}</p>
+          <p>{{item.ACT_ITIME4?item.ACT_ITIME4:'没有记录'| sgChineseConv}}</p>
         </ion-row>
         <ion-row>
-          <p>{{item.ACT_ITIME3}}</p>
-          <p>{{item.ACT_ITIME2}}</p>
+          <p>{{item.ACT_ITIME3?item.ACT_ITIME3:'没有记录'| sgChineseConv}}</p>
+          <p>{{item.ACT_ITIME2?item.ACT_ITIME2:'没有记录'| sgChineseConv}}</p>
         </ion-row>
         <ion-row>
           <p>{{fontContent.off_hour}}:{{item.OFF_HOURS.toFixed(2)}}</p>
           <p>{{fontContent.work_hour}}:{{item.WORK_HOURS.toFixed(2)}}</p>
         </ion-row>
       </h2>
-      <!-- <h2>日期： {{item.IDATE | sgTTime | date:"yyyy/MM/dd"}}</h2>
-      <p>星期{{item.IWEEK}}</p>
-      <p>上午上班： {{item.ACT_ITIME1}};  &nbsp;&nbsp;上午下班： {{item.ACT_ITIME3}}</p>
-      <p>下午上班： {{item.ACT_ITIME4}};  &nbsp;&nbsp;下午下班： {{item.ACT_ITIME2}}</p>
-      <p>班别： {{item.DUTY_KIND}}</p>
-      <p>出勤时数： {{item.WORK_HOURS}};  &nbsp;&nbsp;假单时数： {{item.OFF_HOURS}}</p>
-      <p>迟到/早退： {{item.DELAY}}次</p>
-      <p>旷职： {{item.SUM_LEAVE}}次</p>
-      <p>未刷卡： {{item.NOCARD}}次</p> -->
-    </ion-item>
+    </button>
   </ion-list>
 </ion-content>
