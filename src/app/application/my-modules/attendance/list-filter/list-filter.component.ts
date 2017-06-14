@@ -20,6 +20,7 @@ export class ListFilterComponent implements OnInit {
   items: MyFormModel[];
   showApproved: boolean = false;
   user: any;
+  isMoving:boolean;
   constructor(public navCtrl: NavController, public navParams: NavParams) { }
 
   ngOnInit() {
@@ -105,6 +106,7 @@ export class ListFilterComponent implements OnInit {
     }
   }
   toDetail(detailMes: any) {
+    if(!this.isMoving) return;
     let targetForm: any = '';
     switch (detailMes.type) {
       case '2':
@@ -126,5 +128,11 @@ export class ListFilterComponent implements OnInit {
     this.navCtrl.push(targetForm, {
       detailMes: detailMes
     })
+  }
+  touchstart() {
+    this.isMoving = true;
+  }
+  touchmove() {
+    this.isMoving = false;
   }
 }

@@ -13,12 +13,5 @@
 
 
 <ion-content no-padding>
-  <!-- <ion-searchbar (ionInput)="getItems($event)" placeholder="帅选"></ion-searchbar>
-  <ion-list>
-    <ion-item *ngFor="let item of items" (click)="toDetail(item)">
-      {{ item.No }}
-      <ion-badge item-right color="mac">{{item.status}}</ion-badge>
-    </ion-item>
-  </ion-list> -->
   <sg-list-filter [myset]="{type:type,formData:formData}" *ngIf="showList"></sg-list-filter>
 </ion-content>
