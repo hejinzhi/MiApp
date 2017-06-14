@@ -15,7 +15,7 @@
           <p>{{ user.nickname }}</p>
         </ion-row>
         <ion-row>
-          <p>{{item.IDATE.replace("T",'0').substr(0,10) | date:"MM/dd/yy"}}</p>
+          <p>{{item.IDATE.replace("T",'0').substr(0,10) | sgMydate:"MM/DD/YY"}}</p>
           <p>{{fontContent.week}}{{item.IWEEK}}</p>
         </ion-row>
         <ion-row>
