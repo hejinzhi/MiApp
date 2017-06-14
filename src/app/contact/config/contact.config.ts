@@ -1,4 +1,4 @@
-import { EnvConfig } from '../../shared/config/env.config.ts';
+import { EnvConfig } from '../../shared/config/env.config';
 
 export class ContactConfig {
 

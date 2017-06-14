@@ -7,13 +7,14 @@ import { ContactComponent } from './contact.component';
 import { SearchResultComponent } from './search-result/search-result.component';
 import { ContactDetailComponent } from './contact-detail/contact-detail.component';
 import { ContactListComponent } from './contact-list/contact-list.component';
+import { OrganizationComponent } from './organization/organization.component';
 import { ContactService } from './shared/service/contact.service';
 
 @NgModule({
     imports: [CommonModule, IonicModule, SharedModule],
-    declarations: [ContactComponent, SearchResultComponent, ContactDetailComponent, ContactListComponent],
-    entryComponents: [ContactComponent, SearchResultComponent, ContactDetailComponent, ContactListComponent],
-    exports: [ContactComponent, SearchResultComponent, ContactDetailComponent, ContactListComponent],
+    declarations: [ContactComponent, SearchResultComponent, ContactDetailComponent, ContactListComponent, OrganizationComponent],
+    entryComponents: [ContactComponent, SearchResultComponent, ContactDetailComponent, ContactListComponent, OrganizationComponent],
+    exports: [ContactComponent, SearchResultComponent, ContactDetailComponent, ContactListComponent, OrganizationComponent],
     providers: [ContactService]
 })
 export class ContactModule { }

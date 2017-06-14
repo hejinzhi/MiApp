@@ -7,12 +7,12 @@
           <div class="grid-name">{{item.MODULE_NAME}}</div>
         </a>
       </div>
-      <div (click)="selectItem(item.MODULE_ID)" *ngIf="(type==='remove') && showBtn">
+      <button (click)="selectItem(item.MODULE_ID)" *ngIf="(type==='remove') && showBtn" class="action-btn">
         <ion-icon name="remove-circle" class="remove-circle red"></ion-icon>
-      </div>
-      <div (click)="selectItem(item.MODULE_ID)" *ngIf="(type ==='add') && showBtn">
+      </button>
+      <button (click)="selectItem(item.MODULE_ID)" *ngIf="(type ==='add') && showBtn" class="action-btn">
         <ion-icon name="add-circle" class="add-circle green"></ion-icon>
-      </div>
+      </button>
     </ion-col>
   </ion-row>
 </ion-grid>
