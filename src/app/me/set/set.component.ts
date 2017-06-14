@@ -13,6 +13,7 @@ import { PluginService } from '../../core/services/plugin.service'
 })
 export class SetComponent {
 
+  isMoving:boolean;
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
@@ -30,6 +31,12 @@ export class SetComponent {
   }
   ionViewWillLeave() {
 
+  }
+  touchstart() {
+    this.isMoving = false;
+  }
+  touchmove() {
+    this.isMoving = true;
   }
   changeFont() {
     // localStorage.set('fontType','simple_Chinese');

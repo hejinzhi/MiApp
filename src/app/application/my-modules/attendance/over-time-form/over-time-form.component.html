@@ -3,11 +3,8 @@
   <ion-navbar>
     <ion-title *ngIf="!formData.status">{{fontContent.unSave_title}}</ion-title>
     <ion-title *ngIf="formData.status">{{fontContent.saved_title}}</ion-title>
-    <!-- <ion-buttons *ngIf="showReset">
-      <button ion-button type="button" (click)="reSet()">{{fontContent.reset}}</button>
-    </ion-buttons> -->
     <ion-buttons end >
-      <button ion-button icon-only (click)="presentPopover($event)">
+      <button ion-button icon-only (tap)="presentPopover($event)">
       <ion-icon name="add"></ion-icon>
     </button>
     </ion-buttons>
@@ -84,16 +81,13 @@
         <ion-row>
           <ion-col width-50>
             <ion-buttons left>
-              <button ion-button type="button" (click)="reSet()">{{fontContent.reset}}</button>
+              <button ion-button type="button" (tap)="reSet()">{{fontContent.reset}}</button>
             </ion-buttons>
           </ion-col>
           <ion-col width-50>
             <ion-buttons right >
               <button ion-button class = "submit" type="submit" [disabled]="!todo.valid || myValidators.reason.error || timeError">{{fontContent.sign}}</button>
             </ion-buttons>
-            <!-- <ion-buttons right>
-              <button ion-button type = "button" [disabled]="!todo.valid || myValidators.reason.error || timeError" (click)="saveForm()">{{fontContent.save}}</button>
-            </ion-buttons> -->
           </ion-col>
         </ion-row>
       </ion-grid>
