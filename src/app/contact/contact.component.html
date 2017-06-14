@@ -9,23 +9,31 @@
     <div class="department-group">
       <ion-grid>
         <ion-row>
-          <ion-col class="col" (click)="goToSearchDetail('sameDept')">
-            <img src="assets/icon/person.ico" class="col-img">
-            <span class="desc">同部门</span>
+          <ion-col class="col">
+            <button (click)="goToSearchDetail('sameDept')" class="contact-btn">
+              <img src="assets/icon/person.ico" class="col-img">
+              <span class="desc">同部门</span>
+            </button>
           </ion-col>
-          <ion-col class="col" (click)="goToSearchDetail('subordinated')">
-            <img src="assets/icon/xiashu.ico" class="col-img">
-            <span class="desc">我的下属</span>
+          <ion-col class="col">
+            <button (click)="goToSearchDetail('subordinated')" class="contact-btn">
+              <img src="assets/icon/xiashu.ico" class="col-img">
+              <span class="desc">我的下属</span>
+            </button>
           </ion-col>
         </ion-row>
         <ion-row>
           <ion-col class="col">
-            <img src="assets/icon/department.ico" class="col-img">
-            <span class="desc">组织</span>
+            <button class="contact-btn">
+              <img src="assets/icon/department.ico" class="col-img" >
+              <span class="desc">组织</span>
+            </button>
           </ion-col>
-          <ion-col class="col" (click)="goToSearchDetail('all')">
-            <img src="assets/icon/all.ico" class="col-img">
-            <span class="desc">所有人</span>
+          <ion-col class="col">
+            <button (click)="goToSearchDetail('all')" class="contact-btn">
+              <img src="assets/icon/all.ico" class="col-img">
+              <span class="desc">所有人</span>
+            </button>
           </ion-col>
         </ion-row>
       </ion-grid>

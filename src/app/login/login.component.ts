@@ -20,7 +20,6 @@ export class LoginComponent {
     private myHttp: MyHttpService,
     private jmessageService: JMessageService,
   ) {
-
   }
 
   loading: Loading;
