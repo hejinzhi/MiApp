@@ -106,7 +106,7 @@ export class ListFilterComponent implements OnInit {
     }
   }
   toDetail(detailMes: any) {
-    if(!this.isMoving) return;
+    if(this.isMoving) return;
     let targetForm: any = '';
     switch (detailMes.type) {
       case '2':
@@ -130,9 +130,9 @@ export class ListFilterComponent implements OnInit {
     })
   }
   touchstart() {
-    this.isMoving = true;
+    this.isMoving = false;
   }
   touchmove() {
-    this.isMoving = false;
+    this.isMoving = true;
   }
 }

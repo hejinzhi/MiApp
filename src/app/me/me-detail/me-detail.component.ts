@@ -13,6 +13,7 @@ import { PluginService } from '../../core/services/plugin.service';
 })
 export class MeDetailComponent {
 
+  isMoving:boolean;
   constructor(public navCtrl: NavController,
     public navParams: NavParams,
     private actionSheetCtrl: ActionSheetController,
@@ -32,6 +33,13 @@ export class MeDetailComponent {
     this.user = this.navParams.data.user;
   }
 
+  touchstart() {
+    this.isMoving = false;
+  }
+  touchmove() {
+    this.isMoving = true;
+  }
+  
   showLoading() {
     this.loading = this.loadingCtrl.create({
       content: 'Please wait...'

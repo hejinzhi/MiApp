@@ -4,7 +4,7 @@
     <ion-title *ngIf="!formData.status">{{fontContent.unSave_title}}</ion-title>
     <ion-title *ngIf="formData.status">{{fontContent.saved_title}}</ion-title>
     <ion-buttons end >
-      <button ion-button icon-only (click)="presentPopover($event)">
+      <button ion-button icon-only (tap)="presentPopover($event)">
       <ion-icon name="add"></ion-icon>
     </button>
     </ion-buttons>
@@ -51,7 +51,7 @@
           </ion-col>
           <ion-col width-50>
             <ion-buttons right>
-              <button ion-button type="button" [disabled]="!todo.valid || myValidators.reason.error " (click)="saveForm()">{{fontContent.save}}</button>
+              <button ion-button type="button" [disabled]="!todo.valid || myValidators.reason.error " (tap)="saveForm()">{{fontContent.save}}</button>
             </ion-buttons>
           </ion-col>
         </ion-row>
