@@ -4,10 +4,10 @@
   </ion-navbar>
 </ion-header>
 <ion-content *ngIf="user">
-  <ion-list class="my-detail myList">
+  <ion-list class="my-detail myList" (touchstart)="touchstart()" (touchmove)="touchmove()">
     <button ion-item>
           头像
-          <ion-note item-right class="person" (click)="changePhoto()">
+          <ion-note item-right class="person" (touchend)="isMoving?'':changePhoto()">
            <img [src]="user.avatarUrl" class="avatar">
           </ion-note>
       </button>
@@ -17,7 +17,7 @@
           {{user.nickname}}
           </ion-note>
       </button>
-    <button ion-item (click) = "showQr()">
+    <button ion-item (touchend)="isMoving?'':showQr()">
          我的二维码
           <ion-note item-right>
           <i class="iconfontyyy">&#xe613;</i>

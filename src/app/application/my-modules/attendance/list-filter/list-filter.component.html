@@ -1,6 +1,6 @@
 <ion-searchbar (ionInput)="getItems($event)" [placeholder]="fontContent.search_placeholder" class="searchBar"></ion-searchbar>
-<ion-list class="myList">
-  <button ion-item *ngFor="let item of items;trackBy:trackByItems" (click)="toDetail(item)">
+<ion-list class="myList" >
+  <button ion-item *ngFor="let item of items;trackBy:trackByItems" (touchstart)="touchstart()" (touchend)="toDetail(item)" (touchmove)="touchmove()">
     <ion-row *ngIf="item.type === '3'" no-padding class="myRow">
       <ion-col col-5>
         <p>{{ item.No}}</p>
@@ -8,7 +8,7 @@
         <p>{{ user.nickname | sgChineseConv }}</p>
       </ion-col>
       <ion-col col-3>
-        <p>{{item.data.OTtime | date:"MM/dd/yy" }}</p>
+        <p>{{item.data.OTtime | sgMydate:"MM/DD/YY" }}</p>
         <p>{{ item.data.startTime.substr(3) }}-{{ item.data.endTime.substr(3) }}</p>
         <p *ngIf="item.data.true_during.length>3">{{ item.data.true_during }}</p>
       </ion-col>
@@ -24,7 +24,7 @@
         <p>{{ user.empno }}{{ user.nickname | sgChineseConv}}</p>
       </ion-col>
       <ion-col col-4>
-        <p>{{item.data.startDate | date:"MM/dd/yy" }}-{{item.data.endDate | date:"MM/dd" }}</p>
+        <p>{{item.data.startDate | sgMydate:"MM/DD/YY" }}-{{item.data.endDate | date:"MM/dd" }}</p>
         <p>{{ item.data.startTime.substr(3) }}-{{ item.data.endTime.substr(3) }}</p>
       </ion-col>
       <ion-col col-3>
@@ -38,7 +38,7 @@
         <p>{{ user.empno }}{{ user.nickname | sgChineseConv}}</p>
       </ion-col>
       <ion-col col-4>
-        <p>{{item.data.businessTime | date:"MM/dd/yy" }}</p>
+        <p>{{item.data.businessTime | sgMydate:"MM/DD/YY" }}</p>
         <p>{{ item.data.startTime.substr(3) }}-{{ item.data.endTime.substr(3) }}</p>
       </ion-col>
       <ion-col col-3>
@@ -62,7 +62,7 @@
         <p>{{ user.empno }}{{ user.nickname | sgChineseConv}}</p>
       </ion-row>
       <ion-row>
-        <p>{{item.data.startTime.substr(0,10) | date:"MM/dd/yy" }}-{{item.data.endTime.substr(0,10) | date:"MM/dd" }}</p>
+        <p>{{item.data.startTime.substr(0,10) | sgMydate:"MM/DD/YY" }}-{{item.data.endTime.substr(0,10) | sgMydate:"MM/DD" }}</p>
         <p>{{item.data.startTime.substr(11,5) }}-{{item.data.endTime.substr(11,5) }}</p>
       </ion-row>
       <ion-row>
