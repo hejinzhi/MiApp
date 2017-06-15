@@ -6,6 +6,8 @@ import { JMessageService } from '../core/services/jmessage.service';
 import { MessageService } from './shared/service/message.service';
 import { Message } from './shared/classes/Message';
 import { DialogueComponent } from './dialogue/dialogue.component';
+import { NoticeComponent } from './notice/notice.component';
+import { AlertComponent } from './alert/alert.component';
 
 import { MyHttpService } from '../core/services/myHttp.service';
 
@@ -19,6 +21,8 @@ export class MessageComponent implements OnInit {
   msgListItem: MessageModel[] = [];
   historyMsg: any[] = []; // 在app.component.ts被赋值
   messageListItem: any;
+  noticeListItem: any;
+  _type: string;
 
   constructor(public navCtrl: NavController,
     public navParams: NavParams,
@@ -37,6 +41,42 @@ export class MessageComponent implements OnInit {
 
   ngOnInit() {
 
+    // this.jmessageService.jmessageOffline = this.jmessageService.onSyncOfflineMessage().subscribe(res => {
+
+    //   for (let i = 0; i < res.messageList.length; i++) {
+    //     let _content: string;
+
+    //     if (res.messageList[i].contentType === 'text') {
+    //       _content = res.messageList[i].content.text;
+    //     } else if (res.messageList[i].contentType === 'image') {
+    //       _content = res.messageList[i].content.localThumbnailPath;
+    //     }
+
+    //     if (res.messageList[i].fromName === 'signlist' || res.messageList[i].fromName === 'news' || res.messageList[i].fromName === 'alert' || res.messageList[i].fromName === 'report') {
+    //       this._type = 'notice';
+    //       _content = JSON.parse(res.messageList[i].content.text);
+    //     } else {
+    //       this._type = 'dialogue';
+    //     }
+
+    //     let msg: Message = {
+    //       toUserName: res.messageList[i].targetInfo.userName,
+    //       fromUserName: res.messageList[i].fromName,
+    //       content: _content,
+    //       contentType: res.messageList[i].contentType,
+    //       time: res.messageList[i].createTimeInMillis,
+    //       type: this._type,
+    //       unread: true
+    //     };
+
+    //     this.messageService.history.push(msg);
+    //     this.messageService.setLocalMessageHistory(this.messageService.history);
+
+    //     this.refreshData();
+    //     this.ref.detectChanges();
+    //   }
+    // });
+
     // this.jmessageService.jmessageHandler = this.jmessageService.onReceiveMessage().subscribe(res => {
 
 
@@ -47,6 +87,13 @@ export class MessageComponent implements OnInit {
     //     _content = res.content.localThumbnailPath;
     //   }
 
+    //   if (res.fromName === 'signlist' || res.fromName === 'news' || res.fromName === 'alert' || res.fromName === 'report') {
+    //     this._type = 'notice';
+    //     _content = JSON.parse(res.content.text);
+    //   } else {
+    //     this._type = 'dialogue';
+    //   }
+
 
 
     //   let msg: Message = {
@@ -55,22 +102,20 @@ export class MessageComponent implements OnInit {
     //     content: _content,
     //     contentType: res.contentType,
     //     time: res.createTimeInMillis,
-    //     type: 'dialogue',
+    //     type: this._type,
     //     unread: true
     //   };
-
 
     //   this.messageService.history.push(msg);
 
     //   this.messageService.setLocalMessageHistory(this.messageService.history);
     //   this.jmessageService.setSingleConversationUnreadMessageCount(res.fromName, '', 0);
 
-    //   this.messageListItem = this.messageService.getMessageHistory();
+    //   this.refreshData();
     //   this.ref.detectChanges();
 
     // });
 
-    // setTimeout(() => this.loadUnreadMessage(), 3000);
   }
 
   // 当用户点击登录后，先去检查它是否有未收到的信息，如果有，往本地写入这些信息，这样message才能显示完成
@@ -80,13 +125,13 @@ export class MessageComponent implements OnInit {
     let res;
     try {
       res = await this.jmessageService.getConversationList();
-      console.log(res);
       let conversationList: any[] = JSON.parse(res);
       conversationList = conversationList.filter((v) => v.unReadMsgCnt > 0);
       for (let i = 0; i < conversationList.length; i++) {
         let hisRes;
         hisRes = await this.jmessageService.getHistoryMessages('single', conversationList[i].targetId, '', 0, conversationList[i].unReadMsgCnt);
         let resObj = JSON.parse(hisRes);
+
 
         for (let j = 0; j < resObj.length; j++) {
 
@@ -118,19 +163,24 @@ export class MessageComponent implements OnInit {
   }
 
   ionViewWillEnter() {
-    // this.refreshData();
+    this.refreshData();
   }
 
   refreshData() {
-    this.messageListItem = this.messageService.getMessageHistory();
+    this.messageListItem = this.messageService.getMessageHistory().filter((v: any) => (v.type === "dialogue"));
+    this.noticeListItem = this.messageService.getMessageHistory().filter((v: any) => (v.type === "notice"));
   };
 
 
   goToMessageDetailPage(item: any) {
     if (item.type === 'dialogue') {
       this.navCtrl.push(DialogueComponent, item);
-    } else {
-      // this.navCtrl.push('notice');
+    } else if (item.type === 'notice') {
+      if (item.username === 'alert') {
+        this.navCtrl.push(AlertComponent, item);
+      } else {
+        this.navCtrl.push(NoticeComponent, item);
+      }
     }
   }
 

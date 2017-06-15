@@ -12,6 +12,7 @@ export class JMessageService {
     // private JIM = new JMessage();
     public jmessagePlugin = (<any>window).plugins ? (<any>window).plugins.jmessagePlugin || null : null;
     jmessageHandler: Subscription; //接收句柄，再view被关闭的时候取消订阅，否则对已关闭的view进行数据脏检查会报错
+    jmessageOffline: Subscription;
     constructor() { }
 
     wrapEventObservable(event: string): Observable<any> {
@@ -117,6 +118,11 @@ export class JMessageService {
     // 监听receive事件
     onReceiveMessage(): Observable<any> {
         return this.wrapEventObservable('jmessage.onReceiveMessage');
+    }
+
+    // 监听离线消息
+    onSyncOfflineMessage():Observable<any> {
+        return this.wrapEventObservable('jmessage.onSyncOfflineMessage');
     }
 
     // 监听点击消息栏打开消息事件

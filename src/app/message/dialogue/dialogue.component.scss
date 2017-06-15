@@ -1,19 +1,24 @@
 sg-dialogue {
     $fontcolor: #7b7b7b;
     $activecolor: #13b113;
-    .msg-content {
+    .pag-content {
         .scroll-content {
-            height: 93.5%;
-            padding: 16px 16px 0 16px;
+            overflow-y: hidden;
         }
+    }
+    .msg-content {
+        height: 93%;
+        padding: 10px 16px 0 16px;
+        overflow-y: scroll;
         &.up {
-            .scroll-content {
-                height: 79%
-            }
+            height: 78%;
         }
     }
     .msgarea {
         padding: 10px 0px;
+        .last {
+            margin-bottom: 14%;
+        }
         .clearfix:after {
             content: ".";
             display: block;
@@ -42,6 +47,7 @@ sg-dialogue {
         }
         .me {
             .msg {
+                position: relative;
                 background-color: #9fe757;
                 float: right;
                 margin-right: 10px;
@@ -52,7 +58,7 @@ sg-dialogue {
                     border-style: solid;
                     border-color: transparent transparent transparent #9fe757;
                     position: absolute;
-                    right: 51px;
+                    left: 100%;
                 }
             }
             .img_content {
@@ -67,6 +73,7 @@ sg-dialogue {
         }
         .other {
             .msg {
+                position: relative;
                 background-color: #fff;
                 float: left;
                 margin-left: 10px;
@@ -77,7 +84,7 @@ sg-dialogue {
                     border-style: solid;
                     border-color: transparent #c8c7cc transparent transparent;
                     position: absolute;
-                    left: 50px;
+                    right: 100%;
                 }
                 .arrow_l_out {
                     width: 0px;
@@ -86,7 +93,7 @@ sg-dialogue {
                     border-style: solid;
                     border-color: transparent #fff transparent transparent;
                     position: absolute;
-                    left: 51px;
+                    right: 98%;
                 }
             }
             .img_content {
@@ -102,17 +109,13 @@ sg-dialogue {
     }
     .input {
         color: $fontcolor;
-        position: fixed;
-        z-index: 999;
-        bottom: 0;
-        left: 0px;
-        height: 40px;
+        height: 7.5%;
         width: 100%;
         border-top: 1px solid #d8d8d8;
         background-color: #ededed;
         font-size: 11px;
         &.up {
-            height: 20%;
+            height: 22%;
         }
         .input_layout {
             position: relative;
@@ -120,28 +123,34 @@ sg-dialogue {
             line-height: 40px;
             .input_icon {
                 position: absolute;
-                width: 40px;
-                height: 40px;
+                display: inline-block;
+                top: 10%;
+                font-size: 35px;
                 &.voice {
-                    left: 0px;
+                    left: 2%;
+                    top: 6%;
                 }
                 &.face {
-                    right: 45px;
+                    right: 13%;
+                    top: -4%;
                 }
                 &.plus {
-                    right: 0px;
+                    right: 2%;
+                    top: -6%;
                 }
             }
             .input_text {
                 border-bottom: 1px solid #d8d8d8;
+                text-indent: 5px;
                 margin-left: 50px;
                 margin-right: 120px;
                 vertical-align: middle;
                 line-height: 30px;
                 height: 30px;
                 width: 63%;
-                font-size: 24px;
+                font-size: 18px;
                 color: #000;
+                border-radius: 6px;
             }
             .send {
                 background-color: #14b012;
@@ -150,15 +159,16 @@ sg-dialogue {
                 position: absolute;
                 border: 1px solid #378c37;
                 border-radius: 2px;
-                right: 0px;
-                bottom: 2px;
-                width: 45px;
-                height: 37px;
+                right: 1%;
+                bottom: 1%;
+                width: 11%;
+                height: 40px;
                 line-height: 36px;
                 color: white;
                 text-align: center;
                 font-size: 15px;
                 margin-top: 4px;
+                // margin-bottom: 4px;
                 &.hidden {
                     display: none;
                 }

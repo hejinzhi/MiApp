@@ -77,8 +77,8 @@ export class MyAppComponent {
     } else {
       this.rootPage = LoginComponent;
     }
-    if(!localStorage.getItem('languageType')) {
-      localStorage.setItem('languageType','simple_Chinese');
+    if (!localStorage.getItem('languageType')) {
+      localStorage.setItem('languageType', 'simple_Chinese');
     }
   }
 
