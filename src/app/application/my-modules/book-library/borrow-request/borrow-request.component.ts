@@ -1,9 +1,10 @@
 import { Component, OnInit, ViewChild, ChangeDetectorRef } from '@angular/core';
-import { NavParams, AlertController } from 'ionic-angular';
+import { NavParams, AlertController, IonicPage } from 'ionic-angular';
 import { CheckList } from '../../../../shared/models/check-list.model';
 import { ArrayUtilService } from '../../../../core/services/arrayUtil.service';
 import { BookLibraryService } from '../shared/service/book-library.service';
 
+@IonicPage()
 @Component({
     selector: 'sg-borrow-request',
     templateUrl: 'borrow-request.component.html'
