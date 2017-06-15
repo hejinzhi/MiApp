@@ -1,4 +1,7 @@
 sg-application-grid {
+  button {
+    padding: 0;
+  }
   .grid-col {
     position: relative;
     text-align: center;
@@ -19,11 +22,18 @@ sg-application-grid {
         color: #828282;
       }
     }
-    .remove-circle,
-    .add-circle {
+    .action-btn {
       position: absolute;
       top: 0;
-      right: 5px;
+      right: 3px;
+      background-color: rgba(0, 0, 0, 0);
+      .remove-circle,
+      .add-circle {
+        font-size: 20px;
+        height: 30px;
+        width: 30px;
+        text-align: right;
+      }
     }
   }
   a {

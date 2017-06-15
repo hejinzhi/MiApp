@@ -1,0 +1,28 @@
+<ion-header>
+  <ion-navbar>
+    <ion-title>
+      组织
+    </ion-title>
+  </ion-navbar>
+</ion-header>
+<ion-content>
+  <div class="main-wrapper">
+    <div class="my-header">
+      <button class="my-button" (tap)="goBack()" [disabled]="deptHistory.length <=1">
+          返回上一级
+      </button>
+      <span class="header-content">{{parentDept.DEPTNAME}}</span>
+    </div>
+    <div class="main-content">
+      <div *ngIf="!showPeople">
+        <div class="my-item" *ngFor="let item of childrenDeptList" (tap)="viewChildDept(item)">
+          <div class="left">
+            <ion-icon name="menu"></ion-icon>
+          </div>
+          <div class="right">{{item.DEPTNAME}}</div>
+        </div>
+      </div>
+      <sg-contact-list [contacter]="peopleInDept" *ngIf="showPeople" (onClick)="goToDetailPage($event)"></sg-contact-list>
+    </div>
+  </div>
+</ion-content>

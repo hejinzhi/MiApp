@@ -6,6 +6,7 @@ import { EnvConfig } from '../shared/config/env.config';
 import { ContactService } from './shared/service/contact.service';
 import { SearchResultComponent } from './search-result/search-result.component';
 import { ContactDetailComponent } from './contact-detail/contact-detail.component';
+import { OrganizationComponent } from './organization/organization.component';
 
 
 @Component({
@@ -21,18 +22,6 @@ export class ContactComponent {
     public navCtrl: NavController,
     public contactService: ContactService
   ) {
-    // this.contacter = [{
-    //   NICK_NAME: '何锦枝',
-    //   USER_NAME: 'jinzhi.he',
-    //   JOB_TITLE: '工程师',
-    //   DEPT_NAME: '电子商务部'
-    // },
-    // {
-    //   NICK_NAME: '梁铭辉',
-    //   USER_NAME: 'hugh.liang',
-    //   JOB_TITLE: '工程师',
-    //   DEPT_NAME: '电子商务部'
-    // }];
   }
 
   ionViewWillEnter() {
@@ -58,12 +47,6 @@ export class ContactComponent {
       .subscribe((persons) => {
         this.searchResult = persons.json();
       });
-
-    // if (this.searchFilter) {
-    //   let result = await this.contactService.getPersonByName(this.searchFilter)
-    //   this.searchResult = result.json();
-    // }
-
   }
 
   goToSearchDetail(type: string) {
@@ -73,5 +56,9 @@ export class ContactComponent {
   goToDetailPage(event: any) {
     this.navCtrl.push(ContactDetailComponent, { data: event });
     this.contactService.writeViewHistory(event);
+  }
+
+  goToOrganizationPage() {
+    this.navCtrl.push(OrganizationComponent);
   }
 }
