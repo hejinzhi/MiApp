@@ -53,4 +53,3 @@
   <plugin name="cordova-plugin-inappbrowser" spec="~1.7.1"/>
   <icon src="resources\android\icon\drawable-xhdpi-icon.png"/>
 </widget>
-
