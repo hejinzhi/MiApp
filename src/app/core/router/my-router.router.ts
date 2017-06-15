@@ -1,9 +1,7 @@
 
 import { NavController, App } from 'ionic-angular';
 import { InAppBrowser } from '@ionic-native/in-app-browser';
-import { BookLibraryComponent } from '../../application/my-modules/book-library/book-library.component';
-import { AttendanceComponent } from '../../application/my-modules/attendance/attendance.component'
-
+// import { BookLibraryComponent } from '../../application/my-modules/book-library/book-library.component';
 
 export class MyRouter {
   constructor(private iab: InAppBrowser) { }
@@ -13,10 +11,10 @@ export class MyRouter {
 
       case 1:
         // app.getRootNav().setRoot(BookLibraryComponent);
-        navCtrl.push(BookLibraryComponent);
+        navCtrl.push('BookLibraryComponent');
         break;
       case 21:
-        navCtrl.push(AttendanceComponent);
+        navCtrl.push('AttendanceComponent');
         break;
       case 22:
         // const browser = this.iab.create('http://oaweb.mic.com.tw/gsc/mobile/');

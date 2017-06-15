@@ -2,7 +2,7 @@ import { EnvConfig } from '../../../../../shared/config/env.config';
 
 export class BookLibraryConfig {
     // 设置每页显示多少笔数据
-    static pageCount = 5;
+    static pageCount = 15;
 
     // 根据模块获取function清单
     static getFunctionListUrl = EnvConfig.baseUrl + 'Function/GetByModule';

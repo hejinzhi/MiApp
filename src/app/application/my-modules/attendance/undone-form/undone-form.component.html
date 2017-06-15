@@ -8,6 +8,7 @@
 <ion-content class="main">
   <div [class.layer]="!(formData.status.toUpperCase() === 'NEW')">
   </div>
+  <ion-item-divider class='alert error' *ngIf="errTip">{{errTip}}</ion-item-divider>
   <ion-list>
     <ion-item class="myForm auto first">
       {{fontContent.form_status}}
@@ -78,6 +79,6 @@
       </ion-item>
       <ion-item-divider *ngIf="myValidators.reason.error" class='alert'>{{myValidators.reason.error}}</ion-item-divider>
     </ion-list>
-    <button ion-button full type="button" [disabled]="!todo.valid || myValidators.reason.error" (click)="saveForm()">{{fontContent.submit}}</button>
+    <button ion-button full type="button" [disabled]="!todo.valid || myValidators.reason.error" (tap)="saveForm()">{{fontContent.submit}}</button>
   </form>
 </ion-content>

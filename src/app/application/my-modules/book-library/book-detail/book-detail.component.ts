@@ -1,10 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { NavController, NavParams, AlertController } from 'ionic-angular';
+import { NavController, NavParams, AlertController,IonicPage } from 'ionic-angular';
 import { BarcodeScanner } from '@ionic-native/barcode-scanner';
 
 import { BookLibraryService } from '../shared/service/book-library.service';
 // import { BookLibraryComponent } from '../book-library.component';
 
+@IonicPage()
 @Component({
     selector: 'sg-book-detail',
     templateUrl: 'book-detail.component.html'

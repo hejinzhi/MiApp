@@ -5,10 +5,11 @@ import { SplashScreen } from '@ionic-native/splash-screen';
 
 import { LoginComponent } from './login/login.component';
 import { TabsComponent } from './tabs/tabs.component';
-import { AttendanceComponent } from './application/my-modules/attendance/attendance.component'
 import { PatternLockComponent } from './login/pattern-lock/pattern-lock.component';
 import { MessageService } from './message/shared/service/message.service';
 import { PluginService } from './core/services/plugin.service';
+
+import { OrganizationComponent } from './contact/organization/organization.component';
 
 declare var cordova: any;
 
@@ -74,8 +75,10 @@ export class MyAppComponent {
     if (user && user.myNineCode) {
       // 已经有用户信息和设定为要验证手势密码
       this.rootPage = PatternLockComponent;
+      // this.rootPage = OrganizationComponent;
     } else {
       this.rootPage = LoginComponent;
+      // this.rootPage = OrganizationComponent;
     }
     if (!localStorage.getItem('languageType')) {
       localStorage.setItem('languageType', 'simple_Chinese');

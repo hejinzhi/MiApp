@@ -4,8 +4,10 @@ import { Tabs, Events } from 'ionic-angular'
 import { MessageComponent } from '../message/message.component';
 import { ContactComponent } from '../contact/contact.component';
 import { ApplicationComponent } from '../application/application.component';
+
 import { MeComponent } from '../me/me.component';
 import { MessageService } from '../message/shared/service/message.service';
+
 
 
 @Component({
@@ -26,6 +28,7 @@ export class TabsComponent implements OnInit {
       this.changeTabBadge();
     })
   }
+
 
   ngOnInit() {
 

@@ -1,7 +1,7 @@
 
-import { Component, OnInit, ChangeDetectorRef, AfterViewChecked } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { Subscription } from 'rxjs/Rx';
-import { NavParams } from 'ionic-angular';
+import { NavParams, Events } from 'ionic-angular';
 import { Camera, CameraOptions } from '@ionic-native/camera';
 import { Keyboard } from '@ionic-native/keyboard';
 
@@ -14,7 +14,8 @@ import { JMessageService } from '../../core/services/jmessage.service';
   templateUrl: 'dialogue.component.html'
 })
 
-export class DialogueComponent implements OnInit, AfterViewChecked {
+
+export class DialogueComponent implements OnInit {
   list: any;
   input_text: string;
   userinfo: any;
@@ -25,7 +26,14 @@ export class DialogueComponent implements OnInit, AfterViewChecked {
 
   jmessageHandler: Subscription; //接收句柄，再view被关闭的时候取消订阅，否则对已关闭的view进行数据脏检查会报错
 
-  constructor(private messageService: MessageService, public params: NavParams, private jmessageService: JMessageService, private ref: ChangeDetectorRef, public keyboard: Keyboard, public camera: Camera) {
+
+  constructor(private messageservice: MessageService,
+    public params: NavParams,
+    private jmessageservice: JMessageService,
+    private ref: ChangeDetectorRef,
+    public keyboard: Keyboard,
+    public camera: Camera,
+    private events: Events) {
 
     this.userName = params.get('username');
     this.userNickName = params.get('userNickName');
@@ -37,45 +45,39 @@ export class DialogueComponent implements OnInit, AfterViewChecked {
 
 
   ionViewDidEnter() {
-    this.jmessageHandler = this.jmessageService.onReceiveMessage().subscribe(res => {
-
-      this.messageService.getMessageHistoryByID(this.userName).then((res => {
+    this.events.subscribe('msg.onReceiveMessage', () => {
+      console.log('dialogue');
+      this.messageservice.getMessageHistoryByID(this.userName).then((res => {
         this.list = res;
         this.ref.detectChanges();
       }));
     });
 
-    // this.jmessageService.enterSingleConversation(this.userName);
+    this.jmessageservice.enterSingleConversation(this.userName);
   }
 
   ionViewWillLeave() {
-    // this.jmessageHandler.unsubscribe();
-    this.messageService.setUnreadToZeroByUserName(this.userName,'');
-    // this.jmessageService.setSingleConversationUnreadMessageCount(this.userName, null, 0);
-    // this.jmessageService.exitConversation();
+    this.events.unsubscribe('msg.onReceiveMessage');
+    this.messageservice.setUnreadToZeroByUserName(this.userName);
+    this.jmessageservice.setSingleConversationUnreadMessageCount(this.userName, null, 0);
+    this.jmessageservice.exitConversation();
   }
 
   ionViewWillEnter() {
     setTimeout(() => {
       this.scroll_down();
-    }, 10);
-  }
-
-  ngAfterViewChecked() {
-    // var div = document.getElementsByClassName('msg-content');
-    // div[0].scrollTop = div[0].scrollHeight;
+    }, 0);
   }
 
   clickPlus() {
     this.onPlus = !this.onPlus;
     setTimeout(() => {
       this.scroll_down();
-    }, 10);
+    }, 0);
   }
 
   isPlus() {
     this.onPlus = false;
-
     if (/Android [4-6]/.test(navigator.appVersion)) {
       window.addEventListener("resize", function () {
         if (document.activeElement.tagName == "INPUT" || document.activeElement.tagName == "TEXTAREA") {
@@ -93,8 +95,8 @@ export class DialogueComponent implements OnInit, AfterViewChecked {
   }
 
   async loadMessage() {
-    this.userinfo = await this.messageService.getUserInfo();
-    this.list = await this.messageService.getMessageHistoryByID(this.userName);
+    this.userinfo = await this.messageservice.getUserInfo();
+    this.list = await this.messageservice.getMessageHistoryByID(this.userName);
   };
 
   scroll_down() {
@@ -112,7 +114,7 @@ export class DialogueComponent implements OnInit, AfterViewChecked {
       contentType = "image";
     }
 
-    let history = this.messageService.history;
+    let history = this.messageservice.history;
     let msg = [{
       "toUserName": this.userName,
       "fromUserName": this.userinfo.username,
@@ -123,14 +125,15 @@ export class DialogueComponent implements OnInit, AfterViewChecked {
       "unread": true
     }];
     history.push(msg[0]);
-    this.messageService.setLocalMessageHistory(history);
-    if (type === 1) {
-      this.jmessageService.sendSingleTextMessage(this.userName, content);
-    }
-    else if (type === 2) {
-      this.jmessageService.sendSingleImageMessage(this.userName, content);
-    }
-    msg = this.messageService.leftJoin(msg, this.messageService.allUserInfo);
+
+    this.messageservice.setLocalMessageHistory(history);
+    // if (type === 1) {
+    //   this.jmessageservice.sendSingleTextMessage(this.userName, content);
+    // }
+    // else if (type === 2) {
+    //   this.jmessageservice.sendSingleImageMessage(this.userName, content);
+    // }
+    msg = this.messageservice.leftJoin(msg, this.messageservice.allUserInfo);
     this.list.push(msg[0])
     this.input_text = '';
   }

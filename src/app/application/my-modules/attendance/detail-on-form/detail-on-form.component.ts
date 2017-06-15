@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { NavController, NavParams } from 'ionic-angular';
+import { NavController, NavParams, IonicPage } from 'ionic-angular';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 import { ValidateService }   from '../../../../core/services/validate.service';
@@ -10,11 +10,10 @@ import { MyValidatorModel } from '../../../../shared/models/my-validator.model';
 
 import { FormType } from '../shared/config/form-type';
 
-import { AttendanceMonthComponent } from '../attendance-month/attendance-month.component';
-
 import { AttendanceConfig } from '../shared/config/attendance.config';
 import { LanguageTypeConfig } from '../shared/config/language-type.config';
 
+@IonicPage()
 @Component({
   selector: 'sg-detail-on-form',
   templateUrl: 'detail-on-form.component.html'
@@ -48,7 +47,7 @@ export class DetailOnFormComponent {
       date: ''
     }
     let today = new Date()
-    let month = today.getMonth() +1;
+    let month = today.getMonth();
     let monthString = month<10?'0'+month:month;
     this.betweenMes.date = today.getFullYear()+'-'+ monthString;
     this.todo = this.initWork(this.betweenMes);
@@ -95,7 +94,7 @@ export class DetailOnFormComponent {
     if(!res.content) {
       this.plugin.showToast(this.fontContent.no_result)
     } else {
-      this.navCtrl.push(AttendanceMonthComponent,{
+      this.navCtrl.push('AttendanceMonthComponent',{
         attendance_month:res.content
       });
     }

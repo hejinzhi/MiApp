@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { NavController, NavParams } from 'ionic-angular';
+import { NavController, NavParams, IonicPage } from 'ionic-angular';
 import * as echarts from 'echarts';
 
 import { PluginService }   from '../../../../core/services/plugin.service';
@@ -11,6 +11,8 @@ class Chart {
   name: string;
   value: number
 }
+
+@IonicPage()
 @Component({
   selector: 'sg-statistics',
   templateUrl: 'statistics.component.html'
@@ -32,6 +34,7 @@ export class StatisticsComponent {
   myLeave:{name:string,value:number}[]
   OTday:{name:string,value:number}[];
   leaveDay:{name:string,value:number}[];
+  mySubcribe:any;
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
@@ -40,10 +43,23 @@ export class StatisticsComponent {
   ) { }
 
   ionViewDidLoad() {
+    this.leaveDay = this.OTday = this.initDays();
     this.reFresh();
   }
+  ionViewWillEnter() {
+    let orientation = this.plugin.getScreenOrientation();
+    this.mySubcribe = orientation.onChange().subscribe((value) => {
+      setTimeout(() => {
+        this.initChart2('main', this.fontContent.total);
+        this.initOTMonthChart();
+        this.initLeaveMonthChart();
+      },100)
+    })
+  }
+  ionViewWillLeave() {
+    this.mySubcribe.unsubscribe();
+  }
   async reFresh() {
-    this.initDays();
     let loading = this.plugin.createLoading();
     loading.present()
     await this.editMonthLeave();
@@ -93,7 +109,7 @@ export class StatisticsComponent {
     for(let i=0;i<monthDays+1;i++) {
       days.push({name:i+1+'',value:0});
     }
-    this.OTday = this.leaveDay = days;
+    return days;
   }
   async editMonthOT() {
     let res: any = await this.attendanceService.getOverTimeTotalHours();
@@ -121,6 +137,7 @@ export class StatisticsComponent {
       this.attendanceService.getOverTimeMonthHours(params.dataIndex+1).then((res) => {
         if(res.status) {
           let data = res.content;
+          this.OTday = this.initDays();
           for(let i = 0;i<data.length;i++) {
             this.OTday = this.OTday.map((item:any) => {
               if(item.name == data[i].name) {
@@ -141,6 +158,7 @@ export class StatisticsComponent {
       this.attendanceService.getOffDutyMonthHours(params.dataIndex+1).then((res) => {
         if(res.status) {
           let data = res.content;
+          this.leaveDay = this.initDays();
           for(let i = 0;i<data.length;i++) {
             this.leaveDay = this.leaveDay.map((item:any) => {
               if(item.name == data[i].name) {
@@ -233,7 +251,7 @@ export class StatisticsComponent {
     // 绘制图表
     myChart.setOption({
       title: {
-        text: title, top: '3%', textStyle: {
+        text: title, top: '1%', textStyle: {
           fontFamily: fontFamily,
           fontSize: 18
         }
@@ -256,18 +274,39 @@ export class StatisticsComponent {
       },
       xAxis: [
         {
-          type: 'category',
-          data: [this.fontContent.this_month, this.fontContent.this_year],
-          axisTick: {
-            alignWithLabel: true
-          }
+            type: 'category',
+            boundaryGap: true,
+            data:[this.fontContent.this_month, this.fontContent.this_year],
         }
-      ],
-      yAxis: [
+    ],
+    yAxis: [
         {
-          type: 'value'
+            type: 'value',
+            scale: true,
+            name: this.fontContent.OT,
+            min: 0,
+            interval:Math.ceil(this.totalOT[1].value/4),
+            max: Math.ceil(this.totalOT[1].value/4)*5,
+            boundaryGap: [0.2, 0.2],
+            nameTextStyle: {
+              fontFamily: fontFamily,
+              fontSize: 14
+            }
+        },
+        {
+            type: 'value',
+            scale: true,
+            name: this.fontContent.leave,
+            nameTextStyle: {
+              fontFamily: fontFamily,
+              fontSize: 14
+            },
+            min: 0,
+            interval: Math.ceil(this.totalLeave[1].value/4),
+            max: Math.ceil(this.totalLeave[1].value/4)*5,
+            boundaryGap: [0.2, 0.2]
         }
-      ],
+    ],
       color: color,
       series: [
         {
@@ -286,6 +325,7 @@ export class StatisticsComponent {
         {
           name: this.fontContent.leave,
           type: 'bar',
+          yAxisIndex: 1,
           data: this.totalLeave,
           label: {
             normal:

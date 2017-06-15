@@ -289,14 +289,14 @@ export class LanguageTypeConfig {
     traditional_Chinese:{
       title:'個人維護詳情',
       STADATE:'年休假生效日',
-      canUse:'可用假天數',
-      used:'已用假天數'
+      canUse:'可休假天數',
+      used:'已休假天數'
     },
     simple_Chinese:{
       title:'个人维护详情',
       STADATE:'年休假生效日',
-      canUse:'可用假天数',
-      used:'已用假天数'
+      canUse:'可休假天数',
+      used:'已休假天数'
     }
   };
   static leaveMessageMenuComponent = {
@@ -505,7 +505,8 @@ export class LanguageTypeConfig {
       startTime_timeSmaller_err:'結束時間必須遲於開始時間',
       endTime_required_err:'結束時間不能為空',
       endTime_timeBigger_err:'結束時間必須遲於開始時間',
-      reset:'重置'
+      reset:'重置',
+      alert_title: '確定要重新新建單據嗎?'
     },
     simple_Chinese:{
       unSave_title:'新建加班单',
@@ -534,7 +535,8 @@ export class LanguageTypeConfig {
       startTime_timeSmaller_err:'结束时间必须迟于开始时间',
       endTime_required_err:'结束时间不能为空',
       endTime_timeBigger_err:'结束时间必须迟于开始时间',
-      reset:'重置'
+      reset:'重置',
+      alert_title: '确定要重新新建单据吗?'
     }
   };
 

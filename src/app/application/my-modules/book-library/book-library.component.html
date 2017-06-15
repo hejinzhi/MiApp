@@ -10,38 +10,42 @@
       <h1>{{user.username}}</h1>
     </div>
     <ion-list>
-      <ion-item (click)="getOrderBooksInfo()">
+      <!--<ion-item (click)="getOrderBooksInfo()">
         <ion-icon name="archive" item-left color="primary"></ion-icon>
         已预约图书
-      </ion-item>
-      <ion-item (click)="getBorrowedBooks()">
+      </ion-item>-->
+      <button ion-item (click)="getOrderBooksInfo()">
+        <ion-icon name="archive" item-left color="primary"></ion-icon>
+        已预约图书
+      </button>
+      <button ion-item (click)="getBorrowedBooks()">
         <ion-icon name="book" item-left color="primary"></ion-icon>
         已借图书
-      </ion-item>
-      <ion-item (click)="getPaybackBooks()">
+      </button>
+      <button ion-item (click)="getPaybackBooks()">
         <ion-icon name="bookmark" item-left color="primary"></ion-icon>
         已还图书
-      </ion-item>
-      <ion-item (click)="addBooks()">
+      </button>
+      <button ion-item (click)="addBooks()">
         <ion-icon name="briefcase" item-left color="primary"></ion-icon>
         新增图书(管理员)
-      </ion-item>
-      <ion-item (click)="borrowRequest()">
+      </button>
+      <button ion-item (click)="borrowRequest()">
         <ion-icon name="folder" item-left color="primary"></ion-icon>
         借书申请(管理员)
-      </ion-item>
-      <ion-item (click)="payBackRequest()">
+      </button>
+      <button ion-item (click)="payBackRequest()">
         <ion-icon name="document" item-left color="primary"></ion-icon>
         还书(管理员)
-      </ion-item>
-      <ion-item (click)="showSettingModal()">
+      </button>
+      <button ion-item (click)="showSettingModal()">
         <ion-icon name="settings" item-left color="primary"></ion-icon>
         设置(管理员)
-      </ion-item>
-      <ion-item (click)="exit()">
+      </button>
+      <button ion-item (click)="exit()">
         <ion-icon name="exit" item-left color="primary"></ion-icon>
         退出
-      </ion-item>
+      </button>
     </ion-list>
   </ion-content>
 </ion-menu>
@@ -63,11 +67,10 @@
   </ion-navbar>
 </ion-header>
 <ion-content class="page" #maincontent>
-  <div class="searchbar">
-    <ion-searchbar (ionInput)="queryBooks($event)" #bookInput></ion-searchbar>
+  <ion-searchbar (ionInput)="queryBooks($event)" #bookInput></ion-searchbar>
+  <div class="book-list" #booklist>
+    <sg-book-list [books]="books" (onClick)="goToDetailPage($event)"></sg-book-list>
   </div>
-  <!--<button ion-button block (click)="addBook()" style="margin-top: 40px">新增图书</button>-->
-  <sg-book-list [books]="books" (onClick)="goToDetailPage($event)" class="book-list"></sg-book-list>
   <ion-infinite-scroll (ionInfinite)="doInfinite($event)" *ngIf="!isLastPageReached()">
     <ion-infinite-scroll-content></ion-infinite-scroll-content>
   </ion-infinite-scroll>

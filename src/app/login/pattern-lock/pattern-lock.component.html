@@ -1,13 +1,13 @@
-<ion-header [class.head]='isVal' [class.secHead]='!isVal' id='headCode'>
+<ion-header [class.head]='isVal' [class.secHead]='!isVal' id='headCode' [class.landscape]="isLandscape">
   <ion-navbar *ngIf="!isVal">
     <!--<ion-navbar>-->
     <ion-title>手势密码</ion-title>
-    <ion-buttons start>
+    <!--<ion-buttons start>
       <button ion-button icon-left (click)="back()">
         <ion-icon name="arrow-back" style="font-weight: bold;font-size: 32px;"></ion-icon>
         返回
       </button>
-    </ion-buttons>
+    </ion-buttons>-->
   </ion-navbar>
   <ion-list *ngIf="!isVal">
     <ion-item>
@@ -34,12 +34,12 @@
     <ion-row>
       <ion-col width-50>
         <ion-buttons left>
-          <button ion-button (click)="switchUser()">登录其它账号</button>
+          <button ion-button (tap)="switchUser()">登录其它账号</button>
         </ion-buttons>
       </ion-col>
       <ion-col width-50>
         <ion-buttons right>
-          <button ion-button (click)="validateId()">忘记手势密码</button>
+          <button ion-button (tap)="validateId()">忘记手势密码</button>
         </ion-buttons>
       </ion-col>
     </ion-row>

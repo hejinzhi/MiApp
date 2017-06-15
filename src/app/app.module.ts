@@ -3,13 +3,13 @@ import { BrowserModule } from '@angular/platform-browser';
 import { IonicApp, IonicModule, IonicErrorHandler } from 'ionic-angular';
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
+import { PhotoViewer } from '@ionic-native/photo-viewer';
 import 'rxjs/add/operator/toPromise';
 
 import { MyAppComponent } from './app.component';
 import { ApplicationModule } from './application/application.module';
 import { MessageModule } from './message/message.module';
 import { ContactModule } from './contact/contact.module';
-import { MeModule } from './me/me.module';
 import { TabsComponent } from './tabs/tabs.component';
 import { LoginModule } from './login/login.module';
 import { SharedModule } from './shared/shared.module';
@@ -23,10 +23,9 @@ import { CoreModule } from './core/core.module';
   ],
   imports: [
     BrowserModule,
-    IonicModule.forRoot(MyAppComponent, { tabsHideOnSubPages: true, mode: 'ios', backButtonText: '返回', }),
+    IonicModule.forRoot(MyAppComponent, { tabsHideOnSubPages: true, mode:'ios', backButtonText: '返回', }),
     LoginModule,
     ApplicationModule,
-    MeModule,
     MessageModule,
     ContactModule,
     SharedModule,
@@ -41,6 +40,7 @@ import { CoreModule } from './core/core.module';
   providers: [
     StatusBar,
     SplashScreen,
+    PhotoViewer,
     { provide: ErrorHandler, useClass: IonicErrorHandler }
   ]
 })

@@ -1,7 +1,7 @@
 <ion-header>
-    <ion-navbar>
-        <ion-title>{{userNickName}}</ion-title>
-    </ion-navbar>
+  <ion-navbar>
+    <ion-title>{{userNickName}}</ion-title>
+  </ion-navbar>
 </ion-header>
 <ion-content class='pag-content' id='pag-content'>
     <div class='msg-content' [ngClass]="onPlus?'up':'down'" (tap)="isPlus()">
@@ -17,6 +17,9 @@
                     <div class="clearfix"></div>
                </div>
             </div>
+          </ng-template>
+          <ng-template [ngSwitchCase]="'image'"><img src={{item.content}} class='img_content'></ng-template>
+          <div class="clearfix"></div>
         </div>
     </div>
     <div class="input" id="input" [ngClass]="onPlus?'up':'down'">
@@ -40,20 +43,20 @@
                 <button ion-button color="light" class="button-ion" large icon-only (tap)=getPhoto(1)>
                     <ion-icon name='camera' class="icon-img" ></ion-icon>
                 </button>
-                <div class="icon-content">拍攝</div>
-            </div>
-            <div class="btt">
-                <button ion-button color="light" class="button-ion" large icon-only>
+        <div class="icon-content">拍攝</div>
+      </div>
+      <div class="btt">
+        <button ion-button color="light" class="button-ion" large icon-only>
                    <ion-icon name='person' class="icon-img" ></ion-icon>
                 </button>
-                <div class="icon-content">個人名片</div>
-            </div>
-            <div class="btt">
-                <button ion-button color="light" class="button-ion" large icon-only>
+        <div class="icon-content">個人名片</div>
+      </div>
+      <div class="btt">
+        <button ion-button color="light" class="button-ion" large icon-only>
                    <ion-icon name='pin' class="icon-img" ></ion-icon>
                 </button>
-                <div class="icon-content">位置</div>
-            </div>
-        </div>
+        <div class="icon-content">位置</div>
+      </div>
     </div>
+  </div>
 </ion-content>

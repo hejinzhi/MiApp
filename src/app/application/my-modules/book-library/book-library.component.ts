@@ -1,16 +1,13 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { NavController, ModalController, MenuController, AlertController, LoadingController, App } from 'ionic-angular';
+import { NavController, ModalController, MenuController, AlertController, LoadingController, App, IonicPage } from 'ionic-angular';
 import { BarcodeScanner } from '@ionic-native/barcode-scanner';
 import { Observable } from 'rxjs/Rx';
 
 import { BookLibraryService } from './shared/service/book-library.service';
-import { BookDetailComponent } from './book-detail/book-detail.component';
-import { SettingComponent } from './setting/setting.component';
 import { BookLibraryConfig } from './shared/config/book-library.config';
-import { BorrowedListComponent } from './borrowed-list/borrowed-list.component';
-import { BorrowRequestComponent } from './borrow-request/borrow-request.component';
-import { TabsComponent } from '../../../tabs/tabs.component';
 
+
+@IonicPage()
 @Component({
     selector: 'sg-book-library',
     templateUrl: 'book-library.component.html'
@@ -36,12 +33,59 @@ export class BookLibraryComponent implements OnInit {
     @ViewChild('searchbar') mySearchbar: any;
     @ViewChild('maincontent') mainContent: any;
     @ViewChild('bookInput') bookInput: any;
+    @ViewChild('booklist') bookList: any;
+
+    LastScrollTop: number = 0;
+    scroll: any;
 
     ngOnInit() {
         this.user = JSON.parse(localStorage.getItem('currentUser'));
+
+
+    }
+
+    test() {
+        this.bookList.nativeElement.scrollTop = 0;
+    }
+
+    bookListScroll(event: any) {
+        console.log(window.innerHeight);
+        let bookListHeight: number = window.innerHeight - 44;  // 窗口高度-header 高度 
+        // 30px的偏移（距离底部30px开始加载数据）
+        if ((((event.srcElement.scrollTop + bookListHeight + 30 - this.LastScrollTop) / bookListHeight) > 1) && !this.lastPageReached) {
+            this.scrollAddData();
+            this.LastScrollTop = event.srcElement.scrollTop + bookListHeight;
+        }
+    }
+    async scrollAddData() {
+        this.pageIndex++;
+        let res = await this.bookService.getBooksByPage(this.pageIndex, BookLibraryConfig.pageCount);
+        let nextPageBooks: any[] = res.json();
+        nextPageBooks.forEach((book) => {
+            this.books.push(book);
+        })
+        if (nextPageBooks.length < BookLibraryConfig.pageCount) {
+            this.lastPageReached = true;
+        }
+    }
+
+    // test2() {
+    //     // this.mySearchbar.nativeElement.clientTop += this.heightTest;
+    //     // console.log(this.mySearchbar.nativeElement.clientTop);
+    //     this.mySearchbar.nativeElement.style.top = this.mySearchbar.nativeElement.offsetTop + this.heightTest + 'px';
+    // }
+
+    onScroll(event: any) {
+        console.log(event);
+        // let searchDiv = this.mySearchbar.nativeElement;
+        // searchDiv.style.top = 44 + 'px';
+        // searchDiv.style.top = (event.scrollTop) + 'px';
+        // searchDiv.style.top = (window.innerHeight + event.scrollTop - 44) + 'px';
+        // console.log(searchDiv.style.top);
     }
 
     async ionViewWillEnter() {
+
         let loading = this.loadingCtrl.create({
             content: 'Please wait...'
         });
@@ -78,11 +122,11 @@ export class BookLibraryComponent implements OnInit {
     // 转跳到明细页面
     async goToDetailPage(book: any) {
         let res = await this.bookService.getBookDetailInfo(book.ID);
-        this.navCtrl.push(BookDetailComponent, { book: res.json() });
+        this.navCtrl.push('BookDetailComponent', { book: res.json() });
     }
 
     showSettingModal() {
-        let settingPage = this.modalCtrl.create(SettingComponent);
+        let settingPage = this.modalCtrl.create('SettingComponent');
         settingPage.present();
     }
 
@@ -98,7 +142,7 @@ export class BookLibraryComponent implements OnInit {
                 this.showError('豆瓣上找不到该书籍的信息，请人工输入. ');
             } else {
                 let book = this.bookService.transformBookInfo(doubanRes.json());
-                this.navCtrl.push(BookDetailComponent, { book: book, type: 'addBook' });
+                this.navCtrl.push('BookDetailComponent', { book: book, type: 'addBook' });
                 this.menuCtrl.close();
             }
         } else {
@@ -143,11 +187,15 @@ export class BookLibraryComponent implements OnInit {
                 if (res) {
                     this.pageIndex = 1;
                     this.lastPageReached = true;
+                    this.LastScrollTop = 0;
+                    this.bookList.nativeElement.scrollTop = 0;
                     return this.bookService.getBooksByTitle(res);
                 }
                 else {
                     this.pageIndex = 1;
                     this.lastPageReached = false;
+                    this.LastScrollTop = 0;
+                    this.bookList.nativeElement.scrollTop = 0;
                     return this.bookService.getBooksByPage(1, BookLibraryConfig.pageCount);
                 }
 
@@ -164,8 +212,7 @@ export class BookLibraryComponent implements OnInit {
         let res = await this.bookService.getOrderBooks(currentUser.username);
         let books = res.json();
         await this.menuCtrl.close();
-        // this.navCtrl.push(BorrowedListComponent, { books: books, type: 'book' });
-        this.navCtrl.push(BorrowRequestComponent, { books: books, type: 'cancelbook' });
+        this.navCtrl.push('BorrowRequestComponent', { books: books, type: 'cancelbook' });
 
     }
 
@@ -175,7 +222,7 @@ export class BookLibraryComponent implements OnInit {
         let res = await this.bookService.getBorrowedBooks(currentUser.username);
         let books = res.json();
         await this.menuCtrl.close();
-        this.navCtrl.push(BorrowedListComponent, { books: books, type: 'borrow' });
+        this.navCtrl.push('BorrowedListComponent', { books: books, type: 'borrow' });
     }
 
     // 已归还的图书
@@ -184,7 +231,7 @@ export class BookLibraryComponent implements OnInit {
         let res = await this.bookService.getPaybackBooks(currentUser.username);
         let books = res.json();
         await this.menuCtrl.close();
-        this.navCtrl.push(BorrowedListComponent, { books: books, type: 'payback' });
+        this.navCtrl.push('BorrowedListComponent', { books: books, type: 'payback' });
     }
 
     // 借书申请
@@ -198,7 +245,7 @@ export class BookLibraryComponent implements OnInit {
             }
             let books = res.json();
             await this.menuCtrl.close();
-            this.navCtrl.push(BorrowRequestComponent, { books: books, type: 'borrow' });
+            this.navCtrl.push('BorrowRequestComponent', { books: books, type: 'borrow' });
 
         }).catch((err) => {
             console.log(err);
@@ -218,7 +265,7 @@ export class BookLibraryComponent implements OnInit {
             }
             let books = res.json();
             await this.menuCtrl.close();
-            this.navCtrl.push(BorrowRequestComponent, { books: books, type: 'payback' });
+            this.navCtrl.push('BorrowRequestComponent', { books: books, type: 'payback' });
 
         }).catch((err) => {
             console.log(err);

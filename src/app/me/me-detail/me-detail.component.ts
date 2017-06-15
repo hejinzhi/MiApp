@@ -1,17 +1,19 @@
 import { Component } from '@angular/core';
-import { NavController, NavParams, ActionSheetController, LoadingController, Loading } from 'ionic-angular';
+import { NavController, NavParams, ActionSheetController, LoadingController, Loading, IonicPage } from 'ionic-angular';
 import { BarcodeScanner } from '@ionic-native/barcode-scanner';
 import { Camera, CameraOptions } from '@ionic-native/camera';
 import { JMessageService } from '../../core/services/jmessage.service'
 // import { DataService } from '../../services/data.service';
 import { PluginService } from '../../core/services/plugin.service';
 
+@IonicPage()
 @Component({
   selector: 'sg-detail',
   templateUrl: 'me-detail.component.html'
 })
 export class MeDetailComponent {
 
+  isMoving:boolean;
   constructor(public navCtrl: NavController,
     public navParams: NavParams,
     private actionSheetCtrl: ActionSheetController,
@@ -31,6 +33,13 @@ export class MeDetailComponent {
     this.user = this.navParams.data.user;
   }
 
+  touchstart() {
+    this.isMoving = false;
+  }
+  touchmove() {
+    this.isMoving = true;
+  }
+  
   showLoading() {
     this.loading = this.loadingCtrl.create({
       content: 'Please wait...'

@@ -2,15 +2,12 @@ sg-book-library {
   .page {
     background-color: #fbf9fe;
   }
-  .searchbar {
-    position: fixed;
-    top: ($navbar-ios-height);
-    left: 0;
-    background-color: #c9c7cb;
-    z-index: 999;
-  }
-  .book-list:first-child {
-    margin-top: ($navbar-ios-height);
+  // .searchbar {
+  //   width: 100%;
+  //   background-color: #c9c7cb;
+  // }
+  .book-list {
+    height: 90%;
   }
   .avatar-img {
     width: 100%;

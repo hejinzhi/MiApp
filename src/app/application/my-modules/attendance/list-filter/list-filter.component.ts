@@ -1,13 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { NavController, NavParams } from 'ionic-angular';
 
-import { UndoneFormComponent } from '../undone-form/undone-form.component';
-import { LeaveFormComponent } from '../leave-form/leave-form.component';
-import { BusinessFormComponent } from '../business-form/business-form.component';
-import { CallbackLeaveFormComponent } from '../callback-leave-form/callback-leave-form.component';
-import { OverTimeFormComponent } from '../over-time-form/over-time-form.component';
-import { TabsComponent } from '../../../../tabs/tabs.component'
-
 import { MyFormModel } from '../shared/models/my-form.model';
 
 import { LanguageTypeConfig } from '../shared/config/language-type.config';
@@ -27,6 +20,7 @@ export class ListFilterComponent implements OnInit {
   items: MyFormModel[];
   showApproved: boolean = false;
   user: any;
+  isMoving:boolean;
   constructor(public navCtrl: NavController, public navParams: NavParams) { }
 
   ngOnInit() {
@@ -112,26 +106,33 @@ export class ListFilterComponent implements OnInit {
     }
   }
   toDetail(detailMes: any) {
+    if(this.isMoving) return;
     let targetForm: any = '';
     switch (detailMes.type) {
       case '2':
-        targetForm = LeaveFormComponent;
+        targetForm = 'LeaveFormComponent';
         break;
       case '3':
-        targetForm = OverTimeFormComponent;
+        targetForm = 'OverTimeFormComponent';
         break;
       case '4':
-        targetForm = BusinessFormComponent;
+        targetForm = 'BusinessFormComponent';
         break;
       case '5':
-        targetForm = CallbackLeaveFormComponent;
+        targetForm = 'CallbackLeaveFormComponent';
         break;
       default:
-        targetForm = UndoneFormComponent;
+        targetForm = 'UndoneFormComponent';
         break;
     }
     this.navCtrl.push(targetForm, {
       detailMes: detailMes
     })
+  }
+  touchstart() {
+    this.isMoving = false;
+  }
+  touchmove() {
+    this.isMoving = true;
   }
 }

@@ -1,5 +1,6 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
-import { NavController, NavParams, AlertController, Platform, App, Loading } from 'ionic-angular';
+import { Component, OnInit, ChangeDetectorRef, EventEmitter } from '@angular/core';
+import { NavController, NavParams, AlertController, Platform, App, Loading, Events } from 'ionic-angular';
+import { Observable, Subscription, Subject } from 'rxjs/Rx';
 import { MessageModel } from '../shared/models/message.model';
 
 import { JMessageService } from '../core/services/jmessage.service';
@@ -24,6 +25,9 @@ export class MessageComponent implements OnInit {
   noticeListItem: any;
   _type: string;
 
+  onSyncOfflineMessageHandler: Subscription;
+
+
   constructor(public navCtrl: NavController,
     public navParams: NavParams,
     private jmessageService: JMessageService,
@@ -32,7 +36,8 @@ export class MessageComponent implements OnInit {
     private messageService: MessageService,
     private platform: Platform,
     public appCtrl: App,
-    private myHttp: MyHttpService
+    private myHttp: MyHttpService,
+    private events: Events
   ) {
   }
 
@@ -78,8 +83,6 @@ export class MessageComponent implements OnInit {
     // });
 
     // this.jmessageService.jmessageHandler = this.jmessageService.onReceiveMessage().subscribe(res => {
-
-
     //   let _content: string;
     //   if (res.contentType === 'text') {
     //     _content = res.content.text;
@@ -94,8 +97,6 @@ export class MessageComponent implements OnInit {
     //     this._type = 'dialogue';
     //   }
 
-
-
     //   let msg: Message = {
     //     toUserName: res.targetInfo.userName,
     //     fromUserName: res.fromName,
@@ -107,13 +108,11 @@ export class MessageComponent implements OnInit {
     //   };
 
     //   this.messageService.history.push(msg);
-
     //   this.messageService.setLocalMessageHistory(this.messageService.history);
     //   this.jmessageService.setSingleConversationUnreadMessageCount(res.fromName, '', 0);
-
     //   this.refreshData();
     //   this.ref.detectChanges();
-
+    //   this.events.publish('msg.onReceiveMessage');
     // });
 
   }
@@ -200,4 +199,11 @@ export class MessageComponent implements OnInit {
     });
     alert.present(prompt);
   }
+
+  // ionViewWillLeave() {
+  //   this.jmessageService.jmessageHandler.unsubscribe();
+  //   this.onSyncOfflineMessageHandler.unsubscribe();
+  // }
+
+
 }

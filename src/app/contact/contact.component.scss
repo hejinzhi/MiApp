@@ -1,12 +1,17 @@
 sg-contact {
-  ion-grid {
+  .department-group ion-grid {
     padding: 0;
     .col {
       border-bottom: 1px solid #ccc;
       border-right: 1px solid #ccc;
       padding-left: 15px;
       margin-right: -1px;
-      //   box-shadow: 0px 0px 1px #ccc;
+      .contact-btn {
+        height: 100%;
+        width: 100%;
+        text-align: left;
+        background-color: white;
+      }
     }
     .col-img {
       float: left;
@@ -33,7 +38,7 @@ sg-contact {
         border-bottom: 1px solid #ccc;
         .avatar {
           display: inline-block;
-          margin-left: 15px;
+          // margin-left: 15px;
           width: 40px;
           height: 40px;
           line-height: 40px;
@@ -46,20 +51,24 @@ sg-contact {
         .name {
           font-weight: 600;
           font-size: 15px;
+          border-bottom: none;
         }
         .company {
           margin-top: 5px;
           color: #909090;
           font-size: 12px;
+          border-bottom: none;
         }
         .position {
           color: #909090;
           font-size: 15px;
+          border-bottom: none;
         }
         .department {
           margin-top: 5px;
           color: #909090;
           font-size: 12px;
+          border-bottom: none;
         }
       }
     }

@@ -1,68 +1,51 @@
-<!--
-  Generated template for the Names page.
-
-  See http://ionicframework.com/docs/v2/components/#navigation for more info on
-  Ionic pages and navigation.
--->
 <ion-header>
   <ion-navbar>
     <ion-title>通讯录</ion-title>
   </ion-navbar>
 </ion-header>
 <ion-content>
-  <ion-searchbar placeholder="请输入姓名/首字母/电话"></ion-searchbar>
-  <ion-grid>
-    <ion-row>
-      <ion-col class="col">
-        <img src="assets/icon/person.ico" class="col-img">
-        <span class="desc">同部门</span>
-      </ion-col>
-      <ion-col class="col">
-        <img src="assets/icon/department.ico" class="col-img">
-        <span class="desc">组织</span>
-      </ion-col>
-    </ion-row>
-    <ion-row>
-      <ion-col class="col">
-        <img src="assets/icon/xiashu.ico" class="col-img">
-        <span class="desc">我的下属</span>
-      </ion-col>
-      <ion-col class="col">
-        <img src="assets/icon/group.ico" class="col-img">
-        <span class="desc">常用组</span>
-      </ion-col>
-    </ion-row>
-    <ion-row>
-      <ion-col class="col">
-        <img src="assets/icon/all.ico" class="col-img">
-        <span class="desc">所有人</span>
-      </ion-col>
-      <ion-col class="col">
-        <img src="assets/icon/chat.ico" class="col-img">
-        <span class="desc">群聊</span>
-      </ion-col>
-    </ion-row>
-  </ion-grid>
-  <div class="contacter">
-    <div class="contacter-header">
-      最近
-    </div>
-    <div class="contacter-content" *ngFor="let item of contacter">
+  <ion-searchbar placeholder="请输入中文名/英文名/工号" (ionInput)="getItems($event)"></ion-searchbar>
+  <div class="main-wrapper" *ngIf="!searchFilter">
+    <div class="department-group">
       <ion-grid>
-        <ion-row class="row">
-          <ion-col width-10>
-            <span class="avatar">{{item.name}}</span>
+        <ion-row>
+          <ion-col class="col">
+            <button (click)="goToSearchDetail('sameDept')" class="contact-btn">
+              <img src="assets/icon/person.ico" class="col-img">
+              <span class="desc">同部门</span>
+            </button>
           </ion-col>
-          <ion-col width-20 offset-10>
-            <ion-row class="name">{{item.full_name}}</ion-row>
-            <ion-row class="company">{{item.company}}</ion-row>
+          <ion-col class="col">
+            <button (click)="goToSearchDetail('subordinated')" class="contact-btn">
+              <img src="assets/icon/xiashu.ico" class="col-img">
+              <span class="desc">我的下属</span>
+            </button>
           </ion-col>
-          <ion-col offset-10>
-            <ion-row class="position">{{item.position}}</ion-row>
-            <ion-row class="department">{{item.department}}</ion-row>
+        </ion-row>
+        <ion-row>
+          <ion-col class="col">
+            <button class="contact-btn" (click)="goToOrganizationPage()">
+              <img src="assets/icon/department.ico" class="col-img" >
+              <span class="desc">组织</span>
+            </button>
+          </ion-col>
+          <ion-col class="col">
+            <button (click)="goToSearchDetail('all')" class="contact-btn">
+              <img src="assets/icon/all.ico" class="col-img">
+              <span class="desc">所有人</span>
+            </button>
           </ion-col>
         </ion-row>
       </ion-grid>
     </div>
+    <div class="contacter">
+      <div class="contacter-header">
+        最近
+      </div>
+      <sg-contact-list [contacter]="contacter" (onClick)="goToDetailPage($event)"></sg-contact-list>
+    </div>
+  </div>
+  <div *ngIf="searchFilter">
+    <sg-contact-list [contacter]="searchResult" (onClick)="goToDetailPage($event)"></sg-contact-list>
   </div>
 </ion-content>

@@ -1,0 +1,14 @@
+<ion-header>
+  <ion-navbar>
+    <ion-title>
+      {{typeDesc}}
+    </ion-title>
+  </ion-navbar>
+</ion-header>
+<ion-content>
+  <ion-searchbar placeholder="请输入中文名/英文名/工号" (ionInput)="getItems($event)"></ion-searchbar>
+  <sg-contact-list [contacter]="personList" (onClick)="goToDetailPage($event)"></sg-contact-list>
+  <ion-infinite-scroll (ionInfinite)="doInfinite($event)" *ngIf="!isLastPageReached() && type==='all' && !filter ">
+    <ion-infinite-scroll-content></ion-infinite-scroll-content>
+  </ion-infinite-scroll>
+</ion-content>

@@ -1,12 +1,17 @@
 sg-book-detail {
   .main-wrapper {
+    // .scroll-content {
+    //   overflow-y: hidden;
+    // }
     .book-list-wrapper {
-      position: fixed;
-      top: ($navbar-ios-height);
+      position: absolute;
+      top: 0;
       width: 100%;
       background-color: white;
     }
     .book-detail-wrapper {
+      // height: 100%;
+      // overflow: scroll;
       margin-top: (100+$navbar-ios-height);
       padding-bottom: 55px;
       .book-title {
@@ -37,19 +42,6 @@ sg-book-detail {
         line-height: 18px;
         color: #323232;
         margin-left: 25px;
-      }
-    }
-    .control-btn-wrapper {
-      background-color: white;
-      position: fixed;
-      bottom: 0;
-      width: 100%;
-      height: 55px;
-      line-height: 55px;
-      text-align: center;
-      button {
-        width: 95%;
-        margin-bottom: 20px;
       }
     }
   }

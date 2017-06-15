@@ -1,9 +1,12 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { NavController, NavParams } from 'ionic-angular';
 import { LoginComponent } from '../login.component';
 import { TabsComponent } from '../../tabs/tabs.component';
+
 import { MyHttpService } from '../../core/services/myHttp.service';
 import { JMessageService } from '../../core/services/jmessage.service';
+import { PluginService }   from '../../core/services/plugin.service';
+
 import { LoginConfig } from '../shared/config/login.config';
 
 @Component({
@@ -11,6 +14,10 @@ import { LoginConfig } from '../shared/config/login.config';
   templateUrl: 'pattern-lock.component.html'
 })
 export class PatternLockComponent implements OnInit {
+
+  mySubcribe:any;
+  isLandscape:boolean;
+
   needNineCode: boolean;
   user: any;
   R: number;
@@ -25,12 +32,14 @@ export class PatternLockComponent implements OnInit {
   headHeight: number;
   isReSet: boolean;
   myCode: number[] = [];
-
+  canvas:any;
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
     public myHttp: MyHttpService,
-    private jmessageService: JMessageService
+    private jmessageService: JMessageService,
+    private plugin: PluginService,
+    private ref: ChangeDetectorRef
   ) {
     // 判定是否是进行验证功能还是更改功能
     // this.needNineCode = localStorage.getItem('needPassNineCode') == 'true' ? true : false;
@@ -80,6 +89,11 @@ export class PatternLockComponent implements OnInit {
     this.isVal = !this.navParams.data.reset ? true : false;
     this.message = this.isVal ? '请验证手势密码' : '请输入原来的密码';
     this.message = this.isReSet ? '请设置手势密码' : this.message;
+
+    this.canvas = document.getElementById("lockCanvas");
+    let orientation = this.plugin.getScreenOrientation();
+    this.isLandscape = orientation.type.indexOf('landscape') > -1? true:false;
+    this.ref.detectChanges();
   }
 
   // 忘记手势密码
@@ -112,26 +126,29 @@ export class PatternLockComponent implements OnInit {
     this.navCtrl.setRoot(TabsComponent);
   }
 
-
-
-  ionViewWillEnter() {
+  initCode() {
     // 初始化验证过程
     this.myCode = [];
 
     //设置为先验证旧密码
     this.canChange = false;
-    var canvas: any = document.getElementById("lockCanvas");
     //获取canvas顶部元素的高度，对后面的触摸判断作调整
     let headCode: any = document.getElementById('headCode');
     this.headHeight = headCode.offsetHeight;
 
     this.canvasWidth = document.body.offsetWidth;//网页可见区域宽
-    this.canvasHeight = this.isVal ? this.headHeight / 0.4 * 0.6 - 80 : this.headHeight / 0.18 * 0.6 - 80;
-    canvas.width = this.canvasWidth;
-    canvas.height = this.canvasHeight;
+    let leftHeight = document.body.offsetHeight - this.headHeight+ 80;
+    if(this.isVal) {
+      console.log(this.headHeight)
+      this.canvasHeight = (Math.min(this.headHeight,265) / 0.35 * 0.65 - 80);
+    } else {
+      this.canvasHeight = this.headHeight / 0.18 * 0.6 - 80;
+    }
+    this.canvas.width = this.canvasWidth;
+    this.canvas.height = this.canvasHeight;
     this.R = this.canvasHeight / 11;
     this.OffsetX = this.OffsetY = this.R
-    var cxt = canvas.getContext("2d");
+    var cxt = this.canvas.getContext("2d");
     /**
      * 每行3个圆
      * OffsetX为canvas x方向内边距
@@ -141,13 +158,26 @@ export class PatternLockComponent implements OnInit {
 
     this.createCirclePoint(X, Y);
 
-    this.bindEvent(canvas, cxt);
+    this.bindEvent(this.canvas, cxt);
     //CW=2*offsetX+R*2*3+2*X
     this.Draw(cxt, this.circleArr, [], null);
   }
-  ionViewWillLeave() {
+  ionViewWillEnter() {
+    let orientation = this.plugin.getScreenOrientation();
+    this.initCode();
+    this.mySubcribe = orientation.onChange().subscribe((value) => {
+      this.isLandscape = orientation.type.indexOf('landscape') > -1? true:false;
+      this.ref.detectChanges();
+      this.circleArr =[];
+      this.canvas.height=this.canvas.height;
+      setTimeout(() => {
+        this.initCode();
+      },200)
+    })
   }
-
+  ionViewWillLeave() {
+    this.mySubcribe.unsubscribe();
+  }
   createCirclePoint(diffX: number, diffY: number) {
     for (var row = 0; row < 3; row++) {
       for (var col = 0; col < 3; col++) {

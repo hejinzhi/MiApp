@@ -1,5 +1,5 @@
-<ion-header class="head">
-  <div class="nav-head" *ngIf="user" (click)="goToMyDetail()">
+<ion-header class="head" [class.landscape]="isLandscape">
+  <div class="nav-head" *ngIf="user" (tap)="goToMyDetail()">
     <i class="iconfontyyy headicon">&#xe613;</i>
     <div class="person">
       <img [src]="user.avatarUrl">
@@ -27,7 +27,7 @@
       <ion-icon name="create" color="advice"></ion-icon>
         &nbsp;意见反馈
     </button>
-    <button ion-item class="function-message" (click)="goSetting()">
+    <button ion-item class="function-message" (tap)="goSetting()">
       <ion-icon name="cog" color="mac"></ion-icon>
         &nbsp;设置
     </button>

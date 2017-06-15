@@ -4,7 +4,7 @@
     <ion-title *ngIf="!formData.status">{{fontContent.unSave_title}}</ion-title>
     <ion-title *ngIf="formData.status">{{fontContent.saved_title}}</ion-title>
     <ion-buttons end >
-      <button ion-button icon-only (click)="presentPopover($event)">
+      <button ion-button icon-only (tap)="presentPopover($event)">
       <ion-icon name="add"></ion-icon>
     </button>
     </ion-buttons>
@@ -90,7 +90,7 @@
       <ion-item-divider *ngIf="myValidators.colleague.error" class='alert'>{{myValidators.colleague.error}}</ion-item-divider>
       <div class="searchOut">
         <ul class="list-group" [class.search]="colleague">
-          <li *ngFor="let person of colleague | async" (click)="getcolleague(person.AGENT_NAME)"
+          <li *ngFor="let person of colleague | async" (tap)="getcolleague(person.AGENT_NAME)"
               class="search-result list-group-item">{{person.AGENT_NAME}}</li>
         </ul>
       </div>
@@ -108,7 +108,7 @@
           </ion-col>
           <ion-col width-50>
             <ion-buttons right>
-              <button ion-button type="button" [disabled]="!todo.valid || myValidators.reason.error || !isSelectcolleague " (click)="saveForm()">{{fontContent.save}}</button>
+              <button ion-button type="button" [disabled]="!todo.valid || myValidators.reason.error || !isSelectcolleague " (tap)="saveForm()">{{fontContent.save}}</button>
             </ion-buttons>
           </ion-col>
         </ion-row>

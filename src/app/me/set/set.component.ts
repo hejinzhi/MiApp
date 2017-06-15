@@ -1,17 +1,19 @@
 import { Component } from '@angular/core';
-import { NavController, NavParams, AlertController, App, Platform } from 'ionic-angular';
-import { PatternLockComponent } from '../../login/pattern-lock/pattern-lock.component';
-import { LoginComponent } from '../../login/login.component';
+import { NavController, NavParams, AlertController, App, Platform, IonicPage } from 'ionic-angular';
 
+import { LoginComponent } from '../../login/login.component';
+import { PatternLockComponent } from '../../login/pattern-lock/pattern-lock.component';
 import { JMessageService } from '../../core/services/jmessage.service'
 import { PluginService } from '../../core/services/plugin.service'
 
+@IonicPage()
 @Component({
   selector: 'sg-set',
   templateUrl: 'set.component.html'
 })
 export class SetComponent {
 
+  isMoving:boolean;
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
@@ -29,6 +31,12 @@ export class SetComponent {
   }
   ionViewWillLeave() {
 
+  }
+  touchstart() {
+    this.isMoving = false;
+  }
+  touchmove() {
+    this.isMoving = true;
   }
   changeFont() {
     // localStorage.set('fontType','simple_Chinese');
@@ -50,8 +58,8 @@ export class SetComponent {
     alert.addButton('取消');
     alert.addButton({
       text: '确认',
-      handler: (data:string) => {
-        localStorage.setItem('languageType',data);
+      handler: (data: string) => {
+        localStorage.setItem('languageType', data);
         this.plugin.showToast('已切换语言版本,重启可获得最佳体验')
       }
     });
@@ -59,8 +67,10 @@ export class SetComponent {
   }
   // 注销用户
   logout(): void {
+    let that = this;
     let confirm = this.alertCtrl.create({
-      title: '确定退出',
+      title: '注销',
+      message: '注销后将收不到推送消息，确认要退出吗?',
       buttons: [
         {
           text: '取消',
@@ -72,8 +82,7 @@ export class SetComponent {
           text: '确定',
           handler: () => {
             localStorage.removeItem('currentUser');
-            // localStorage.removeItem('myNineCode');
-            // localStorage.setItem('needPassNineCode','true');
+            that.jmessage.loginOut();
             this.app.getRootNav().setRoot(LoginComponent);
           }
         }
@@ -97,7 +106,7 @@ export class SetComponent {
           text: '是',
           handler: () => {
             // that.jmessage.jmessageHandler.unsubscribe();
-            // that.jmessage.loginOut();
+            that.jmessage.loginOut();
             that.platform.exitApp();
           }
         }

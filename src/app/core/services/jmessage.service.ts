@@ -23,10 +23,13 @@ export class JMessageService {
     }
 
     // 初始化
-    init(): Promise<any> {
-        return new Promise((resolve, reject) => {
-            this.jmessagePlugin.init();
-        });
+    // init(): Promise<any> {
+    //     return new Promise((resolve, reject) => {
+    //         this.jmessagePlugin.init();
+    //     });
+    // };
+    init() {
+        this.jmessagePlugin.init();
     };
 
     // 注册
@@ -104,12 +107,12 @@ export class JMessageService {
         });
     };
 
-   //  發送單聊圖片
+    //  發送單聊圖片
     sendSingleImageMessage(username: string, imageUrl: string, appKey?: string): Promise<any> {
         return new Promise((resolve, reject) => {
-            this.jmessagePlugin.sendSingleImageMessage(username, imageUrl, appKey, (suc) => {
+            this.jmessagePlugin.sendSingleImageMessage(username, imageUrl, appKey, (suc: any) => {
                 resolve(suc);
-            }, (err) => {
+            }, (err: any) => {
                 reject(err);
             })
         });
@@ -120,8 +123,8 @@ export class JMessageService {
         return this.wrapEventObservable('jmessage.onReceiveMessage');
     }
 
-    // 监听离线消息
-    onSyncOfflineMessage():Observable<any> {
+
+    onSyncOfflineMessage(): Observable<any> {
         return this.wrapEventObservable('jmessage.onSyncOfflineMessage');
     }
 
@@ -168,7 +171,7 @@ export class JMessageService {
     getConversationList(): Promise<any> {
         return new Promise((resolve, reject) => {
             this.jmessagePlugin.getConversationList((suc: any) => {
-                console.log(JSON.parse(suc),666);
+                console.log(JSON.parse(suc), 666);
                 resolve(suc);
             }, (err: any) => {
                 reject(err);

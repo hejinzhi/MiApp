@@ -5,6 +5,8 @@ sg-leave-form {
   }
   .search {
     position: absolute;
+    max-height: 199px;
+    overflow-y: scroll;
     left: 20%;
     z-index: 1000;
     width: 100%;
@@ -24,9 +26,11 @@ sg-leave-form {
     position: relative;
     display: block;
     padding: 10px 15px;
-    margin-bottom: -1px;
+    margin-bottom: 0px;
     background-color: #fff;
-    border: 1px solid #ddd;
+    border-right: 1px solid #ddd;
+    border-left: 1px solid #ddd;
+    border-bottom: 1px solid #ddd;
   }
   .myitem {
     position: relative;

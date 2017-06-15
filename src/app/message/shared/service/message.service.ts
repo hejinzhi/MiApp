@@ -1,6 +1,7 @@
-import { Injectable } from '@angular/core';
-import { Events } from 'ionic-angular';
 
+import { Injectable, EventEmitter } from '@angular/core';
+import { Events } from 'ionic-angular';
+import { Observable, Subscription, Subject } from 'rxjs/Rx';
 import { JMessageService } from '../../../core/services/jmessage.service';
 import { Message } from '../classes/Message';
 
@@ -257,6 +258,7 @@ export class MessageService {
           let temp = sorted.filter((v) => (v.fromUserName === username && v.toUserName === this.userInfo.username) || v.toUserName === username && v.fromUserName === this.userInfo.username);
           temp = this.leftJoin(temp, this.allUserInfo);
           resolve(temp);
+
         }
       })
     })

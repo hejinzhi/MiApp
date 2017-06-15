@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { NavParams } from 'ionic-angular';
+import { NavParams, IonicPage } from 'ionic-angular';
 
+@IonicPage()
 @Component({
     selector: 'sg-borrowed-list',
     templateUrl: 'borrowed-list.component.html'
