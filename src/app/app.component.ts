@@ -74,11 +74,11 @@ export class MyAppComponent {
     let user = JSON.parse(localStorage.getItem('currentUser'));
     if (user && user.myNineCode) {
       // 已经有用户信息和设定为要验证手势密码
-      // this.rootPage = PatternLockComponent;
-      this.rootPage = OrganizationComponent;
+      this.rootPage = PatternLockComponent;
+      // this.rootPage = OrganizationComponent;
     } else {
-      // this.rootPage = LoginComponent;
-      this.rootPage = OrganizationComponent;
+      this.rootPage = LoginComponent;
+      // this.rootPage = OrganizationComponent;
     }
     if (!localStorage.getItem('languageType')) {
       localStorage.setItem('languageType', 'simple_Chinese');

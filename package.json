@@ -22,7 +22,7 @@
     "@ionic-native/barcode-scanner": "^3.4.4",
     "@ionic-native/camera": "^3.5.0",
     "@ionic-native/core": "3.7.0",
-    "@ionic-native/in-app-browser": "^3.5.0",
+    "@ionic-native/in-app-browser": "^3.12.1",
     "@ionic-native/keyboard": "^3.5.0",
     "@ionic-native/photo-viewer": "^3.11.0",
     "@ionic-native/screen-orientation": "^3.10.3",

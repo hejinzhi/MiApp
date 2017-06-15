@@ -8,18 +8,21 @@
 <ion-content>
   <div class="main-wrapper">
     <div class="my-header">
-      <button class="my-button" (tap)="test()">
+      <button class="my-button" (tap)="goBack()" [disabled]="deptHistory.length <=1">
           返回上一级
       </button>
-      <span class="header-content">MSL 總公司董事長室</span>
+      <span class="header-content">{{parentDept.DEPTNAME}}</span>
     </div>
     <div class="main-content">
-      <div class="my-item">
-        <div class="left">
-          <ion-icon name="menu"></ion-icon>
+      <div *ngIf="!showPeople">
+        <div class="my-item" *ngFor="let item of childrenDeptList" (tap)="viewChildDept(item)">
+          <div class="left">
+            <ion-icon name="menu"></ion-icon>
+          </div>
+          <div class="right">{{item.DEPTNAME}}</div>
         </div>
-        <div class="right">MSL 總公司總經理室</div>
       </div>
+      <sg-contact-list [contacter]="peopleInDept" *ngIf="showPeople" (onClick)="goToDetailPage($event)"></sg-contact-list>
     </div>
   </div>
 </ion-content>

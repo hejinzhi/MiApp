@@ -20,5 +20,11 @@ export class ContactConfig {
     // 分页查询所有员工信息
     static getAllPersonByPageUrl = EnvConfig.baseUrl + 'Guid/GetAllUserByPage';
 
+    // 根据等级获取公司部门信息
+    static getDeptInfoByGradeUrl = EnvConfig.baseUrl + 'Guid/GetDeptInfo';
+
+    // 获取子部门信息
+    static getChildDeptInfoUrl = EnvConfig.baseUrl + 'Guid/GetChildDeptInfo';
+
     static pageSize = 30;
 }

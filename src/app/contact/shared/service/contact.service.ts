@@ -27,7 +27,7 @@ export class ContactService {
     }
 
     public getPersonByDept(deptno: string) {
-        return this.myHttp.get(ContactConfig.getPersonByDeptUrl + `deptno=${deptno}`);
+        return this.myHttp.get(ContactConfig.getPersonByDeptUrl + `?deptno=${deptno}`);
     }
 
     public getSubordinate() {
@@ -48,6 +48,16 @@ export class ContactService {
 
     public getAllPersonByPage(site: string, pageIndex: number, pageSize: number) {
         return this.myHttp.get(ContactConfig.getAllPersonByPageUrl + `?site=${site}&pageIndex=${pageIndex}&pageSize=${pageSize}`);
+    }
+
+    // 根据等级获取公司部门信息
+    public getDeptInfoByGrade(site: string, grade: number) {
+        return this.myHttp.get(ContactConfig.getDeptInfoByGradeUrl + `?site=${site}&grade=${grade}`)
+    }
+
+    // 获取子部门信息
+    public getChildDeptInfo(site: string, deptno: string) {
+        return this.myHttp.get(ContactConfig.getChildDeptInfoUrl + `?site=${site}&deptno=${deptno}`)
     }
 
     public writeViewHistory(personData: any) {
