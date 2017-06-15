@@ -15,12 +15,12 @@
     </div>
     <div class="main-content">
       <div *ngIf="!showPeople">
-        <button class="my-item" *ngFor="let item of childrenDeptList" (click)="viewChildDept(item)">
+        <div class="my-item" *ngFor="let item of childrenDeptList" (tap)="viewChildDept(item)">
           <div class="left">
             <ion-icon name="menu"></ion-icon>
           </div>
           <div class="right">{{item.DEPTNAME}}</div>
-        </button>
+        </div>
       </div>
       <sg-contact-list [contacter]="peopleInDept" *ngIf="showPeople" (onClick)="goToDetailPage($event)"></sg-contact-list>
     </div>
