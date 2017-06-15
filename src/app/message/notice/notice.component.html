@@ -1,0 +1,20 @@
+<ion-header>
+    <ion-navbar>
+        <ion-title>{{userNickName}}</ion-title>
+    </ion-navbar>
+</ion-header>
+<ion-content class="page-content">
+    <ion-list *ngFor="let item of list" class="page-list">
+        <div class="list-time">
+            <div class="list-time-content">{{item.time | sgTimeDesc}}</div>
+        </div>
+        <ion-card>
+            <ion-card-header>
+                {{item.content.type}}
+            </ion-card-header>
+            <ion-card-content>
+                {{item.content.content}}
+            </ion-card-content>
+        </ion-card>
+    </ion-list>
+</ion-content>
