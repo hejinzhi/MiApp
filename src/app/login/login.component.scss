@@ -1,16 +1,11 @@
 sg-login {
   .login-content {
-    .logo-row {
-      padding-top: 50px;
-      padding-bottom: 20px;
-      .logo-img {
-        height: 60px;
-        // width: 300px;
-      }
-    }
+    background-image: url('../assets/bg/entry.png');
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
     .login-box {
       padding: 20px 20px 0px 20px;
-      margin-top: 30px;
+      margin-top: 40%;
     }
     ion-row {
       align-items: center;

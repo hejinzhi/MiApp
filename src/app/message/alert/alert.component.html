@@ -1,0 +1,33 @@
+<ion-header>
+    <ion-navbar>
+        <ion-title>{{userNickName}}</ion-title>
+    </ion-navbar>
+</ion-header>
+<ion-content class="page-content">
+    <ion-list>
+        <ion-item (tap)="goToNoticePage('att')">ERP-人事考勤
+            <ion-note item-right class="item-count" *ngIf="att_unread>0">{{att_unread}}</ion-note>
+        </ion-item>
+        <ion-item (tap)="goToNoticePage('pro')">ERP-生產管理
+            <ion-note item-right class="item-count" *ngIf="pro_unread>0">{{pro_unread}}</ion-note>
+        </ion-item>
+        <ion-item (tap)="goToNoticePage('sal')">ERP-銷售管理
+            <ion-note item-right class="item-count" *ngIf="sal_unread>0">{{sal_unread}}</ion-note>
+        </ion-item>
+        <ion-item (tap)="goToNoticePage('pur')">ERP-採購管理
+            <ion-note item-right class="item-count" *ngIf="pur_unread>0">{{pur_unread}}</ion-note>
+        </ion-item>
+        <ion-item (tap)="goToNoticePage('inv')">ERP-庫存管理
+            <ion-note item-right class="item-count" *ngIf="inv_unread>0">{{inv_unread}}</ion-note>
+        </ion-item>
+        <ion-item (tap)="goToNoticePage('fin')">ERP-財務管理
+            <ion-note item-right class="item-count" *ngIf="fin_unread>0">{{fin_unread}}</ion-note>
+        </ion-item>
+        <ion-item (tap)="goToNoticePage('sfcs')">SFCS-現場管理
+            <ion-note item-right class="item-count" *ngIf="sfcs_unread>0">{{sfcs_unread}}</ion-note>
+        </ion-item>
+        <ion-item (tap)="goToNoticePage('ims')">IMS-智能物流
+            <ion-note item-right class="item-count" *ngIf="ims_unread>0">{{ims_unread}}</ion-note>
+        </ion-item>
+    </ion-list>
+</ion-content>
