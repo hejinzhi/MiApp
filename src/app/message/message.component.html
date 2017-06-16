@@ -7,8 +7,25 @@
 </ion-header>
 <ion-content class="list-avatar-page">
   <ion-searchbar></ion-searchbar>
+  <ion-list class="list-page">
+    <ion-item *ngFor="let item of noticeListItem" (tap)="goToMessageDetailPage(item)" [ngSwitch]="item.contentType">
+      <div item-left class="img-header">
+        <img class="img" src={{item.avatarSrc}}>
+        <div class="badge" *ngIf="item.unreadCount > 0">{{item.unreadCount}}</div>
+      </div>
+      <h2 class="name">{{item.userNickName}}</h2>
+      <ng-template [ngSwitchCase]="'text'">
+        <p class="msg">{{item.lastmsg.content}}</p>
+      </ng-template>
+      <ng-template [ngSwitchCase]="'image'">
+        <p>[图片]</p>
+      </ng-template>
+      <ion-note item-right>{{item.timedesc}}</ion-note>
+    </ion-item>
+  </ion-list>
+  <div class="grid-footer"></div>
   <ion-list>
-    <ion-item *ngFor="let item of messageListItem" (click)="goToMessageDetailPage(item)" [ngSwitch]="item.contentType">
+    <ion-item *ngFor="let item of messageListItem" (tap)="goToMessageDetailPage(item)" [ngSwitch]="item.contentType">
       <div item-left class="img-header">
         <img class="img" src={{item.avatarSrc}}>
         <div class="badge" *ngIf="item.unreadCount > 0">{{item.unreadCount}}</div>

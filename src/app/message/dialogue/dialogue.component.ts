@@ -14,6 +14,7 @@ import { JMessageService } from '../../core/services/jmessage.service';
   templateUrl: 'dialogue.component.html'
 })
 
+
 export class DialogueComponent implements OnInit {
   list: any;
   input_text: string;
@@ -24,6 +25,7 @@ export class DialogueComponent implements OnInit {
   userNickName: string;
 
   jmessageHandler: Subscription; //接收句柄，再view被关闭的时候取消订阅，否则对已关闭的view进行数据脏检查会报错
+
 
   constructor(private messageservice: MessageService,
     public params: NavParams,
@@ -56,7 +58,7 @@ export class DialogueComponent implements OnInit {
 
   ionViewWillLeave() {
     this.events.unsubscribe('msg.onReceiveMessage');
-    this.messageservice.setUnreadToZeroByUserName(this.userName);
+    this.messageservice.setUnreadToZeroByUserName(this.userName, '');
     this.jmessageservice.setSingleConversationUnreadMessageCount(this.userName, null, 0);
     this.jmessageservice.exitConversation();
   }
@@ -86,7 +88,9 @@ export class DialogueComponent implements OnInit {
       })
     }
     this.keyboard.onKeyboardShow().subscribe(() => {
-      this.scroll_down();
+      setTimeout(() => {
+        this.scroll_down();
+      }, 10);
     })
   }
 
@@ -102,22 +106,6 @@ export class DialogueComponent implements OnInit {
 
   //type: 1是文字，2是圖片
   sendMessage(type: number, content: string) {
-    // let history = this.dataService.history;
-    // let msg = [{
-    //   "toUserName": this.userName,
-    //   "fromUserName": this.userinfo.username,
-    //   "content": this.input_text,
-    //   "time": +new Date(),
-    //   "type": "dialogue",
-    //   "unread": true
-    // }];
-    // this.jmessage.sendSingleTextMessage(this.userName, this.input_text);
-    // msg = this.dataService.leftJoin(msg, this.dataService.usersInfo);
-
-    // history.push(msg[0]);
-    // this.dataService.setLocalMessageHistory(history);
-    // this.list.push(msg[0])
-    // this.input_text = '';
     let contentType: string;
 
     if (type === 1) {
@@ -137,6 +125,7 @@ export class DialogueComponent implements OnInit {
       "unread": true
     }];
     history.push(msg[0]);
+
     this.messageservice.setLocalMessageHistory(history);
     // if (type === 1) {
     //   this.jmessageservice.sendSingleTextMessage(this.userName, content);

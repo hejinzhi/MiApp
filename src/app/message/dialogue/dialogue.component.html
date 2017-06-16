@@ -4,7 +4,7 @@
   </ion-navbar>
 </ion-header>
 <ion-content class='pag-content' id='pag-content'>
-  <div class='msg-content' [ngClass]="onPlus?'up':'down'" (click)="isPlus()">
+  <div class='msg-content' [ngClass]="onPlus?'up':'down'" (tap)="isPlus()">
     <div *ngFor="let item of list">
       <div class="msgarea">
         <div [ngClass]="item.toUserName === userinfo.username ? 'other' : 'me'" [ngSwitch]="item.contentType">
@@ -25,21 +25,21 @@
     <div class="input_layout">
       <span class="iconfontyyy input_icon voice">&#xe68b;</span>
       <span class="iconfontyyy input_icon face">&#xe61e;</span>
-      <span class="iconfontyyy input_icon plus" *ngIf="!input_text" (click)="clickPlus()">&#xe649;</span>
+      <span class="iconfontyyy input_icon plus" *ngIf="!input_text" (tap)="clickPlus()">&#xe649;</span>
       <!--<img class="input_icon face" src="assets/img/face.png">
             <img class="input_icon plus" src="assets/img/plus.png" (click)="clickPlus()">-->
       <input class="input_text" [(ngModel)]="input_text" name="input_text" (focus)="isPlus()">
-      <div *ngIf="input_text" class="send" (click)="sendMessage(1,input_text)" tappable>發送</div>
+      <div *ngIf="input_text" class="send" (tap)="sendMessage(1,input_text)" tappable>發送</div>
     </div>
     <div class="button-bar" *ngIf="onPlus">
       <div class="btt">
-        <button ion-button color="light" class="button-ion" large icon-only (click)=getPhoto(0)>
+        <button ion-button color="light" class="button-ion" large icon-only (tap)=getPhoto(0)>
                    <ion-icon name='image' class="icon-img" ></ion-icon>
                 </button>
         <div class="icon-content">照片</div>
       </div>
       <div class="btt">
-        <button ion-button color="light" class="button-ion" large icon-only (click)=getPhoto(1)>
+        <button ion-button color="light" class="button-ion" large icon-only (tap)=getPhoto(1)>
                     <ion-icon name='camera' class="icon-img" ></ion-icon>
                 </button>
         <div class="icon-content">拍攝</div>
