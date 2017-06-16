@@ -20,7 +20,7 @@ export class TabsComponent implements OnInit {
   tab1Root = MessageComponent;
   tab2Root = ApplicationComponent;
   tab3Root = ContactComponent;
-  tab4Root = MeComponent;
+  tab4Root = 'MeComponent';
   unreadCount: number;
 
   constructor(private messageService: MessageService, private events: Events) {
