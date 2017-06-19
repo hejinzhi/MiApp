@@ -1,18 +1,18 @@
 <ion-grid>
-  <ion-row center wrap>
-    <ion-col col-3 *ngFor="let item of items" class="grid-col">
-      <div class="grid-content" (click)="goToDetailPage(item.MODULE_ID)">
-        <a>
-          <img [src]="item.ICON_URL" class="grid-img">
-          <div class="grid-name">{{item.MODULE_NAME}}</div>
-        </a>
-      </div>
-      <button (click)="selectItem(item.MODULE_ID)" *ngIf="(type==='remove') && showBtn" class="action-btn">
+    <ion-row center wrap>
+        <ion-col col-3 *ngFor="let item of items" class="grid-col">
+            <div class="grid-content" (click)="goToDetailPage(item.MODULE_ID)">
+                <a>
+                    <img [src]="item.ICON_URL" class="grid-img">
+                    <div class="grid-name">{{item.MODULE_NAME|sgChineseConv}}</div>
+                </a>
+            </div>
+            <button (click)="selectItem(item.MODULE_ID)" *ngIf="(type==='remove') && showBtn" class="action-btn">
         <ion-icon name="remove-circle" class="remove-circle red"></ion-icon>
       </button>
-      <button (click)="selectItem(item.MODULE_ID)" *ngIf="(type ==='add') && showBtn" class="action-btn">
+            <button (click)="selectItem(item.MODULE_ID)" *ngIf="(type ==='add') && showBtn" class="action-btn">
         <ion-icon name="add-circle" class="add-circle green"></ion-icon>
       </button>
-    </ion-col>
-  </ion-row>
+        </ion-col>
+    </ion-row>
 </ion-grid>
