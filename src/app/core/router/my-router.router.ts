@@ -19,7 +19,8 @@ export class MyRouter {
       case 22:
         // const browser = this.iab.create('http://oaweb.mic.com.tw/gsc/mobile/');
         // const browser = this.iab.create('http://10.86.0.18:8080/default.aspx?username=jinzhi.he&password=Mitac123', '_seft', 'clearcache=yes');
-        const browser = this.iab.create('http://oaweb.mic.com.tw/gsc/mobile/', '_blank', 'hardwareback=no');
+        const browser = this.iab.create('http://oaweb.mic.com.tw/gsc/mobile/', '_system', 'hardwareback=no');
+      // const browser = this.iab.create('http://oaweb.mic.com.tw/gsc/mobile/');
       default:
         break;
     }

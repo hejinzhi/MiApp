@@ -1,13 +1,13 @@
 sg-book-library {
+  // .scroll-content {
+  //   overflow-y: hidden;
+  // }
   .page {
     background-color: #fbf9fe;
+    // overflow-y: scroll;
   }
-  // .searchbar {
-  //   width: 100%;
-  //   background-color: #c9c7cb;
-  // }
-  .book-list {
-    height: 90%;
+  .my-book-list {
+    // height: 90%;
   }
   .avatar-img {
     width: 100%;
