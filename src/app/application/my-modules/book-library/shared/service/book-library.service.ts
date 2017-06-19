@@ -5,6 +5,7 @@ import { BarcodeScanner } from '@ionic-native/barcode-scanner';
 import { EnvConfig } from '../../../../../shared/config/env.config';
 import { BookLibraryConfig } from '../config/book-library.config';
 import { MyHttpService } from '../../../../../core/services/myHttp.service';
+import { LanguageConfig } from '../config/language.config';
 
 
 @Injectable()
@@ -15,6 +16,9 @@ export class BookLibraryService {
         private barcodeScanner: BarcodeScanner,
         private alertCtrl: AlertController,
     ) { }
+
+    languageType: string = localStorage.getItem('languageType')
+    languageContent = LanguageConfig.settingComponent[this.languageType];
 
     getAllBooks() {
         return this.myHttp.get(BookLibraryConfig.getBooksUrl + '?companyID=' + EnvConfig.companyID);
@@ -75,7 +79,7 @@ export class BookLibraryService {
     transformBookInfo(book: any) {
         let newBookObj = {
             AUTHOR: book.author.join(),
-            AUTHOR_INFO: book.author_info,
+            AUTHOR_INFO: book.author_intro,
             BINDING: book.binding,
             IMAGE: book.image,
             ISBN13: book.isbn13,
@@ -95,7 +99,7 @@ export class BookLibraryService {
 
     showError(msg: string) {
         let confirm = this.alertCtrl.create({
-            title: '错误',
+            title: this.languageContent.error,
             subTitle: msg,
             buttons: ['OK']
         });

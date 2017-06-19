@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { NavController, NavParams, AlertController,IonicPage } from 'ionic-angular';
+import { NavController, NavParams, AlertController, IonicPage } from 'ionic-angular';
 import { BarcodeScanner } from '@ionic-native/barcode-scanner';
 
 import { BookLibraryService } from '../shared/service/book-library.service';
-// import { BookLibraryComponent } from '../book-library.component';
+import { LanguageConfig } from '../shared/config/language.config';
 
 @IonicPage()
 @Component({
@@ -19,6 +19,8 @@ export class BookDetailComponent implements OnInit {
         private bookService: BookLibraryService
     ) { }
 
+    languageType: string = localStorage.getItem('languageType')
+    languageContent = LanguageConfig.bookDetailComponent[this.languageType];
     book: any;
     type: string; // 记录是否由“添加图书”转跳进来的
     showAddBtn: boolean; // 是否显示“录入”按钮

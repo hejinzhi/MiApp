@@ -5,6 +5,7 @@ import { Observable } from 'rxjs/Rx';
 
 import { BookLibraryService } from './shared/service/book-library.service';
 import { BookLibraryConfig } from './shared/config/book-library.config';
+import { LanguageConfig } from './shared/config/language.config';
 
 
 @IonicPage()
@@ -24,6 +25,8 @@ export class BookLibraryComponent implements OnInit {
         private app: App
     ) { }
 
+    languageType: string = localStorage.getItem('languageType');
+    languageContent = LanguageConfig.bookLibraryComponent[this.languageType];
     books: any[];
     booksBackup: any[]; // 用于备份books的信息。当点击进入明细页面时备份，从明细页面返回时恢复
     user: any;
@@ -139,20 +142,20 @@ export class BookLibraryComponent implements OnInit {
         if (!scanRes.cancelled && scanRes.text.length === 13) {
             let doubanRes = await this.bookService.getBookInfoFromDouban(scanRes.text);
             if (doubanRes.json().code === 6000) {
-                this.showError('豆瓣上找不到该书籍的信息，请人工输入. ');
+                this.showError(this.languageContent.errorMsg1);
             } else {
                 let book = this.bookService.transformBookInfo(doubanRes.json());
                 this.navCtrl.push('BookDetailComponent', { book: book, type: 'addBook' });
                 this.menuCtrl.close();
             }
         } else {
-            this.showError('你所扫描的并不是有效的ISBN码');
+            this.showError(this.languageContent.errorMsg2);
         }
     }
 
     showError(msg: string) {
         let confirm = this.alertCtrl.create({
-            title: '错误',
+            title: this.languageContent.error,
             subTitle: msg,
             buttons: ['OK']
         });
@@ -236,7 +239,7 @@ export class BookLibraryComponent implements OnInit {
 
     // 借书申请
     borrowRequest() {
-        this.prompt('借书申请', '请输入要借书人的AD').then(async (username: string) => {
+        this.prompt(this.languageContent.borrowPromptTitle, this.languageContent.borrowPromptContent).then(async (username: string) => {
             let res;
             if (username) {
                 res = await this.bookService.getOrderBooks(username.toLowerCase());
@@ -256,7 +259,7 @@ export class BookLibraryComponent implements OnInit {
 
     // 还书申请
     payBackRequest() {
-        this.prompt('还书申请', '请输入还书人的AD').then(async (username: string) => {
+        this.prompt(this.languageContent.paybackPromptTitle, this.languageContent.paybackPromptContent).then(async (username: string) => {
             let res;
             if (username) {
                 res = await this.bookService.getBorrowedBooks(username.toLowerCase());
@@ -287,14 +290,14 @@ export class BookLibraryComponent implements OnInit {
                 ],
                 buttons: [
                     {
-                        text: '取消',
+                        text: this.languageContent.cancel,
                         handler: (data: any) => {
                             console.log('Cancel clicked');
                             reject();
                         }
                     },
                     {
-                        text: '确定',
+                        text: this.languageContent.confirm,
                         handler: (data: any) => {
                             resolve(data.username);
                         }
