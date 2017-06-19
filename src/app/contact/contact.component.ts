@@ -7,7 +7,7 @@ import { ContactService } from './shared/service/contact.service';
 import { SearchResultComponent } from './search-result/search-result.component';
 import { ContactDetailComponent } from './contact-detail/contact-detail.component';
 import { OrganizationComponent } from './organization/organization.component';
-
+import {LanguageConfig} from './shared/config/language.config';
 
 @Component({
   selector: 'sg-contact',
@@ -15,6 +15,8 @@ import { OrganizationComponent } from './organization/organization.component';
 })
 export class ContactComponent {
 
+    languageType: string = localStorage.getItem('languageType');
+    languageContent = LanguageConfig.contactComponent[this.languageType];
   contacter: any[] = [];
   searchFilter: string; // 记录搜索条件
   searchResult: any[] = []; // 保存通过searchbar搜索后返回的结果

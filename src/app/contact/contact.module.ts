@@ -9,9 +9,10 @@ import { ContactDetailComponent } from './contact-detail/contact-detail.componen
 import { ContactListComponent } from './contact-list/contact-list.component';
 import { OrganizationComponent } from './organization/organization.component';
 import { ContactService } from './shared/service/contact.service';
+import { PipesModule } from '../shared/pipe/pipes.module';
 
 @NgModule({
-    imports: [CommonModule, IonicModule, SharedModule],
+    imports: [CommonModule, IonicModule, SharedModule, PipesModule],
     declarations: [ContactComponent, SearchResultComponent, ContactDetailComponent, ContactListComponent, OrganizationComponent],
     entryComponents: [ContactComponent, SearchResultComponent, ContactDetailComponent, ContactListComponent, OrganizationComponent],
     exports: [ContactComponent, SearchResultComponent, ContactDetailComponent, ContactListComponent, OrganizationComponent],
