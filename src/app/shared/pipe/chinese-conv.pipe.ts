@@ -8,11 +8,11 @@ export class ChineseConv implements PipeTransform {
       let fontType: string = localStorage.getItem('languageType');
       switch (fontType) {
         case 'simple_Chinese':
-          // return sify(JSON.stringify(value)).replace(/^\"/g, '').replace(/\"$/g, '');
-          return sify(value);
+          return sify(JSON.stringify(value)).replace(/^\"/g, '').replace(/\"$/g, '');
+          // return sify(value);
         case 'traditional_Chinese':
-          // return tify(JSON.stringify(value)).replace(/^\"/g, '').replace(/\"$/g, '');
-          return tify(value);
+          return tify(JSON.stringify(value)).replace(/^\"/g, '').replace(/\"$/g, '');
+          // return tify(value);
         default:
           return value;
       }
