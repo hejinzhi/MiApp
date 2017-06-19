@@ -160,5 +160,8 @@ export class DialogueComponent implements OnInit {
       console.log(err);
     });
   }
+
+  getLocation() {
+  };
 }
 
