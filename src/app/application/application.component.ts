@@ -8,6 +8,7 @@ import { MyRouter } from '../core/router/my-router.router';
 import { AttendanceComponent } from './my-modules/attendance/attendance.component';
 
 import { InAppBrowser } from '@ionic-native/in-app-browser';
+import { LanguageConfig } from './shared/config/language.config';
 
 @Component({
   selector: 'sg-application',
@@ -20,9 +21,11 @@ export class ApplicationComponent implements OnInit {
     public navCtrl: NavController,
     private appService: ApplicationService,
     private iab: InAppBrowser,
-    public app:App) {
+    public app: App) {
   }
 
+  languageType: string = localStorage.getItem('languageType');
+  languageContent = LanguageConfig.ApplicationComponent[this.languageType];
   items: ApplicationItem[]; // 不分类的所有数据
   itemsByGroup: ApplicationItem[][] = []; //按group分组
   showBtn: boolean = false; // 控制是否显示右上角的减号
