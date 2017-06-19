@@ -3,6 +3,7 @@ import { NavParams, AlertController, IonicPage } from 'ionic-angular';
 import { CheckList } from '../../../../shared/models/check-list.model';
 import { ArrayUtilService } from '../../../../core/services/arrayUtil.service';
 import { BookLibraryService } from '../shared/service/book-library.service';
+import { LanguageConfig } from '../shared/config/language.config';
 
 @IonicPage()
 @Component({
@@ -12,6 +13,8 @@ import { BookLibraryService } from '../shared/service/book-library.service';
 
 // 借书申请，还书，取消预约共用这一个页面
 export class BorrowRequestComponent implements OnInit {
+    languageType: string = localStorage.getItem('languageType')
+    languageContent = LanguageConfig.borrowRequestComponent[this.languageType];
     selectIDs: number[] = []; // 返回的借书人的清单
     books: any[] = []; // 记录后端返回的原始数据
     userListAfterTransform: CheckList[] = []; // 对借书清单进行分组处理，保存处理后的借书清单
@@ -33,17 +36,17 @@ export class BorrowRequestComponent implements OnInit {
         this.books = this.navParams.get('books');
         this.type = this.navParams.get('type');
         if (this.type === 'borrow') {
-            this.title = '借书申请';
+            this.title = this.languageContent.borrowRequest;
             this.showBorrow = true;
             this.showPayback = false;
             this.showCancelBook = false;
         } else if (this.type === 'payback') {
-            this.title = '还书';
+            this.title = this.languageContent.paybackRequest;
             this.showBorrow = false;
             this.showPayback = true;
             this.showCancelBook = false;
         } else if (this.type === 'cancelbook') {
-            this.title = '取消预约';
+            this.title = this.languageContent.cancelBook;
             this.showBorrow = false;
             this.showPayback = false;
             this.showCancelBook = true;

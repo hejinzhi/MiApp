@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ViewController, IonicPage } from 'ionic-angular';
+import { LanguageConfig } from '../shared/config/language.config';
 
 @IonicPage()
 @Component({
@@ -7,6 +8,8 @@ import { ViewController, IonicPage } from 'ionic-angular';
     templateUrl: 'setting.component.html'
 })
 export class SettingComponent implements OnInit {
+    languageType: string = localStorage.getItem('languageType')
+    languageContent = LanguageConfig.settingComponent[this.languageType];
     scanFlag: boolean = true;
     batchAddBooks: boolean = true;
 

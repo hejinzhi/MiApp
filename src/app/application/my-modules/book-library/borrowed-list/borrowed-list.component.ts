@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { NavParams, IonicPage } from 'ionic-angular';
+import { LanguageConfig } from '../shared/config/language.config';
 
 @IonicPage()
 @Component({
@@ -12,6 +13,8 @@ export class BorrowedListComponent implements OnInit {
     ) {
 
     }
+    languageType: string = localStorage.getItem('languageType')
+    languageContent = LanguageConfig.borrowListComponent[this.languageType];
     title: string;
     books: any[]; // 接收传递过来的书籍信息
     type: string;   // 判断是“已预约图书”还是“已借图书”转跳过来的
@@ -21,17 +24,17 @@ export class BorrowedListComponent implements OnInit {
         this.books = this.navParams.get('books');
         this.type = this.navParams.get('type');
         if (this.type === 'book') {
-            this.title = '已预约图书';
+            this.title = this.languageContent.booked;
             this.showPayBackDate = false;
             this.showActualBackDate = false;
         }
         else if (this.type === 'borrow') {
-            this.title = '已借图书';
+            this.title = this.languageContent.borrowed;
             this.showPayBackDate = true;
             this.showActualBackDate = false;
         }
         else if (this.type === 'payback') {
-            this.title = '已归还图书';
+            this.title = this.languageContent.payback;;
             this.showPayBackDate = false;
             this.showActualBackDate = true;
         }

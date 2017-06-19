@@ -14,6 +14,7 @@ import { TabsComponent } from './tabs/tabs.component';
 import { LoginModule } from './login/login.module';
 import { SharedModule } from './shared/shared.module';
 import { CoreModule } from './core/core.module';
+import { PipesModule } from './shared/pipe/pipes.module';
 // import { BookLibraryModule } from './book-library/book-library.module';
 
 @NgModule({
@@ -23,13 +24,14 @@ import { CoreModule } from './core/core.module';
   ],
   imports: [
     BrowserModule,
-    IonicModule.forRoot(MyAppComponent, { tabsHideOnSubPages: true, mode:'ios', backButtonText: '返回', }),
+    IonicModule.forRoot(MyAppComponent, { tabsHideOnSubPages: true, mode: 'ios', backButtonText: '返回' }),
     LoginModule,
     ApplicationModule,
     MessageModule,
     ContactModule,
     SharedModule,
     CoreModule,
+    PipesModule
     // BookLibraryModule
   ],
   bootstrap: [IonicApp],

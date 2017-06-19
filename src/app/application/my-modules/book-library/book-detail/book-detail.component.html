@@ -1,9 +1,9 @@
 <ion-header>
   <ion-navbar>
-    <ion-title>图书详情</ion-title>
+    <ion-title>{{languageContent.title}}</ion-title>
     <ion-buttons end>
-      <button ion-button *ngIf="showBorrowBtn" (click)="borrowBook(book.ISBN13)">预约</button>
-      <button ion-button *ngIf="showAddBtn" (click)="addBook()">录入</button>
+      <button ion-button *ngIf="showBorrowBtn" (click)="borrowBook(book.ISBN13)">{{languageContent.book}}</button>
+      <button ion-button *ngIf="showAddBtn" (click)="addBook()">{{languageContent.addBooks}}</button>
     </ion-buttons>
   </ion-navbar>
 </ion-header>
@@ -14,18 +14,18 @@
     </div>
     <div class="book-detail-wrapper">
       <div class="book-intro">
-        <span class="book-title">内容推荐</span>
-        <div class="book-msg">{{book.SUMMARY}}</div>
+        <span class="book-title">{{languageContent.content}}</span>
+        <div class="book-msg">{{book.SUMMARY | sgChineseConv}}</div>
       </div>
       <div class="space-line-30"></div>
       <div class="book-intro">
-        <span class="book-title">作者简介</span>
-        <div class="book-msg">{{book.AUTHOR_INTRO}}</div>
+        <span class="book-title">{{languageContent.author }}</span>
+        <div class="book-msg">{{book.AUTHOR_INTRO | sgChineseConv }}</div>
       </div>
       <div class="space-line-30"></div>
       <div class="book-intro">
-        <span class="book-title">目录</span>
-        <pre class="book-catalog">{{book.CATALOG}}</pre>
+        <span class="book-title">{{languageContent.catalog}}</span>
+        <pre class="book-catalog">{{book.CATALOG | sgChineseConv }}</pre>
       </div>
     </div>
     <!--<div class="control-btn-wrapper">
