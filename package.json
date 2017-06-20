@@ -66,32 +66,7 @@
     "tslint": "^4.0.0",
     "typescript": "~2.2.1"
   },
-  "cordovaPlugins": [
-    "cordova-plugin-whitelist",
-    "cordova-plugin-console",
-    "cordova-plugin-statusbar",
-    "cordova-plugin-splashscreen",
-    "cordova-plugin-device",
-    "ionic-plugin-keyboard",
-    "cordova-sqlite-storage", {
-      "id": "jmessage-phonegap-plugin",
-      "locator": "jmessage-phonegap-plugin",
-      "variables": {
-        "APP_KEY": "c35bdfd0449ed461f7adad98"
-      }
-    },
-    "cordova-plugin-background-mode",
-    "cordova-plugin-camera",
-    "cordova-plugin-compat", {
-      "locator": "https://github.com/Telerik-Verified-Plugins/ImagePicker",
-      "id": "com.synconset.imagepicker"
-    },
-    "phonegap-plugin-barcodescanner"
-  ],
-  "cordovaPlatforms": [{
-    "platform": "android",
-    "version": "",
-    "locator": "android"
-  }],
+  "cordovaPlugins": [],
+  "cordovaPlatforms": [],
   "description": "e-mobile: An Ionic project"
 }
