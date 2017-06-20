@@ -6,12 +6,17 @@ import { MessageService } from '../shared/service/message.service';
 import { JMessageService } from '../../core/services/jmessage.service';
 import { NoticeComponent } from '../notice/notice.component';
 
+import { LanguageConfig } from '../shared/config/language.config';
+
 @Component({
   selector: 'sg-alert',
   templateUrl: 'alert.component.html'
 })
 
 export class AlertComponent implements OnInit {
+
+  languageType: string = localStorage.getItem('languageType');
+  languageContent = LanguageConfig.AlertComponent[this.languageType];
 
   userNickName: string;
   userName: string;

@@ -5,7 +5,7 @@ import { NavParams } from 'ionic-angular';
 import { MessageService } from '../shared/service/message.service';
 import { JMessageService } from '../../core/services/jmessage.service';
 
-
+import { LanguageConfig } from '../shared/config/language.config';
 
 @Component({
   selector: 'sg-notice',
@@ -13,6 +13,9 @@ import { JMessageService } from '../../core/services/jmessage.service';
 })
 
 export class NoticeComponent implements OnInit {
+
+  languageType: string = localStorage.getItem('languageType');
+  languageContent = LanguageConfig.AlertComponent[this.languageType];
 
   userNickName: string;
   userName: string;
@@ -37,7 +40,7 @@ export class NoticeComponent implements OnInit {
   }
 
   ionViewWillLeave() {
-    this.messageService.setUnreadToZeroByUserName(this.userName,this.alertType);
+    this.messageService.setUnreadToZeroByUserName(this.userName, this.alertType);
   }
 
   ngOnInit() {

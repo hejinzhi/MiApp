@@ -1,6 +1,6 @@
 <ion-header>
     <ion-navbar>
-        <ion-title>{{userNickName|sgChineseConv}}</ion-title>
+        <ion-title>{{userNickName | sgChineseConv}}</ion-title>
     </ion-navbar>
 </ion-header>
 <ion-content class='pag-content' id='pag-content'>
@@ -12,7 +12,7 @@
                     <ng-template [ngSwitchCase]="'text'">
                         <div class="msg">
                             <span [ngClass]="item.toUserName === userinfo.username ? ' arrow_l_int' : ' arrow_r_int'"></span>
-                            <span [ngClass]="item.toUserName === userinfo.username ? ' arrow_l_out' : ' arrow_r_out'"></span>{{item.content|sgChineseConv}}
+                            <span [ngClass]="item.toUserName === userinfo.username ? ' arrow_l_out' : ' arrow_r_out'"></span>{{item.content | sgChineseConv}}
                         </div>
                     </ng-template>
                     <ng-template [ngSwitchCase]="'image'"><img src={{item.content}} class='img_content'></ng-template>
