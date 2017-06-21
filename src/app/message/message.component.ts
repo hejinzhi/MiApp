@@ -11,6 +11,7 @@ import { NoticeComponent } from './notice/notice.component';
 import { AlertComponent } from './alert/alert.component';
 
 import { MyHttpService } from '../core/services/myHttp.service';
+import { LanguageConfig } from './shared/config/language.config';
 
 @Component({
   selector: 'sg-message',
@@ -19,6 +20,8 @@ import { MyHttpService } from '../core/services/myHttp.service';
 
 export class MessageComponent implements OnInit {
 
+  languageType: string = localStorage.getItem('languageType');
+  languageContent = LanguageConfig.MessageComponent[this.languageType];
   msgListItem: MessageModel[] = [];
   historyMsg: any[] = []; // 在app.component.ts被赋值
   messageListItem: any;

@@ -1,18 +1,18 @@
 <ion-header>
   <ion-navbar>
-    <ion-title>设置</ion-title>
+    <ion-title>{{languageContent.title}}</ion-title>
   </ion-navbar>
 </ion-header>
 <ion-content padding>
   <ion-list>
     <ion-item>
-      <ion-label>扫码录入</ion-label>
+      <ion-label>{{languageContent.scan}}</ion-label>
       <ion-toggle [(ngModel)]="scanFlag"></ion-toggle>
     </ion-item>
     <ion-item>
-      <ion-label>连续录入</ion-label>
+      <ion-label>{{languageContent.batchAddBooks}}</ion-label>
       <ion-toggle [(ngModel)]="batchAddBooks"></ion-toggle>
     </ion-item>
   </ion-list>
-  <button ion-button block (click)="dismiss()">返回</button>
+  <button ion-button block (click)="dismiss()">{{languageContent.goBack}}</button>
 </ion-content>

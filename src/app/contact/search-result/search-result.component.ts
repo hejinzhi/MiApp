@@ -4,14 +4,17 @@ import { Observable } from 'rxjs/Rx';
 
 import { ContactService } from '../shared/service/contact.service';
 import { ContactDetailComponent } from '../contact-detail/contact-detail.component';
-import { ContactConfig } from '../config/contact.config';
+import { ContactConfig } from '../shared/config/contact.config';
 import { EnvConfig } from '../../shared/config/env.config.ts';
+import { LanguageConfig } from '../shared/config/language.config';
 
 @Component({
     selector: 'sg-search-result',
     templateUrl: 'search-result.component.html'
 })
 export class SearchResultComponent implements OnInit {
+    languageType: string = localStorage.getItem('languageType');
+    languageContent = LanguageConfig.searchResultComponent[this.languageType];
     type: string; // 记录时点击哪个按钮进来的
     typeDesc: string; // 类型的中文描述
     personList: any[] = []; // 记录服务器返回的结果

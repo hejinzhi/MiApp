@@ -7,7 +7,7 @@ import { ApplicationComponent } from '../application/application.component';
 
 import { MeComponent } from '../me/me.component';
 import { MessageService } from '../message/shared/service/message.service';
-import { PluginService } from '../core/services/plugin.service';
+import { LanguageConfig } from './shared/config/language.config';
 
 
 @Component({
@@ -16,7 +16,8 @@ import { PluginService } from '../core/services/plugin.service';
 })
 export class TabsComponent implements OnInit {
   @ViewChild('mainTabs') tabRef: Tabs;
-
+  languageType: string = localStorage.getItem('languageType');
+  languageContent = LanguageConfig.tabComponent[this.languageType];
   tab1Root = MessageComponent;
   tab2Root = ApplicationComponent;
   tab3Root = ContactComponent;

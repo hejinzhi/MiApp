@@ -7,6 +7,7 @@ import { Keyboard } from '@ionic-native/keyboard';
 
 import { MessageService } from '../shared/service/message.service';
 import { JMessageService } from '../../core/services/jmessage.service';
+import { LanguageConfig } from '../shared/config/language.config';
 
 
 @Component({
@@ -16,6 +17,8 @@ import { JMessageService } from '../../core/services/jmessage.service';
 
 
 export class DialogueComponent implements OnInit {
+  languageType: string = localStorage.getItem('languageType');
+  languageContent = LanguageConfig.DialogueComponent[this.languageType];
   list: any;
   input_text: string;
   userinfo: any;
@@ -53,14 +56,14 @@ export class DialogueComponent implements OnInit {
       }));
     });
 
-    this.jmessageservice.enterSingleConversation(this.userName);
+    // this.jmessageservice.enterSingleConversation(this.userName);
   }
 
   ionViewWillLeave() {
     this.events.unsubscribe('msg.onReceiveMessage');
     this.messageservice.setUnreadToZeroByUserName(this.userName, '');
-    this.jmessageservice.setSingleConversationUnreadMessageCount(this.userName, null, 0);
-    this.jmessageservice.exitConversation();
+    // this.jmessageservice.setSingleConversationUnreadMessageCount(this.userName, null, 0);
+    // this.jmessageservice.exitConversation();
   }
 
   ionViewWillEnter() {
@@ -160,5 +163,8 @@ export class DialogueComponent implements OnInit {
       console.log(err);
     });
   }
+
+  getLocation() {
+  };
 }
 

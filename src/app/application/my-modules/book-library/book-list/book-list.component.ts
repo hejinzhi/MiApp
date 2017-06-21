@@ -1,10 +1,13 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { LanguageConfig } from '../shared/config/language.config';
 
 @Component({
     selector: 'sg-book-list',
     templateUrl: 'book-list.component.html'
 })
 export class BookListComponent {
+    languageType: string = localStorage.getItem('languageType');
+    languageContent = LanguageConfig.bookListComponent[this.languageType];
     @Input() books: any[];
     @Input() showAddBookInput: boolean = false; // 是否显示input输入框
     @Input() showPayBackDate: boolean = false;  // 是否显示“应归还时间”

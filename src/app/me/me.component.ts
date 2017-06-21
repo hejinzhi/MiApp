@@ -3,7 +3,6 @@ import { NavController, IonicPage } from 'ionic-angular';
 
 import { BarcodeScanner } from '@ionic-native/barcode-scanner';
 
-
 @IonicPage()
 @Component({
   selector: 'sg-me',

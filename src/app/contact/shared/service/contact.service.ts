@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 
 import { MyHttpService } from '../../../core/services/myHttp.service';
-import { ContactConfig } from '../../config/contact.config';
+// import { ContactConfig } from '../../config/contact.config';
+import { ContactConfig } from '../../shared/config/contact.config';
 
 
 @Injectable()
