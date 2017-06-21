@@ -9,6 +9,7 @@ import { MeComponent } from '../me/me.component';
 import { MessageService } from '../message/shared/service/message.service';
 import { LanguageConfig } from './shared/config/language.config';
 
+import { PluginService } from '../core/services/plugin.service';
 
 @Component({
   selector: 'sg-tabs',
