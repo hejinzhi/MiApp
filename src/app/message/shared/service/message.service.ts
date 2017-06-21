@@ -238,6 +238,10 @@ export class MessageService {
       "unread": true
     }];
 
+
+
+
+
   getLocalMessageHistory() {
     //return JSON.parse(localStorage.getItem('localMessageHistory'));
     return this.history;

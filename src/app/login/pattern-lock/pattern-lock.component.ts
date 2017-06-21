@@ -5,7 +5,7 @@ import { TabsComponent } from '../../tabs/tabs.component';
 
 import { MyHttpService } from '../../core/services/myHttp.service';
 import { JMessageService } from '../../core/services/jmessage.service';
-import { PluginService }   from '../../core/services/plugin.service';
+import { PluginService } from '../../core/services/plugin.service';
 
 import { LoginConfig } from '../shared/config/login.config';
 
@@ -15,8 +15,8 @@ import { LoginConfig } from '../shared/config/login.config';
 })
 export class PatternLockComponent implements OnInit {
 
-  mySubcribe:any;
-  isLandscape:boolean;
+  mySubcribe: any;
+  isLandscape: boolean;
 
   needNineCode: boolean;
   user: any;
@@ -32,7 +32,7 @@ export class PatternLockComponent implements OnInit {
   headHeight: number;
   isReSet: boolean;
   myCode: number[] = [];
-  canvas:any;
+  canvas: any;
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
@@ -92,7 +92,7 @@ export class PatternLockComponent implements OnInit {
 
     this.canvas = document.getElementById("lockCanvas");
     let orientation = this.plugin.getScreenOrientation();
-    this.isLandscape = orientation.type.indexOf('landscape') > -1? true:false;
+    this.isLandscape = orientation.type.indexOf('landscape') > -1 ? true : false;
     this.ref.detectChanges();
   }
 
@@ -137,10 +137,10 @@ export class PatternLockComponent implements OnInit {
     this.headHeight = headCode.offsetHeight;
 
     this.canvasWidth = document.body.offsetWidth;//网页可见区域宽
-    let leftHeight = document.body.offsetHeight - this.headHeight+ 80;
-    if(this.isVal) {
+    let leftHeight = document.body.offsetHeight - this.headHeight + 80;
+    if (this.isVal) {
       console.log(this.headHeight)
-      this.canvasHeight = (Math.min(this.headHeight,265) / 0.35 * 0.65 - 80);
+      this.canvasHeight = (Math.min(this.headHeight, 265) / 0.35 * 0.65 - 80);
     } else {
       this.canvasHeight = this.headHeight / 0.18 * 0.6 - 80;
     }
@@ -166,13 +166,13 @@ export class PatternLockComponent implements OnInit {
     let orientation = this.plugin.getScreenOrientation();
     this.initCode();
     this.mySubcribe = orientation.onChange().subscribe((value) => {
-      this.isLandscape = orientation.type.indexOf('landscape') > -1? true:false;
+      this.isLandscape = orientation.type.indexOf('landscape') > -1 ? true : false;
       this.ref.detectChanges();
-      this.circleArr =[];
-      this.canvas.height=this.canvas.height;
+      this.circleArr = [];
+      this.canvas.height = this.canvas.height;
       setTimeout(() => {
         this.initCode();
-      },200)
+      }, 200)
     })
   }
   ionViewWillLeave() {
@@ -308,6 +308,13 @@ export class PatternLockComponent implements OnInit {
             //   // to do loadUnreadMessage
             //   this.navCtrl.setRoot(TabsComponent);
             // });
+            this.jmessageService.autoLogin(this.user.username, this.user.password).then((res) => {
+              if (res) {
+                this.navCtrl.setRoot(TabsComponent);
+              } else {
+                this.message = 'Jmessage error';
+              }
+            });
           } else {
             this.message = '密码错误！！！';
           }

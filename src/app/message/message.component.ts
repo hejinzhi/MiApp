@@ -49,74 +49,75 @@ export class MessageComponent implements OnInit {
 
   ngOnInit() {
 
-    // this.jmessageService.jmessageOffline = this.jmessageService.onSyncOfflineMessage().subscribe(res => {
+    this.jmessageService.jmessageOffline = this.jmessageService.onSyncOfflineMessage().subscribe(res => {
 
-    //   for (let i = 0; i < res.messageList.length; i++) {
-    //     let _content: string;
+      for (let i = 0; i < res.messageList.length; i++) {
+        let _content: string;
 
-    //     if (res.messageList[i].contentType === 'text') {
-    //       _content = res.messageList[i].content.text;
-    //     } else if (res.messageList[i].contentType === 'image') {
-    //       _content = res.messageList[i].content.localThumbnailPath;
-    //     }
+        if (res.messageList[i].contentType === 'text') {
+          _content = res.messageList[i].content.text;
+        } else if (res.messageList[i].contentType === 'image') {
+          _content = res.messageList[i].content.localThumbnailPath;
+        }
 
-    //     if (res.messageList[i].fromName === 'signlist' || res.messageList[i].fromName === 'news' || res.messageList[i].fromName === 'alert' || res.messageList[i].fromName === 'report') {
-    //       this._type = 'notice';
-    //       _content = JSON.parse(res.messageList[i].content.text);
-    //     } else {
-    //       this._type = 'dialogue';
-    //     }
+        if (res.messageList[i].fromName === 'signlist' || res.messageList[i].fromName === 'news' || res.messageList[i].fromName === 'alert' || res.messageList[i].fromName === 'report') {
+          this._type = 'notice';
+          _content = JSON.parse(res.messageList[i].content.text);
+        } else {
+          this._type = 'dialogue';
+        }
 
-    //     let msg: Message = {
-    //       toUserName: res.messageList[i].targetInfo.userName,
-    //       fromUserName: res.messageList[i].fromName,
-    //       content: _content,
-    //       contentType: res.messageList[i].contentType,
-    //       time: res.messageList[i].createTimeInMillis,
-    //       type: this._type,
-    //       unread: true
-    //     };
+        let msg: Message = {
+          toUserName: res.messageList[i].targetInfo.userName,
+          fromUserName: res.messageList[i].fromName,
+          content: _content,
+          contentType: res.messageList[i].contentType,
+          time: res.messageList[i].createTimeInMillis,
+          type: this._type,
+          unread: true
+        };
 
-    //     this.messageService.history.push(msg);
-    //     this.messageService.setLocalMessageHistory(this.messageService.history);
+        this.messageService.history.push(msg);
+        this.messageService.setLocalMessageHistory(this.messageService.history);
 
-    //     this.refreshData();
-    //     this.ref.detectChanges();
-    //   }
-    // });
+        this.refreshData();
+        this.ref.detectChanges();
+      }
+    });
 
-    // this.jmessageService.jmessageHandler = this.jmessageService.onReceiveMessage().subscribe(res => {
-    //   let _content: string;
-    //   if (res.contentType === 'text') {
-    //     _content = res.content.text;
-    //   } else if (res.contentType === 'image') {
-    //     _content = res.content.localThumbnailPath;
-    //   }
+    this.jmessageService.jmessageHandler = this.jmessageService.onReceiveMessage().subscribe(res => {
+      console.log(res);
+      let _content: string;
+      if (res.contentType === 'text') {
+        _content = res.content.text;
+      } else if (res.contentType === 'image') {
+        _content = res.content.localThumbnailPath;
+      }
 
-    //   if (res.fromName === 'signlist' || res.fromName === 'news' || res.fromName === 'alert' || res.fromName === 'report') {
-    //     this._type = 'notice';
-    //     _content = JSON.parse(res.content.text);
-    //   } else {
-    //     this._type = 'dialogue';
-    //   }
+      if (res.fromName === 'signlist' || res.fromName === 'news' || res.fromName === 'alert' || res.fromName === 'report') {
+        this._type = 'notice';
+        _content = JSON.parse(res.content.text);
+      } else {
+        this._type = 'dialogue';
+      }
 
-    //   let msg: Message = {
-    //     toUserName: res.targetInfo.userName,
-    //     fromUserName: res.fromName,
-    //     content: _content,
-    //     contentType: res.contentType,
-    //     time: res.createTimeInMillis,
-    //     type: this._type,
-    //     unread: true
-    //   };
+      let msg: Message = {
+        toUserName: res.targetInfo.userName,
+        fromUserName: res.fromName,
+        content: _content,
+        contentType: res.contentType,
+        time: res.createTimeInMillis,
+        type: this._type,
+        unread: true
+      };
 
-    //   this.messageService.history.push(msg);
-    //   this.messageService.setLocalMessageHistory(this.messageService.history);
-    //   this.jmessageService.setSingleConversationUnreadMessageCount(res.fromName, '', 0);
-    //   this.refreshData();
-    //   this.ref.detectChanges();
-    //   this.events.publish('msg.onReceiveMessage');
-    // });
+      this.messageService.history.push(msg);
+      this.messageService.setLocalMessageHistory(this.messageService.history);
+      this.jmessageService.setSingleConversationUnreadMessageCount(res.fromName, '', 0);
+      this.refreshData();
+      this.ref.detectChanges();
+      this.events.publish('msg.onReceiveMessage');
+    });
 
   }
 
@@ -208,5 +209,9 @@ export class MessageComponent implements OnInit {
   //   this.onSyncOfflineMessageHandler.unsubscribe();
   // }
 
-
+  public sendSingleMsg() {
+    // this.jmessageService.sendSingleCusCustomMessage('jinzhi.he', { name: 'hejinzhi' });
+    this.jmessageService.sendSingleTextMessageWithExtras('hugh.liang', 'test', { name: 'hejinzhi' });
+    // this.jmessageService.sendSingleTextMessage('hugh.liang', 'test');
+  }
 }
