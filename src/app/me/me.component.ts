@@ -3,7 +3,6 @@ import { NavController, IonicPage } from 'ionic-angular';
 
 import { BarcodeScanner } from '@ionic-native/barcode-scanner';
 
-import { PluginService }   from '../core/services/plugin.service';
 
 @IonicPage()
 @Component({
@@ -12,13 +11,10 @@ import { PluginService }   from '../core/services/plugin.service';
 })
 export class MeComponent {
 
-  mySubcribe:any;
   user:any;
-  isLandscape:boolean = false;
   constructor(
     public navCtrl: NavController,
     private barcodeScanner: BarcodeScanner,
-    private plugin: PluginService,
     private ref: ChangeDetectorRef
   ) {
 
@@ -26,15 +22,8 @@ export class MeComponent {
 
   ionViewWillEnter() {
     this.user = JSON.parse(localStorage.getItem('currentUser'));
-    let orientation = this.plugin.getScreenOrientation();
-    this.isLandscape = orientation.type.indexOf('landscape') > -1? true:false;
-    this.mySubcribe = orientation.onChange().subscribe((value) => {
-      this.isLandscape = orientation.type.indexOf('landscape') > -1? true:false;
-      this.ref.detectChanges();
-    })
   }
   ionViewWillLeave() {
-    this.mySubcribe.unsubscribe();
   }
   goSetting(): void {
     this.navCtrl.push('SetComponent', {

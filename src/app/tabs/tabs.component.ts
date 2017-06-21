@@ -7,7 +7,7 @@ import { ApplicationComponent } from '../application/application.component';
 
 import { MeComponent } from '../me/me.component';
 import { MessageService } from '../message/shared/service/message.service';
-
+import { PluginService } from '../core/services/plugin.service';
 
 
 @Component({
@@ -23,7 +23,7 @@ export class TabsComponent implements OnInit {
   tab4Root = 'MeComponent';
   unreadCount: number;
 
-  constructor(private messageService: MessageService, private events: Events) {
+  constructor(private messageService: MessageService, private events: Events, private plugin:PluginService) {
     this.events.subscribe('messageUnreadCount', () => {
       this.changeTabBadge();
     })
@@ -31,7 +31,7 @@ export class TabsComponent implements OnInit {
 
 
   ngOnInit() {
-
+      this.plugin.checkAppForUpdate();
   }
 
   ionViewDidEnter() {

@@ -14,10 +14,6 @@ import { LoginConfig } from '../shared/config/login.config';
   templateUrl: 'pattern-lock.component.html'
 })
 export class PatternLockComponent implements OnInit {
-
-  mySubcribe:any;
-  isLandscape:boolean;
-
   needNineCode: boolean;
   user: any;
   R: number;
@@ -33,6 +29,7 @@ export class PatternLockComponent implements OnInit {
   isReSet: boolean;
   myCode: number[] = [];
   canvas:any;
+  isHere: boolean = true;
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
@@ -91,9 +88,6 @@ export class PatternLockComponent implements OnInit {
     this.message = this.isReSet ? '请设置手势密码' : this.message;
 
     this.canvas = document.getElementById("lockCanvas");
-    let orientation = this.plugin.getScreenOrientation();
-    this.isLandscape = orientation.type.indexOf('landscape') > -1? true:false;
-    this.ref.detectChanges();
   }
 
   // 忘记手势密码
@@ -163,10 +157,9 @@ export class PatternLockComponent implements OnInit {
     this.Draw(cxt, this.circleArr, [], null);
   }
   ionViewWillEnter() {
-    let orientation = this.plugin.getScreenOrientation();
     this.initCode();
-    this.mySubcribe = orientation.onChange().subscribe((value) => {
-      this.isLandscape = orientation.type.indexOf('landscape') > -1? true:false;
+    window.addEventListener('resize',() =>{
+      if(!this.isHere) return;
       this.ref.detectChanges();
       this.circleArr =[];
       this.canvas.height=this.canvas.height;
@@ -176,7 +169,7 @@ export class PatternLockComponent implements OnInit {
     })
   }
   ionViewWillLeave() {
-    this.mySubcribe.unsubscribe();
+    this.isHere = false;
   }
   createCirclePoint(diffX: number, diffY: number) {
     for (var row = 0; row < 3; row++) {
