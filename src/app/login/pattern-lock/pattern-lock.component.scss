@@ -12,7 +12,7 @@ sg-pattern-lock {
     max-height: 265px;
     color: #fff;
     font-size: 150%;
-    &.landscape {
+    @media screen and (orientation: landscape) {
       max-height:none;
       min-height: 265px;
     }

@@ -1,8 +1,11 @@
 import { Injectable } from '@angular/core';
-import { ToastController, LoadingController, AlertController } from 'ionic-angular';
+import { Platform, ToastController, LoadingController, AlertController } from 'ionic-angular';
 import { BarcodeScanner } from '@ionic-native/barcode-scanner';
 import { Camera, CameraOptions } from '@ionic-native/camera';
-import { ScreenOrientation } from '@ionic-native/screen-orientation';
+import { CodePush } from '@ionic-native/code-push';
+import { Network } from '@ionic-native/network';
+import { CodePushService } from 'ionic2-code-push';
+import { SyncStatus } from 'ionic-native';
 
 @Injectable()
 export class PluginService {
@@ -11,18 +14,141 @@ export class PluginService {
     private loadingCtrl: LoadingController,
     private alertCtrl: AlertController,
     private barcodeScanner: BarcodeScanner,
-    private screenOrientation: ScreenOrientation,
-    private camera: Camera
-  ) { }
+    private camera: Camera,
+    private codePush: CodePush,
+    private network: Network,
+    private codePushService: CodePushService,
+    private platform: Platform
+  ) {}
 
+  getCodePush() {
+    return this.codePush;
+  }
+  isCordova() {
+    return this.platform.is('cordova');
+  }
+  isWifi() {
+    return this.network.type === 'wifi';
+  }
+  confirmUpdate() {
+    this.codePush.notifyApplicationReady().then(() => {
+      if(!localStorage.getItem('showConfirmUpdate') || localStorage.getItem('showConfirmUpdate') == '0') return;
+      const alert = this.alertCtrl.create({
+        title: '已更新成功',
+        buttons: ['OK']
+      });
+      alert.present();
+      this.showConfirmUpdate('0');
+    })
+  }
+  showConfirmUpdate(ss:string) {
+    // '1' show '0' not show
+    localStorage.setItem('showConfirmUpdate',ss);
+  }
+  codePushSync() {
+    this.codePush.sync().subscribe((syncStatus) => {
+      console.log('Sync Status1: ', syncStatus);
+      if (syncStatus === SyncStatus.UP_TO_DATE) {
+      }
+      switch (syncStatus) {
+        case SyncStatus.IN_PROGRESS:
+          break;
+        case SyncStatus.CHECKING_FOR_UPDATE:
+          break;
+        case SyncStatus.DOWNLOADING_PACKAGE:
+          break;
+        case SyncStatus.INSTALLING_UPDATE:
+          break;
+        case SyncStatus.UPDATE_INSTALLED:
+          this.showConfirmUpdate('1');
+          let confirm = this.alertCtrl.create({
+              title: `更新成功`,
+              message: `马上重启应用体验最新版本?`,
+              buttons: [
+                {
+                  text: '取消',
+                  handler: () => {
+
+                  }
+                },
+                {
+                  text: '确定',
+                  handler: () => {
+                    this.codePush.restartApplication();
+                  }
+                }
+              ]
+            });
+            confirm.present();
+          break;
+        case SyncStatus.ERROR:
+          break;
+        default:
+          break;
+      }
+    });
+  }
+  checkAppForUpdate() {
+    if(!this.isCordova()) return;
+    this.codePush.checkForUpdate().then((apk) => {
+      if(!apk) {
+        this.confirmUpdate();
+        return;
+      };
+      console.log(789);
+      let confirm = this.alertCtrl.create({
+        title: `检测到应用有更新,是否升级`,
+        message: `应用大小: ${(apk.packageSize/Math.pow(1024,2)).toFixed(2)}M`,
+        buttons: [
+          {
+            text: '取消',
+            handler: () => {
+
+            }
+          },
+          {
+            text: '确定',
+            handler: () => {
+              this.confirmWifiTodo(this.codePushSync)
+            }
+          }
+        ]
+      });
+      confirm.present();
+    }).catch((err) => {
+      console.log(err)
+    })
+  }
+  confirmWifiTodo(todo:any) {
+    if(!this.isWifi()) {
+      let confirm = this.alertCtrl.create({
+        title: `警告`,
+        message: `目前不是在WIFI网络,是否继续下载操作`,
+        buttons: [
+          {
+            text: '取消',
+            handler: () => {
+
+            }
+          },
+          {
+            text: '确定',
+            handler: () => {
+              todo.call(this);
+            }
+          }
+        ]
+      });
+      confirm.present();
+    } else {
+      todo.call(this);
+    }
+  }
   setBarcode(content: string) {
     this.barcodeScanner.encode('TEXT_TYPE', content).then((res) => {
     }, (err) => {
       console.log(err)
     })
-  }
-  getScreenOrientation() {
-    return this.screenOrientation;
   }
   getBarcode(): Promise<void> {
     return this.barcodeScanner.scan().then((barcodeData) => {

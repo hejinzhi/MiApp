@@ -34,7 +34,7 @@ export class StatisticsComponent {
   myLeave:{name:string,value:number}[]
   OTday:{name:string,value:number}[];
   leaveDay:{name:string,value:number}[];
-  mySubcribe:any;
+  isHere:boolean = true;
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
@@ -47,17 +47,17 @@ export class StatisticsComponent {
     this.reFresh();
   }
   ionViewWillEnter() {
-    let orientation = this.plugin.getScreenOrientation();
-    this.mySubcribe = orientation.onChange().subscribe((value) => {
-      setTimeout(() => {
-        this.initChart2('main', this.fontContent.total);
-        this.initOTMonthChart();
-        this.initLeaveMonthChart();
-      },100)
-    })
+    let that = this;
+    window.addEventListener('resize',() =>this.resize())
+  }
+  resize() {
+    if(!this.isHere) return;
+    this.initChart2('main', this.fontContent.total);
+    this.initOTMonthChart();
+    this.initLeaveMonthChart();
   }
   ionViewWillLeave() {
-    this.mySubcribe.unsubscribe();
+    this.isHere = false;
   }
   async reFresh() {
     let loading = this.plugin.createLoading();

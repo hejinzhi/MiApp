@@ -24,7 +24,7 @@ export class TabsComponent implements OnInit {
   tab4Root = 'MeComponent';
   unreadCount: number;
 
-  constructor(private messageService: MessageService, private events: Events) {
+  constructor(private messageService: MessageService, private events: Events, private plugin:PluginService) {
     this.events.subscribe('messageUnreadCount', () => {
       this.changeTabBadge();
     })
@@ -32,7 +32,7 @@ export class TabsComponent implements OnInit {
 
 
   ngOnInit() {
-
+      this.plugin.checkAppForUpdate();
   }
 
   ionViewDidEnter() {
