@@ -6,6 +6,7 @@ import { CodePush } from '@ionic-native/code-push';
 import { Network } from '@ionic-native/network';
 import { CodePushService } from 'ionic2-code-push';
 import { SyncStatus } from 'ionic-native';
+import { tify, sify } from 'chinese-conv';
 
 @Injectable()
 export class PluginService {
@@ -21,6 +22,18 @@ export class PluginService {
     private platform: Platform
   ) {}
 
+  chineseConv(value:string) {
+    let fontType: string = localStorage.getItem('languageType');
+    switch (fontType) {
+      case 'simple_Chinese':
+        return sify(JSON.stringify(value)).replace(/^\"/g,'').replace(/\"$/g,'');
+      case 'traditional_Chinese':
+        return tify(JSON.stringify(value)).replace(/^\"/g,'').replace(/\"$/g,'');
+      default:
+        return value;
+    }
+  }
+
   getCodePush() {
     return this.codePush;
   }
@@ -34,7 +47,7 @@ export class PluginService {
     this.codePush.notifyApplicationReady().then(() => {
       if(!localStorage.getItem('showConfirmUpdate') || localStorage.getItem('showConfirmUpdate') == '0') return;
       const alert = this.alertCtrl.create({
-        title: '已更新成功',
+        title: this.chineseConv('已更新成功'),
         buttons: ['OK']
       });
       alert.present();
@@ -62,17 +75,17 @@ export class PluginService {
         case SyncStatus.UPDATE_INSTALLED:
           this.showConfirmUpdate('1');
           let confirm = this.alertCtrl.create({
-              title: `更新成功`,
-              message: `马上重启应用体验最新版本?`,
+              title: this.chineseConv(`更新成功`),
+              message: this.chineseConv(`马上重启应用体验最新版本?`),
               buttons: [
                 {
-                  text: '取消',
+                  text: this.chineseConv('取消'),
                   handler: () => {
 
                   }
                 },
                 {
-                  text: '确定',
+                  text: this.chineseConv('确定'),
                   handler: () => {
                     this.codePush.restartApplication();
                   }
@@ -97,17 +110,17 @@ export class PluginService {
       };
       console.log(789);
       let confirm = this.alertCtrl.create({
-        title: `检测到应用有更新,是否升级`,
-        message: `应用大小: ${(apk.packageSize/Math.pow(1024,2)).toFixed(2)}M`,
+        title: this.chineseConv(`检测到应用有更新,是否升级`),
+        message: this.chineseConv(`应用大小: ${(apk.packageSize/Math.pow(1024,2)).toFixed(2)}M`),
         buttons: [
           {
-            text: '取消',
+            text: this.chineseConv('取消'),
             handler: () => {
 
             }
           },
           {
-            text: '确定',
+            text: this.chineseConv('确定'),
             handler: () => {
               this.confirmWifiTodo(this.codePushSync)
             }
@@ -122,17 +135,17 @@ export class PluginService {
   confirmWifiTodo(todo:any) {
     if(!this.isWifi()) {
       let confirm = this.alertCtrl.create({
-        title: `警告`,
-        message: `目前不是在WIFI网络,是否继续下载操作`,
+        title: this.chineseConv(`警告`),
+        message: this.chineseConv(`目前不是在WIFI网络,是否继续下载操作`),
         buttons: [
           {
-            text: '取消',
+            text: this.chineseConv('取消'),
             handler: () => {
 
             }
           },
           {
-            text: '确定',
+            text: this.chineseConv('确定'),
             handler: () => {
               todo.call(this);
             }
@@ -160,9 +173,9 @@ export class PluginService {
 
   createBasicAlert(subText: string) {
     let alert = this.alertCtrl.create({
-      title: '错误',
+      title: this.chineseConv('错误'),
       subTitle: subText,
-      buttons: ['确定']
+      buttons: [this.chineseConv('确定')]
     });
     alert.present();
   }
