@@ -4,12 +4,12 @@
   </ion-navbar>
 </ion-header>
 <ion-content>
-  <ion-list class="myList" (touchstart)="touchstart()" (touchmove)="touchmove()">
+  <ion-list class="myList">
     <button ion-item class="function-message">
       <ion-icon name="swap" color="mac"></ion-icon>
         &nbsp;流程信息提醒
     </button>
-    <button ion-item class="function-message" (touchend)="isMoving?'':toNineCode()">
+    <button ion-item class="function-message" (tap)="toNineCode()">
       <ion-icon name="lock" color="mac"></ion-icon>
         &nbsp;手势密码保护
     </button>
@@ -38,7 +38,7 @@
       <ion-icon name="trash" color="mac"></ion-icon>
         &nbsp;清空缓存
     </button>
-    <button ion-item class="function-message" (touchend)="isMoving?'':changeFont()">
+    <button ion-item class="function-message" (tap)="changeFont()">
       <ion-icon name="git-compare" color="mac"></ion-icon>
         &nbsp;语言版本切换
     </button>
@@ -47,11 +47,11 @@
         &nbsp;关于
     </button>
     <ion-item-divider color="light"></ion-item-divider>
-    <button ion-item class="function-message" (touchend)="isMoving?'':logout()">
+    <button ion-item class="function-message" (tap)="logout()">
       <ion-icon name="disc" color="mac"></ion-icon>
         &nbsp;注销
     </button>
-    <button ion-item class="function-message" (touchend)="isMoving?'':exit()">
+    <button ion-item class="function-message" (tap)="exit()">
       <ion-icon name="disc" color="mac"></ion-icon>
         &nbsp;退出
     </button>

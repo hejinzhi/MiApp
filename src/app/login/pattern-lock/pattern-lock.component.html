@@ -1,18 +1,10 @@
 <ion-header [class.head]='isVal' [class.secHead]='!isVal' id='headCode'>
-  <ion-navbar *ngIf="!isVal">
-    <!--<ion-navbar>-->
+  <ion-navbar [class.hide] = "isVal">
     <ion-title>手势密码</ion-title>
-    <!--<ion-buttons start>
-      <button ion-button icon-left (click)="back()">
-        <ion-icon name="arrow-back" style="font-weight: bold;font-size: 32px;"></ion-icon>
-        返回
-      </button>
-    </ion-buttons>-->
   </ion-navbar>
   <ion-list *ngIf="!isVal">
     <ion-item>
       <ion-label>启用手势密码</ion-label>
-      <!--<ion-toggle [(ngModel)]="needNineCode"></ion-toggle>-->
       <ion-toggle [(ngModel)]="needNineCode" (ionChange)="toggleBtn($event)"></ion-toggle>
     </ion-item>
   </ion-list>
@@ -44,15 +36,6 @@
       </ion-col>
     </ion-row>
   </ion-grid>
-  <!--<ion-grid *ngIf="isVal && isReSet">
-    <ion-row>
-      <ion-col width-50>
-        <ion-buttons left>
-          <button ion-button (click)="skip()">跳过不设置</button>
-        </ion-buttons>
-      </ion-col>
-    </ion-row>
-  </ion-grid>-->
   <ion-card *ngIf="!isVal && message && needNineCode">
     <ion-card-content>
       {{message}}
