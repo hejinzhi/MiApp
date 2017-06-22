@@ -41,7 +41,7 @@ export class LanguageConfig {
           exitAlertTitle: '退出',
           exitAlertMes: '退出後將收不到推送消息，確認要退出嗎?',
           Y: '是',
-          N: '否'
+          N: '否',
         },
 
         simple_Chinese: {
@@ -70,7 +70,7 @@ export class LanguageConfig {
           exitAlertTitle: '退出',
           exitAlertMes: '退出后将收不到推送消息，确认要退出吗?',
           Y: '是',
-          N: '否'
+          N: '否',
         }
     };
     static MeDetailComponent = {

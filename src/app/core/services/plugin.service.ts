@@ -95,22 +95,26 @@ export class PluginService {
             confirm.present();
           break;
         case SyncStatus.ERROR:
+          this.showToast(this.chineseConv('更新失败,请稍后重试'))
           break;
         default:
           break;
       }
     });
   }
-  checkAppForUpdate() {
+  checkAppForUpdate(auto:boolean = true) {
     if(!this.isCordova()) return;
-    this.codePush.checkForUpdate().then((apk) => {
+    return this.codePush.checkForUpdate().then((apk) => {
       if(!apk) {
         this.confirmUpdate();
+        if(!auto) {
+          this.showToast(this.chineseConv('已经是最新版本'))
+        }
         return;
       };
-      console.log(789);
       let confirm = this.alertCtrl.create({
         title: this.chineseConv(`检测到应用有更新,是否升级`),
+        subTitle: this.chineseConv(`更新内容: ${apk.description}`),
         message: this.chineseConv(`应用大小: ${(apk.packageSize/Math.pow(1024,2)).toFixed(2)}M`),
         buttons: [
           {
