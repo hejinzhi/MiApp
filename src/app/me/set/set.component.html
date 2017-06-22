@@ -1,59 +1,59 @@
 <ion-header>
   <ion-navbar>
-    <ion-title>设置</ion-title>
+    <ion-title>{{languageContent.title}}</ion-title>
   </ion-navbar>
 </ion-header>
 <ion-content>
   <ion-list class="myList">
     <button ion-item class="function-message">
       <ion-icon name="swap" color="mac"></ion-icon>
-        &nbsp;流程信息提醒
+        &nbsp;{{languageContent.flowMes}}
     </button>
     <button ion-item class="function-message" (tap)="toNineCode()">
       <ion-icon name="lock" color="mac"></ion-icon>
-        &nbsp;手势密码保护
+        &nbsp;{{languageContent.lock}}
     </button>
     <button ion-item class="function-message">
       <ion-icon name="unlock" color="mac"></ion-icon>
-        &nbsp;修改密码
+        &nbsp;{{languageContent.changePWD}}
     </button>
     <button ion-item class="function-message">
       <ion-icon name="people" color="mac"></ion-icon>
-        &nbsp;同步人力资源
+        &nbsp;{{languageContent.peopleResource}}
     </button>
     <button ion-item class="function-message">
       <ion-icon name="calendar" color="mac"></ion-icon>
-        &nbsp;日程自动同步
+        &nbsp;{{languageContent.canlendarSync}}
     </button>
     <ion-item-divider color="light"></ion-item-divider>
-    <button ion-item class="function-message">
+    <button ion-item class="function-message" (tap)="checkUpdate()">
       <ion-icon name="planet" color="mac"></ion-icon>
-        &nbsp;检查更新
+        &nbsp;{{languageContent.checkUpdate}}
     </button>
     <button ion-item class="function-message">
       <ion-icon name="trash" color="mac"></ion-icon>
-        &nbsp;清空聊天记录
+        &nbsp;{{languageContent.dropChatNote}}
     </button>
     <button ion-item class="function-message">
       <ion-icon name="trash" color="mac"></ion-icon>
-        &nbsp;清空缓存
+        &nbsp;{{languageContent.dropSave}}
     </button>
     <button ion-item class="function-message" (tap)="changeFont()">
       <ion-icon name="git-compare" color="mac"></ion-icon>
-        &nbsp;语言版本切换
+        &nbsp;{{languageContent.languageChange}}
     </button>
     <button ion-item class="function-message">
       <ion-icon name="search" color="mac"></ion-icon>
-        &nbsp;关于
+        &nbsp;{{languageContent.about}}
     </button>
     <ion-item-divider color="light"></ion-item-divider>
     <button ion-item class="function-message" (tap)="logout()">
       <ion-icon name="disc" color="mac"></ion-icon>
-        &nbsp;注销
+        &nbsp;{{languageContent.logout}}
     </button>
     <button ion-item class="function-message" (tap)="exit()">
       <ion-icon name="disc" color="mac"></ion-icon>
-        &nbsp;退出
+        &nbsp;{{languageContent.exitApp}}
     </button>
   </ion-list>
 </ion-content>

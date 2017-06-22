@@ -36,6 +36,11 @@ export class SetComponent {
   ionViewWillLeave() {
 
   }
+
+  checkUpdate() {
+    this.plugin.checkAppForUpdate(false);
+  }
+
   changeFont() {
     // localStorage.set('fontType','simple_Chinese');
     let alert = this.alertCtrl.create();
