@@ -60,7 +60,7 @@ export class DialogueComponent implements OnInit {
   }
 
   ionViewWillLeave() {
-    this.events.unsubscribe('msg.onReceiveMessage');
+    // this.events.unsubscribe('msg.onReceiveMessage');
     this.messageservice.setUnreadToZeroByUserName(this.userName, '');
     // this.jmessageservice.setSingleConversationUnreadMessageCount(this.userName, null, 0);
     // this.jmessageservice.exitConversation();

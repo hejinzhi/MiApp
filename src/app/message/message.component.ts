@@ -5,7 +5,7 @@ import { MessageModel } from '../shared/models/message.model';
 
 import { JMessageService } from '../core/services/jmessage.service';
 import { MessageService } from './shared/service/message.service';
-import { Message } from './shared/classes/Message';
+import { Message, NoticeContent } from './shared/classes/Message';
 import { DialogueComponent } from './dialogue/dialogue.component';
 import { NoticeComponent } from './notice/notice.component';
 import { AlertComponent } from './alert/alert.component';
@@ -52,7 +52,7 @@ export class MessageComponent implements OnInit {
     // this.jmessageService.jmessageOffline = this.jmessageService.onSyncOfflineMessage().subscribe(res => {
 
     //   for (let i = 0; i < res.messageList.length; i++) {
-    //     let _content: string;
+    //     let _content: any;
 
     //     if (res.messageList[i].contentType === 'text') {
     //       _content = res.messageList[i].content.text;
@@ -62,7 +62,14 @@ export class MessageComponent implements OnInit {
 
     //     if (res.messageList[i].fromName === 'signlist' || res.messageList[i].fromName === 'news' || res.messageList[i].fromName === 'alert' || res.messageList[i].fromName === 'report') {
     //       this._type = 'notice';
-    //       _content = JSON.parse(res.messageList[i].content.text);
+
+    //       let noticecontent: NoticeContent = {
+    //         type: res.messageList[i].content.extras.members.type.value,
+    //         title: res.messageList[i].content.extras.members.title.value,
+    //         content: res.messageList[i].content.extras.members.content.value
+    //       };
+
+    //       _content = noticecontent;
     //     } else {
     //       this._type = 'dialogue';
     //     }
@@ -86,7 +93,8 @@ export class MessageComponent implements OnInit {
     // });
 
     // this.jmessageService.jmessageHandler = this.jmessageService.onReceiveMessage().subscribe(res => {
-    //   let _content: string;
+    //   console.log(res, 999);
+    //   let _content: any;
     //   if (res.contentType === 'text') {
     //     _content = res.content.text;
     //   } else if (res.contentType === 'image') {
@@ -95,7 +103,13 @@ export class MessageComponent implements OnInit {
 
     //   if (res.fromName === 'signlist' || res.fromName === 'news' || res.fromName === 'alert' || res.fromName === 'report') {
     //     this._type = 'notice';
-    //     _content = JSON.parse(res.content.text);
+    //     let noticecontent: NoticeContent = {
+    //       type: res.content.extras.members.type.value,
+    //       title: res.content.extras.members.title.value,
+    //       content: res.content.extras.members.content.value
+    //     };
+
+    //     _content = noticecontent;
     //   } else {
     //     this._type = 'dialogue';
     //   }
