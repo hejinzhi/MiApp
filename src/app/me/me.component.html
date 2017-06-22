@@ -5,9 +5,9 @@
       <img [src]="user.avatarUrl">
     </div>
     <div class="pagehead">
-      <div class="message">{{user.nickname}}</div>
-      <div class="message">{{user.position}}</div>
-      <div class="message">{{user.department}}</div>
+      <div class="message">{{user.nickname | sgChineseConv}}</div>
+      <div class="message">{{user.position | sgChineseConv}}</div>
+      <div class="message">{{user.department | sgChineseConv}}</div>
     </div>
   </div>
 </ion-header>
@@ -16,20 +16,20 @@
     <ion-item-divider color="light"></ion-item-divider>
     <button ion-item class="function-message">
       <ion-icon name="disc" color="keep"></ion-icon>
-        &nbsp;我的收藏
+        &nbsp;{{languageContent.keep}}
     </button>
     <ion-item-divider color="light"></ion-item-divider>
     <button ion-item class="function-message">
       <ion-icon name="expand" color="sao"></ion-icon>
-        &nbsp;扫一扫
+        &nbsp;{{languageContent.scan}}
     </button>
     <button ion-item class="function-message">
       <ion-icon name="create" color="advice"></ion-icon>
-        &nbsp;意见反馈
+        &nbsp;{{languageContent.advice}}
     </button>
     <button ion-item class="function-message" (tap)="goSetting()">
       <ion-icon name="cog" color="mac"></ion-icon>
-        &nbsp;设置
+        &nbsp;{{languageContent.set}}
     </button>
   </ion-list>
 </ion-content>

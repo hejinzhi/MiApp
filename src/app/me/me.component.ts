@@ -2,6 +2,8 @@ import { Component, ChangeDetectorRef } from '@angular/core';
 import { NavController, IonicPage } from 'ionic-angular';
 
 import { BarcodeScanner } from '@ionic-native/barcode-scanner';
+import { LanguageConfig } from './shared/config/language.config';
+
 
 @IonicPage()
 @Component({
@@ -11,6 +13,8 @@ import { BarcodeScanner } from '@ionic-native/barcode-scanner';
 export class MeComponent {
 
   user:any;
+  languageType: string = localStorage.getItem('languageType');
+  languageContent = LanguageConfig.meComponent[this.languageType];
   constructor(
     public navCtrl: NavController,
     private barcodeScanner: BarcodeScanner,

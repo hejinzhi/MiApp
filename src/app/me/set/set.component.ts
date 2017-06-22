@@ -46,13 +46,13 @@ export class SetComponent {
       type: 'radio',
       label: '简体中文',
       value: 'simple_Chinese',
-      checked: true
+      checked: localStorage.getItem('languageType') === 'simple_Chinese'
     });
     alert.addInput({
       type: 'radio',
       label: '繁体中文',
       value: 'traditional_Chinese',
-      checked: false
+      checked: localStorage.getItem('languageType') === 'traditional_Chinese'
     });
 
     alert.addButton('取消');
