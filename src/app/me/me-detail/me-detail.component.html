@@ -1,43 +1,43 @@
 <ion-header color="mac">
   <ion-navbar color="mac">
-    <ion-title>我的资料</ion-title>
+    <ion-title>{{languageContent.title}}</ion-title>
   </ion-navbar>
 </ion-header>
 <ion-content *ngIf="user">
-  <ion-list class="my-detail myList" (touchstart)="touchstart()" (touchmove)="touchmove()">
+  <ion-list class="my-detail myList">
     <button ion-item>
-          头像
-          <ion-note item-right class="person" (touchend)="isMoving?'':changePhoto()">
+          {{languageContent.photo}}
+          <ion-note item-right class="person" (tap)="changePhoto()">
            <img [src]="user.avatarUrl" class="avatar">
           </ion-note>
       </button>
     <button ion-item>
-          姓名
+          {{languageContent.name}}
           <ion-note item-right>
           {{user.nickname}}
           </ion-note>
       </button>
-    <button ion-item (touchend)="isMoving?'':showQr()">
-         我的二维码
+    <button ion-item (tap)="showQr()">
+         {{languageContent.Qr}}
           <ion-note item-right>
           <i class="iconfontyyy">&#xe613;</i>
           </ion-note>
       </button>
     <ion-item-divider color="light"></ion-item-divider>
     <button ion-item>
-        手机
+        {{languageContent.mobile}}
         <ion-note item-right>
         {{user.telephone}}
         </ion-note>
     </button>
     <button ion-item>
-        电话
+        {{languageContent.telephone}}
         <ion-note item-right>
         {{user.mobile}}
         </ion-note>
     </button>
     <button ion-item>
-        邮箱
+        {{languageContent.mail}}
         <ion-note item-right>
         {{user.email}}
         </ion-note>
