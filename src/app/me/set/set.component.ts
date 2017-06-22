@@ -6,6 +6,8 @@ import { PatternLockComponent } from '../../login/pattern-lock/pattern-lock.comp
 import { JMessageService } from '../../core/services/jmessage.service'
 import { PluginService } from '../../core/services/plugin.service'
 
+import { LanguageConfig } from '../shared/config/language.config';
+
 @IonicPage()
 @Component({
   selector: 'sg-set',
@@ -13,7 +15,9 @@ import { PluginService } from '../../core/services/plugin.service'
 })
 export class SetComponent {
 
-  isMoving:boolean;
+  languageType: string = localStorage.getItem('languageType');
+  languageContent = LanguageConfig.setComponent[this.languageType];
+
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
@@ -32,54 +36,74 @@ export class SetComponent {
   ionViewWillLeave() {
 
   }
-  touchstart() {
-    this.isMoving = false;
+
+  checkUpdate() {
+    this.plugin.checkAppForUpdate(false);
   }
-  touchmove() {
-    this.isMoving = true;
-  }
+
   changeFont() {
     // localStorage.set('fontType','simple_Chinese');
     let alert = this.alertCtrl.create();
-    alert.setTitle('语言版本选择');
+    alert.setTitle(this.languageContent.languageChangeAlertTitle);
     alert.addInput({
       type: 'radio',
-      label: '简体中文',
+      label: this.languageContent.simple_Chinese,
       value: 'simple_Chinese',
-      checked: true
+      checked: localStorage.getItem('languageType') === 'simple_Chinese'
     });
     alert.addInput({
       type: 'radio',
-      label: '繁体中文',
+      label: this.languageContent.traditional_Chinese,
       value: 'traditional_Chinese',
-      checked: false
+      checked: localStorage.getItem('languageType') === 'traditional_Chinese'
     });
 
-    alert.addButton('取消');
+    alert.addButton(this.languageContent.cancel);
     alert.addButton({
-      text: '确认',
+      text: this.languageContent.confirm,
       handler: (data: string) => {
         localStorage.setItem('languageType', data);
-        this.plugin.showToast('已切换语言版本,重启可获得最佳体验')
+        this.reStartApp();
       }
     });
     alert.present();
+  }
+  reStartApp() {
+    let confirm = this.alertCtrl.create({
+        title: this.languageContent.reStartAppAlertTitle,
+        message: this.languageContent.reStartAppAlertMes,
+        buttons: [
+          {
+            text: this.languageContent.cancel,
+            handler: () => {
+
+            }
+          },
+          {
+            text: this.languageContent.confirm,
+            handler: () => {
+              this.plugin.getCodePush().restartApplication();
+            }
+          }
+        ]
+      });
+      confirm.present();
   }
   // 注销用户
   logout(): void {
     let that = this;
     let confirm = this.alertCtrl.create({
-      title: '注销',
-      message: '注销后将收不到推送消息，确认要退出吗?',
+      title: this.languageContent.logoutAlertTitle,
+      message: this.languageContent.logoutAlertMes,
       buttons: [
         {
-          text: '取消',
+          text: this.languageContent.cancel,
           handler: () => {
 
           }
         },
         {
-          text: '确定',
+          text: this.languageContent.confirm,
           handler: () => {
             localStorage.removeItem('currentUser');
             that.jmessage.loginOut();
@@ -93,17 +117,17 @@ export class SetComponent {
   exit() {
     let that = this;
     let confirm = this.alertCtrl.create({
-      title: '退出',
-      message: '退出后将收不到推送消息，确认要退出吗?',
+      title: this.languageContent.exitAlertTitle,
+      message: this.languageContent.exitAlertMes,
       buttons: [
         {
-          text: '否',
+          text: this.languageContent.N,
           handler: () => {
             console.log('Disagree clicked');
           }
         },
         {
-          text: '是',
+          text: this.languageContent.Y,
           handler: () => {
             // that.jmessage.jmessageHandler.unsubscribe();
             that.jmessage.loginOut();

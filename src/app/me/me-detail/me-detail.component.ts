@@ -6,6 +6,8 @@ import { JMessageService } from '../../core/services/jmessage.service'
 // import { DataService } from '../../services/data.service';
 import { PluginService } from '../../core/services/plugin.service';
 
+import { LanguageConfig } from '../shared/config/language.config';
+
 @IonicPage()
 @Component({
   selector: 'sg-detail',
@@ -13,7 +15,9 @@ import { PluginService } from '../../core/services/plugin.service';
 })
 export class MeDetailComponent {
 
-  isMoving:boolean;
+  languageType: string = localStorage.getItem('languageType');
+  languageContent = LanguageConfig.MeDetailComponent[this.languageType];
+
   constructor(public navCtrl: NavController,
     public navParams: NavParams,
     private actionSheetCtrl: ActionSheetController,
@@ -33,13 +37,6 @@ export class MeDetailComponent {
     this.user = this.navParams.data.user;
   }
 
-  touchstart() {
-    this.isMoving = false;
-  }
-  touchmove() {
-    this.isMoving = true;
-  }
-  
   showLoading() {
     this.loading = this.loadingCtrl.create({
       content: 'Please wait...'
@@ -58,21 +55,21 @@ export class MeDetailComponent {
   }
   changePhoto() {
     let actionSheet = this.actionSheetCtrl.create({
-      title: '更换头像',
+      title: this.languageContent.changePhotoActionTitle,
       buttons: [
         {
-          text: '拍照',
+          text: this.languageContent.takePhoto,
           handler: () => {
             this.getNewPhoto(1,800);
           }
         }, {
-          text: '从相册选择',
+          text: this.languageContent.selectPhoto,
           handler: () => {
             this.getNewPhoto(0,800);
           }
         }, {
-          text: '取消',
-          role: '取消',
+          text: this.languageContent.cancel,
+          role: this.languageContent.cancel,
           handler: () => {
             console.log('Cancel clicked');
           }

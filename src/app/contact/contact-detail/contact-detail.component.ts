@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { NavController, NavParams } from 'ionic-angular';
 import { ContactService } from '../shared/service/contact.service';
+import { LanguageConfig } from '../shared/config/language.config';
 
 @Component({
     selector: 'sg-contact-detail',
@@ -8,6 +9,8 @@ import { ContactService } from '../shared/service/contact.service';
 })
 export class ContactDetailComponent implements OnInit {
 
+    languageType: string = localStorage.getItem('languageType');
+    languageContent = LanguageConfig.contactDetailComponent[this.languageType];
     personData: any;
 
     constructor(

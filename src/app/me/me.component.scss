@@ -5,7 +5,7 @@ sg-me{
     max-height: 260px;
     color: #fff;
     font-size: 110%;
-    &.landscape {
+    @media screen and (orientation: landscape) {
       max-height:none;
       min-height: 245px;
     }

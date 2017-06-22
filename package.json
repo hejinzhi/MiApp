@@ -21,11 +21,12 @@
     "@angular/platform-browser-dynamic": "4.1.2",
     "@ionic-native/barcode-scanner": "^3.4.4",
     "@ionic-native/camera": "^3.5.0",
+    "@ionic-native/code-push": "^3.12.1",
     "@ionic-native/core": "3.10.2",
     "@ionic-native/in-app-browser": "^3.12.1",
     "@ionic-native/keyboard": "^3.5.0",
+    "@ionic-native/network": "^3.12.1",
     "@ionic-native/photo-viewer": "^3.11.0",
-    "@ionic-native/screen-orientation": "^3.10.3",
     "@ionic-native/splash-screen": "3.10.2",
     "@ionic-native/status-bar": "3.10.2",
     "@ionic/storage": "2.0.1",
@@ -66,32 +67,7 @@
     "tslint": "^4.0.0",
     "typescript": "~2.2.1"
   },
-  "cordovaPlugins": [
-    "cordova-plugin-whitelist",
-    "cordova-plugin-console",
-    "cordova-plugin-statusbar",
-    "cordova-plugin-splashscreen",
-    "cordova-plugin-device",
-    "ionic-plugin-keyboard",
-    "cordova-sqlite-storage", {
-      "id": "jmessage-phonegap-plugin",
-      "locator": "jmessage-phonegap-plugin",
-      "variables": {
-        "APP_KEY": "c35bdfd0449ed461f7adad98"
-      }
-    },
-    "cordova-plugin-background-mode",
-    "cordova-plugin-camera",
-    "cordova-plugin-compat", {
-      "locator": "https://github.com/Telerik-Verified-Plugins/ImagePicker",
-      "id": "com.synconset.imagepicker"
-    },
-    "phonegap-plugin-barcodescanner"
-  ],
-  "cordovaPlatforms": [{
-    "platform": "android",
-    "version": "",
-    "locator": "android"
-  }],
+  "cordovaPlugins": [],
+  "cordovaPlatforms": [],
   "description": "e-mobile: An Ionic project"
 }

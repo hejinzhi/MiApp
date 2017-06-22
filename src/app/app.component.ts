@@ -7,6 +7,7 @@ import { LoginComponent } from './login/login.component';
 import { TabsComponent } from './tabs/tabs.component';
 import { PatternLockComponent } from './login/pattern-lock/pattern-lock.component';
 import { MessageService } from './message/shared/service/message.service';
+
 import { PluginService } from './core/services/plugin.service';
 
 import { OrganizationComponent } from './contact/organization/organization.component';
@@ -39,34 +40,39 @@ export class MyAppComponent {
       splashScreen.hide();
       this.messageservice.getContacts();
       this.messageservice.history = this.messageservice.getLocalMessageHistory() ? this.messageservice.getLocalMessageHistory() : [];
+
+      if (platform.is('android')) {
+        let original = platform.runBackButtonAction;
+        let __this = this;
+        platform.runBackButtonAction = function (): void {
+          if (__this.keyboard.isOpen()) {//如果键盘开启则隐藏键盘
+            __this.keyboard.close();
+            return;
+          }
+          let activePortal = __this.ionicApp._toastPortal.getActive()
+            || __this.ionicApp._loadingPortal.getActive()
+            || __this.ionicApp._overlayPortal.getActive()
+            || __this.ionicApp._modalPortal.getActive();
+          if (activePortal) {
+            activePortal.dismiss();
+            return;
+          }
+          let activeVC = __this.nav.getActive();
+          if (activeVC.instance instanceof LoginComponent) {
+            platform.exitApp();
+          } else if (activeVC.instance instanceof PatternLockComponent) {
+            platform.exitApp();
+          } else {
+            let tabs = activeVC.instance.tabRef;
+            let activeNav = tabs.getSelected();
+            return activeNav.canGoBack() ? original.apply(platform) : cordova.plugins.backgroundMode.moveToBackground();
+          }
+        }
+      }
     });
 
-    let original = platform.runBackButtonAction;
-    let __this = this;
-    platform.runBackButtonAction = function (): void {
-      if (__this.keyboard.isOpen()) {//如果键盘开启则隐藏键盘
-        __this.keyboard.close();
-        return;
-      }
-      let activePortal = __this.ionicApp._toastPortal.getActive()
-        || __this.ionicApp._loadingPortal.getActive()
-        || __this.ionicApp._overlayPortal.getActive()
-        || __this.ionicApp._modalPortal.getActive();
-      if (activePortal) {
-        activePortal.dismiss();
-        return;
-      }
-      let activeVC = __this.nav.getActive();
-      if (activeVC.instance instanceof LoginComponent) {
-        platform.exitApp();
-      } else if (activeVC.instance instanceof PatternLockComponent) {
-        platform.exitApp();
-      } else {
-        let tabs = activeVC.instance.tabRef;
-        let activeNav = tabs.getSelected();
-        return activeNav.canGoBack() ? original.apply(platform) : cordova.plugins.backgroundMode.moveToBackground();
-      }
-    }
+
+
   }
 
 
