@@ -12,6 +12,7 @@ import { AlertComponent } from './alert/alert.component';
 
 import { MyHttpService } from '../core/services/myHttp.service';
 import { LanguageConfig } from './shared/config/language.config';
+import { DatabaseService } from './shared/service/database.service';
 
 @Component({
   selector: 'sg-message',
@@ -27,8 +28,9 @@ export class MessageComponent implements OnInit {
   messageListItem: any;
   noticeListItem: any;
   _type: string;
-
+  loading: Loading;
   onSyncOfflineMessageHandler: Subscription;
+  userinfo; //登录人信息
 
 
   constructor(public navCtrl: NavController,
@@ -40,15 +42,20 @@ export class MessageComponent implements OnInit {
     private platform: Platform,
     public appCtrl: App,
     private myHttp: MyHttpService,
-    private events: Events
+    private events: Events,
+    private databaseService: DatabaseService
   ) {
   }
 
 
-  loading: Loading;
+  ionViewWillEnter() {
+    this.refreshData();
+  }
 
   ngOnInit() {
+    this.userinfo = JSON.parse(localStorage.getItem('currentUser'));
 
+    // 读取离线消息
     this.jmessageService.jmessageOffline = this.jmessageService.onSyncOfflineMessage().subscribe(res => {
 
       for (let i = 0; i < res.messageList.length; i++) {
@@ -85,93 +92,49 @@ export class MessageComponent implements OnInit {
       }
     });
 
-    this.jmessageService.jmessageHandler = this.jmessageService.onReceiveMessage().subscribe(res => {
-      console.log(res);
-      let _content: string;
-      if (res.contentType === 'text') {
-        _content = res.content.text;
-      } else if (res.contentType === 'image') {
-        _content = res.content.localThumbnailPath;
-      }
-
-      if (res.fromName === 'signlist' || res.fromName === 'news' || res.fromName === 'alert' || res.fromName === 'report') {
-        this._type = 'notice';
-        _content = JSON.parse(res.content.text);
-      } else {
-        this._type = 'dialogue';
-      }
-
-      let msg: Message = {
-        toUserName: res.targetInfo.userName,
-        fromUserName: res.fromName,
-        content: _content,
-        contentType: res.contentType,
-        time: res.createTimeInMillis,
-        type: this._type,
-        unread: true
-      };
-
-      this.messageService.history.push(msg);
-      this.messageService.setLocalMessageHistory(this.messageService.history);
-      this.jmessageService.setSingleConversationUnreadMessageCount(res.fromName, '', 0);
-      this.refreshData();
-      this.ref.detectChanges();
-      this.events.publish('msg.onReceiveMessage');
+    // 监听是否有消息推送过来
+    this.jmessageService.jmessageHandler = this.jmessageService.onReceiveMessage().subscribe(async (res) => {
+      await this.handleReceiveMessage(res);
     });
 
   }
 
-  // 当用户点击登录后，先去检查它是否有未收到的信息，如果有，往本地写入这些信息，这样message才能显示完成
-  async loadUnreadMessage() {
-    let user = JSON.parse(localStorage.getItem('currentUser'));
+  async handleReceiveMessage(res: any) {
+    console.log(res);
     let _content: string;
-    let res;
-    try {
-      res = await this.jmessageService.getConversationList();
-      let conversationList: any[] = JSON.parse(res);
-      conversationList = conversationList.filter((v) => v.unReadMsgCnt > 0);
-      for (let i = 0; i < conversationList.length; i++) {
-        let hisRes;
-        hisRes = await this.jmessageService.getHistoryMessages('single', conversationList[i].targetId, '', 0, conversationList[i].unReadMsgCnt);
-        let resObj = JSON.parse(hisRes);
-
-
-        for (let j = 0; j < resObj.length; j++) {
-
-          if (resObj[j].contentType === 'text') {
-            _content = resObj[j].content.text;
-          } else if (resObj[j].contentType === 'image') {
-            _content = resObj[j].content.localThumbnailPath;
-          }
-
-          let msg: Message = {
-            toUserName: user.username,  // this.dataService.userinfo.username
-            fromUserName: resObj[j].fromName,
-            content: _content,
-            contentType: resObj[j].contentType,
-            time: resObj[j].createTimeInMillis,
-            type: 'dialogue',
-            unread: true
-          };
-          this.messageService.history.push(msg);
-        }
-        this.jmessageService.setSingleConversationUnreadMessageCount(conversationList[i].targetId, '', 0);
-        this.messageService.setLocalMessageHistory(this.messageService.history);
-        this.refreshData();
-      }
+    if (res.contentType === 'text') {
+      _content = res.content.text;
+    } else if (res.contentType === 'image') {
+      _content = res.content.localThumbnailPath;
     }
-    catch (err) {
-      this.showError(err._body);
+
+    if (res.fromName === 'signlist' || res.fromName === 'news' || res.fromName === 'alert' || res.fromName === 'report') {
+      this._type = 'notice';
+      _content = JSON.parse(res.content.text);
+    } else {
+      this._type = 'dialogue';
     }
+
+    let msg: Message = {
+      toUserName: res.targetInfo.userName,
+      fromUserName: res.fromName,
+      content: _content,
+      contentType: res.contentType,
+      time: res.createTimeInMillis,
+      type: this._type,
+      unread: true
+    };
+
+    await this.databaseService.addMessage(res.targetInfo.userName, res.fromName, _content, res.contentType, res.createTimeInMillis, this._type, 'Y', JSON.stringify(res.content.extras))
+    this.messageListItem = await this.messageService.getMessageHistory(this.userinfo.username, 'dialogue');
+    this.ref.detectChanges();
+    this.events.publish('msg.onReceiveMessage');
   }
 
-  ionViewWillEnter() {
-    this.refreshData();
-  }
 
-  refreshData() {
-    this.messageListItem = this.messageService.getMessageHistory().filter((v: any) => (v.type === "dialogue"));
-    this.noticeListItem = this.messageService.getMessageHistory().filter((v: any) => (v.type === "notice"));
+
+  async refreshData() {
+    this.messageListItem = await this.messageService.getMessageHistory(this.userinfo.username, 'dialogue');
   };
 
 
@@ -210,8 +173,7 @@ export class MessageComponent implements OnInit {
   // }
 
   public sendSingleMsg() {
-    // this.jmessageService.sendSingleCusCustomMessage('jinzhi.he', { name: 'hejinzhi' });
-    this.jmessageService.sendSingleTextMessageWithExtras('hugh.liang', 'test', { name: 'hejinzhi' });
-    // this.jmessageService.sendSingleTextMessage('hugh.liang', 'test');
+    // this.jmessageService.sendSingleTextMessageWithExtras('hugh.liang', 'test', { name: 'hejinzhi' });
+    this.databaseService.deleteAllMessages();
   }
 }

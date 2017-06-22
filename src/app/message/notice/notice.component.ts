@@ -40,7 +40,7 @@ export class NoticeComponent implements OnInit {
   }
 
   ionViewWillLeave() {
-    this.messageService.setUnreadToZeroByUserName(this.userName, this.alertType);
+    // this.messageService.setUnreadToZeroByUserName(this.userName, this.alertType);
   }
 
   ngOnInit() {

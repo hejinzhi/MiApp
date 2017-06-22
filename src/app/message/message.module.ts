@@ -12,7 +12,7 @@ import { Keyboard } from '@ionic-native/keyboard';
 import { Camera } from '@ionic-native/camera';
 import { TimeDescPipe } from './shared/pipe/timedesc.pipe';
 import { PipesModule } from '../shared/pipe/pipes.module';
-
+import { DatabaseService } from './shared/service/database.service';
 
 
 @NgModule({
@@ -20,6 +20,6 @@ import { PipesModule } from '../shared/pipe/pipes.module';
   declarations: [MessageComponent, DialogueComponent, NoticeComponent, TimeDescPipe, AlertComponent],
   entryComponents: [MessageComponent, DialogueComponent, NoticeComponent, AlertComponent],
   exports: [MessageComponent, DialogueComponent, NoticeComponent, AlertComponent],
-  providers: [MessageService, Keyboard, Camera]
+  providers: [MessageService, Keyboard, Camera, DatabaseService]
 })
 export class MessageModule { }
