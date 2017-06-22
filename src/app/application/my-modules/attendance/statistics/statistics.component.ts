@@ -47,7 +47,6 @@ export class StatisticsComponent {
     this.reFresh();
   }
   ionViewWillEnter() {
-    let that = this;
     window.addEventListener('resize',() =>this.resize())
   }
   resize() {
