@@ -30,6 +30,14 @@ export class AlertComponent implements OnInit {
   fin_unread: number;
   sfcs_unread: number;
   ims_unread: number;
+  att_length: number;
+  pro_length: number;
+  sal_length: number;
+  pur_length: number;
+  inv_length: number;
+  fin_length: number;
+  sfcs_length: number;
+  ims_length: number;
 
   constructor(public navCtrl: NavController, public params: NavParams, public messageService: MessageService, public jmessageService: JMessageService) {
     this.userName = params.get('username');
@@ -56,10 +64,22 @@ export class AlertComponent implements OnInit {
     this.fin_unread = this.getUnreadCount('fin');
     this.sfcs_unread = this.getUnreadCount('sfcs');
     this.sal_unread = this.getUnreadCount('sal');
+    this.att_length = this.getAlertTypeCount('att');
+    this.pro_length = this.getAlertTypeCount('pro');
+    this.sal_length = this.getAlertTypeCount('sal');
+    this.pur_length = this.getAlertTypeCount('pur');
+    this.inv_length = this.getAlertTypeCount('inv');
+    this.fin_length = this.getAlertTypeCount('fin');
+    this.sfcs_length = this.getAlertTypeCount('sfcs');
+    this.sal_length = this.getAlertTypeCount('sal');
   };
 
   getUnreadCount(type: string) {
     return this.list.filter((v: any) => (v.content.type === type && v.unread === true)).length;
+  }
+
+  getAlertTypeCount(type: string) {
+    return this.list.filter((v: any) => (v.content.type === type)).length;
   }
 
   goToNoticePage(type: string) {
