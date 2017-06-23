@@ -3,7 +3,6 @@ import { BrowserModule } from '@angular/platform-browser';
 import { IonicApp, IonicModule, IonicErrorHandler } from 'ionic-angular';
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
-import { PhotoViewer } from '@ionic-native/photo-viewer';
 import 'rxjs/add/operator/toPromise';
 
 import { MyAppComponent } from './app.component';
@@ -15,7 +14,6 @@ import { LoginModule } from './login/login.module';
 import { SharedModule } from './shared/shared.module';
 import { CoreModule } from './core/core.module';
 import { PipesModule } from './shared/pipe/pipes.module';
-// import { BookLibraryModule } from './book-library/book-library.module';
 
 @NgModule({
   declarations: [
@@ -42,7 +40,6 @@ import { PipesModule } from './shared/pipe/pipes.module';
   providers: [
     StatusBar,
     SplashScreen,
-    PhotoViewer,
     { provide: ErrorHandler, useClass: IonicErrorHandler }
   ]
 })

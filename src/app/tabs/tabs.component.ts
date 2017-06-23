@@ -40,21 +40,21 @@ export class TabsComponent implements OnInit {
     this.changeTabBadge();
   }
 
-  changeTabBadge() {
-    this.unreadCount = 0;
-    let hisobj = this.messageService.getMessageHistory();
-    for (let i = 0; i < hisobj.length; i++) {
-      this.unreadCount = this.unreadCount + hisobj[i].unreadCount;
-    }
+  async changeTabBadge() {
+    // this.unreadCount = 0;
+    // let hisobj = await this.messageService.getMessageHistory();
+    // for (let i = 0; i < hisobj.length; i++) {
+    //   this.unreadCount = this.unreadCount + hisobj[i].unreadCount;
+    // }
 
-    setTimeout(() => {
-      var div: any = document.getElementsByTagName('ion-badge');
-      if (parseInt(div[0].innerHTML) <= 0) {
-        div[0].style.display = "none";
-      } else {
-        div[0].style.display = "block";
-      }
-    }, 0)
+    // setTimeout(() => {
+    //   var div: any = document.getElementsByTagName('ion-badge');
+    //   if (parseInt(div[0].innerHTML) <= 0) {
+    //     div[0].style.display = "none";
+    //   } else {
+    //     div[0].style.display = "block";
+    //   }
+    // }, 0)
   }
 
 }

@@ -8,6 +8,7 @@ import { Keyboard } from '@ionic-native/keyboard';
 import { MessageService } from '../shared/service/message.service';
 import { JMessageService } from '../../core/services/jmessage.service';
 import { LanguageConfig } from '../shared/config/language.config';
+import { DatabaseService } from '../shared/service/database.service';
 
 
 @Component({
@@ -26,6 +27,7 @@ export class DialogueComponent implements OnInit {
 
   userName: string;
   userNickName: string;
+  unreadCount: number; //未读消息数，如果大于0，退出dialogue页面时把未读消息更新为已读。否则不更新
 
   jmessageHandler: Subscription; //接收句柄，再view被关闭的时候取消订阅，否则对已关闭的view进行数据脏检查会报错
 
@@ -36,34 +38,39 @@ export class DialogueComponent implements OnInit {
     private ref: ChangeDetectorRef,
     public keyboard: Keyboard,
     public camera: Camera,
-    private events: Events) {
+    private events: Events,
+    private databaseService: DatabaseService) {
 
-    this.userName = params.get('username');
-    this.userNickName = params.get('userNickName');
+    this.userName = params.get('fromUserName');
+    this.userNickName = params.get('fromUserNickName');
+    this.unreadCount = params.get('unreadCount');
   }
 
   ngOnInit() {
+    this.userinfo = JSON.parse(localStorage.getItem('currentUser'));
     this.loadMessage();
   }
 
 
   ionViewDidEnter() {
     this.events.subscribe('msg.onReceiveMessage', () => {
-      console.log('dialogue');
-      this.messageservice.getMessageHistoryByID(this.userName).then((res => {
-        this.list = res;
+      this.messageservice.getMessagesByUsername(this.userName, this.userinfo.username).then((data) => {
+        this.list = data;
         this.ref.detectChanges();
-      }));
+        this.scroll_down();
+      });
     });
 
-    // this.jmessageservice.enterSingleConversation(this.userName);
+    this.jmessageservice.enterSingleConversation(this.userName);
   }
 
   ionViewWillLeave() {
-    // this.events.unsubscribe('msg.onReceiveMessage');
-    this.messageservice.setUnreadToZeroByUserName(this.userName, '');
-    // this.jmessageservice.setSingleConversationUnreadMessageCount(this.userName, null, 0);
-    // this.jmessageservice.exitConversation();
+    this.events.unsubscribe('msg.onReceiveMessage');
+    if (this.unreadCount > 0) {
+      this.messageservice.setUnreadToZeroByUserName(this.userName);
+      this.jmessageservice.setSingleConversationUnreadMessageCount(this.userName, null, 0);
+    }
+    this.jmessageservice.exitConversation();
   }
 
   ionViewWillEnter() {
@@ -98,8 +105,7 @@ export class DialogueComponent implements OnInit {
   }
 
   async loadMessage() {
-    this.userinfo = await this.messageservice.getUserInfo();
-    this.list = await this.messageservice.getMessageHistoryByID(this.userName);
+    this.list = await this.messageservice.getMessagesByUsername(this.userName, this.userinfo.username);
   };
 
   scroll_down() {
@@ -108,7 +114,7 @@ export class DialogueComponent implements OnInit {
   }
 
   //type: 1是文字，2是圖片
-  sendMessage(type: number, content: string) {
+  async sendMessage(type: number, content: string) {
     let contentType: string;
 
     if (type === 1) {
@@ -117,7 +123,7 @@ export class DialogueComponent implements OnInit {
       contentType = "image";
     }
 
-    let history = this.messageservice.history;
+    // let history = this.messageservice.history;
     let msg = [{
       "toUserName": this.userName,
       "fromUserName": this.userinfo.username,
@@ -125,17 +131,16 @@ export class DialogueComponent implements OnInit {
       "contentType": contentType,
       "time": +new Date(),
       "type": "dialogue",
-      "unread": true
+      "unread": 'N'
     }];
-    history.push(msg[0]);
+    await this.databaseService.addMessage(msg[0].toUserName, msg[0].fromUserName, msg[0].content, msg[0].contentType, msg[0].time, msg[0].type, msg[0].unread, null);
 
-    this.messageservice.setLocalMessageHistory(history);
-    // if (type === 1) {
-    //   this.jmessageservice.sendSingleTextMessage(this.userName, content);
-    // }
-    // else if (type === 2) {
-    //   this.jmessageservice.sendSingleImageMessage(this.userName, content);
-    // }
+    if (type === 1) {
+      this.jmessageservice.sendSingleTextMessage(this.userName, content);
+    }
+    else if (type === 2) {
+      this.jmessageservice.sendSingleImageMessage(this.userName, content);
+    }
     msg = this.messageservice.leftJoin(msg, this.messageservice.allUserInfo);
     this.list.push(msg[0])
     this.input_text = '';
