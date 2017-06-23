@@ -34,7 +34,7 @@ export class StatisticsComponent {
   myLeave:{name:string,value:number}[]
   OTday:{name:string,value:number}[];
   leaveDay:{name:string,value:number}[];
-  isHere:boolean = true;
+  isHere:boolean;
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
@@ -47,6 +47,7 @@ export class StatisticsComponent {
     this.reFresh();
   }
   ionViewWillEnter() {
+    this.isHere = true;
     window.addEventListener('resize',() =>this.resize())
   }
   resize() {
