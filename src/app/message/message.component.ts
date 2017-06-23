@@ -5,7 +5,7 @@ import { MessageModel } from '../shared/models/message.model';
 
 import { JMessageService } from '../core/services/jmessage.service';
 import { MessageService } from './shared/service/message.service';
-import { Message } from './shared/classes/Message';
+import { Message, NoticeContent } from './shared/classes/Message';
 import { DialogueComponent } from './dialogue/dialogue.component';
 import { NoticeComponent } from './notice/notice.component';
 import { AlertComponent } from './alert/alert.component';

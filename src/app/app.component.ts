@@ -7,6 +7,7 @@ import { LoginComponent } from './login/login.component';
 import { TabsComponent } from './tabs/tabs.component';
 import { PatternLockComponent } from './login/pattern-lock/pattern-lock.component';
 import { MessageService } from './message/shared/service/message.service';
+
 import { PluginService } from './core/services/plugin.service';
 import { JMessageService } from './core/services/jmessage.service';
 

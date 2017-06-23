@@ -8,4 +8,10 @@ export class Message {
     unread: boolean;
 }
 
+export class NoticeContent {
+    type: string;
+    title: string;
+    content: string;
+}
+
 

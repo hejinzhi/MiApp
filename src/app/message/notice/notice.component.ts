@@ -39,6 +39,12 @@ export class NoticeComponent implements OnInit {
     }
   }
 
+  ionViewWillEnter() {
+    setTimeout(() => {
+      this.scroll_down();
+    }, 0);
+  }
+
   ionViewWillLeave() {
     // this.messageService.setUnreadToZeroByUserName(this.userName, this.alertType);
   }
@@ -54,6 +60,11 @@ export class NoticeComponent implements OnInit {
       this.list = this.list.filter((v: any) => (v.content.type === this.alertType));
     }
   };
+
+  scroll_down() {
+    var div = document.getElementsByClassName('msg-content');
+    div[0].scrollTop = div[0].scrollHeight;
+  }
 
 }
 
