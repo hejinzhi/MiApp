@@ -10,7 +10,7 @@ import { LanguageConfig } from './shared/config/language.config';
 })
 export class ChartComponent {
 
-  tab1Root = 'HumanResourcesComponent';
+  tab1Root = 'StorageComponent';
   tab2Root = 'HumanResourcesComponent';
   tab3Root = 'HumanResourcesComponent';
   tab4Root = 'HumanResourcesComponent';

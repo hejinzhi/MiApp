@@ -88,7 +88,7 @@ export class DialogueComponent implements OnInit {
 
   isPlus() {
     this.onPlus = false;
-    if (/Android [4-6]/.test(navigator.appVersion)) {
+    if (/Android [4-9]/.test(navigator.appVersion)) {
       window.addEventListener("resize", function () {
         if (document.activeElement.tagName == "INPUT" || document.activeElement.tagName == "TEXTAREA") {
           window.setTimeout(function () {
@@ -172,4 +172,3 @@ export class DialogueComponent implements OnInit {
   getLocation() {
   };
 }
-
