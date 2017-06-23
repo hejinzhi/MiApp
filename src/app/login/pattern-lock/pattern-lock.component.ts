@@ -14,13 +14,6 @@ import { LoginConfig } from '../shared/config/login.config';
   templateUrl: 'pattern-lock.component.html'
 })
 export class PatternLockComponent implements OnInit {
-<<<<<<< HEAD
-
-  mySubcribe: any;
-  isLandscape: boolean;
-
-=======
->>>>>>> refs/remotes/origin/master
   needNineCode: boolean;
   user: any;
   R: number;

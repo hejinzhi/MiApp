@@ -30,7 +30,7 @@ export class MessageComponent implements OnInit {
   _type: string;
   loading: Loading;
   onSyncOfflineMessageHandler: Subscription;
-  userinfo; //登录人信息
+  userinfo: any; //登录人信息
 
 
   constructor(public navCtrl: NavController,
@@ -100,7 +100,6 @@ export class MessageComponent implements OnInit {
   }
 
   async handleReceiveMessage(res: any) {
-    console.log(res);
     let _content: string;
     if (res.contentType === 'text') {
       _content = res.content.text;

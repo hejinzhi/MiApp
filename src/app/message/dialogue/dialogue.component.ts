@@ -27,6 +27,7 @@ export class DialogueComponent implements OnInit {
 
   userName: string;
   userNickName: string;
+  unreadCount: number; //未读消息数，如果大于0，退出dialogue页面时把未读消息更新为已读。否则不更新
 
   jmessageHandler: Subscription; //接收句柄，再view被关闭的时候取消订阅，否则对已关闭的view进行数据脏检查会报错
 
@@ -42,6 +43,7 @@ export class DialogueComponent implements OnInit {
 
     this.userName = params.get('fromUserName');
     this.userNickName = params.get('fromUserNickName');
+    this.unreadCount = params.get('unreadCount');
   }
 
   ngOnInit() {
@@ -64,8 +66,10 @@ export class DialogueComponent implements OnInit {
 
   ionViewWillLeave() {
     this.events.unsubscribe('msg.onReceiveMessage');
-    this.messageservice.setUnreadToZeroByUserName(this.userName);
-    this.jmessageservice.setSingleConversationUnreadMessageCount(this.userName, null, 0);
+    if (this.unreadCount > 0) {
+      this.messageservice.setUnreadToZeroByUserName(this.userName);
+      this.jmessageservice.setSingleConversationUnreadMessageCount(this.userName, null, 0);
+    }
     this.jmessageservice.exitConversation();
   }
 

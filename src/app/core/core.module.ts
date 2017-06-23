@@ -16,7 +16,6 @@ import { JMessageService } from './services/jmessage.service';
 import { ArrayUtilService } from './services/arrayUtil.service';
 import { PluginService } from './services/plugin.service';
 import { ValidateService } from './services/validate.service';
-import { CodePushService } from 'ionic2-code-push';
 
 
 
@@ -37,8 +36,7 @@ import { CodePushService } from 'ionic2-code-push';
         SQLite,
         PhotoViewer,
         CodePush,
-        Network,
-        CodePushService
+        Network
     ],
     exports: []
 })

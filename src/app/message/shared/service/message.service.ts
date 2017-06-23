@@ -178,7 +178,7 @@ export class MessageService {
       "fromUserName": "signlist",
       "content": {
         "type": "att",
-        "title":"請假單簽核",
+        "title": "請假單簽核",
         "content": "請假單簽核1"
       },
       "contentType": "text",
@@ -190,7 +190,7 @@ export class MessageService {
       "fromUserName": "news",
       "content": {
         "type": "att",
-        "title":"天氣預告",
+        "title": "天氣預告",
         "content": "天氣預告1"
       },
       "contentType": "text",
@@ -202,7 +202,7 @@ export class MessageService {
       "fromUserName": "report",
       "content": {
         "type": "庫存報表",
-        "title":"庫存信息",
+        "title": "庫存信息",
         "content": "庫存信息1"
       },
       "contentType": "text",
@@ -214,7 +214,7 @@ export class MessageService {
       "fromUserName": "alert",
       "content": {
         "type": "att",
-        "title":"假單維護",
+        "title": "假單維護",
         "content": "考勤異常"
       },
       "contentType": "text",
@@ -226,7 +226,7 @@ export class MessageService {
       "fromUserName": "alert",
       "content": {
         "type": "pro",
-        "title":"生產管理",
+        "title": "生產管理",
         "content": "生產管理1"
       },
       "contentType": "text",
@@ -238,7 +238,7 @@ export class MessageService {
       "fromUserName": "alert",
       "content": {
         "type": "pro",
-        "title":"生產管理",
+        "title": "生產管理",
         "content": "生產管理2"
       },
       "contentType": "text",
@@ -250,19 +250,19 @@ export class MessageService {
       "fromUserName": "alert",
       "content": {
         "type": "att",
-        "title":"離職注意事項1",
+        "title": "離職注意事項1",
         "content": "尊敬的XXX: 您的离职日xxxx年x月x 日,请您在离职日16:30前携带以下物品前往招聘办公室办理离职手续(住宿的同仁请先找宿管办理退宿手续),17:00后您的厂牌将失效. 感谢您的配合!\r\n1.离职申请单(在贵部门助理处领取)\r\n2.辞呈\r\n3.工作移交清单\r\n4.厂牌\r\n5.员工手册\r\n6.工衣(进厂不满2年者,退还发放的全部工衣:两年以上者, 退还入职时发放的所有工衣和近两年满年限发放的工衣)"
       },
       "contentType": "text",
       "time": 1496306792900,
       "type": "notice",
       "unread": true
-    },{
+    }, {
       "toUserName": "hugh.liang",
       "fromUserName": "alert",
       "content": {
         "type": "att",
-        "title":"離職注意事項2",
+        "title": "離職注意事項2",
         "content": "尊敬的XXX: 您的离职日xxxx年x月x 日,请您在离职日16:30前携带以下物品前往招聘办公室办理离职手续(住宿的同仁请先找宿管办理退宿手续),17:00后您的厂牌将失效. 感谢您的配合!\r\n1.离职申请单(在贵部门助理处领取)\r\n2.辞呈\r\n3.工作移交清单\r\n4.厂牌\r\n5.员工手册\r\n6.工衣(进厂不满2年者,退还发放的全部工衣:两年以上者, 退还入职时发放的所有工衣和近两年满年限发放的工衣)"
       },
       "contentType": "text",
@@ -270,7 +270,7 @@ export class MessageService {
       "type": "notice",
       "unread": true
     }
-    ];
+  ];
 
 
 
@@ -326,7 +326,6 @@ export class MessageService {
 
   public async getMessageHistory(loginUsername: string, type?: string) {
     let history = await this.databaseService.getMessageList(loginUsername, type);
-    console.log(history);
     return this.leftJoin(history, this.allUserInfo);
   }
 
