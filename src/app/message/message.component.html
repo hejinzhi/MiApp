@@ -1,43 +1,44 @@
 <ion-header>
-    <ion-navbar>
-        <ion-title class="page-title">
-            <div>{{languageContent.title}}</div>
-        </ion-title>
-    </ion-navbar>
+  <ion-navbar>
+    <ion-title class="page-title">
+      <div>{{languageContent.title}}</div>
+    </ion-title>
+  </ion-navbar>
 </ion-header>
 <ion-content class="list-avatar-page">
-    <ion-searchbar></ion-searchbar>
-    <ion-list class="list-page">
-        <ion-item *ngFor="let item of noticeListItem" (tap)="goToMessageDetailPage(item)" [ngSwitch]="item.contentType">
-            <div item-left class="img-header">
-                <img class="img" src={{item.avatarSrc}}>
-                <div class="badge" *ngIf="item.unreadCount > 0">{{item.unreadCount | sgChineseConv}}</div>
-            </div>
-            <h2 class="name">{{item.userNickName | sgChineseConv}}</h2>
-            <ng-template [ngSwitchCase]="'text'">
-                <p class="msg">{{item.lastmsg.content | sgChineseConv}}</p>
-            </ng-template>
-            <ng-template [ngSwitchCase]="'image'">
-                <p>[{{languageContent.messagetype}}]</p>
-            </ng-template>
-            <ion-note item-right>{{item.timedesc | sgChineseConv}}</ion-note>
-        </ion-item>
-    </ion-list>
-    <div class="grid-footer"></div>
-    <ion-list>
-        <ion-item *ngFor="let item of messageListItem" (tap)="goToMessageDetailPage(item)" [ngSwitch]="item.contentType">
-            <div item-left class="img-header">
-                <img class="img" src={{item.avatarSrc}}>
-                <div class="badge" *ngIf="item.unreadCount > 0">{{item.unreadCount}}</div>
-            </div>
-            <h2 class="name">{{item.userNickName | sgChineseConv}}</h2>
-            <ng-template [ngSwitchCase]="'text'">
-                <p class="msg">{{item.lastmsg | sgChineseConv}}</p>
-            </ng-template>
-            <ng-template [ngSwitchCase]="'image'">
-                <p>[{{languageContent.messagetype}}]</p>
-            </ng-template>
-            <ion-note item-right>{{item.timedesc | sgChineseConv}}</ion-note>
-        </ion-item>
-    </ion-list>
+  <ion-searchbar></ion-searchbar>
+  <ion-list class="list-page">
+    <ion-item *ngFor="let item of noticeListItem" (tap)="goToMessageDetailPage(item)" [ngSwitch]="item.contentType">
+      <div item-left class="img-header">
+        <img class="img" src={{item.avatarSrc}}>
+        <div class="badge" *ngIf="item.unreadCount > 0">{{item.unreadCount | sgChineseConv}}</div>
+      </div>
+      <h2 class="name">{{item.userNickName | sgChineseConv}}</h2>
+      <ng-template [ngSwitchCase]="'text'">
+        <p class="msg">{{item.lastmsg.content | sgChineseConv}}</p>
+      </ng-template>
+      <ng-template [ngSwitchCase]="'image'">
+        <p>[{{languageContent.messagetype}}]</p>
+      </ng-template>
+      <ion-note item-right>{{item.timedesc | sgChineseConv}}</ion-note>
+    </ion-item>
+  </ion-list>
+  <div class="grid-footer"></div>
+  <ion-list>
+    <ion-item *ngFor="let item of messageListItem" (tap)="goToMessageDetailPage(item)" [ngSwitch]="item.contentType">
+      <div item-left class="img-header">
+        <img class="img" src={{item.fromUserAvatarSrc}}>
+        <div class="badge" *ngIf="item.unreadCount > 0">{{item.unreadCount}}</div>
+      </div>
+      <h2 class="name">{{item.fromUserNickName | sgChineseConv}}</h2>
+      <ng-template [ngSwitchCase]="'text'">
+        <p class="msg">{{item.content | sgChineseConv}}</p>
+      </ng-template>
+      <ng-template [ngSwitchCase]="'image'">
+        <p>[{{languageContent.messagetype}}]</p>
+      </ng-template>
+      <ion-note item-right>{{item.timedesc | sgChineseConv}}</ion-note>
+    </ion-item>
+  </ion-list>
+  <!--<button ion-button (click)="sendSingleMsg()">发送</button>-->
 </ion-content>

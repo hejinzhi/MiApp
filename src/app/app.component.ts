@@ -9,6 +9,7 @@ import { PatternLockComponent } from './login/pattern-lock/pattern-lock.componen
 import { MessageService } from './message/shared/service/message.service';
 
 import { PluginService } from './core/services/plugin.service';
+import { JMessageService } from './core/services/jmessage.service';
 
 import { OrganizationComponent } from './contact/organization/organization.component';
 
@@ -28,7 +29,7 @@ export class MyAppComponent {
     private keyboard: Keyboard,
     private ionicApp: IonicApp,
     private menuCtrl: MenuController,
-
+    private jMessage: JMessageService,
     private messageservice: MessageService,
     private plugin: PluginService,
     private app: App
@@ -38,6 +39,7 @@ export class MyAppComponent {
     platform.ready().then(() => {
       statusBar.styleDefault();
       splashScreen.hide();
+      this.jMessage.jmessagePlugin = (<any>window).plugins ? (<any>window).plugins.jmessagePlugin || null : null;
       this.messageservice.getContacts();
       this.messageservice.history = this.messageservice.getLocalMessageHistory() ? this.messageservice.getLocalMessageHistory() : [];
 

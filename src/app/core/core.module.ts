@@ -4,9 +4,10 @@ import { HttpModule } from '@angular/http';
 import { BarcodeScanner } from '@ionic-native/barcode-scanner';
 import { Camera } from '@ionic-native/camera';
 import { InAppBrowser } from '@ionic-native/in-app-browser';
+import { SQLite } from '@ionic-native/sqlite';
+import { PhotoViewer } from '@ionic-native/photo-viewer';
 import { CodePush } from '@ionic-native/code-push';
 import { Network } from '@ionic-native/network';
-
 import { MyHttpService } from './services/myHttp.service';
 import { JMessageService } from './services/jmessage.service';
 

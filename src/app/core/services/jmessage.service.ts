@@ -45,27 +45,52 @@ export class JMessageService {
         });
     };
 
+    // 获取当前用户信息
+    getMyInfo(): Promise<any> {
+        return new Promise((resolve, reject) => {
+            this.jmessagePlugin.getMyInfo((suc: any) => {
+                resolve(suc);
+            }, (err: any) => {
+                reject(err);
+            })
+        });
+    };
+
+    // 检查是否已经登录
+    async ifAlreadyLogin(username: string) {
+        try {
+            let userInfo = await this.getUserInfo(username);
+            if (userInfo) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+        catch (err) {
+            return false;
+
+        }
+    };
+
     // auto login登陆前先检查是否已登陆，是，则不需登陆
     async autoLogin(username: string, password: string, is_md5?: boolean) {
         let getInfoSuccess: boolean;
         try {
-            await this.getMyInfo();
-            getInfoSuccess = true;
+            getInfoSuccess = await this.ifAlreadyLogin(username);
+            if (getInfoSuccess) {
+                return getInfoSuccess;
+            }
         }
         catch (err) {
-            // console.log(err);
-            // await this.login(username, password);
             getInfoSuccess = false;
+            return getInfoSuccess;
         }
-        if (!getInfoSuccess) {
-            try {
-                await this.login(username, password);
-            }
-            catch (err) {
-                console.log(err);
-                return new Promise((resolve, reject) => setTimeout(() => reject("This doesn't work!"), 0));
-            }
-        }
+
+
+        let loginFlag = await this.login(username, password);
+        return loginFlag;
+
+
 
     }
 
@@ -73,9 +98,9 @@ export class JMessageService {
     login(username: string, password: string, is_md5?: boolean): Promise<any> {
         return new Promise((resolve, reject) => {
             this.jmessagePlugin.login(username, password, (suc: any) => {
-                resolve('OK');
+                resolve(true);
             }, (err: any) => {
-                resolve(err);
+                resolve(false);
             });
         });
     };
@@ -91,7 +116,7 @@ export class JMessageService {
             this.jmessagePlugin.getUserInfo(username, appkey, (suc: any) => {
                 resolve(suc);
             }, (err: any) => {
-                reject(err);
+                resolve(null);
             });
         });
     };
@@ -100,6 +125,28 @@ export class JMessageService {
     sendSingleTextMessage(username: string, text: string, appKey?: string): Promise<any> {
         return new Promise((resolve, reject) => {
             this.jmessagePlugin.sendSingleTextMessage(username, text, appKey, (suc: any) => {
+                resolve(suc);
+            }, (err: any) => {
+                reject(err);
+            })
+        });
+    };
+
+    // 发送单聊文本并附带额外的信息
+    sendSingleTextMessageWithExtras(username: string, text: string, json: any, appKey?: string): Promise<any> {
+        return new Promise((resolve, reject) => {
+            this.jmessagePlugin.sendSingleTextMessageWithExtras(username, text, json, appKey, (suc: any) => {
+                resolve(suc);
+            }, (err: any) => {
+                reject(err);
+            })
+        });
+    };
+
+    // 发送自定义消息
+    sendSingleCusCustomMessage(username: string, jsonStr: any, appKey?: string): Promise<any> {
+        return new Promise((resolve, reject) => {
+            this.jmessagePlugin.sendSingleCustomMessage(username, jsonStr, appKey, (suc: any) => {
                 resolve(suc);
             }, (err: any) => {
                 reject(err);
@@ -190,16 +237,7 @@ export class JMessageService {
         });
     }
 
-    // 获取当前用户信息
-    getMyInfo(): Promise<any> {
-        return new Promise((resolve, reject) => {
-            this.jmessagePlugin.getMyInfo((suc: any) => {
-                resolve(suc);
-            }, (err: any) => {
-                reject(err);
-            })
-        });
-    };
+
 
     // 更新用户头像
     updateMyAvatar(avatarFileUrl: string): Promise<any> {

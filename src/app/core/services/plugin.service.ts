@@ -18,15 +18,15 @@ export class PluginService {
     private codePush: CodePush,
     private network: Network,
     private platform: Platform
-  ) {}
+  ) { }
 
-  chineseConv(value:string) {
+  chineseConv(value: string) {
     let fontType: string = localStorage.getItem('languageType');
     switch (fontType) {
       case 'simple_Chinese':
-        return sify(JSON.stringify(value)).replace(/^\"/g,'').replace(/\"$/g,'');
+        return sify(JSON.stringify(value)).replace(/^\"/g, '').replace(/\"$/g, '');
       case 'traditional_Chinese':
-        return tify(JSON.stringify(value)).replace(/^\"/g,'').replace(/\"$/g,'');
+        return tify(JSON.stringify(value)).replace(/^\"/g, '').replace(/\"$/g, '');
       default:
         return value;
     }
@@ -43,7 +43,7 @@ export class PluginService {
   }
   confirmUpdate() {
     this.codePush.notifyApplicationReady().then(() => {
-      if(!localStorage.getItem('showConfirmUpdate') || localStorage.getItem('showConfirmUpdate') == '0') return;
+      if (!localStorage.getItem('showConfirmUpdate') || localStorage.getItem('showConfirmUpdate') == '0') return;
       const alert = this.alertCtrl.create({
         title: this.chineseConv('已更新成功'),
         buttons: ['OK']
@@ -52,9 +52,9 @@ export class PluginService {
       this.showConfirmUpdate('0');
     })
   }
-  showConfirmUpdate(ss:string) {
+  showConfirmUpdate(ss: string) {
     // '1' show '0' not show
-    localStorage.setItem('showConfirmUpdate',ss);
+    localStorage.setItem('showConfirmUpdate', ss);
   }
   codePushSync() {
     this.codePush.sync().subscribe((syncStatus) => {
@@ -73,24 +73,24 @@ export class PluginService {
         case SyncStatus.UPDATE_INSTALLED:
           this.showConfirmUpdate('1');
           let confirm = this.alertCtrl.create({
-              title: this.chineseConv(`更新成功`),
-              message: this.chineseConv(`马上重启应用体验最新版本?`),
-              buttons: [
-                {
-                  text: this.chineseConv('取消'),
-                  handler: () => {
+            title: this.chineseConv(`更新成功`),
+            message: this.chineseConv(`马上重启应用体验最新版本?`),
+            buttons: [
+              {
+                text: this.chineseConv('取消'),
+                handler: () => {
 
-                  }
-                },
-                {
-                  text: this.chineseConv('确定'),
-                  handler: () => {
-                    this.codePush.restartApplication();
-                  }
                 }
-              ]
-            });
-            confirm.present();
+              },
+              {
+                text: this.chineseConv('确定'),
+                handler: () => {
+                  this.codePush.restartApplication();
+                }
+              }
+            ]
+          });
+          confirm.present();
           break;
         case SyncStatus.ERROR:
           this.showToast(this.chineseConv('更新失败,请稍后重试'))
@@ -100,12 +100,12 @@ export class PluginService {
       }
     });
   }
-  checkAppForUpdate(auto:boolean = true) {
-    if(!this.isCordova()) return;
+  checkAppForUpdate(auto: boolean = true) {
+    if (!this.isCordova()) return;
     return this.codePush.checkForUpdate().then((apk) => {
-      if(!apk) {
+      if (!apk) {
         this.confirmUpdate();
-        if(!auto) {
+        if (!auto) {
           this.showToast(this.chineseConv('已经是最新版本'))
         }
         return;
@@ -113,7 +113,7 @@ export class PluginService {
       let confirm = this.alertCtrl.create({
         title: this.chineseConv(`检测到应用有更新,是否升级`),
         subTitle: this.chineseConv(`更新内容: ${apk.description}`),
-        message: this.chineseConv(`应用大小: ${(apk.packageSize/Math.pow(1024,2)).toFixed(2)}M`),
+        message: this.chineseConv(`应用大小: ${(apk.packageSize / Math.pow(1024, 2)).toFixed(2)}M`),
         buttons: [
           {
             text: this.chineseConv('取消'),
@@ -134,8 +134,8 @@ export class PluginService {
       console.log(err)
     })
   }
-  confirmWifiTodo(todo:any) {
-    if(!this.isWifi()) {
+  confirmWifiTodo(todo: any) {
+    if (!this.isWifi()) {
       let confirm = this.alertCtrl.create({
         title: this.chineseConv(`警告`),
         message: this.chineseConv(`目前不是在WIFI网络,是否继续下载操作`),
