@@ -7,10 +7,18 @@ import { BehaviorSubject } from 'rxjs/Rx';
 export class DatabaseService {
     database: SQLiteObject;
     private databaseReady: BehaviorSubject<boolean>;
+    plf: string; // 记录是什么平台
 
     constructor(private sqlite: SQLite, private platform: Platform) {
         this.databaseReady = new BehaviorSubject(false);
         this.platform.ready().then(() => {
+
+            if (this.platform.is('ios')) {
+                this.plf = 'ios';
+            } else if (this.platform.is('android')) {
+                this.plf = 'android';
+            }
+
             this.sqlite.create({
                 name: 'message.db',
                 location: 'default'
@@ -19,7 +27,6 @@ export class DatabaseService {
                 if (localStorage.getItem('messageTableAlreadyCreated') === 'true') { }
                 else {
                     this.createMessageTable().then((res) => {
-                        console.log(res, 'create table success');
                         localStorage.setItem('messageTableAlreadyCreated', 'true');
                     });
                 }
@@ -48,6 +55,27 @@ export class DatabaseService {
                 let msgs = [];
                 if (data.rows.length > 0) {
                     for (var i = 0; i < data.rows.length; i++) {
+                        let extra = this.changeStrToJson(data.rows.item(i).EXTRA);
+
+                        if (this.plf === 'ios') { }
+                        else if (this.plf === 'android') {
+                            // let extra: any;
+                            // try {
+                            //     extra = JSON.parse(data.rows.item(i).EXTRA);
+                            // }
+                            // catch (err) {
+                            //     extra = data.rows.item(i).EXTRA;
+                            // }
+                            // if (extra.members) {
+                            //     let extraObj = {};
+                            //     Object.keys(extra.members).map((key) => {
+                            //         extraObj[key] = extra.members[key].value;
+                            //         return extraObj;
+                            //     });
+                            //     console.log(extraObj);
+                            // }
+
+                        }
                         msgs.push({
                             id: data.rows.item(i).ID,
                             toUserName: data.rows.item(i).TO_USER_NAME,
@@ -57,7 +85,7 @@ export class DatabaseService {
                             time: data.rows.item(i).TIME,
                             type: data.rows.item(i).TYPE,
                             unread: data.rows.item(i).UNREAD,
-                            extra: data.rows.item(i).EXTRA
+                            extra: extra
                         });
                     }
                 }
@@ -69,6 +97,28 @@ export class DatabaseService {
 
     }
 
+    // 写这个function的目的是android上接收到jmessage的extra栏位跟ios的不一样
+    // 利用这个function把extra栏位进行转换，从而两个环境extra的数据结构一致
+    changeStrToJson(data: any) {
+        let extra: any;
+        let extraObj = {};
+        try {
+            extra = JSON.parse(data);
+        }
+        catch (err) {
+            extra = data;
+        }
+        if (extra.members) {
+            Object.keys(extra.members).map((key) => {
+                extraObj[key] = extra.members[key].value;
+            });
+            console.log(extraObj);
+            return extraObj;
+        } else {
+            return extra;
+        }
+    }
+
     // 获取消息页面数据
     getMessageList(loginUsername: string, type?: string) {
         let sql: string;
@@ -76,18 +126,18 @@ export class DatabaseService {
             sql = `SELECT   A.*,
          (SELECT   COUNT ( * ) FROM   MOA_LOCAL_MESSAGE WHERE   FROM_USER_NAME = A.FROM_USER_NAME AND UNREAD = 'Y') AS UNREAD_COUNT
          FROM   MOA_LOCAL_MESSAGE A, 
-         (  SELECT   FROM_USER_NAME, MAX (ID) ID
+         (  SELECT   FROM_USER_NAME, MAX (TIME) TIME
                 FROM   MOA_LOCAL_MESSAGE
                 GROUP BY   FROM_USER_NAME,TO_USER_NAME) B
-        WHERE   A.ID = B.ID AND A.TYPE='${type}' ORDER BY A.TIME DESC;`;
+        WHERE   A.TIME = B.TIME AND A.TYPE='${type}' ORDER BY A.TIME DESC;`;
         } else {
             sql = `SELECT   A.*,
          (SELECT   COUNT ( * ) FROM   MOA_LOCAL_MESSAGE WHERE   FROM_USER_NAME = A.FROM_USER_NAME AND UNREAD = 'Y') AS UNREAD_COUNT
          FROM   MOA_LOCAL_MESSAGE A, 
-         (  SELECT   FROM_USER_NAME, MAX (ID) ID
+         (  SELECT   FROM_USER_NAME, MAX (TIME) TIME
                 FROM   MOA_LOCAL_MESSAGE
                 GROUP BY   FROM_USER_NAME,TO_USER_NAME) B
-        WHERE   A.ID = B.ID  ORDER BY A.TIME DESC;`
+        WHERE   A.TIME = B.TIME  ORDER BY A.TIME DESC;`
         }
         return this.database.executeSql(sql, {})
             .then((data) => {
