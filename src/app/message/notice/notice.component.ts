@@ -8,63 +8,74 @@ import { JMessageService } from '../../core/services/jmessage.service';
 import { LanguageConfig } from '../shared/config/language.config';
 
 @Component({
-  selector: 'sg-notice',
-  templateUrl: 'notice.component.html'
+    selector: 'sg-notice',
+    templateUrl: 'notice.component.html'
 })
 
 export class NoticeComponent implements OnInit {
 
-  languageType: string = localStorage.getItem('languageType');
-  languageContent = LanguageConfig.AlertComponent[this.languageType];
+    languageType: string = localStorage.getItem('languageType');
+    languageContent = LanguageConfig.AlertComponent[this.languageType];
 
-  userNickName: string;
-  userName: string;
-  list: any;
-  userinfo: any;
-  alertType: string;
+    fromUserNickName: string;
+    fromUserName: string;
+    list: any;
+    userInfo: any; // 登录人信息
+    alertType: string;
 
-  constructor(public params: NavParams, public messageService: MessageService, public jmessageService: JMessageService) {
-    this.userName = params.get('username');
-    this.userNickName = params.get('userNickName');
-    if (this.userName === "" || typeof this.userName === 'undefined') {
 
-      this.userName = params.get('fromUserName');
+    constructor(
+        public params: NavParams,
+        public messageService: MessageService,
+        public jmessageService: JMessageService) {
+
+        this.fromUserName = params.get('fromUserName');
+        this.fromUserNickName = params.get('fromUserNickName');
+
+        // if (this.fromUserName === "" || typeof this.fromUserName === 'undefined') {
+
+        //   this.fromUserName = params.get('fromUserName');
+        // }
+        // if (this.fromUserNickName === "" || typeof this.fromUserNickName === 'undefined') {
+        //   this.fromUserNickName = params.get('fromUserNickName');
+        // }
+
+        if (this.fromUserName === 'alert') {
+            this.alertType = params.data.content.type;
+        }
     }
-    if (this.userNickName === "" || typeof this.userNickName === 'undefined') {
-      this.userNickName = params.get('fromUserNickName');
+
+    ionViewWillEnter() {
+        setTimeout(() => {
+            this.scroll_down();
+        }, 0);
     }
 
-    if (this.userName === 'alert') {
-      this.alertType = params.data.content.type;
+    ionViewWillLeave() {
+        // this.messageService.setUnreadToZeroByUserName(this.userName, this.alertType);
     }
-  }
 
-  ionViewWillEnter() {
-    setTimeout(() => {
-      this.scroll_down();
-    }, 0);
-  }
+    ngOnInit() {
+        this.userInfo = JSON.parse(localStorage.getItem('currentUser'));
+        this.loadMessage();
 
-  ionViewWillLeave() {
-    this.messageService.setUnreadToZeroByUserName(this.userName, this.alertType);
-  }
-
-  ngOnInit() {
-    this.loadMessage();
-  }
-
-  async loadMessage() {
-    this.userinfo = await this.messageService.getUserInfo();
-    this.list = await this.messageService.getNoticeHistoryByID(this.userName);
-    if (this.userName === 'alert') {
-      this.list = this.list.filter((v: any) => (v.content.type === this.alertType));
     }
-  };
 
-  scroll_down() {
-    var div = document.getElementsByClassName('msg-content');
-    div[0].scrollTop = div[0].scrollHeight;
-  }
+    async loadMessage() {
+
+        this.list = await this.messageService.getMessagesByUsername(this.fromUserName, this.userInfo.username);
+
+
+        // this.list = await this.messageService.getNoticeHistoryByID(this.fromUserName);
+        // if (this.fromUserName === 'alert') {
+        //   this.list = this.list.filter((v: any) => (v.content.type === this.alertType));
+        // }
+    };
+
+    scroll_down() {
+        var div = document.getElementsByClassName('msg-content');
+        div[0].scrollTop = div[0].scrollHeight;
+    }
 
 }
 
