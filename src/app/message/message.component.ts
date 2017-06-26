@@ -49,88 +49,88 @@ export class MessageComponent implements OnInit {
 
   ngOnInit() {
 
-    // this.jmessageService.jmessageOffline = this.jmessageService.onSyncOfflineMessage().subscribe(res => {
+    this.jmessageService.jmessageOffline = this.jmessageService.onSyncOfflineMessage().subscribe(res => {
 
-    //   for (let i = 0; i < res.messageList.length; i++) {
-    //     let _content: any;
+      for (let i = 0; i < res.messageList.length; i++) {
+        let _content: any;
 
-    //     if (res.messageList[i].contentType === 'text') {
-    //       _content = res.messageList[i].content.text;
-    //     } else if (res.messageList[i].contentType === 'image') {
-    //       _content = res.messageList[i].content.localThumbnailPath;
-    //     }
+        if (res.messageList[i].contentType === 'text') {
+          _content = res.messageList[i].content.text;
+        } else if (res.messageList[i].contentType === 'image') {
+          _content = res.messageList[i].content.localThumbnailPath;
+        }
 
-    //     if (res.messageList[i].fromName === 'signlist' || res.messageList[i].fromName === 'news' || res.messageList[i].fromName === 'alert' || res.messageList[i].fromName === 'report') {
-    //       this._type = 'notice';
+        if (res.messageList[i].fromName === 'signlist' || res.messageList[i].fromName === 'news' || res.messageList[i].fromName === 'alert' || res.messageList[i].fromName === 'report') {
+          this._type = 'notice';
 
-    //       let noticecontent: NoticeContent = {
-    //         type: res.messageList[i].content.extras.members.type.value,
-    //         title: res.messageList[i].content.extras.members.title.value,
-    //         content: res.messageList[i].content.extras.members.content.value
-    //       };
+          let noticecontent: NoticeContent = {
+            type: res.messageList[i].content.extras.members.type.value,
+            title: res.messageList[i].content.extras.members.title.value,
+            content: res.messageList[i].content.extras.members.content.value
+          };
 
-    //       _content = noticecontent;
-    //     } else {
-    //       this._type = 'dialogue';
-    //     }
+          _content = noticecontent;
+        } else {
+          this._type = 'dialogue';
+        }
 
-    //     let msg: Message = {
-    //       toUserName: res.messageList[i].targetInfo.userName,
-    //       fromUserName: res.messageList[i].fromName,
-    //       content: _content,
-    //       contentType: res.messageList[i].contentType,
-    //       time: res.messageList[i].createTimeInMillis,
-    //       type: this._type,
-    //       unread: true
-    //     };
+        let msg: Message = {
+          toUserName: res.messageList[i].targetInfo.userName,
+          fromUserName: res.messageList[i].fromName,
+          content: _content,
+          contentType: res.messageList[i].contentType,
+          time: res.messageList[i].createTimeInMillis,
+          type: this._type,
+          unread: true
+        };
 
-    //     this.messageService.history.push(msg);
-    //     this.messageService.setLocalMessageHistory(this.messageService.history);
+        this.messageService.history.push(msg);
+        this.messageService.setLocalMessageHistory(this.messageService.history);
 
-    //     this.refreshData();
-    //     this.ref.detectChanges();
-    //   }
-    // });
+        this.refreshData();
+        this.ref.detectChanges();
+      }
+    });
 
-    // this.jmessageService.jmessageHandler = this.jmessageService.onReceiveMessage().subscribe(res => {
-    //   console.log(res, 999);
-    //   let _content: any;
-    //   if (res.contentType === 'text') {
-    //     _content = res.content.text;
-    //   } else if (res.contentType === 'image') {
-    //     _content = res.content.localThumbnailPath;
-    //   }
+    this.jmessageService.jmessageHandler = this.jmessageService.onReceiveMessage().subscribe(res => {
+      console.log(res, 999);
+      let _content: any;
+      if (res.contentType === 'text') {
+        _content = res.content.text;
+      } else if (res.contentType === 'image') {
+        _content = res.content.localThumbnailPath;
+      }
 
-    //   if (res.fromName === 'signlist' || res.fromName === 'news' || res.fromName === 'alert' || res.fromName === 'report') {
-    //     this._type = 'notice';
-    //     let noticecontent: NoticeContent = {
-    //       type: res.content.extras.members.type.value,
-    //       title: res.content.extras.members.title.value,
-    //       content: res.content.extras.members.content.value
-    //     };
+      if (res.fromName === 'signlist' || res.fromName === 'news' || res.fromName === 'alert' || res.fromName === 'report') {
+        this._type = 'notice';
+        let noticecontent: NoticeContent = {
+          type: res.content.extras.members.type.value,
+          title: res.content.extras.members.title.value,
+          content: res.content.extras.members.content.value
+        };
 
-    //     _content = noticecontent;
-    //   } else {
-    //     this._type = 'dialogue';
-    //   }
+        _content = noticecontent;
+      } else {
+        this._type = 'dialogue';
+      }
 
-    //   let msg: Message = {
-    //     toUserName: res.targetInfo.userName,
-    //     fromUserName: res.fromName,
-    //     content: _content,
-    //     contentType: res.contentType,
-    //     time: res.createTimeInMillis,
-    //     type: this._type,
-    //     unread: true
-    //   };
+      let msg: Message = {
+        toUserName: res.targetInfo.userName,
+        fromUserName: res.fromName,
+        content: _content,
+        contentType: res.contentType,
+        time: res.createTimeInMillis,
+        type: this._type,
+        unread: true
+      };
 
-    //   this.messageService.history.push(msg);
-    //   this.messageService.setLocalMessageHistory(this.messageService.history);
-    //   this.jmessageService.setSingleConversationUnreadMessageCount(res.fromName, '', 0);
-    //   this.refreshData();
-    //   this.ref.detectChanges();
-    //   this.events.publish('msg.onReceiveMessage');
-    // });
+      this.messageService.history.push(msg);
+      this.messageService.setLocalMessageHistory(this.messageService.history);
+      this.jmessageService.setSingleConversationUnreadMessageCount(res.fromName, '', 0);
+      this.refreshData();
+      this.ref.detectChanges();
+      this.events.publish('msg.onReceiveMessage');
+    });
 
   }
 

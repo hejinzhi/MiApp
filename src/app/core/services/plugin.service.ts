@@ -4,7 +4,6 @@ import { BarcodeScanner } from '@ionic-native/barcode-scanner';
 import { Camera, CameraOptions } from '@ionic-native/camera';
 import { CodePush } from '@ionic-native/code-push';
 import { Network } from '@ionic-native/network';
-import { CodePushService } from 'ionic2-code-push';
 import { SyncStatus } from 'ionic-native';
 import { tify, sify } from 'chinese-conv';
 
@@ -18,7 +17,6 @@ export class PluginService {
     private camera: Camera,
     private codePush: CodePush,
     private network: Network,
-    private codePushService: CodePushService,
     private platform: Platform
   ) {}
 
