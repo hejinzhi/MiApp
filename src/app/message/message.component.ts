@@ -89,6 +89,7 @@ export class MessageComponent implements OnInit {
         await this.handleReceiveMessageAndroid(res);
       }
       this.messageListItem = await this.messageService.getMessageHistory(this.userinfo.username, 'dialogue');
+      this.noticeListItem = await this.messageService.getMessageHistory(this.userinfo.username, 'notice');
       this.ref.detectChanges();
       this.events.publish('msg.onReceiveMessage');
     });
@@ -196,12 +197,12 @@ export class MessageComponent implements OnInit {
 
   public sendSingleMsg() {
     // this.jmessageService.sendSingleTextMessageWithExtras('hugh.liang', 'test', { name: 'hejinzhi' });
-    // this.databaseService.deleteAllMessages();
+    this.databaseService.deleteAllMessages();
 
-    this.databaseService.getMessageList(this.userinfo.username, 'notice').then((data) => {
-      console.log(data);
-      console.log(JSON.parse(data[0].extra));
-    });
+    // this.databaseService.getMessageList(this.userinfo.username, 'notice').then((data) => {
+    //   console.log(data);
+    //   console.log(JSON.parse(data[0].extra));
+    // });
 
     // this.databaseService.getAllMessages().then(data => {
     //   console.log(data);

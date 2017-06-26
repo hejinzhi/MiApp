@@ -1,4 +1,4 @@
-import { Component, ViewChild, OnInit } from '@angular/core';
+import { Component, ViewChild, OnInit, ChangeDetectorRef } from '@angular/core';
 import { Tabs, Events } from 'ionic-angular'
 
 import { MessageComponent } from '../message/message.component';
@@ -8,7 +8,7 @@ import { ApplicationComponent } from '../application/application.component';
 import { MeComponent } from '../me/me.component';
 import { MessageService } from '../message/shared/service/message.service';
 import { LanguageConfig } from './shared/config/language.config';
-
+import { DatabaseService } from '../message/shared/service/database.service';
 import { PluginService } from '../core/services/plugin.service';
 
 @Component({
@@ -25,36 +25,36 @@ export class TabsComponent implements OnInit {
   tab4Root = 'MeComponent';
   unreadCount: number;
 
-  constructor(private messageService: MessageService, private events: Events, private plugin:PluginService) {
-    this.events.subscribe('messageUnreadCount', () => {
-      this.changeTabBadge();
-    })
+  constructor(
+    private messageService: MessageService,
+    private events: Events,
+    private plugin: PluginService,
+    private databaseService: DatabaseService,
+    private ref: ChangeDetectorRef,
+  ) {
+    this.events.subscribe('msg.onReceiveMessage', async () => {
+      await this.changeTabBadge();
+      this.ref.detectChanges();
+    });
+
+    this.events.subscribe('msg.onChangeTabBadge', async () => {
+      await this.changeTabBadge();
+      this.ref.detectChanges();
+    });
   }
 
 
   ngOnInit() {
-      this.plugin.checkAppForUpdate();
+    this.plugin.checkAppForUpdate();
   }
 
-  ionViewDidEnter() {
-    this.changeTabBadge();
+  async ionViewDidEnter() {
+    await this.changeTabBadge();
   }
 
   async changeTabBadge() {
-    // this.unreadCount = 0;
-    // let hisobj = await this.messageService.getMessageHistory();
-    // for (let i = 0; i < hisobj.length; i++) {
-    //   this.unreadCount = this.unreadCount + hisobj[i].unreadCount;
-    // }
-
-    // setTimeout(() => {
-    //   var div: any = document.getElementsByTagName('ion-badge');
-    //   if (parseInt(div[0].innerHTML) <= 0) {
-    //     div[0].style.display = "none";
-    //   } else {
-    //     div[0].style.display = "block";
-    //   }
-    // }, 0)
+    let data = await this.databaseService.getAllUnreadCount();
+    this.unreadCount = data.rows.item(0).COUNT;
   }
 
 }
