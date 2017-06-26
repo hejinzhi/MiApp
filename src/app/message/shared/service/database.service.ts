@@ -46,6 +46,10 @@ export class DatabaseService {
         TIME INTEGER, TYPE VARCHAR2(100),UNREAD VARCHAR2(100),EXTRA VARCHAR2(1000));`, {});
     }
 
+    getAllUnreadCount() {
+        return this.database.executeSql(`SELECT COUNT(*) COUNT FROM MOA_LOCAL_MESSAGE WHERE UNREAD='Y';`, {});
+    }
+
     getMessagesByUsername(fromUsername: string, toUsername: string) {
         let sql = `SELECT * FROM MOA_LOCAL_MESSAGE WHERE 
         (FROM_USER_NAME ='${fromUsername}' AND TO_USER_NAME ='${toUsername}' ) OR (TO_USER_NAME='${fromUsername}' AND FROM_USER_NAME='${toUsername}' ) AND TYPE='dialogue' ORDER BY TIME;`;
@@ -56,26 +60,6 @@ export class DatabaseService {
                 if (data.rows.length > 0) {
                     for (var i = 0; i < data.rows.length; i++) {
                         let extra = this.changeStrToJson(data.rows.item(i).EXTRA);
-
-                        if (this.plf === 'ios') { }
-                        else if (this.plf === 'android') {
-                            // let extra: any;
-                            // try {
-                            //     extra = JSON.parse(data.rows.item(i).EXTRA);
-                            // }
-                            // catch (err) {
-                            //     extra = data.rows.item(i).EXTRA;
-                            // }
-                            // if (extra.members) {
-                            //     let extraObj = {};
-                            //     Object.keys(extra.members).map((key) => {
-                            //         extraObj[key] = extra.members[key].value;
-                            //         return extraObj;
-                            //     });
-                            //     console.log(extraObj);
-                            // }
-
-                        }
                         msgs.push({
                             id: data.rows.item(i).ID,
                             toUserName: data.rows.item(i).TO_USER_NAME,
