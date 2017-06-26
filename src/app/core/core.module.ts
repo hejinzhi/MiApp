@@ -30,7 +30,8 @@ import { ValidateService } from './services/validate.service';
       ArrayUtilService,
       InAppBrowser,
       CodePush,
-      Network
+      Network,
+      SQLite
     ],
     exports: []
 })

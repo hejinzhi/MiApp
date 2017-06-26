@@ -70,24 +70,24 @@ export class SetComponent {
   }
   reStartApp() {
     let confirm = this.alertCtrl.create({
-        title: this.languageContent.reStartAppAlertTitle,
-        message: this.languageContent.reStartAppAlertMes,
-        buttons: [
-          {
-            text: this.languageContent.cancel,
-            handler: () => {
+      title: this.languageContent.reStartAppAlertTitle,
+      message: this.languageContent.reStartAppAlertMes,
+      buttons: [
+        {
+          text: this.languageContent.cancel,
+          handler: () => {
 
-            }
-          },
-          {
-            text: this.languageContent.confirm,
-            handler: () => {
-              this.plugin.getCodePush().restartApplication();
-            }
           }
-        ]
-      });
-      confirm.present();
+        },
+        {
+          text: this.languageContent.confirm,
+          handler: () => {
+            this.plugin.getCodePush().restartApplication();
+          }
+        }
+      ]
+    });
+    confirm.present();
   }
   // 注销用户
   logout(): void {
@@ -131,7 +131,9 @@ export class SetComponent {
           handler: () => {
             // that.jmessage.jmessageHandler.unsubscribe();
             that.jmessage.loginOut();
-            that.platform.exitApp();
+            if (that.platform.is('android')) {
+              that.platform.exitApp();
+            }
           }
         }
       ]
