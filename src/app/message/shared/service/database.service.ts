@@ -60,7 +60,7 @@ export class DatabaseService {
     }
 
     getMessagesByUsername(fromUsername: string, toUsername: string) {
-        let sql = `SELECT * FROM MOA_LOCAL_MESSAGE WHERE 
+        let sql = `SELECT * FROM MOA_LOCAL_MESSAGE WHERE
         (FROM_USER_NAME ='${fromUsername}' AND TO_USER_NAME ='${toUsername}' ) OR (TO_USER_NAME='${fromUsername}' AND FROM_USER_NAME='${toUsername}' ) AND TYPE='dialogue' ORDER BY TIME;`;
 
         return this.database.executeSql(sql, {})
@@ -118,7 +118,9 @@ export class DatabaseService {
         if (type) {
             sql = `SELECT   A.*,
          (SELECT   COUNT ( * ) FROM   MOA_LOCAL_MESSAGE WHERE   FROM_USER_NAME = A.FROM_USER_NAME AND UNREAD = 'Y') AS UNREAD_COUNT
+
          FROM   MOA_LOCAL_MESSAGE A, 
+
          (  SELECT   FROM_USER_NAME, MAX (TIME) TIME
                 FROM   MOA_LOCAL_MESSAGE
                 GROUP BY   FROM_USER_NAME,TO_USER_NAME) B
@@ -126,7 +128,9 @@ export class DatabaseService {
         } else {
             sql = `SELECT   A.*,
          (SELECT   COUNT ( * ) FROM   MOA_LOCAL_MESSAGE WHERE   FROM_USER_NAME = A.FROM_USER_NAME AND UNREAD = 'Y') AS UNREAD_COUNT
+
          FROM   MOA_LOCAL_MESSAGE A, 
+
          (  SELECT   FROM_USER_NAME, MAX (TIME) TIME
                 FROM   MOA_LOCAL_MESSAGE
                 GROUP BY   FROM_USER_NAME,TO_USER_NAME) B
@@ -190,7 +194,7 @@ export class DatabaseService {
 
     addMessage(toUsername: string, fromUserName: string, content: string, contentType: string, time: number, type: string, unread: string, extra: string) {
         let data = [toUsername, fromUserName, content, contentType, time, type, unread, extra];
-        return this.database.executeSql(`INSERT INTO MOA_LOCAL_MESSAGE (TO_USER_NAME, FROM_USER_NAME, CONTENT,CONTENT_TYPE,TIME,TYPE,UNREAD,EXTRA) 
+        return this.database.executeSql(`INSERT INTO MOA_LOCAL_MESSAGE (TO_USER_NAME, FROM_USER_NAME, CONTENT,CONTENT_TYPE,TIME,TYPE,UNREAD,EXTRA)
         VALUES (?,?,?,?,?,?,?,?)`, data).then(data => {
                 return data;
             }, err => {
