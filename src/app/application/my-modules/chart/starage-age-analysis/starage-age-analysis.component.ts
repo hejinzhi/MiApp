@@ -13,6 +13,7 @@ export class StarageAgeAnalysisComponent {
 
   isHere: boolean;
   pageY: number;
+  pageX: number;
   @ViewChild('main1') myContent: any;
   fontFamily: string[] = ['Helvetica', 'Tahoma', 'Arial', 'STXihei', '华文细黑', 'Microsoft YaHei', '微软雅黑', 'sans-serif'];
   constructor(
@@ -23,8 +24,9 @@ export class StarageAgeAnalysisComponent {
   ) { }
 
   ionViewDidLoad() {
+    this.addWidth();
     let option1: any = this.chartService.initDoubleYChart('IDL年资分析', {
-      legend_data: ['0-30 days AMT', '30-60 days AMT', '61-90 days AMT', '91-120 days AMT', '>120 days AMT', '0-30RATE', '31-60RATE', '61-90RATE', '91-120RATE', '120RATE'],
+      legend_data: ['0-30 days AMT', '30-60 days AMT', '61-90 days AMT', '91-120 days AMT', '>120 days AMT', '0-30RATE', '31-60RATE', '61-90RATE', '91-120RATE', '>120RATE'],
       xAxis_data: ['201701', '201702', '201703', '201704', '201705'],
       series: [{
         name: '0-30 days AMT',
@@ -113,13 +115,14 @@ export class StarageAgeAnalysisComponent {
       this.chartService.makeChart('main2', option2);
 
     let option3 = this.chartService.initPieChart('201705 MSL庫存帳齡', {
-      legend_data: ['0-30RATE', '31-60RATE', '61-90RATE', '91-120RATE', '120RATE'],
+      legend_data: ['0-30RATE', '31-60RATE', '61-90RATE', '91-120RATE', '>120RATE'],
       series: [{
         name: '库存比例', data: [{ value: 137531714, name: '0-30RATE' }, { value: 69500338, name: '31-60RATE' },
           { value: 53017785, name: '61-90RATE' }, { value: 70152847, name: '91-120RATE' }, { value: 221514561, name: '120RATE' }]
       }]
     })
-    this.chartService.makeChart('main3', option3)
+    this.chartService.makeChart('main3', option3);
+
   }
 
   reFresh() {
@@ -146,5 +149,17 @@ export class StarageAgeAnalysisComponent {
   }
   draftEnd() {
     this.myContent.nativeElement.style.marginTop = '0px';
+  }
+  addWidth() {
+    let content:any = document.querySelector('.storage .scroll-content');
+    content.addEventListener('touchstart',(e:any)=> {
+      this.pageX = e.touches[0].pageX;
+    });
+    content.addEventListener('touchmove',(e:any)=> {
+      content.style.marginLeft = (e.touches[0].pageX - this.pageX) +'px';
+    });
+    content.addEventListener('touchend',(e:any) => {
+      content.style.marginLeft = 0+'px';
+    })
   }
 }

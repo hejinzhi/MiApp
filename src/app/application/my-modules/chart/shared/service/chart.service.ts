@@ -115,7 +115,7 @@ export class ChartService {
     },
     tooltip : {
         trigger: 'item',
-        formatter: "{a} <br/>{b} : {c} ({d}%)"
+        formatter: "{a} <br/>{b} : <br/>{c} ({d}%)"
     },
     grid: {
       left: '3%',
