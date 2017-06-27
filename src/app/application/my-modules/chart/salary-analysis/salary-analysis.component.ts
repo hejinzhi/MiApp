@@ -21,7 +21,7 @@ export class SalaryAnalysisComponent {
   ) { }
 
   ionViewDidLoad() {
-    this.chartService.initSingleYChart('main1','IDL年资分析',{
+    let option1 = this.chartService.initSingleYChart('IDL年资分析',{
       legend_data:['工程','管理','研发','专业'],
       xAxis_data:['0-1年','1-2年','2-3年','3-4年','4-5年','5-7年','7-9年','9年以上'],
       series:[{
@@ -47,7 +47,10 @@ export class SalaryAnalysisComponent {
       }]
     });
 
-    this.chartService.initPieChart('main2','IDL年资比例',{
+    this.chartService.makeChart('main1',option1);
+
+
+    let option2 = this.chartService.initPieChart('IDL年资比例',{
       legend_data:['0-1年','1-2年','2-3年','3-4年','4-5年','5-7年','7-9年','9年以上'],
       series:[
         {
@@ -59,8 +62,9 @@ export class SalaryAnalysisComponent {
         }
        ]
     })
-
-    this.chartService.initSingleYChart('main3','DL年资分析',{
+    this.chartService.makeChart('main2',option2);
+    
+    let option3 = this.chartService.initSingleYChart('DL年资分析',{
       legend_data:['DL'],
       xAxis_data: ['0-1年','1-2年','2-3年','3-4年','4-5年','5-7年','7-9年','9年以上'],
       series:[{name:'DL',type:'bar',
@@ -69,8 +73,9 @@ export class SalaryAnalysisComponent {
       ]
     }]
     })
+    this.chartService.makeChart('main3',option3);
 
-    this.chartService.initPieChart('main4','DL年资比例',{
+    let option4 = this.chartService.initPieChart('DL年资比例',{
       legend_data:['0-1年','1-2年','2-3年','3-4年','4-5年','5-7年','7-9年','9年以上'],
       series:[
         {
@@ -82,6 +87,7 @@ export class SalaryAnalysisComponent {
         }
        ]
     })
+    this.chartService.makeChart('main4',option4);
   }
   reFresh() {
     this.ionViewDidLoad();

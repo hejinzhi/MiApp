@@ -11,7 +11,7 @@
 
 
 <ion-content>
-  <div id="main1" class="chart">
+  <div id="main1" class="chart" (touchend)="draftEnd()" (touchstart)="draftStart($event)" (touchmove)="draft($event)" #main1>
 
   </div>
   <div id="main2" class="chart">

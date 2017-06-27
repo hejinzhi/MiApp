@@ -35,11 +35,12 @@ export class LoginComponent {
       localStorage.setItem('currentUser', JSON.stringify(this.currentUser));
       let res;
       res = await this.myHttp.post(LoginConfig.loginUrl, { userName: this.registerCredentials.username, password: this.registerCredentials.password }, true);
-      let jmessageLogin = await this.jmessageService.autoLogin(this.registerCredentials.username, this.registerCredentials.password);
-      if (!jmessageLogin) {
-        this.showError('Jmessage Login Error: ' + jmessageLogin);
-        return;
-      };
+      // let jmessageLogin = await this.jmessageService.autoLogin(this.registerCredentials.username, this.registerCredentials.password);
+      // let jmessageLogin = await this.jmessageService.autoLogin(this.registerCredentials.username, 'pass');
+      // if (!jmessageLogin) {
+      //   this.showError('Jmessage Login Error: ' + jmessageLogin);
+      //   return;
+      // };
       let token = res.json().Token;
       if (token) {
         this.currentUser.avatarUrl = res.json().User.AVATAR_URL;

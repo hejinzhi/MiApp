@@ -31,6 +31,7 @@ export class MessageComponent implements OnInit {
   loading: Loading;
   onSyncOfflineMessageHandler: Subscription;
   userinfo: any; //登录人信息
+  plf: string; // 记录是什么平台
 
 
   constructor(public navCtrl: NavController,
@@ -49,57 +50,53 @@ export class MessageComponent implements OnInit {
 
 
   ionViewWillEnter() {
-    this.refreshData();
+    // this.refreshData();
+  }
+
+  ionViewDidLeave() {
+    this.jmessageService.jmessageOffline.unsubscribe();
   }
 
   ngOnInit() {
     this.userinfo = JSON.parse(localStorage.getItem('currentUser'));
+    if (this.platform.is('ios')) {
+      this.plf = 'ios';
+    } else if (this.platform.is('android')) {
+      this.plf = 'android';
+    }
 
     // 读取离线消息
-    this.jmessageService.jmessageOffline = this.jmessageService.onSyncOfflineMessage().subscribe(res => {
-
+    this.jmessageService.jmessageOffline = this.jmessageService.onSyncOfflineMessage().subscribe(async (res) => {
       for (let i = 0; i < res.messageList.length; i++) {
-        let _content: string;
-
-        if (res.messageList[i].contentType === 'text') {
-          _content = res.messageList[i].content.text;
-        } else if (res.messageList[i].contentType === 'image') {
-          _content = res.messageList[i].content.localThumbnailPath;
+        if (this.plf === 'ios') {
+          await this.handleReceiveMessageIos(res.messageList[i]);
+        } else if (this.plf === 'android') {
+          await this.handleReceiveMessageAndroid(res.messageList[i]);
         }
 
-        if (res.messageList[i].fromName === 'signlist' || res.messageList[i].fromName === 'news' || res.messageList[i].fromName === 'alert' || res.messageList[i].fromName === 'report') {
-          this._type = 'notice';
-          _content = JSON.parse(res.messageList[i].content.text);
-        } else {
-          this._type = 'dialogue';
-        }
-
-        let msg: Message = {
-          toUserName: res.messageList[i].targetInfo.userName,
-          fromUserName: res.messageList[i].fromName,
-          content: _content,
-          contentType: res.messageList[i].contentType,
-          time: res.messageList[i].createTimeInMillis,
-          type: this._type,
-          unread: true
-        };
-
-        this.messageService.history.push(msg);
-        this.messageService.setLocalMessageHistory(this.messageService.history);
-
-        this.refreshData();
-        this.ref.detectChanges();
       }
+      this.messageListItem = await this.messageService.getMessageHistory(this.userinfo.username, 'dialogue');
+      this.ref.detectChanges();
+      this.events.publish('msg.onReceiveMessage');
     });
 
     // 监听是否有消息推送过来
     this.jmessageService.jmessageHandler = this.jmessageService.onReceiveMessage().subscribe(async (res) => {
-      await this.handleReceiveMessage(res);
+      console.log(res);
+      if (this.plf === 'ios') {
+        await this.handleReceiveMessageIos(res);
+      } else if (this.plf === 'android') {
+        await this.handleReceiveMessageAndroid(res);
+      }
+      this.messageListItem = await this.messageService.getMessageHistory(this.userinfo.username, 'dialogue');
+      this.noticeListItem = await this.messageService.getMessageHistory(this.userinfo.username, 'notice');
+      this.ref.detectChanges();
+      this.events.publish('msg.onReceiveMessage');
     });
 
   }
 
-  async handleReceiveMessage(res: any) {
+  async handleReceiveMessageAndroid(res: any) {
     let _content: string;
     if (res.contentType === 'text') {
       _content = res.content.text;
@@ -109,7 +106,7 @@ export class MessageComponent implements OnInit {
 
     if (res.fromName === 'signlist' || res.fromName === 'news' || res.fromName === 'alert' || res.fromName === 'report') {
       this._type = 'notice';
-      _content = JSON.parse(res.content.text);
+      _content = res.content.text;
     } else {
       this._type = 'dialogue';
     }
@@ -125,14 +122,41 @@ export class MessageComponent implements OnInit {
     };
 
     await this.databaseService.addMessage(res.targetInfo.userName, res.fromName, _content, res.contentType, res.createTimeInMillis, this._type, 'Y', JSON.stringify(res.content.extras))
-    this.messageListItem = await this.messageService.getMessageHistory(this.userinfo.username, 'dialogue');
-    this.ref.detectChanges();
-    this.events.publish('msg.onReceiveMessage');
+  }
+
+  async handleReceiveMessageIos(res: any) {
+    let _content: string;
+    if (res.content.msg_type === 'text') {
+      _content = res.content.msg_body.text;
+    } else if (res.content.msg_type === 'image') {
+      _content = res.content.localThumbnailPath;
+    }
+
+    if (res.content.from_id === 'signlist' || res.content.from_id === 'news' || res.content.from_id === 'alert' || res.content.from_id === 'report') {
+      this._type = 'notice';
+      _content = res.content.msg_body.text;
+    } else {
+      this._type = 'dialogue';
+    }
+
+    let msg: Message = {
+      toUserName: res.content.target_id,
+      fromUserName: res.content.from_id,
+      content: _content,
+      contentType: res.content.msg_type,
+      time: res.content.create_time,
+      type: this._type,
+      unread: true
+    };
+
+    await this.databaseService.addMessage(res.content.target_id, res.content.from_id, _content, res.content.msg_type, res.content.create_time, this._type, 'Y', JSON.stringify(res.content.msg_body.extras))
+
   }
 
 
 
   async refreshData() {
+    this.noticeListItem = await this.messageService.getMessageHistory(this.userinfo.username, 'notice');
     this.messageListItem = await this.messageService.getMessageHistory(this.userinfo.username, 'dialogue');
   };
 
@@ -174,5 +198,15 @@ export class MessageComponent implements OnInit {
   public sendSingleMsg() {
     // this.jmessageService.sendSingleTextMessageWithExtras('hugh.liang', 'test', { name: 'hejinzhi' });
     this.databaseService.deleteAllMessages();
+
+    // this.databaseService.getMessageList(this.userinfo.username, 'notice').then((data) => {
+    //   console.log(data);
+    //   console.log(JSON.parse(data[0].extra));
+    // });
+
+    // this.databaseService.getAllMessages().then(data => {
+    //   console.log(data);
+    // });
+
   }
 }

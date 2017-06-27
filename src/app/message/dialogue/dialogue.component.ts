@@ -64,11 +64,12 @@ export class DialogueComponent implements OnInit {
     this.jmessageservice.enterSingleConversation(this.userName);
   }
 
-  ionViewWillLeave() {
+  async ionViewWillLeave() {
     this.events.unsubscribe('msg.onReceiveMessage');
     if (this.unreadCount > 0) {
-      this.messageservice.setUnreadToZeroByUserName(this.userName);
+      await this.messageservice.setUnreadToZeroByUserName(this.userName);
       this.jmessageservice.setSingleConversationUnreadMessageCount(this.userName, null, 0);
+      this.events.publish('msg.onChangeTabBadge');
     }
     this.jmessageservice.exitConversation();
   }
@@ -88,7 +89,7 @@ export class DialogueComponent implements OnInit {
 
   isPlus() {
     this.onPlus = false;
-    if (/Android [4-9]/.test(navigator.appVersion)) {
+    if (/Android [4-6]/.test(navigator.appVersion)) {
       window.addEventListener("resize", function () {
         if (document.activeElement.tagName == "INPUT" || document.activeElement.tagName == "TEXTAREA") {
           window.setTimeout(function () {
@@ -172,3 +173,4 @@ export class DialogueComponent implements OnInit {
   getLocation() {
   };
 }
+

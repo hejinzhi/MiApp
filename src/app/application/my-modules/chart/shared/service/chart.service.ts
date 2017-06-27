@@ -9,7 +9,12 @@ export class ChartService {
 
   constructor(private myHttp: MyHttpService) {  }
 
-  initSingleYChart(name: string, title: string,
+  makeChart(id:string,option:any) {
+    let myChart = echarts.init(document.getElementById(id));
+    myChart.setOption(option);
+    return myChart;
+  }
+  initSingleYChart(title: string,
     data:{
       legend_data:string[],
       xAxis_data:string[],
@@ -20,13 +25,10 @@ export class ChartService {
           value: number
         }[],
       }[]
-    },
-  color: string[] = ['#3773F7', '#EEB174'], fontFamily: string[] = this.fontFamily) {
-    let myChart = echarts.init(document.getElementById(name));
-    // 绘制图表
+    }, isY_value:boolean = true,fontFamily: string[] = this.fontFamily) {
     let mySeries:any = data.series;
     mySeries[0].barGap = 0;
-    myChart.setOption({
+    let option:any = {
       title: {
         text: title, textStyle: {
           fontFamily: fontFamily,
@@ -51,7 +53,15 @@ export class ChartService {
         bottom: '3%',
         containLabel: true
       },
-      xAxis: [
+      series: mySeries,
+      textStyle: {
+        fontFamily: fontFamily,
+        fontSize: 18
+      }
+    }
+    if(isY_value) {
+      option.yAxis = [{type: 'value'}]
+      option.xAxis = [
         {
           type: 'category',
           data: data.xAxis_data,
@@ -59,22 +69,23 @@ export class ChartService {
             alignWithLabel: true
           }
         }
-      ],
-      yAxis: [
+      ]
+    } else {
+      option.xAxis = [{type: 'value'}]
+      option.yAxis = [
         {
-          type: 'value'
+          type: 'category',
+          data: data.xAxis_data,
+          axisTick: {
+            alignWithLabel: true
+          }
         }
-      ],
-      series: mySeries,
-      textStyle: {
-        fontFamily: fontFamily,
-        fontSize: 18
-      }
-    });
-    return myChart;
+      ]
+    }
+    return option;
   }
 
-  initPieChart(name: string, title: string,
+  initPieChart(title: string,
     data:{
       legend_data:string[],
       series:{
@@ -83,8 +94,6 @@ export class ChartService {
       }[]
     }
     ,fontFamily:string[] =this.fontFamily) {
-    let myChart = echarts.init(document.getElementById(name));
-    // 绘制图表
     let mySeries:any = data.series;
     mySeries[0].type = 'pie';
     mySeries[0].itemStyle = {
@@ -95,7 +104,7 @@ export class ChartService {
       }
     };
     mySeries[0].center =['50%','60%'];
-    myChart.setOption({
+    let option = {
     title : {
         text: title,
         textStyle: {
@@ -126,11 +135,11 @@ export class ChartService {
         data: data.legend_data
     },
     series : mySeries
-   });
-    return myChart;
+   }
+    return option;
   }
 
-  initDoubleYChart(name: string, title: string,
+  initDoubleYChart(title: string,
     data:{
       legend_data:string[],
       xAxis_data:string[],
@@ -142,13 +151,20 @@ export class ChartService {
         }[],
       }[]
     },
-  data2:any,color: string[] = ['#3773F7', '#EEB174'], fontFamily: string[] = this.fontFamily) {
-    let myChart = echarts.init(document.getElementById(name));
-    // 绘制图表
+  data2:{
+    name: string,
+    type: string,
+    data: {
+      value: number
+    }[],
+  }[],color: string[] = ['#3773F7', '#EEB174'], fontFamily: string[] = this.fontFamily) {
+    data2 = data2.map((res:any) => {
+      res.yAxisIndex = 1;
+      return res;
+    })
     let mySeries:any = data.series;
     mySeries[0].barGap = 0;
-    mySeries[0].center = ['50%','70%'];
-    myChart.setOption({
+    let option = {
       title: {
         text: title, textStyle: {
           fontFamily: fontFamily,
@@ -172,7 +188,6 @@ export class ChartService {
         left: '3%',
         right: '4%',
         bottom: '3%',
-        height: '60%',
         containLabel: true
       },
       xAxis: [
@@ -209,9 +224,6 @@ export class ChartService {
 
            splitLine: {
            	show: false
-           },
-           axisLabel : {
-               formatter: '{value} %'
            }
         }
       ],
@@ -220,8 +232,8 @@ export class ChartService {
         fontFamily: fontFamily,
         fontSize: 18
       }
-    });
-    return myChart;
+    }
+    return option;
   }
 
 }

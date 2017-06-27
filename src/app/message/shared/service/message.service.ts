@@ -431,7 +431,7 @@ export class MessageService {
 
   async setUnreadToZeroByUserName(username: string) {
     await this.databaseService.setUnreadToZeroByUserName(username);
-    this.events.publish('messageUnreadCount');
+    // this.events.publish('messageUnreadCount');
   }
 
   usersInfo2 = [
@@ -455,4 +455,3 @@ export class MessageService {
   ];
 
 }
-
