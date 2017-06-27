@@ -6,6 +6,7 @@ import { JMessageService } from '../core/services/jmessage.service';
 import { UserModel } from '../shared/models/user.model';
 import { LoginConfig } from './shared/config/login.config';
 import { TabsComponent } from '../tabs/tabs.component';
+import { PluginService } from '../core/services/plugin.service';
 
 @Component({
   selector: 'sg-login',
@@ -19,6 +20,7 @@ export class LoginComponent {
     private loadingCtrl: LoadingController,
     private myHttp: MyHttpService,
     private jmessageService: JMessageService,
+    private pluginService: PluginService
   ) {
   }
 
@@ -34,13 +36,23 @@ export class LoginComponent {
       this.currentUser = new UserModel(this.registerCredentials.username, this.registerCredentials.password);
       localStorage.setItem('currentUser', JSON.stringify(this.currentUser));
       let res;
-      res = await this.myHttp.post(LoginConfig.loginUrl, { userName: this.registerCredentials.username, password: this.registerCredentials.password }, true);
+      try {
+        res = await this.myHttp.post(LoginConfig.loginUrl, { userName: this.registerCredentials.username, password: this.registerCredentials.password }, true);
+      }
+      catch (err) {
+        this.showError('Username or password error,please try again.');
+      }
+
       // let jmessageLogin = await this.jmessageService.autoLogin(this.registerCredentials.username, this.registerCredentials.password);
-      let jmessageLogin = await this.jmessageService.autoLogin(this.registerCredentials.username, 'pass');
-      if (!jmessageLogin) {
-        this.showError('Jmessage Login Error: ' + jmessageLogin);
-        return;
-      };
+      if (this.pluginService.isCordova()) {
+        let jmessageLogin = await this.jmessageService.autoLogin(this.registerCredentials.username, 'pass');
+        if (!jmessageLogin) {
+          this.showError('Jmessage Login Error: ' + jmessageLogin);
+          return;
+        };
+      }
+
+
       let token = res.json().Token;
       if (token) {
         this.currentUser.avatarUrl = res.json().User.AVATAR_URL;

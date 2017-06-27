@@ -49,7 +49,10 @@ export class TabsComponent implements OnInit {
   }
 
   async ionViewDidEnter() {
-    await this.changeTabBadge();
+    if (this.plugin.isCordova()) {
+      await this.changeTabBadge();
+    }
+
   }
 
   async changeTabBadge() {
