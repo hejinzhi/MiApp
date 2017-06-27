@@ -13,6 +13,7 @@ import { AlertComponent } from './alert/alert.component';
 import { MyHttpService } from '../core/services/myHttp.service';
 import { LanguageConfig } from './shared/config/language.config';
 import { DatabaseService } from './shared/service/database.service';
+import { PluginService } from '../core/services/plugin.service';
 
 @Component({
   selector: 'sg-message',
@@ -44,55 +45,63 @@ export class MessageComponent implements OnInit {
     public appCtrl: App,
     private myHttp: MyHttpService,
     private events: Events,
-    private databaseService: DatabaseService
+    private databaseService: DatabaseService,
+    private pluginService: PluginService
   ) {
   }
 
 
   ionViewWillEnter() {
-    // this.refreshData();
+    if (this.pluginService.isCordova()) {
+      this.refreshData();
+    }
+
   }
 
   ionViewDidLeave() {
-    this.jmessageService.jmessageOffline.unsubscribe();
+    if (this.pluginService.isCordova()) {
+      this.jmessageService.jmessageOffline.unsubscribe();
+    }
   }
 
   ngOnInit() {
-    this.userinfo = JSON.parse(localStorage.getItem('currentUser'));
-    if (this.platform.is('ios')) {
-      this.plf = 'ios';
-    } else if (this.platform.is('android')) {
-      this.plf = 'android';
-    }
+    if (this.pluginService.isCordova()) {
+      this.userinfo = JSON.parse(localStorage.getItem('currentUser'));
+      if (this.platform.is('ios')) {
+        this.plf = 'ios';
+      } else if (this.platform.is('android')) {
+        this.plf = 'android';
+      }
 
-    // 读取离线消息
-    this.jmessageService.jmessageOffline = this.jmessageService.onSyncOfflineMessage().subscribe(async (res) => {
-      for (let i = 0; i < res.messageList.length; i++) {
-        if (this.plf === 'ios') {
-          await this.handleReceiveMessageIos(res.messageList[i]);
-        } else if (this.plf === 'android') {
-          await this.handleReceiveMessageAndroid(res.messageList[i]);
+      // 读取离线消息
+      this.jmessageService.jmessageOffline = this.jmessageService.onSyncOfflineMessage().subscribe(async (res) => {
+        for (let i = 0; i < res.messageList.length; i++) {
+          if (this.plf === 'ios') {
+            await this.handleReceiveMessageIos(res.messageList[i]);
+          } else if (this.plf === 'android') {
+            await this.handleReceiveMessageAndroid(res.messageList[i]);
+          }
+
         }
+        this.messageListItem = await this.messageService.getMessageHistory(this.userinfo.username, 'dialogue');
+        this.ref.detectChanges();
+        this.events.publish('msg.onReceiveMessage');
+      });
 
-      }
-      this.messageListItem = await this.messageService.getMessageHistory(this.userinfo.username, 'dialogue');
-      this.ref.detectChanges();
-      this.events.publish('msg.onReceiveMessage');
-    });
-
-    // 监听是否有消息推送过来
-    this.jmessageService.jmessageHandler = this.jmessageService.onReceiveMessage().subscribe(async (res) => {
-      console.log(res);
-      if (this.plf === 'ios') {
-        await this.handleReceiveMessageIos(res);
-      } else if (this.plf === 'android') {
-        await this.handleReceiveMessageAndroid(res);
-      }
-      this.messageListItem = await this.messageService.getMessageHistory(this.userinfo.username, 'dialogue');
-      this.noticeListItem = await this.messageService.getMessageHistory(this.userinfo.username, 'notice');
-      this.ref.detectChanges();
-      this.events.publish('msg.onReceiveMessage');
-    });
+      // 监听是否有消息推送过来
+      this.jmessageService.jmessageHandler = this.jmessageService.onReceiveMessage().subscribe(async (res) => {
+        console.log(res);
+        if (this.plf === 'ios') {
+          await this.handleReceiveMessageIos(res);
+        } else if (this.plf === 'android') {
+          await this.handleReceiveMessageAndroid(res);
+        }
+        this.messageListItem = await this.messageService.getMessageHistory(this.userinfo.username, 'dialogue');
+        this.noticeListItem = await this.messageService.getMessageHistory(this.userinfo.username, 'notice');
+        this.ref.detectChanges();
+        this.events.publish('msg.onReceiveMessage');
+      });
+    }
 
   }
 

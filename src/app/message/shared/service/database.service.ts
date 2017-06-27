@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Platform } from 'ionic-angular';
 import { SQLite, SQLiteObject } from '@ionic-native/sqlite';
 import { BehaviorSubject } from 'rxjs/Rx';
+import { PluginService } from '../../../core/services/plugin.service';
 
 @Injectable()
 export class DatabaseService {
@@ -9,30 +10,38 @@ export class DatabaseService {
     private databaseReady: BehaviorSubject<boolean>;
     plf: string; // 记录是什么平台
 
-    constructor(private sqlite: SQLite, private platform: Platform) {
-        this.databaseReady = new BehaviorSubject(false);
-        // this.platform.ready().then(() => {
-        //
-        //     if (this.platform.is('ios')) {
-        //         this.plf = 'ios';
-        //     } else if (this.platform.is('android')) {
-        //         this.plf = 'android';
-        //     }
-        //
-        //     this.sqlite.create({
-        //         name: 'message.db',
-        //         location: 'default'
-        //     }).then((db: SQLiteObject) => {
-        //         this.database = db;
-        //         if (localStorage.getItem('messageTableAlreadyCreated') === 'true') { }
-        //         else {
-        //             this.createMessageTable().then((res) => {
-        //                 localStorage.setItem('messageTableAlreadyCreated', 'true');
-        //             });
-        //         }
-        //         this.databaseReady.next(true);
-        //     });
-        // });
+    constructor(
+        private sqlite: SQLite,
+        private platform: Platform,
+        private pluginService: PluginService
+    ) {
+        if (this.pluginService.isCordova()) {
+            this.databaseReady = new BehaviorSubject(false);
+            this.platform.ready().then(() => {
+
+                if (this.platform.is('ios')) {
+                    this.plf = 'ios';
+                } else if (this.platform.is('android')) {
+                    this.plf = 'android';
+                }
+
+                this.sqlite.create({
+                    name: 'message.db',
+                    location: 'default'
+                }).then((db: SQLiteObject) => {
+                    this.database = db;
+                    if (localStorage.getItem('messageTableAlreadyCreated') === 'true') { }
+                    else {
+                        this.createMessageTable().then((res) => {
+                            localStorage.setItem('messageTableAlreadyCreated', 'true');
+                        });
+                    }
+                    this.databaseReady.next(true);
+                });
+
+            });
+        }
+
     }
 
     setUnreadToZeroByUserName(username: string) {
@@ -109,7 +118,9 @@ export class DatabaseService {
         if (type) {
             sql = `SELECT   A.*,
          (SELECT   COUNT ( * ) FROM   MOA_LOCAL_MESSAGE WHERE   FROM_USER_NAME = A.FROM_USER_NAME AND UNREAD = 'Y') AS UNREAD_COUNT
-         FROM   MOA_LOCAL_MESSAGE A,
+
+         FROM   MOA_LOCAL_MESSAGE A, 
+
          (  SELECT   FROM_USER_NAME, MAX (TIME) TIME
                 FROM   MOA_LOCAL_MESSAGE
                 GROUP BY   FROM_USER_NAME,TO_USER_NAME) B
@@ -117,7 +128,9 @@ export class DatabaseService {
         } else {
             sql = `SELECT   A.*,
          (SELECT   COUNT ( * ) FROM   MOA_LOCAL_MESSAGE WHERE   FROM_USER_NAME = A.FROM_USER_NAME AND UNREAD = 'Y') AS UNREAD_COUNT
-         FROM   MOA_LOCAL_MESSAGE A,
+
+         FROM   MOA_LOCAL_MESSAGE A, 
+
          (  SELECT   FROM_USER_NAME, MAX (TIME) TIME
                 FROM   MOA_LOCAL_MESSAGE
                 GROUP BY   FROM_USER_NAME,TO_USER_NAME) B
