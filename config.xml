@@ -106,8 +106,5 @@
   <plugin name="jmessage-phonegap-plugin" spec="~2.4.9">
     <variable name="APP_KEY" value="c35bdfd0449ed461f7adad98"/>
   </plugin>
-  <plugin name="jpush-phonegap-plugin" spec="~3.1.8">
-    <variable name="APP_KEY" value="c35bdfd0449ed461f7adad98"/>
-  </plugin>
   <icon src="resources/android/icon/drawable-xhdpi-icon.png"/>
 </widget>

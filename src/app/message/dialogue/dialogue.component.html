@@ -5,7 +5,7 @@
 </ion-header>
 
 <ion-content class='page-content' #content (touchstart)="closeKeyboard()">
-  <div class='msg-content' [ngClass]="onPlus && plf==='android' ?'up android-height' :'down'" (tap)="isPlus()">
+  <div class='msg-content' [ngClass]="{'up':onPlus,'android-height':plf==='android'}" (tap)="isPlus()">
     <div *ngFor="let item of list">
       <div class="msgarea">
         <div [ngClass]="item.toUserName === userinfo.username ? 'other' : 'me'" [ngSwitch]="item.contentType">

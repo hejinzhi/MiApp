@@ -42,7 +42,7 @@ export class MyAppComponent {
       statusBar.styleDefault();
       splashScreen.hide();
       this.jMessage.jmessagePlugin = (<any>window).plugins ? (<any>window).plugins.jmessagePlugin || null : null;
-      this.jPushService.jPushHandler = (<any>window).plugins ? (<any>window).plugins.jPushPlugin || null : null;
+      this.jPushService.jPushPlugin = (<any>window).plugins ? (<any>window).plugins.jPushPlugin || null : null;
       this.messageservice.getContacts();
       this.messageservice.history = this.messageservice.getLocalMessageHistory() ? this.messageservice.getLocalMessageHistory() : [];
 
