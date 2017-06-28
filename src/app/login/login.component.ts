@@ -52,7 +52,6 @@ export class LoginComponent {
         };
       }
 
-
       let token = res.json().Token;
       if (token) {
         this.currentUser.avatarUrl = res.json().User.AVATAR_URL;

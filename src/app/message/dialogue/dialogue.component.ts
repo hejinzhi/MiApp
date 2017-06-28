@@ -80,17 +80,16 @@ export class DialogueComponent implements OnInit {
 
   async ionViewWillLeave() {
     this.events.unsubscribe('msg.onReceiveMessage');
-    if (this.unreadCount > 0) {
-      await this.messageservice.setUnreadToZeroByUserName(this.userName);
-      this.jmessageservice.setSingleConversationUnreadMessageCount(this.userName, null, 0);
-      this.events.publish('msg.onChangeTabBadge');
-    }
+    await this.messageservice.setUnreadToZeroByUserName(this.userName);
+    this.jmessageservice.setSingleConversationUnreadMessageCount(this.userName, null, 0);
+    this.events.publish('msg.onChangeTabBadge');
     this.jmessageservice.exitConversation();
   }
 
   ionViewWillEnter() {
     setTimeout(() => {
-      this.content.scrollToBottom();
+      // this.content.scrollToBottom();
+      this.scroll_down();
     }, 10);
   }
 
@@ -103,7 +102,7 @@ export class DialogueComponent implements OnInit {
 
   isPlus() {
     this.onPlus = false;
-    if (/Android [4-6]/.test(navigator.appVersion)) {
+    if (/Android [4-7]/.test(navigator.appVersion)) {
       window.addEventListener("resize", function () {
         if (document.activeElement.tagName == "INPUT" || document.activeElement.tagName == "TEXTAREA") {
           window.setTimeout(function () {
@@ -126,9 +125,14 @@ export class DialogueComponent implements OnInit {
   };
 
   scroll_down() {
+    let that = this;
     if (this.plf === 'android') {
       var div = document.getElementsByClassName('msg-content');
       div[0].scrollTop = div[0].scrollHeight;
+    } else {
+      setTimeout(function () {
+        that.content.scrollToBottom();
+      }, 0);
     }
 
   }
@@ -154,7 +158,7 @@ export class DialogueComponent implements OnInit {
       "type": "dialogue",
       "unread": 'N'
     }];
-    await this.databaseService.addMessage(msg[0].toUserName, msg[0].fromUserName, msg[0].content, msg[0].contentType, msg[0].time, msg[0].type, msg[0].unread, null);
+    await this.databaseService.addMessage(msg[0].toUserName, msg[0].fromUserName, msg[0].content, msg[0].contentType, msg[0].time, msg[0].type, msg[0].unread, null, null);
 
     if (type === 1) {
       this.jmessageservice.sendSingleTextMessage(this.userName, content);
@@ -166,7 +170,8 @@ export class DialogueComponent implements OnInit {
     this.list.push(msg[0])
     this.input_text = '';
     setTimeout(function () {
-      that.content.scrollToBottom();
+      // that.content.scrollToBottom();
+      that.scroll_down();
     }, 0);
 
   }

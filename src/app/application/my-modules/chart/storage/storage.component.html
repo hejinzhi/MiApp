@@ -1,0 +1,25 @@
+<ion-header>
+
+  <ion-navbar>
+    <ion-title>ERP-庫存管理</ion-title>
+  </ion-navbar>
+
+</ion-header>
+
+
+<ion-content>
+  <ion-list class="myList">
+    <button ion-item (tap)='quit()'>
+    存貨周轉天數(月報)
+    </button>
+    <button ion-item (tap)='starage_age()'>
+    庫存賬齡分析(月報)
+    </button>
+    <button ion-item (tap)='quit()'>
+    OBS庫存分析(週報)
+    </button>
+    <button ion-item (tap)='quit()'>
+    OBS PO分析(週報)
+    </button>
+  </ion-list>
+</ion-content>

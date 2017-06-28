@@ -1,9 +1,8 @@
 import { Component } from '@angular/core';
 import { NavController, NavParams, IonicPage } from 'ionic-angular';
-import * as echarts from 'echarts';
 
 import { PluginService }   from '../../../../core/services/plugin.service';
-
+import { ChartService } from '../shared/service/chart.service';
 
 @IonicPage()
 @Component({
@@ -18,10 +17,11 @@ export class SalaryAnalysisComponent {
     public navCtrl: NavController,
     public navParams: NavParams,
     private plugin: PluginService,
+    private chartService: ChartService
   ) { }
 
   ionViewDidLoad() {
-    this.initSingleYChart('main1','IDL年资分析',{
+    let option1 = this.chartService.initSingleYChart('IDL年资分析',{
       legend_data:['工程','管理','研发','专业'],
       xAxis_data:['0-1年','1-2年','2-3年','3-4年','4-5年','5-7年','7-9年','9年以上'],
       series:[{
@@ -47,7 +47,10 @@ export class SalaryAnalysisComponent {
       }]
     });
 
-    this.initPieChart('main2','IDL年资比例',{
+    this.chartService.makeChart('main1',option1);
+
+
+    let option2 = this.chartService.initPieChart('IDL年资比例',{
       legend_data:['0-1年','1-2年','2-3年','3-4年','4-5年','5-7年','7-9年','9年以上'],
       series:[
         {
@@ -59,8 +62,9 @@ export class SalaryAnalysisComponent {
         }
        ]
     })
-
-    this.initSingleYChart('main3','DL年资分析',{
+    this.chartService.makeChart('main2',option2);
+    
+    let option3 = this.chartService.initSingleYChart('DL年资分析',{
       legend_data:['DL'],
       xAxis_data: ['0-1年','1-2年','2-3年','3-4年','4-5年','5-7年','7-9年','9年以上'],
       series:[{name:'DL',type:'bar',
@@ -69,8 +73,9 @@ export class SalaryAnalysisComponent {
       ]
     }]
     })
+    this.chartService.makeChart('main3',option3);
 
-    this.initPieChart('main4','DL年资比例',{
+    let option4 = this.chartService.initPieChart('DL年资比例',{
       legend_data:['0-1年','1-2年','2-3年','3-4年','4-5年','5-7年','7-9年','9年以上'],
       series:[
         {
@@ -82,127 +87,20 @@ export class SalaryAnalysisComponent {
         }
        ]
     })
+    this.chartService.makeChart('main4',option4);
   }
   reFresh() {
     this.ionViewDidLoad();
   }
   ionViewWillEnter() {
     this.isHere = true;
-    window.addEventListener('resize',() =>this.reFresh());
+    window.addEventListener('resize',() =>this.resize());
   }
   resize() {
-
+    if(!this.isHere) return;
+    this.ionViewDidLoad();
   }
   ionViewWillLeave() {
     this.isHere = false;
-  }
-  initSingleYChart(name: string, title: string,
-    data:{
-      legend_data:string[],
-      xAxis_data:string[],
-      series: {
-        name: string,
-        type: string,
-        data: {
-          value: number
-        }[],
-      }[]
-    },
-  color: string[] = ['#3773F7', '#EEB174'], fontFamily: string[] = this.fontFamily) {
-    let myChart = echarts.init(document.getElementById(name));
-    // 绘制图表
-    let mySeries:any = data.series;
-    mySeries[0].barGap = 0;
-    myChart.setOption({
-      title: {
-        text: title, textStyle: {
-          fontFamily: fontFamily,
-          fontSize: 18
-        },
-        x:'center'
-      },
-      tooltip: {
-        trigger: 'axis'
-      },
-      legend: {
-        data: data.legend_data,
-        top: '6%',
-        textStyle: {
-          fontFamily: fontFamily,
-          fontSize: 16
-        }
-      },
-      grid: {
-        left: '3%',
-        right: '4%',
-        bottom: '3%',
-        containLabel: true
-      },
-      xAxis: [
-        {
-          type: 'category',
-          data: data.xAxis_data,
-          axisTick: {
-            alignWithLabel: true
-          }
-        }
-      ],
-      yAxis: [
-        {
-          type: 'value'
-        }
-      ],
-      series: mySeries,
-      textStyle: {
-        fontFamily: fontFamily,
-        fontSize: 18
-      }
-    });
-    return myChart;
-  }
-
-  initPieChart(name: string, title: string,
-    data:{
-      legend_data:string[],
-      series:{
-        name: string,
-        data:{value:number, name: string}[]
-      }[]
-    }
-    ,fontFamily:string[] =this.fontFamily) {
-    let myChart = echarts.init(document.getElementById(name));
-    // 绘制图表
-    let mySeries:any = data.series;
-    mySeries[0].type = 'pie';
-    mySeries[0].itemStyle = {
-      emphasis: {
-          shadowBlur: 10,
-          shadowOffsetX: 0,
-          shadowColor: 'rgba(0, 0, 0, 0.5)'
-      }
-    };
-    mySeries[0].center =['50%','60%'];
-    myChart.setOption({
-    title : {
-        text: title,
-        textStyle: {
-          fontFamily: fontFamily,
-          fontSize: 18
-        },
-        x:'center'
-    },
-    tooltip : {
-        trigger: 'item',
-        formatter: "{a} <br/>{b} : {c} ({d}%)"
-    },
-    legend: {
-        orient: 'horizontal',
-        left: 'left',
-        top: '6%',
-        data: data.legend_data
-    },
-    series : mySeries
-   });
-    return myChart;
   }
 }
