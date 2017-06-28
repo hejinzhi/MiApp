@@ -101,7 +101,7 @@ export class DatabaseService {
         catch (err) {
             extra = data;
         }
-        if (extra.members) {
+        if (extra && extra.members) {
             Object.keys(extra.members).map((key) => {
                 extraObj[key] = extra.members[key].value;
             });

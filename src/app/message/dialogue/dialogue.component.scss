@@ -1,18 +1,21 @@
 sg-dialogue {
     $fontcolor: #7b7b7b;
     $activecolor: #13b113;
-    .pag-content {
-        .scroll-content {
-            overflow-y: hidden;
-        }
+    .page-content {
+        
+        height: 100%;
+        overflow: scroll;
+        
     }
     .msg-content {
-        height: 93%;
         padding: 10px 16px 0 16px;
         overflow-y: scroll;
         &.up {
             height: 78%;
         }
+    }
+    .android-height{
+        height:93%;
     }
     .msgarea {
         padding: 10px 0px;
@@ -109,7 +112,7 @@ sg-dialogue {
     }
     .input {
         color: $fontcolor;
-        height: 7.5%;
+        // height: 7.5%;
         width: 100%;
         border-top: 1px solid #d8d8d8;
         background-color: #ededed;

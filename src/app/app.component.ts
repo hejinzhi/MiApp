@@ -10,6 +10,7 @@ import { MessageService } from './message/shared/service/message.service';
 
 import { PluginService } from './core/services/plugin.service';
 import { JMessageService } from './core/services/jmessage.service';
+import { JPushService } from './core/services/jpush.service'
 
 import { OrganizationComponent } from './contact/organization/organization.component';
 
@@ -32,7 +33,8 @@ export class MyAppComponent {
     private jMessage: JMessageService,
     private messageservice: MessageService,
     private plugin: PluginService,
-    private app: App
+    private app: App,
+    private jPushService: JPushService
   ) {
 
     this.appInit();
@@ -40,6 +42,7 @@ export class MyAppComponent {
       statusBar.styleDefault();
       splashScreen.hide();
       this.jMessage.jmessagePlugin = (<any>window).plugins ? (<any>window).plugins.jmessagePlugin || null : null;
+      this.jPushService.jPushHandler = (<any>window).plugins ? (<any>window).plugins.jPushPlugin || null : null;
       this.messageservice.getContacts();
       this.messageservice.history = this.messageservice.getLocalMessageHistory() ? this.messageservice.getLocalMessageHistory() : [];
 

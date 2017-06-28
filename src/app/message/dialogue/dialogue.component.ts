@@ -1,7 +1,6 @@
-
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, ViewChild } from '@angular/core';
 import { Subscription } from 'rxjs/Rx';
-import { NavParams, Events } from 'ionic-angular';
+import { NavParams, Events, Content, Platform } from 'ionic-angular';
 import { Camera, CameraOptions } from '@ionic-native/camera';
 import { Keyboard } from '@ionic-native/keyboard';
 
@@ -9,7 +8,7 @@ import { MessageService } from '../shared/service/message.service';
 import { JMessageService } from '../../core/services/jmessage.service';
 import { LanguageConfig } from '../shared/config/language.config';
 import { DatabaseService } from '../shared/service/database.service';
-
+import { KeyboardAttachDirective } from '../shared/directive/KeyboardAttachDirective';
 
 @Component({
   selector: 'sg-dialogue',
@@ -18,6 +17,7 @@ import { DatabaseService } from '../shared/service/database.service';
 
 
 export class DialogueComponent implements OnInit {
+  @ViewChild(Content) content: Content;
   languageType: string = localStorage.getItem('languageType');
   languageContent = LanguageConfig.DialogueComponent[this.languageType];
   list: any;
@@ -30,6 +30,9 @@ export class DialogueComponent implements OnInit {
   unreadCount: number; //未读消息数，如果大于0，退出dialogue页面时把未读消息更新为已读。否则不更新
 
   jmessageHandler: Subscription; //接收句柄，再view被关闭的时候取消订阅，否则对已关闭的view进行数据脏检查会报错
+  keyboardOpen: boolean;
+  msgContent: string;
+  plf: string;
 
 
   constructor(private messageservice: MessageService,
@@ -39,16 +42,26 @@ export class DialogueComponent implements OnInit {
     public keyboard: Keyboard,
     public camera: Camera,
     private events: Events,
+    private platform: Platform,
     private databaseService: DatabaseService) {
 
     this.userName = params.get('fromUserName');
     this.userNickName = params.get('fromUserNickName');
     this.unreadCount = params.get('unreadCount');
+
+
   }
 
-  ngOnInit() {
+  async ngOnInit() {
+    if (this.platform.is('ios')) {
+      this.plf = 'ios';
+    } else if (this.platform.is('android')) {
+      this.plf = 'android';
+    }
+    this.keyboard.hideKeyboardAccessoryBar(true);
+    this.keyboard.disableScroll(true);
     this.userinfo = JSON.parse(localStorage.getItem('currentUser'));
-    this.loadMessage();
+    await this.loadMessage();
   }
 
 
@@ -57,11 +70,12 @@ export class DialogueComponent implements OnInit {
       this.messageservice.getMessagesByUsername(this.userName, this.userinfo.username).then((data) => {
         this.list = data;
         this.ref.detectChanges();
-        this.scroll_down();
+        this.content.scrollToBottom();
       });
     });
 
     this.jmessageservice.enterSingleConversation(this.userName);
+
   }
 
   async ionViewWillLeave() {
@@ -76,14 +90,14 @@ export class DialogueComponent implements OnInit {
 
   ionViewWillEnter() {
     setTimeout(() => {
-      this.scroll_down();
-    }, 0);
+      this.content.scrollToBottom();
+    }, 10);
   }
 
   clickPlus() {
     this.onPlus = !this.onPlus;
     setTimeout(() => {
-      this.scroll_down();
+      this.content.scrollToBottom();
     }, 0);
   }
 
@@ -97,12 +111,14 @@ export class DialogueComponent implements OnInit {
           }, 0);
         }
       })
+
+      this.keyboard.onKeyboardShow().subscribe(() => {
+        setTimeout(() => {
+          this.scroll_down();
+        }, 10);
+      })
     }
-    this.keyboard.onKeyboardShow().subscribe(() => {
-      setTimeout(() => {
-        this.scroll_down();
-      }, 10);
-    })
+
   }
 
   async loadMessage() {
@@ -110,13 +126,17 @@ export class DialogueComponent implements OnInit {
   };
 
   scroll_down() {
-    var div = document.getElementsByClassName('msg-content');
-    div[0].scrollTop = div[0].scrollHeight;
+    if (this.plf === 'android') {
+      var div = document.getElementsByClassName('msg-content');
+      div[0].scrollTop = div[0].scrollHeight;
+    }
+
   }
 
   //type: 1是文字，2是圖片
   async sendMessage(type: number, content: string) {
     let contentType: string;
+    let that = this;
 
     if (type === 1) {
       contentType = "text";
@@ -145,6 +165,10 @@ export class DialogueComponent implements OnInit {
     msg = this.messageservice.leftJoin(msg, this.messageservice.allUserInfo);
     this.list.push(msg[0])
     this.input_text = '';
+    setTimeout(function () {
+      that.content.scrollToBottom();
+    }, 0);
+
   }
 
   getPhoto(type: number) {
@@ -172,5 +196,24 @@ export class DialogueComponent implements OnInit {
 
   getLocation() {
   };
+
+  onBlur(event: any) {
+    if (this.keyboardOpen) {
+      event.target.focus()
+    }
+  }
+
+  keyup(event: any) {
+    this.msgContent = event.target.innerText
+  }
+
+  onFocus(event: any) {
+    this.keyboardOpen = true
+  }
+
+  closeKeyboard() {
+    this.keyboardOpen = false
+    this.keyboard.close()
+  }
 }
 
