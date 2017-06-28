@@ -66,11 +66,9 @@ export class DialogueComponent implements OnInit {
 
   async ionViewWillLeave() {
     this.events.unsubscribe('msg.onReceiveMessage');
-    if (this.unreadCount > 0) {
-      await this.messageservice.setUnreadToZeroByUserName(this.userName);
-      this.jmessageservice.setSingleConversationUnreadMessageCount(this.userName, null, 0);
-      this.events.publish('msg.onChangeTabBadge');
-    }
+    await this.messageservice.setUnreadToZeroByUserName(this.userName);
+    this.jmessageservice.setSingleConversationUnreadMessageCount(this.userName, null, 0);
+    this.events.publish('msg.onChangeTabBadge');
     this.jmessageservice.exitConversation();
   }
 
@@ -89,7 +87,7 @@ export class DialogueComponent implements OnInit {
 
   isPlus() {
     this.onPlus = false;
-    if (/Android [4-6]/.test(navigator.appVersion)) {
+    if (/Android [4-9]/.test(navigator.appVersion)) {
       window.addEventListener("resize", function () {
         if (document.activeElement.tagName == "INPUT" || document.activeElement.tagName == "TEXTAREA") {
           window.setTimeout(function () {
@@ -134,7 +132,7 @@ export class DialogueComponent implements OnInit {
       "type": "dialogue",
       "unread": 'N'
     }];
-    await this.databaseService.addMessage(msg[0].toUserName, msg[0].fromUserName, msg[0].content, msg[0].contentType, msg[0].time, msg[0].type, msg[0].unread, null);
+    await this.databaseService.addMessage(msg[0].toUserName, msg[0].fromUserName, msg[0].content, msg[0].contentType, msg[0].time, msg[0].type, msg[0].unread, null, null);
 
     if (type === 1) {
       this.jmessageservice.sendSingleTextMessage(this.userName, content);

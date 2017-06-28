@@ -1,6 +1,5 @@
-
-import { Component, OnInit } from '@angular/core';
-import { NavParams, NavController } from 'ionic-angular';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { NavParams, NavController, Events } from 'ionic-angular';
 
 import { MessageService } from '../shared/service/message.service';
 import { JMessageService } from '../../core/services/jmessage.service';
@@ -39,23 +38,39 @@ export class AlertComponent implements OnInit {
   sfcs_length: number;
   ims_length: number;
 
-  constructor(public navCtrl: NavController, public params: NavParams, public messageService: MessageService, public jmessageService: JMessageService) {
-    this.userName = params.get('username');
-    this.userNickName = params.get('userNickName');
+  constructor(public navCtrl: NavController,
+    public params: NavParams,
+    public messageService: MessageService,
+    public jmessageService: JMessageService,
+    private ref: ChangeDetectorRef,
+    private events: Events) {
+    this.userName = params.get('fromUserName');
+    this.userNickName = params.get('fromUserNickName');
   }
 
   ngOnInit() {
-    this.userinfo = this.messageService.getUserInfo();
-    this.loadMessage();
+    this.userinfo = JSON.parse(localStorage.getItem('currentUser'));
   }
 
   ionViewWillEnter() {
     this.loadMessage();
   }
 
-  async loadMessage() {
+  ionViewDidEnter() {
+    this.events.subscribe('msg.onReceiveMessage', async () => {
+      await this.loadMessage();
+      this.ref.detectChanges();
+    });
+  }
 
-    this.list = await this.messageService.getNoticeHistoryByID(this.userName);
+  async ionViewWillLeave() {
+    this.events.unsubscribe('msg.onReceiveMessage');
+    this.events.publish('msg.onChangeTabBadge');
+  }
+
+  async loadMessage() {
+    this.list = await this.messageService.getMessagesByUsername(this.userName, this.userinfo.username);
+    console.log(this.list);
     this.att_unread = this.getUnreadCount('att');
     this.pro_unread = this.getUnreadCount('pro');
     this.sal_unread = this.getUnreadCount('sal');
@@ -63,7 +78,7 @@ export class AlertComponent implements OnInit {
     this.inv_unread = this.getUnreadCount('inv');
     this.fin_unread = this.getUnreadCount('fin');
     this.sfcs_unread = this.getUnreadCount('sfcs');
-    this.sal_unread = this.getUnreadCount('sal');
+    this.ims_unread = this.getUnreadCount('ims');
     this.att_length = this.getAlertTypeCount('att');
     this.pro_length = this.getAlertTypeCount('pro');
     this.sal_length = this.getAlertTypeCount('sal');
@@ -71,19 +86,19 @@ export class AlertComponent implements OnInit {
     this.inv_length = this.getAlertTypeCount('inv');
     this.fin_length = this.getAlertTypeCount('fin');
     this.sfcs_length = this.getAlertTypeCount('sfcs');
-    this.sal_length = this.getAlertTypeCount('sal');
+    this.ims_length = this.getAlertTypeCount('ims');
   };
 
   getUnreadCount(type: string) {
-    return this.list.filter((v: any) => (v.content.type === type && v.unread === true)).length;
+    return this.list.filter((v: any) => (v.childType === type && v.unread === 'Y')).length;
   }
 
   getAlertTypeCount(type: string) {
-    return this.list.filter((v: any) => (v.content.type === type)).length;
+    return this.list.filter((v: any) => (v.childType === type)).length;
   }
 
   goToNoticePage(type: string) {
-    let item: any = this.list.filter((v: any) => (v.content.type === type));
+    let item: any = this.list.filter((v: any) => (v.childType === type));
 
     if ((Array.isArray(item) && item.length === 0) || (Object.prototype.isPrototypeOf(item) && Object.keys(item).length === 0)) {
       console.log('no message');
