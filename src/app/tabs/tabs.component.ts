@@ -24,6 +24,7 @@ export class TabsComponent implements OnInit {
   tab3Root = ContactComponent;
   tab4Root = 'MeComponent';
   unreadCount: number;
+  userinfo: any; //登录人信息
 
   constructor(
     private messageService: MessageService,
@@ -46,6 +47,7 @@ export class TabsComponent implements OnInit {
 
   ngOnInit() {
     this.plugin.checkAppForUpdate();
+    this.userinfo = JSON.parse(localStorage.getItem('currentUser'));
   }
 
   async ionViewDidEnter() {
@@ -56,7 +58,7 @@ export class TabsComponent implements OnInit {
   }
 
   async changeTabBadge() {
-    let data = await this.databaseService.getAllUnreadCount();
+    let data = await this.databaseService.getAllUnreadCount(this.userinfo.username);
     this.unreadCount = data.rows.item(0).COUNT;
   }
 

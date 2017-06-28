@@ -5,7 +5,7 @@
 </ion-header>
 <ion-content class="page-content">
     <ion-list>
-        <ion-item (tap)="goToNoticePage('att')" *ngIf="att_length>0">{{languageContent.att}}
+         <ion-item (tap)="goToNoticePage('att')" *ngIf="att_length>0">{{languageContent.att}}
             <ion-note item-right class="item-count" *ngIf="att_unread>0">{{att_unread}}</ion-note>
         </ion-item>
         <ion-item (tap)="goToNoticePage('pro')" *ngIf="pro_length>0">{{languageContent.pro}}

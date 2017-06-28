@@ -12,7 +12,8 @@
                     <ng-template [ngSwitchCase]="'text'">
                         <div class="msg">
                             <span [ngClass]="item.toUserName === userinfo.username ? ' arrow_l_int' : ' arrow_r_int'"></span>
-                            <span [ngClass]="item.toUserName === userinfo.username ? ' arrow_l_out' : ' arrow_r_out'"></span>{{item.content | sgChineseConv}}
+                            <span [ngClass]="item.toUserName === userinfo.username ? ' arrow_l_out' : ' arrow_r_out'"></span>
+                            <div [innerHTML]="item.content | sgChangeSpace | sgChineseConv "></div>
                         </div>
                     </ng-template>
                     <ng-template [ngSwitchCase]="'image'"><img src={{item.content}} class='img_content'></ng-template>
