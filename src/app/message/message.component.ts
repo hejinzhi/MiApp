@@ -97,13 +97,14 @@ export class MessageComponent implements OnInit {
         } else if (this.plf === 'android') {
           await this.handleReceiveMessageAndroid(res);
         }
-      this.messageListItem = await this.messageService.getMessageHistory(this.userinfo.username, 'dialogue');
-      this.noticeListItem = await this.messageService.getMessageHistory(this.userinfo.username, 'notice');
-      this.ref.detectChanges();
-      this.events.publish('msg.onReceiveMessage');
-      this.events.publish('msg.onChangeTabBadge');
-    });
+        this.messageListItem = await this.messageService.getMessageHistory(this.userinfo.username, 'dialogue');
+        this.noticeListItem = await this.messageService.getMessageHistory(this.userinfo.username, 'notice');
+        this.ref.detectChanges();
+        this.events.publish('msg.onReceiveMessage');
+        this.events.publish('msg.onChangeTabBadge');
+      });
 
+    }
   }
 
   async handleReceiveMessageAndroid(res: any) {
@@ -227,4 +228,9 @@ export class MessageComponent implements OnInit {
     });
 
   }
+
+  public deleteAllMsgs() {
+    this.databaseService.deleteAllMessages();
+  }
 }
+
