@@ -3,9 +3,8 @@
     <ion-title>{{userNickName | sgChineseConv}}</ion-title>
   </ion-navbar>
 </ion-header>
-
 <ion-content class='page-content' #content (touchstart)="closeKeyboard()">
-  <div class='msg-content' [ngClass]="{'up':onPlus,'android-height':plf==='android'}" (tap)="isPlus()">
+  <div class='msg-content' [ngClass]="{'up':onPlus,'android-height': plf==='android'}" (tap)="isPlus()">
     <div *ngFor="let item of list">
       <div class="msgarea">
         <div [ngClass]="item.toUserName === userinfo.username ? 'other' : 'me'" [ngSwitch]="item.contentType">
@@ -23,7 +22,6 @@
       </div>
     </div>
   </div>
-
   <div class="input" id="input" [ngClass]="onPlus?'up':'down'" *ngIf="plf ==='android'">
     <div class="input_layout">
       <span class="iconfontyyy input_icon voice">&#xe68b;</span>
@@ -59,9 +57,7 @@
       </div>
     </div>
   </div>
-
 </ion-content>
-
 <ion-footer [keyboardAttach]="content" class="messagebar" *ngIf="plf === 'ios' ">
   <div class="input" id="input" [ngClass]="onPlus?'up':'down'">
     <div class="input_layout">
@@ -98,5 +94,4 @@
       </div>
     </div>
   </div>
-
 </ion-footer>
