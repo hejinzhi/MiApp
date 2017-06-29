@@ -25,7 +25,7 @@ export class LoginComponent {
   }
 
   loading: Loading;
-  registerCredentials = { username: 'hugh.liang', password: 'pass' };
+  registerCredentials = { username: 'jinzhi.he', password: 'pass' };
   currentUser: UserModel;
 
   public async login() {
@@ -51,7 +51,7 @@ export class LoginComponent {
           return;
         };
       }
-      
+
       let token = res.json().Token;
       if (token) {
         this.currentUser.avatarUrl = res.json().User.AVATAR_URL;
