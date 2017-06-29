@@ -1,47 +1,47 @@
 sg-message {
-    .list-avatar-page {
-        ion-note {
-            font-size: 12px;
-            align-self: flex-start;
-            margin-top: 14px;
-        }
-        .list-ios {
-            margin: -1px 0 0px 0;
-        }
-        .grid-footer {
-            height: 10px;
-            background-color: #f7f7f7;
-        }
-        .img-header {
-            width: 56px;
-            height: 56px;
-            margin: 8px 16px 8px 0;
-            position: relative;
-            .img {
-                width: 56px;
-                height: 56px;
-            }
-            .badge {
-                z-index: 10;
-                position: absolute;
-                background-color: red;
-                height: 18px;
-                width: 18px;
-                line-height: 18px;
-                border-radius: 10px;
-                top: -5px;
-                right: -5px;
-                text-align: center;
-                font-size: 12px;
-                color: white;
-                overflow: hidden;
-            }
-        }
-        .name {
-            font-size: 16px;
-            display: inline-block;
-            top: 0;
-            padding: 0px 0px 8px 0px;
-        }
+  .list-avatar-page {
+    ion-note {
+      font-size: 12px;
+      align-self: flex-start;
+      margin-top: 14px;
     }
+    .list-ios {
+      margin: -1px 0 0px 0;
+    }
+    .grid-footer {
+      height: 10px;
+      background-color: #f7f7f7;
+    }
+    .img-header {
+      width: 56px;
+      height: 56px;
+      margin: 8px 16px 8px 0;
+      position: relative;
+      .img {
+        width: 56px;
+        height: 56px;
+      }
+      .badge {
+        z-index: 10;
+        position: absolute;
+        background-color: red;
+        height: 18px;
+        width: 18px;
+        line-height: 18px;
+        border-radius: 10px;
+        top: -5px;
+        right: -5px;
+        text-align: center;
+        font-size: 12px;
+        color: white;
+        overflow: hidden;
+      }
+    }
+    .name {
+      font-size: 16px;
+      display: inline-block;
+      top: 0;
+      padding: 0px 0px 8px 0px;
+    }
+  }
 }

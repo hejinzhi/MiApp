@@ -24,6 +24,7 @@ export class DialogueComponent implements OnInit {
   input_text: string;
   userinfo: any;
   onPlus: boolean = false;
+  selectable: number;
 
   userName: string;
   userNickName: string;

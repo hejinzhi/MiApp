@@ -9,13 +9,19 @@
             <div class="list-time">
                 <div class="list-time-content">{{item.time | sgTimeDesc | sgChineseConv}}</div>
             </div>
-            <ion-card>
+            <ion-card [ngSwitch]="item.extra.content_type">
                 <ion-card-header class="card-header">
                     {{item.extra.title | sgChineseConv}}
                 </ion-card-header>
-                <ion-card-content class="card-content" [innerHTML]="item.extra.content | sgChangeSpace | sgChineseConv ">
-                </ion-card-content>
-                <!--<div>{{item.extra.c}}</div>-->
+                <ng-template [ngSwitchCase]="'text'">
+                    <ion-card-content class="card-content" [innerHTML]="item.extra.content | sgChangeSpace | sgChineseConv ">
+                    </ion-card-content>
+                </ng-template>
+                <ng-template [ngSwitchCase]="'image'">
+                    <ion-card-content class="card-content">
+                        <img src={{item.extra.content}} class='img_content' (tap)="openPhoto(item.extra.content)">
+                    </ion-card-content>
+                </ng-template>
             </ion-card>
         </ion-list>
     </div>

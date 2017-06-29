@@ -1,6 +1,7 @@
 
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { NavParams, Events } from 'ionic-angular';
+import { PhotoViewer } from '@ionic-native/photo-viewer';
 
 import { MessageService } from '../shared/service/message.service';
 import { JMessageService } from '../../core/services/jmessage.service';
@@ -29,7 +30,8 @@ export class NoticeComponent implements OnInit {
     public messageService: MessageService,
     public jmessageService: JMessageService,
     private ref: ChangeDetectorRef,
-    private events: Events) {
+    private events: Events,
+    private photoViewer: PhotoViewer) {
 
     this.fromUserName = params.get('fromUserName');
     this.fromUserNickName = params.get('fromUserNickName');
@@ -75,10 +77,15 @@ export class NoticeComponent implements OnInit {
     }
   };
 
+  openPhoto(url: string) {
+    this.photoViewer.show(url);
+  }
+
   scroll_down() {
     var div = document.getElementsByClassName('msg-content');
     div[0].scrollTop = div[0].scrollHeight;
   }
+
 
 }
 
