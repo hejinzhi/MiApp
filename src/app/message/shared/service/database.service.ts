@@ -196,15 +196,18 @@ export class DatabaseService {
 
 
   addMessage(toUsername: string, fromUserName: string, content: string, contentType: string, time: number, type: string, unread: string, extra: string, child_type: string) {
-    let data = [toUsername, fromUserName, content, contentType, time, type, unread, extra, child_type];
-    return this.database.executeSql(`INSERT INTO MOA_LOCAL_MESSAGE (TO_USER_NAME, FROM_USER_NAME, CONTENT,CONTENT_TYPE,TIME,TYPE,UNREAD,EXTRA,CHILD_TYPE)
+    if (toUsername != fromUserName) {
+      let data = [toUsername, fromUserName, content, contentType, time, type, unread, extra, child_type];
+      return this.database.executeSql(`INSERT INTO MOA_LOCAL_MESSAGE (TO_USER_NAME, FROM_USER_NAME, CONTENT,CONTENT_TYPE,TIME,TYPE,UNREAD,EXTRA,CHILD_TYPE)
         VALUES (?,?,?,?,?,?,?,?,?)`, data).then(data => {
-        console.log(data);
-        return data;
-      }, err => {
-        console.log('Error: ', err);
-        return err;
-      });
+          console.log(data);
+          return data;
+        }, err => {
+          console.log('Error: ', err);
+          return err;
+        });
+    }
+
   }
 
   getAllMessages() {
