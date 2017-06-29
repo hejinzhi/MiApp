@@ -73,6 +73,7 @@ export class DialogueComponent implements OnInit {
         this.ref.detectChanges();
         this.content.scrollToBottom();
       });
+      
     });
 
     this.jmessageservice.enterSingleConversation(this.userName);
