@@ -22,7 +22,11 @@ import { PipesModule } from './shared/pipe/pipes.module';
   ],
   imports: [
     BrowserModule,
-    IonicModule.forRoot(MyAppComponent, { tabsHideOnSubPages: true, mode: 'ios', backButtonText: '返回' }),
+    IonicModule.forRoot(MyAppComponent, {
+      tabsHideOnSubPages: true,
+      mode: 'ios',
+      backButtonText: '返回',
+    }),
     LoginModule,
     ApplicationModule,
     MessageModule,

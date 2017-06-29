@@ -10,6 +10,7 @@ import { CodePush } from '@ionic-native/code-push';
 import { Network } from '@ionic-native/network';
 import { MyHttpService } from './services/myHttp.service';
 import { JMessageService } from './services/jmessage.service';
+import { JPushService } from './services/jpush.service.ts';
 
 import { ArrayUtilService } from './services/arrayUtil.service';
 import { PluginService } from './services/plugin.service';
@@ -21,17 +22,18 @@ import { ValidateService } from './services/validate.service';
     imports: [CommonModule, HttpModule],
     declarations: [],
     providers: [
-      MyHttpService,
-      JMessageService,
-      PluginService,
-      ValidateService,
-      BarcodeScanner,
-      Camera,
-      ArrayUtilService,
-      InAppBrowser,
-      CodePush,
-      Network,
-      SQLite
+        MyHttpService,
+        JMessageService,
+        JPushService,
+        PluginService,
+        ValidateService,
+        BarcodeScanner,
+        Camera,
+        ArrayUtilService,
+        InAppBrowser,
+        CodePush,
+        Network,
+        SQLite
     ],
     exports: []
 })

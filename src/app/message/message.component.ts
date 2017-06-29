@@ -84,8 +84,10 @@ export class MessageComponent implements OnInit {
 
         }
         this.messageListItem = await this.messageService.getMessageHistory(this.userinfo.username, 'dialogue');
+        this.noticeListItem = await this.messageService.getMessageHistory(this.userinfo.username, 'notice');
         this.ref.detectChanges();
         this.events.publish('msg.onReceiveMessage');
+        this.events.publish('msg.onChangeTabBadge');
       });
 
       // 监听是否有消息推送过来
@@ -100,13 +102,15 @@ export class MessageComponent implements OnInit {
         this.noticeListItem = await this.messageService.getMessageHistory(this.userinfo.username, 'notice');
         this.ref.detectChanges();
         this.events.publish('msg.onReceiveMessage');
+        this.events.publish('msg.onChangeTabBadge');
       });
-    }
 
+    }
   }
 
   async handleReceiveMessageAndroid(res: any) {
     let _content: string;
+    let child_type: string;
     if (res.contentType === 'text') {
       _content = res.content.text;
     } else if (res.contentType === 'image') {
@@ -116,6 +120,9 @@ export class MessageComponent implements OnInit {
     if (res.fromName === 'signlist' || res.fromName === 'news' || res.fromName === 'alert' || res.fromName === 'report') {
       this._type = 'notice';
       _content = res.content.text;
+      if (res.fromName === 'alert') {
+        child_type = res.content.extras.members.type.value;
+      }
     } else {
       this._type = 'dialogue';
     }
@@ -130,11 +137,12 @@ export class MessageComponent implements OnInit {
       unread: true
     };
 
-    await this.databaseService.addMessage(res.targetInfo.userName, res.fromName, _content, res.contentType, res.createTimeInMillis, this._type, 'Y', JSON.stringify(res.content.extras))
+    await this.databaseService.addMessage(res.targetInfo.userName, res.fromName, _content, res.contentType, res.createTimeInMillis, this._type, 'Y', JSON.stringify(res.content.extras), child_type)
   }
 
   async handleReceiveMessageIos(res: any) {
     let _content: string;
+    let child_type: string;
     if (res.content.msg_type === 'text') {
       _content = res.content.msg_body.text;
     } else if (res.content.msg_type === 'image') {
@@ -144,6 +152,9 @@ export class MessageComponent implements OnInit {
     if (res.content.from_id === 'signlist' || res.content.from_id === 'news' || res.content.from_id === 'alert' || res.content.from_id === 'report') {
       this._type = 'notice';
       _content = res.content.msg_body.text;
+      if (res.fromName === 'alert') {
+        child_type = res.content.msg_body.extras.type;
+      }
     } else {
       this._type = 'dialogue';
     }
@@ -158,7 +169,7 @@ export class MessageComponent implements OnInit {
       unread: true
     };
 
-    await this.databaseService.addMessage(res.content.target_id, res.content.from_id, _content, res.content.msg_type, res.content.create_time, this._type, 'Y', JSON.stringify(res.content.msg_body.extras))
+    await this.databaseService.addMessage(res.content.target_id, res.content.from_id, _content, res.content.msg_type, res.content.create_time, this._type, 'Y', JSON.stringify(res.content.msg_body.extras), child_type)
 
   }
 
@@ -174,7 +185,7 @@ export class MessageComponent implements OnInit {
     if (item.type === 'dialogue') {
       this.navCtrl.push(DialogueComponent, item);
     } else if (item.type === 'notice') {
-      if (item.username === 'alert') {
+      if (item.fromUserName === 'alert') {
         this.navCtrl.push(AlertComponent, item);
       } else {
         this.navCtrl.push(NoticeComponent, item);
@@ -206,16 +217,21 @@ export class MessageComponent implements OnInit {
 
   public sendSingleMsg() {
     // this.jmessageService.sendSingleTextMessageWithExtras('hugh.liang', 'test', { name: 'hejinzhi' });
-    this.databaseService.deleteAllMessages();
+    // this.databaseService.deleteAllMessages();
 
     // this.databaseService.getMessageList(this.userinfo.username, 'notice').then((data) => {
     //   console.log(data);
     //   console.log(JSON.parse(data[0].extra));
     // });
 
-    // this.databaseService.getAllMessages().then(data => {
-    //   console.log(data);
-    // });
+    this.databaseService.getAllMessages().then(data => {
+      console.log(data);
+    });
 
   }
+
+  public deleteAllMsgs() {
+    this.databaseService.deleteAllMessages();
+  }
 }
+
