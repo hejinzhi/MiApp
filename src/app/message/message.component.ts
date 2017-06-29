@@ -92,7 +92,6 @@ export class MessageComponent implements OnInit {
 
       // 监听是否有消息推送过来
       this.jmessageService.jmessageHandler = this.jmessageService.onReceiveMessage().subscribe(async (res) => {
-        console.log(res);
         if (this.plf === 'ios') {
           await this.handleReceiveMessageIos(res);
         } else if (this.plf === 'android') {

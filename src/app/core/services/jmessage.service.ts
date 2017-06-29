@@ -191,6 +191,17 @@ export class JMessageService {
         });
     };
 
+    //设置对某个用户免打扰。isNoDisturb: 0 - 普通状态，1 - 免打扰状态。
+    setUserNoDisturb(username: string, isNoDisturb: number) {
+        return new Promise((resolve, reject) => {
+            this.jmessagePlugin.setUserNoDisturb(username, isNoDisturb, (suc: any) => {
+                resolve(suc);
+            }, (err: any) => {
+                reject(err);
+            })
+        });
+    }
+
     // 关闭当前会话
     exitConversation(): Promise<any> {
         return new Promise((resolve, reject) => {

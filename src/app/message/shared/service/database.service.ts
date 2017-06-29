@@ -19,21 +19,26 @@ export class DatabaseService {
         this.plf = 'android';
       }
 
-      this.sqlite.create({
-        name: 'message.db',
-        location: 'default'
-      }).then((db: SQLiteObject) => {
-        this.database = db;
-        if (localStorage.getItem('messageTableAlreadyCreated') === 'true') { }
-        else {
-          this.createMessageTable().then((res) => {
-            localStorage.setItem('messageTableAlreadyCreated', 'true');
-          });
-        }
-        this.databaseReady.next(true);
-      });
+      if (this.platform.is('cordova')) {
+        this.sqlite.create({
+          name: 'message.db',
+          location: 'default'
+        }).then((db: SQLiteObject) => {
+          this.database = db;
+          if (localStorage.getItem('messageTableAlreadyCreated') === 'true') { }
+          else {
+            this.createMessageTable().then((res) => {
+              localStorage.setItem('messageTableAlreadyCreated', 'true');
+            });
+          }
+          this.databaseReady.next(true);
+        });
+      }
+
     });
+
   }
+
 
   setUnreadToZeroByUserName(username: string, child_type?: string) {
     let sql;
