@@ -6,11 +6,17 @@ sg-dialogue {
     overflow: scroll;
   }
   .msg-content {
-    padding: 10px 16px 0 16px;
+    padding: 10px 16px 0 16px; 
     overflow-y: scroll;
     &.up {
       height: 78% !important;
     }
+  }
+  .selectable {
+    -webkit-user-select: auto !important;
+    -moz-user-select: auto !important;
+    -ms-user-select: auto !important;
+    user-select: auto !important;
   }
   .android-height {
     height: 93%;
@@ -109,8 +115,7 @@ sg-dialogue {
     }
   }
   .input {
-    color: $fontcolor;
-    // height: 7.5%;
+    color: $fontcolor; // height: 7.5%;
     width: 100%;
     border-top: 1px solid #d8d8d8;
     background-color: #ededed;
@@ -168,8 +173,7 @@ sg-dialogue {
         color: white;
         text-align: center;
         font-size: 15px;
-        margin-top: 4px;
-        // margin-bottom: 4px;
+        margin-top: 4px; // margin-bottom: 4px;
         &.hidden {
           display: none;
         }

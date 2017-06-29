@@ -5,15 +5,15 @@
 </ion-header>
 <ion-content class='page-content' #content (touchstart)="closeKeyboard()">
   <div class='msg-content' [ngClass]="{'up':onPlus,'android-height': plf==='android'}" (tap)="isPlus()">
-    <div *ngFor="let item of list">
+    <div *ngFor="let item of list;let i=index ">
       <div class="msgarea">
         <div [ngClass]="item.toUserName === userinfo.username ? 'other' : 'me'" [ngSwitch]="item.contentType">
           <img class="icon" [src]="item.fromUserAvatarSrc">
           <ng-template [ngSwitchCase]="'text'">
             <div class="msg">
               <span [ngClass]="item.toUserName === userinfo.username ? ' arrow_l_int' : ' arrow_r_int'"></span>
-              <span [ngClass]="item.toUserName === userinfo.username ? ' arrow_l_out' : ' arrow_r_out'"></span>{{item.content
-              | sgChineseConv}}
+              <span [ngClass]="item.toUserName === userinfo.username ? ' arrow_l_out' : ' arrow_r_out'"></span> 
+              <div [class.selectable]="selectable === i" [innerHTML]="item.content | sgChangeSpace | sgChineseConv " (touchstart)="selectable=i"></div>
             </div>
           </ng-template>
           <ng-template [ngSwitchCase]="'image'"><img src={{item.content}} class='img_content'></ng-template>
