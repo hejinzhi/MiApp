@@ -77,7 +77,7 @@ export class StarageAgeAnalysisComponent {
           data: [{ value: 4.89 }, { value: 4.54 }, { value: 4.37 }, { value: 6.42 },
             { value: 12.6 }]
         }, {
-          name: '120RATE',
+          name: '>120RATE',
           type: 'line',
           data: [{ value: 19.46 }, { value: 17.58 }, { value: 19.27 }, { value: 22.16 },
             { value: 24.93 }]
@@ -95,7 +95,6 @@ export class StarageAgeAnalysisComponent {
 
     option1.color = ['#91c7ae', '#2f4554', '#61a0a8', '#d48265', '#c23531', '#91c7ae', '#2f4554', '#61a0a8', '#d48265', '#c23531']
     this.chartService.makeChart('main1', option1)
-
     let option2 = this.chartService.initSingleYChart('201705 MSL庫存帳齡', {
       legend_data: [],
       xAxis_data: ['0-30 days AMT', '30-60 days AMT', '61-90 days AMT', '91-120 days AMT', '>120 days AMT'],
@@ -118,11 +117,11 @@ export class StarageAgeAnalysisComponent {
       legend_data: ['0-30RATE', '31-60RATE', '61-90RATE', '91-120RATE', '>120RATE'],
       series: [{
         name: '库存比例', data: [{ value: 137531714, name: '0-30RATE' }, { value: 69500338, name: '31-60RATE' },
-          { value: 53017785, name: '61-90RATE' }, { value: 70152847, name: '91-120RATE' }, { value: 221514561, name: '120RATE' }]
+          { value: 53017785, name: '61-90RATE' }, { value: 70152847, name: '91-120RATE' }, { value: 221514561, name: '>120RATE' }]
       }]
     })
     this.chartService.makeChart('main3', option3);
-
+    
   }
 
   reFresh() {
