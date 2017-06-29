@@ -33,11 +33,6 @@ export class TabsComponent implements OnInit {
     private databaseService: DatabaseService,
     private ref: ChangeDetectorRef,
   ) {
-    this.events.subscribe('msg.onReceiveMessage', async () => {
-      await this.changeTabBadge();
-      this.ref.detectChanges();
-    });
-
     this.events.subscribe('msg.onChangeTabBadge', async () => {
       await this.changeTabBadge();
       this.ref.detectChanges();

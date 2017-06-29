@@ -84,6 +84,7 @@ export class MessageComponent implements OnInit {
 
         }
         this.messageListItem = await this.messageService.getMessageHistory(this.userinfo.username, 'dialogue');
+        this.noticeListItem = await this.messageService.getMessageHistory(this.userinfo.username, 'notice');
         this.ref.detectChanges();
         this.events.publish('msg.onReceiveMessage');
         this.events.publish('msg.onChangeTabBadge');
