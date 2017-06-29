@@ -10,6 +10,7 @@ import { NoticeComponent } from './notice/notice.component';
 import { AlertComponent } from './alert/alert.component';
 import { Keyboard } from '@ionic-native/keyboard';
 import { Camera } from '@ionic-native/camera';
+import { PhotoViewer } from '@ionic-native/photo-viewer';
 import { TimeDescPipe } from './shared/pipe/timedesc.pipe';
 import { ChangeSpace } from './shared/pipe/changespace.pipe';
 import { PipesModule } from '../shared/pipe/pipes.module';
@@ -21,6 +22,6 @@ import { DatabaseService } from './shared/service/database.service';
   declarations: [MessageComponent, DialogueComponent, NoticeComponent, TimeDescPipe, AlertComponent, ChangeSpace],
   entryComponents: [MessageComponent, DialogueComponent, NoticeComponent, AlertComponent],
   exports: [MessageComponent, DialogueComponent, NoticeComponent, AlertComponent],
-  providers: [MessageService, Keyboard, Camera, DatabaseService]
+  providers: [MessageService, Keyboard, Camera, DatabaseService, PhotoViewer]
 })
 export class MessageModule { }
