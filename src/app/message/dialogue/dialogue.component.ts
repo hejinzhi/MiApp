@@ -111,6 +111,7 @@ export class DialogueComponent implements OnInit {
           }, 0);
         }
       })
+      this.scroll_down();
 
       this.keyboard.onKeyboardShow().subscribe(() => {
         setTimeout(() => {
@@ -128,8 +129,10 @@ export class DialogueComponent implements OnInit {
   scroll_down() {
     let that = this;
     if (this.plf === 'android') {
-      var div = document.getElementsByClassName('msg-content');
-      div[0].scrollTop = div[0].scrollHeight;
+      setTimeout(() => {
+        var div = document.getElementsByClassName('msg-content');
+        div[0].scrollTop = div[0].scrollHeight;
+      }, 0);
     } else {
       setTimeout(function () {
         that.content.scrollToBottom();
