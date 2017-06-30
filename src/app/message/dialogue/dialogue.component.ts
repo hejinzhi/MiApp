@@ -66,7 +66,7 @@ export class DialogueComponent implements OnInit {
   }
 
 
-  ionViewDidEnter() {
+  async ionViewDidEnter() {
     this.events.subscribe('msg.onReceiveMessage', () => {
       this.messageservice.getMessagesByUsername(this.userName, this.userinfo.username).then((data) => {
         this.list = data;
@@ -75,13 +75,13 @@ export class DialogueComponent implements OnInit {
       });
     });
 
+    await this.messageservice.setUnreadToZeroByUserName(this.userName);
     this.jmessageservice.enterSingleConversation(this.userName);
 
   }
 
   async ionViewWillLeave() {
     this.events.unsubscribe('msg.onReceiveMessage');
-    await this.messageservice.setUnreadToZeroByUserName(this.userName);
     this.jmessageservice.setSingleConversationUnreadMessageCount(this.userName, null, 0);
     this.events.publish('msg.onChangeTabBadge');
     this.jmessageservice.exitConversation();
