@@ -9,10 +9,27 @@ export class ChartService {
 
   constructor(private myHttp: MyHttpService) {  }
 
+  getECharts() {
+    return echarts;
+  }
+  makeChartWithDom(dom:any,option:any) {
+    let myChart = echarts.init(dom);
+    myChart.setOption(option);
+    return myChart;
+  }
   makeChart(id:string,option:any) {
     let myChart = echarts.init(document.getElementById(id));
     myChart.setOption(option);
     return myChart;
+  }
+  afterInit(option:any) {
+    option = this.addFontFamily(option);
+    return option
+  }
+  addFontFamily(option:any,fontFamily: string[] = this.fontFamily) {
+    let add = {fontFamily: fontFamily};
+    Object.assign(option.textStyle,add);
+    return option
   }
   initSingleYChart(title: string,
     data:{
@@ -25,13 +42,12 @@ export class ChartService {
           value: number
         }[],
       }[]
-    }, isY_value:boolean = true,fontFamily: string[] = this.fontFamily) {
+    }, isY_value:boolean = true) {
     let mySeries:any = data.series;
     mySeries[0].barGap = 0;
     let option:any = {
       title: {
         text: title, textStyle: {
-          fontFamily: fontFamily,
           fontSize: 18
         },
         x:'center'
@@ -43,7 +59,6 @@ export class ChartService {
         data: data.legend_data,
         top: '7%',
         textStyle: {
-          fontFamily: fontFamily,
           fontSize: 13
         }
       },
@@ -55,7 +70,6 @@ export class ChartService {
       },
       series: mySeries,
       textStyle: {
-        fontFamily: fontFamily,
         fontSize: 18
       }
     }
@@ -82,6 +96,7 @@ export class ChartService {
         }
       ]
     }
+    option = this.afterInit(option);
     return option;
   }
 
@@ -92,8 +107,7 @@ export class ChartService {
         name: string,
         data:{value:number, name: string}[]
       }[]
-    }
-    ,fontFamily:string[] =this.fontFamily) {
+    }) {
     let mySeries:any = data.series;
     mySeries[0].type = 'pie';
     mySeries[0].itemStyle = {
@@ -108,7 +122,6 @@ export class ChartService {
     title : {
         text: title,
         textStyle: {
-          fontFamily: fontFamily,
           fontSize: 18
         },
         x:'center'
@@ -129,13 +142,16 @@ export class ChartService {
         top: '7%',
         itemGap: 4,
         textStyle: {
-          fontFamily: fontFamily,
           fontSize: 13
         },
         data: data.legend_data
     },
-    series : mySeries
+    series : mySeries,
+    textStyle: {
+
+    }
    }
+   option = this.afterInit(option);
     return option;
   }
 
@@ -157,7 +173,7 @@ export class ChartService {
     data: {
       value: number
     }[],
-  }[],color: string[] = ['#3773F7', '#EEB174'], fontFamily: string[] = this.fontFamily) {
+  }[]) {
     data2 = data2.map((res:any) => {
       res.yAxisIndex = 1;
       return res;
@@ -167,7 +183,6 @@ export class ChartService {
     let option = {
       title: {
         text: title, textStyle: {
-          fontFamily: fontFamily,
           fontSize: '17'
         },
         x:'center'
@@ -180,7 +195,6 @@ export class ChartService {
         top: '7%',
         itemGap: 2,
         textStyle: {
-          fontFamily: fontFamily,
           fontSize: 12
         }
       },
@@ -207,7 +221,6 @@ export class ChartService {
             min: 0,
             boundaryGap: [0.2, 0.2],
             nameTextStyle: {
-              fontFamily: fontFamily,
               fontSize: 14
             }
         },
@@ -216,7 +229,6 @@ export class ChartService {
             scale: true,
             name: '',
             nameTextStyle: {
-              fontFamily: fontFamily,
               fontSize: 14
             },
             min: 0,
@@ -229,10 +241,10 @@ export class ChartService {
       ],
       series: mySeries.concat(data2),
       textStyle: {
-        fontFamily: fontFamily,
         fontSize: 18
       }
     }
+    option = this.afterInit(option);
     return option;
   }
 
