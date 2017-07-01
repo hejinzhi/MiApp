@@ -33,255 +33,6 @@ export class MessageService {
   allUserInfo: any;
   // history: Message[];  // 历史消息
 
-  history = [{
-    "toUserName": "mahuateng",
-    "fromUserName": "hugh.liang",
-    "content": "test1",
-    "contentType": "text",
-    "time": 1496306792505,
-    "type": "dialogue",
-    "unread": true
-  }, {
-    "toUserName": "mahuateng",
-    "fromUserName": "hugh.liang",
-    "content": "test2",
-    "contentType": "text",
-    "time": 1496306792506,
-    "type": "dialogue",
-    "unread": true
-  }, {
-    "toUserName": "mahuateng",
-    "fromUserName": "hugh.liang",
-    "content": "test3",
-    "contentType": "text",
-    "time": 1496306792507,
-    "type": "dialogue",
-    "unread": true
-  }, {
-    "toUserName": "mahuateng",
-    "fromUserName": "hugh.liang",
-    "content": "test4",
-    "contentType": "text",
-    "time": 1496306792508,
-    "type": "dialogue",
-    "unread": true
-  }, {
-    "toUserName": "mahuateng",
-    "fromUserName": "hugh.liang",
-    "content": "test5",
-    "contentType": "text",
-    "time": 1496306792509,
-    "type": "dialogue",
-    "unread": true
-  }, {
-    "toUserName": "mahuateng",
-    "fromUserName": "hugh.liang",
-    "content": "test6",
-    "contentType": "text",
-    "time": 1496306792510,
-    "type": "dialogue",
-    "unread": true
-  }, {
-    "toUserName": "mahuateng",
-    "fromUserName": "hugh.liang",
-    "content": "test7",
-    "contentType": "text",
-    "time": 1496306792511,
-    "type": "dialogue",
-    "unread": true
-  }, {
-    "toUserName": "mahuateng",
-    "fromUserName": "hugh.liang",
-    "content": "test8",
-    "contentType": "text",
-    "time": 1496306792512,
-    "type": "dialogue",
-    "unread": true
-  }, {
-    "toUserName": "mahuateng",
-    "fromUserName": "hugh.liang",
-    "content": "test9",
-    "contentType": "text",
-    "time": 1496306792513,
-    "type": "dialogue",
-    "unread": true
-  }, {
-    "toUserName": "mahuateng",
-    "fromUserName": "hugh.liang",
-    "content": "test10",
-    "contentType": "text",
-    "time": 1496306792514,
-    "type": "dialogue",
-    "unread": true
-  }, {
-    "toUserName": "mahuateng",
-    "fromUserName": "hugh.liang",
-    "content": "test11",
-    "contentType": "text",
-    "time": 1496306792515,
-    "type": "dialogue",
-    "unread": true
-  }, {
-    "toUserName": "hugh.liang",
-    "fromUserName": "mahuateng",
-    "content": "test12",
-    "contentType": "text",
-    "time": 1496306792516,
-    "type": "dialogue",
-    "unread": true
-  }, {
-    "toUserName": "mahuateng",
-    "fromUserName": "hugh.liang",
-    "content": "test13",
-    "contentType": "text",
-    "time": 1496306792517,
-    "type": "dialogue",
-    "unread": true
-  }, {
-    "toUserName": "mahuateng",
-    "fromUserName": "hugh.liang",
-    "content": "test14",
-    "contentType": "text",
-    "time": 1496306792518,
-    "type": "dialogue",
-    "unread": true
-  }, {
-    "toUserName": "mahuateng",
-    "fromUserName": "hugh.liang",
-    "content": "test15",
-    "contentType": "text",
-    "time": 1496306792519,
-    "type": "dialogue",
-    "unread": true
-  }, {
-    "toUserName": "mahuateng",
-    "fromUserName": "hugh.liang",
-    "content": "test19",
-    "contentType": "text",
-    "time": 1496306792520,
-    "type": "dialogue",
-    "unread": true
-  }, {
-    "toUserName": "mahuateng",
-    "fromUserName": "hugh.liang",
-    "content": "test20",
-    "contentType": "text",
-    "time": 1496306792521,
-    "type": "dialogue",
-    "unread": true
-  }, {
-    "toUserName": "mahuateng",
-    "fromUserName": "hugh.liang",
-    "content": "test21",
-    "contentType": "text",
-    "time": 1496306792522,
-    "type": "dialogue",
-    "unread": true
-  }, {
-    "toUserName": "mahuateng",
-    "fromUserName": "hugh.liang",
-    "content": "test22",
-    "contentType": "text",
-    "time": 1496306792523,
-    "type": "dialogue",
-    "unread": true
-  }, {
-    "toUserName": "hugh.liang",
-    "fromUserName": "signlist",
-    "content": {
-      "type": "att",
-      "title": "請假單簽核",
-      "content": "請假單簽核1"
-    },
-    "contentType": "text",
-    "time": 1496306792526,
-    "type": "notice",
-    "unread": true
-  }, {
-    "toUserName": "hugh.liang",
-    "fromUserName": "news",
-    "content": {
-      "type": "att",
-      "title": "天氣預告",
-      "content": "天氣預告1"
-    },
-    "contentType": "text",
-    "time": 1496306792520,
-    "type": "notice",
-    "unread": true
-  }, {
-    "toUserName": "hugh.liang",
-    "fromUserName": "report",
-    "content": {
-      "type": "庫存報表",
-      "title": "庫存信息",
-      "content": "庫存信息1"
-    },
-    "contentType": "text",
-    "time": 1496306792527,
-    "type": "notice",
-    "unread": true
-  }, {
-    "toUserName": "hugh.liang",
-    "fromUserName": "alert",
-    "content": {
-      "type": "att",
-      "title": "假單維護",
-      "content": "考勤異常"
-    },
-    "contentType": "text",
-    "time": 1496306792527,
-    "type": "notice",
-    "unread": true
-  }, {
-    "toUserName": "hugh.liang",
-    "fromUserName": "alert",
-    "content": {
-      "type": "pro",
-      "title": "生產管理",
-      "content": "生產管理1"
-    },
-    "contentType": "text",
-    "time": 1496306792550,
-    "type": "notice",
-    "unread": true
-  }, {
-    "toUserName": "hugh.liang",
-    "fromUserName": "alert",
-    "content": {
-      "type": "pro",
-      "title": "生產管理",
-      "content": "生產管理2"
-    },
-    "contentType": "text",
-    "time": 1496306792551,
-    "type": "notice",
-    "unread": true
-  }, {
-    "toUserName": "hugh.liang",
-    "fromUserName": "alert",
-    "content": {
-      "type": "att",
-      "title": "離職注意事項1",
-      "content": "尊敬的XXX: 您的离职日xxxx年x月x 日,请您在离职日16:30前携带以下物品前往招聘办公室办理离职手续(住宿的同仁请先找宿管办理退宿手续),17:00后您的厂牌将失效. 感谢您的配合!\r\n1.离职申请单(在贵部门助理处领取)\r\n2.辞呈\r\n3.工作移交清单\r\n4.厂牌\r\n5.员工手册\r\n6.工衣(进厂不满2年者,退还发放的全部工衣:两年以上者, 退还入职时发放的所有工衣和近两年满年限发放的工衣)"
-    },
-    "contentType": "text",
-    "time": 1496306792900,
-    "type": "notice",
-    "unread": true
-  }, {
-    "toUserName": "hugh.liang",
-    "fromUserName": "alert",
-    "content": {
-      "type": "att",
-      "title": "離職注意事項2",
-      "content": "尊敬的XXX: 您的离职日xxxx年x月x 日,请您在离职日16:30前携带以下物品前往招聘办公室办理离职手续(住宿的同仁请先找宿管办理退宿手续),17:00后您的厂牌将失效. 感谢您的配合!\r\n1.离职申请单(在贵部门助理处领取)\r\n2.辞呈\r\n3.工作移交清单\r\n4.厂牌\r\n5.员工手册\r\n6.工衣(进厂不满2年者,退还发放的全部工衣:两年以上者, 退还入职时发放的所有工衣和近两年满年限发放的工衣)"
-    },
-    "contentType": "text",
-    "time": 1496306852900,
-    "type": "notice",
-    "unread": true
-  }];
 
   getMessagesByUsername(fromUsername: string, toUsername: string) {
     return this.databaseService.getMessagesByUsername(fromUsername, toUsername).then((data) => {
@@ -291,8 +42,31 @@ export class MessageService {
 
 
   public async getMessageHistory(loginUsername: string, type?: string, child_type?: string) {
-    let history = await this.databaseService.getMessageList(loginUsername, type, child_type);
-    return this.leftJoin(history, this.allUserInfo);
+    let history: any[] = await this.databaseService.getMessageList(loginUsername, type, child_type);
+    console.log(history);
+    for (let i = 0; i < history.length; i++) {
+      // 1.先在本机存储找是否有这个人的头像
+      let fromUserAvatarObj = await this.databaseService.getAvatarByUsername(history[i].fromUserName);
+
+      // 2.如果找到了,新增昵称和头像属性
+      if (fromUserAvatarObj.length > 0) {
+        history[i].fromUserNickName = fromUserAvatarObj[0].USER_NAME;
+        history[i].fromUserAvatarSrc = fromUserAvatarObj[0].AVATAR;
+        history[i].timedesc = this.getDateDiff(history[i].time);
+      }
+      // 3.如果找不到，则请求服务器,并写入本地
+      else {
+        let fromUserServeObj = await this.getUserAvatar(history[i].fromUserName);
+        if (fromUserServeObj.length > 0) {
+          history[i].fromUserNickName = fromUserServeObj[0].NICK_NAME;
+          history[i].fromUserAvatarSrc = fromUserServeObj[0].AVATAR_URL;
+          history[i].timedesc = this.getDateDiff(history[i].time);
+        }
+      }
+    }
+    return history;
+
+    // return this.leftJoin(history, this.allUserInfo);
   }
 
 
@@ -400,6 +174,29 @@ export class MessageService {
     await this.databaseService.setUnreadToZeroByUserName(username, child_type);
   }
 
+  getUserAvatar(username: string) {
+
+    // return new Promise((resolve, reject) => {
+    //    this.usersInfo2.forEach((value, index) => {
+    //     if (value.username === username) {
+    //       // resolve(true);
+    //     }
+    //   });
+    //   resolve(false);
+    // });
+    let obj: any[];
+    this.usersInfo2.forEach((value, index) => {
+      if (value.username === username) {
+        obj = [{
+          NICK_NAME: value.nickname,
+          AVATAR_URL: value.avatar
+        }]
+      }
+    });
+    return obj;
+
+  }
+
   usersInfo2 = [{
     username: 'mahuateng',
     nickname: '马化腾',
@@ -463,7 +260,7 @@ export class MessageService {
   {
     username: 'gary.h',
     nickname: '黄家骏',
-    avatar: 'assets/avatar/hugh.jpg'
+    avatar: 'assets/avatar/default.png'
   },
   {
     username: 'kaoqinyichang',
