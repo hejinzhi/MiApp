@@ -507,6 +507,11 @@ export class MessageService {
     avatar: 'assets/avatar/hugh.jpg'
   },
   {
+    username: 'gary.h',
+    nickname: '黄家骏',
+    avatar: 'assets/avatar/hugh.jpg'
+  },
+  {
     username: 'kaoqinyichang',
     nickname: '考勤異常',
     avatar: 'assets/icon/document.ico'
