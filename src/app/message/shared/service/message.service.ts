@@ -283,57 +283,12 @@ export class MessageService {
     "unread": true
   }];
 
-
-
-
-
-  getLocalMessageHistory() {
-    //return JSON.parse(localStorage.getItem('localMessageHistory'));
-    return this.history;
-  }
-
-  setLocalMessageHistory(messages: Message[]) {
-    return localStorage.setItem('localMessageHistory', JSON.stringify(messages));
-  }
-
   getMessagesByUsername(fromUsername: string, toUsername: string) {
     return this.databaseService.getMessagesByUsername(fromUsername, toUsername).then((data) => {
       return this.leftJoin(data, this.allUserInfo);
     });
   }
 
-  getMessageHistoryByID(username: string) {
-    let history = this.history;
-    return new Promise((resolve, reject) => {
-      setTimeout(() => {
-        let sorted = history.sort((a, b) => a.time - b.time);
-        if (!username)
-          resolve(this.leftJoin(sorted, this.allUserInfo));
-        else {
-          let temp = sorted.filter((v) => (v.fromUserName === username && v.toUserName === this.userInfo.username) || v.toUserName === username && v.fromUserName === this.userInfo.username);
-          temp = this.leftJoin(temp, this.allUserInfo);
-          resolve(temp);
-
-        }
-      })
-    })
-  }
-
-  getNoticeHistoryByID(username: string) {
-    let history = this.history;
-    return new Promise((resolve, reject) => {
-      setTimeout(() => {
-        let sorted = history.sort((a, b) => a.time - b.time);
-        if (!username)
-          resolve(this.leftJoin(sorted, this.allUserInfo));
-        else {
-          let temp = sorted.filter((v) => (v.fromUserName === username && v.toUserName === this.userInfo.username) || v.toUserName === username && v.fromUserName === this.userInfo.username);
-          temp = this.leftJoin(temp, this.allUserInfo);
-          resolve(temp);
-        }
-      })
-    })
-  }
 
   public async getMessageHistory(loginUsername: string, type?: string, child_type?: string) {
     let history = await this.databaseService.getMessageList(loginUsername, type, child_type);
@@ -342,7 +297,7 @@ export class MessageService {
 
 
 
-  leftJoin(original: any, contacts: any) {
+  leftJoin(original: any[], contacts: any[]) {
     let contactObj = contacts;
     let rst: any = [];
 
@@ -443,7 +398,6 @@ export class MessageService {
 
   async setUnreadToZeroByUserName(username: string, child_type?: string) {
     await this.databaseService.setUnreadToZeroByUserName(username, child_type);
-    // this.events.publish('messageUnreadCount');
   }
 
   usersInfo2 = [{

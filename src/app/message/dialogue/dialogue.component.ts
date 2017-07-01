@@ -67,12 +67,16 @@ export class DialogueComponent implements OnInit {
 
 
   async ionViewDidEnter() {
-    this.events.subscribe('msg.onReceiveMessage', () => {
-      this.messageservice.getMessagesByUsername(this.userName, this.userinfo.username).then((data) => {
+    this.events.subscribe('msg.onReceiveMessage', async (msg: any) => {
+      if (msg) {
+        let temp = this.messageservice.leftJoin([msg], this.messageservice.allUserInfo);
+        this.list.push(temp[0]);
+      } else {
+        let data = await this.messageservice.getMessagesByUsername(this.userName, this.userinfo.username);
         this.list = data;
-        this.ref.detectChanges();
-        this.content.scrollToBottom();
-      });
+      }
+      this.ref.detectChanges();
+      this.scroll_down();
     });
 
     await this.messageservice.setUnreadToZeroByUserName(this.userName);

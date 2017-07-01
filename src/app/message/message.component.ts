@@ -26,13 +26,14 @@ export class MessageComponent implements OnInit {
   languageContent = LanguageConfig.MessageComponent[this.languageType];
   msgListItem: MessageModel[] = [];
   historyMsg: any[] = []; // 在app.component.ts被赋值
-  messageListItem: any;
-  noticeListItem: any;
+  messageListItem: any[];
+  noticeListItem: any[];
   _type: string;
   loading: Loading;
   onSyncOfflineMessageHandler: Subscription;
   userinfo: any; //登录人信息
   plf: string; // 记录是什么平台
+  firstTimeRefresh: boolean = true; // 是否第一次进入这个画面
 
 
   constructor(public navCtrl: NavController,
@@ -92,15 +93,15 @@ export class MessageComponent implements OnInit {
 
       // 监听是否有消息推送过来
       this.jmessageService.jmessageHandler = this.jmessageService.onReceiveMessage().subscribe(async (res) => {
+        let msg: any;
         if (this.plf === 'ios') {
-          await this.handleReceiveMessageIos(res);
+          msg = await this.handleReceiveMessageIos(res);
         } else if (this.plf === 'android') {
-          await this.handleReceiveMessageAndroid(res);
+          msg = await this.handleReceiveMessageAndroid(res);
         }
-        this.messageListItem = await this.messageService.getMessageHistory(this.userinfo.username, 'dialogue');
-        this.noticeListItem = await this.messageService.getMessageHistory(this.userinfo.username, 'notice');
+        await this.refreshData();
         this.ref.detectChanges();
-        this.events.publish('msg.onReceiveMessage');
+        this.events.publish('msg.onReceiveMessage', msg);
         this.events.publish('msg.onChangeTabBadge');
       });
 
@@ -136,7 +137,10 @@ export class MessageComponent implements OnInit {
       unread: true
     };
 
-    await this.databaseService.addMessage(res.targetInfo.userName, res.fromName, _content, res.contentType, res.createTimeInMillis, this._type, 'Y', JSON.stringify(res.content.extras), child_type)
+    await this.databaseService.addMessage(res.targetInfo.userName, res.fromName, _content, res.contentType, res.createTimeInMillis, this._type, 'Y',
+      JSON.stringify(res.content.extras), child_type);
+
+    return msg;
   }
 
   async handleReceiveMessageIos(res: any) {
@@ -168,15 +172,68 @@ export class MessageComponent implements OnInit {
       unread: true
     };
 
-    await this.databaseService.addMessage(res.content.target_id, res.content.from_id, _content, res.content.msg_type, res.content.create_time, this._type, 'Y', JSON.stringify(res.content.msg_body.extras), child_type)
+    await this.databaseService.addMessage(res.content.target_id, res.content.from_id, _content, res.content.msg_type, res.content.create_time, this._type, 'Y',
+      JSON.stringify(res.content.msg_body.extras), child_type);
+
+    return msg;
 
   }
 
 
 
   async refreshData() {
-    this.noticeListItem = await this.messageService.getMessageHistory(this.userinfo.username, 'notice');
-    this.messageListItem = await this.messageService.getMessageHistory(this.userinfo.username, 'dialogue');
+    if (this.firstTimeRefresh) {
+      this.noticeListItem = await this.messageService.getMessageHistory(this.userinfo.username, 'notice');
+      this.messageListItem = await this.messageService.getMessageHistory(this.userinfo.username, 'dialogue');
+      this.firstTimeRefresh = false;
+    } else {
+      let newMessageData: any[] = await this.messageService.getMessageHistory(this.userinfo.username, 'dialogue');
+      // 当后台返回的数据条数大于目前的数据条数，则证明有新的联系人发消息过来
+      //要把新联系人加进来，而且要检查旧联系人是否也有发信息过来
+      if (newMessageData.length > this.messageListItem.length) {
+
+        for (let i = 0; i < newMessageData.length; i++) {
+          let flag = true;
+          for (let j = 0; j < this.messageListItem.length; j++) {
+            if (newMessageData[i] == this.messageListItem[j])
+              flag = false;
+          }
+          if (flag) {
+            this.messageListItem.push(newMessageData[i]);
+          }
+        }
+
+        // 检查旧联系人是否有发信息过来
+        for (let i = 0; i < this.messageListItem.length; i++) {
+          for (let j = 0; j < newMessageData.length; j++) {
+            if (this.messageListItem[i].fromUserName === newMessageData[j].fromUserName) {
+              this.messageListItem[i].content = newMessageData[j].content;
+              this.messageListItem[i].timedesc = newMessageData[j].timedesc;
+              break;
+            }
+          }
+        }
+      }
+      // 记录条数一致
+      else if (newMessageData.length == this.messageListItem.length) {
+        // 检查旧联系人是否有发信息过来
+        for (let i = 0; i < this.messageListItem.length; i++) {
+          for (let j = 0; j < newMessageData.length; j++) {
+            if (this.messageListItem[i].fromUserName === newMessageData[j].fromUserName) {
+              this.messageListItem[i].content = newMessageData[j].content;
+              this.messageListItem[i].timedesc = newMessageData[j].timedesc;
+              this.messageListItem[i].unreadCount = newMessageData[j].unreadCount;
+              break;
+            }
+          }
+        }
+      }
+      // 本地记录大于数据库记录，不应该出现这种情况，按新数据为准
+      else {
+        this.messageListItem = newMessageData;
+      }
+    }
+
   };
 
 
@@ -192,10 +249,6 @@ export class MessageComponent implements OnInit {
     }
   }
 
-  getItems(ev: any) {
-
-  }
-
   showError(text: string) {
     setTimeout(() => {
       this.loading.dismiss();
@@ -209,11 +262,6 @@ export class MessageComponent implements OnInit {
     alert.present(prompt);
   }
 
-  // ionViewWillLeave() {
-  //   this.jmessageService.jmessageHandler.unsubscribe();
-  //   this.onSyncOfflineMessageHandler.unsubscribe();
-  // }
-
   public sendSingleMsg() {
     // this.jmessageService.sendSingleTextMessageWithExtras('hugh.liang', 'test', { name: 'hejinzhi' });
     // this.databaseService.deleteAllMessages();
@@ -226,6 +274,9 @@ export class MessageComponent implements OnInit {
     this.databaseService.getAllMessages().then(data => {
       console.log(data);
     });
+
+    this.messageListItem[0].unreadCount = 10;
+    // this.ref.detectChanges();
 
   }
 

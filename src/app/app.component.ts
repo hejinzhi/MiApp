@@ -44,7 +44,6 @@ export class MyAppComponent {
       this.jMessage.jmessagePlugin = (<any>window).plugins ? (<any>window).plugins.jmessagePlugin || null : null;
       this.jPushService.jPushPlugin = (<any>window).plugins ? (<any>window).plugins.jPushPlugin || null : null;
       this.messageservice.getContacts();
-      this.messageservice.history = this.messageservice.getLocalMessageHistory() ? this.messageservice.getLocalMessageHistory() : [];
 
       if (platform.is('android')) {
         let original = platform.runBackButtonAction;
