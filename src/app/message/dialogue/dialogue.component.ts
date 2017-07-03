@@ -28,7 +28,13 @@ export class DialogueComponent implements OnInit {
 
   userName: string;
   userNickName: string;
+  fromUserAvatarSrc: string;
   unreadCount: number; //未读消息数，如果大于0，退出dialogue页面时把未读消息更新为已读。否则不更新
+
+  toUserName: string;
+  toUserNickName: string;
+  toUserAvatarSrc: string;
+
 
   jmessageHandler: Subscription; //接收句柄，再view被关闭的时候取消订阅，否则对已关闭的view进行数据脏检查会报错
   keyboardOpen: boolean;
@@ -48,9 +54,11 @@ export class DialogueComponent implements OnInit {
 
     this.userName = params.get('fromUserName');
     this.userNickName = params.get('fromUserNickName');
+    this.fromUserAvatarSrc = params.get('fromUserAvatarSrc');
     this.unreadCount = params.get('unreadCount');
 
-
+    // 这里的toUserName一般是指当前登陆人
+    this.toUserName = params.get('toUserName');
   }
 
   async ngOnInit() {
@@ -62,6 +70,12 @@ export class DialogueComponent implements OnInit {
     this.keyboard.hideKeyboardAccessoryBar(true);
     this.keyboard.disableScroll(true);
     this.userinfo = JSON.parse(localStorage.getItem('currentUser'));
+
+    // 获取当前登录人的昵称和头像
+    let res = await this.messageservice.getUserAvatar(this.toUserName)
+    let toUserObj = res.json();
+    this.toUserNickName = toUserObj.NICK_NAME;
+    this.toUserAvatarSrc = toUserObj.AVATAR_URL;
     await this.loadMessage();
   }
 
@@ -69,10 +83,12 @@ export class DialogueComponent implements OnInit {
   async ionViewDidEnter() {
     this.events.subscribe('msg.onReceiveMessage', async (msg: any) => {
       if (msg) {
-        let temp = this.messageservice.leftJoin([msg], this.messageservice.allUserInfo);
-        this.list.push(temp[0]);
+        this.getNickNameAndAvatar(msg);
       } else {
-        let data = await this.messageservice.getMessagesByUsername(this.userName, this.userinfo.username);
+        let data: any[] = await this.messageservice.getMessagesByUsername(this.userName, this.userinfo.username);
+        data.forEach((value, index) => {
+          this.getNickNameAndAvatar(value);
+        });
         this.list = data;
       }
       this.ref.detectChanges();
@@ -94,7 +110,6 @@ export class DialogueComponent implements OnInit {
 
   ionViewWillEnter() {
     setTimeout(() => {
-      // this.content.scrollToBottom();
       this.scroll_down();
     }, 10);
   }
@@ -128,8 +143,25 @@ export class DialogueComponent implements OnInit {
   }
 
   async loadMessage() {
-    this.list = await this.messageservice.getMessagesByUsername(this.userName, this.userinfo.username);
+    let data: any[] = await this.messageservice.getMessagesByUsername(this.userName, this.userinfo.username);
+    data.forEach((value, index) => {
+      this.getNickNameAndAvatar(value);
+    });
+    this.list = data;
   };
+
+  getNickNameAndAvatar(targetUser: any) {
+    if (targetUser.fromUserName === this.userName) {
+      targetUser.fromUserNickName = this.userNickName;
+      targetUser.fromUserAvatarSrc = this.fromUserAvatarSrc;
+    }
+    // 这里代表是当前登陆人发出去的信息
+    else {
+      targetUser.fromUserNickName = this.toUserNickName;
+      targetUser.fromUserAvatarSrc = this.toUserAvatarSrc;
+    }
+
+  }
 
   scroll_down() {
     let that = this;
@@ -158,16 +190,17 @@ export class DialogueComponent implements OnInit {
     }
 
     // let history = this.messageservice.history;
-    let msg = [{
-      "toUserName": this.userName,
-      "fromUserName": this.userinfo.username,
-      "content": content,
-      "contentType": contentType,
-      "time": +new Date(),
-      "type": "dialogue",
-      "unread": 'N'
-    }];
-    await this.databaseService.addMessage(msg[0].toUserName, msg[0].fromUserName, msg[0].content, msg[0].contentType, msg[0].time, msg[0].type, msg[0].unread, null, null);
+    let msg = {
+      toUserName: this.userName,
+      fromUserName: this.userinfo.username,
+      content: content,
+      contentType: contentType,
+      time: +new Date(),
+      type: "dialogue",
+      unread: 'N',
+    };
+    this.getNickNameAndAvatar(msg);
+    await this.databaseService.addMessage(msg.toUserName, msg.fromUserName, msg.content, msg.contentType, msg.time, msg.type, msg.unread, null, null);
 
     if (type === 1) {
       this.jmessageservice.sendSingleTextMessage(this.userName, content);
@@ -175,11 +208,9 @@ export class DialogueComponent implements OnInit {
     else if (type === 2) {
       this.jmessageservice.sendSingleImageMessage(this.userName, content);
     }
-    msg = this.messageservice.leftJoin(msg, this.messageservice.allUserInfo);
-    this.list.push(msg[0])
+    this.list.push(msg)
     this.input_text = '';
     setTimeout(function () {
-      // that.content.scrollToBottom();
       that.scroll_down();
     }, 0);
 
@@ -189,8 +220,8 @@ export class DialogueComponent implements OnInit {
     //  this.sendMessage(2,"'assets/avatar/thumbnail-puppy-1.jpg'");
     let options: CameraOptions = {
       //这些参数可能要配合着使用，比如选择了sourcetype是0，destinationtype要相应的设置
-      quality: 100,                                            //相片质量0-100
-      allowEdit: false,                                        //在选择之前允许修改截图
+      quality: 50,                                            //相片质量0-100
+      allowEdit: true,                                        //在选择之前允许修改截图
       destinationType: this.camera.DestinationType.FILE_URI,
       sourceType: type,                                         //从哪里选择图片：PHOTOLIBRARY=0，相机拍照=1，SAVEDPHOTOALBUM=2。0和1其实都是本地图库
       encodingType: this.camera.EncodingType.JPEG,                   //保存的图片格式： JPEG = 0, PNG = 1

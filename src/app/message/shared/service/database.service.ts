@@ -253,25 +253,33 @@ export class DatabaseService {
     return this.database.executeSql('DELETE FROM MOA_LOCAL_MESSAGE', {});
   }
 
+  deleteAllAvatar() {
+    return this.database.executeSql('DELETE FROM MOA_LOCAL_AVATAR', {});
+  }
+
   // 创建存储头像的table
   createAvatarTable() {
     return this.database.executeSql(`CREATE TABLE IF NOT EXISTS MOA_LOCAL_AVATAR
-        (ID INTEGER PRIMARY KEY AUTOINCREMENT,USER_ID VARCHAR2(10), USER_NAME VARCHAR2(100),AVATAR VARCHAR2(1000))`, {});
+        (ID INTEGER PRIMARY KEY AUTOINCREMENT,USER_ID VARCHAR2(10), USER_NAME VARCHAR2(100),NICK_NAME VARCHAR2(100),AVATAR VARCHAR2(1000))`, {});
   }
 
-  insertAvatarTable(username: string, avatar: string, userID?: string) {
+  insertAvatarTable(username: string, nick_name: string, avatar: string, userID?: string) {
     let data;
     if (userID) {
-      data = [userID, username, avatar];
-      return this.database.executeSql('INSERT INTO MOA_LOCAL_AVATAR (USER_ID,USER_NAME,AVATAR) VALUES(?,?,?)', data);
+      data = [userID, username, nick_name, avatar];
+      return this.database.executeSql('INSERT INTO MOA_LOCAL_AVATAR (USER_ID,USER_NAME,NICK_NAME,AVATAR) VALUES(?,?,?,?)', data);
     } else {
-      data = [username, avatar];
-      return this.database.executeSql('INSERT INTO MOA_LOCAL_AVATAR (USER_NAME,AVATAR) VALUES(?,?)', data);
+      data = [username, nick_name, avatar];
+      return this.database.executeSql('INSERT INTO MOA_LOCAL_AVATAR (USER_NAME,NICK_NAME,AVATAR) VALUES(?,?,?)', data);
     }
   }
 
   getAvatarByUsername(username: string) {
     return this.database.executeSql(`SELECT * FROM MOA_LOCAL_AVATAR WHERE USER_NAME = '${username}' ;`, {});
+  }
+
+  updateAvatarByUsername(username: string, avatar: string) {
+    return this.database.executeSql(`UPDATE MOA_LOCAL_AVATAR SET AVATAR='${avatar}' WHERE USER_NAME='${username}'`, {});
   }
 
 }

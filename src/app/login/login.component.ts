@@ -7,6 +7,7 @@ import { UserModel } from '../shared/models/user.model';
 import { LoginConfig } from './shared/config/login.config';
 import { TabsComponent } from '../tabs/tabs.component';
 import { PluginService } from '../core/services/plugin.service';
+import { DatabaseService } from '../message/shared/service/database.service';
 
 @Component({
   selector: 'sg-login',
@@ -20,7 +21,8 @@ export class LoginComponent {
     private loadingCtrl: LoadingController,
     private myHttp: MyHttpService,
     private jmessageService: JMessageService,
-    private pluginService: PluginService
+    private pluginService: PluginService,
+    private messageDatabaseService: DatabaseService
   ) {
   }
 
@@ -54,12 +56,23 @@ export class LoginComponent {
 
       let token = res.json().Token;
       if (token) {
+        this.currentUser.id = res.json().User.ID;
         this.currentUser.avatarUrl = res.json().User.AVATAR_URL;
         this.currentUser.nickname = res.json().User.NICK_NAME;
         this.currentUser.position = res.json().User.JOB_TITLE;
         this.currentUser.department = res.json().User.DEPT_NAME;
         this.currentUser.empno = res.json().User.EMPNO;
         localStorage.setItem('currentUser', JSON.stringify(this.currentUser));
+
+        //把登陆人的头像保存到本地
+        let myAvatar = await this.messageDatabaseService.getAvatarByUsername(this.currentUser.username);
+        if (myAvatar.rows.length > 0) {
+          await this.messageDatabaseService.updateAvatarByUsername(this.currentUser.username, this.currentUser.avatarUrl);
+        }
+        else {
+          await this.messageDatabaseService.insertAvatarTable(this.currentUser.username, this.currentUser.nickname, this.currentUser.avatarUrl);
+        }
+
         this.loading.dismiss();
         this.navCtrl.setRoot(TabsComponent);
       } else {

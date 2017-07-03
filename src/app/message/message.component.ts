@@ -188,54 +188,61 @@ export class MessageComponent implements OnInit {
       this.messageListItem = await this.messageService.getMessageHistory(this.userinfo.username, 'dialogue');
       this.firstTimeRefresh = false;
     } else {
+      let newNoticeData: any[] = await this.messageService.getMessageHistory(this.userinfo.username, 'notice');
       let newMessageData: any[] = await this.messageService.getMessageHistory(this.userinfo.username, 'dialogue');
-      // 当后台返回的数据条数大于目前的数据条数，则证明有新的联系人发消息过来
-      //要把新联系人加进来，而且要检查旧联系人是否也有发信息过来
-      if (newMessageData.length > this.messageListItem.length) {
-
-        for (let i = 0; i < newMessageData.length; i++) {
-          let flag = true;
-          for (let j = 0; j < this.messageListItem.length; j++) {
-            if (newMessageData[i] == this.messageListItem[j])
-              flag = false;
-          }
-          if (flag) {
-            this.messageListItem.push(newMessageData[i]);
-          }
-        }
-
-        // 检查旧联系人是否有发信息过来
-        for (let i = 0; i < this.messageListItem.length; i++) {
-          for (let j = 0; j < newMessageData.length; j++) {
-            if (this.messageListItem[i].fromUserName === newMessageData[j].fromUserName) {
-              this.messageListItem[i].content = newMessageData[j].content;
-              this.messageListItem[i].timedesc = newMessageData[j].timedesc;
-              break;
-            }
-          }
-        }
-      }
-      // 记录条数一致
-      else if (newMessageData.length == this.messageListItem.length) {
-        // 检查旧联系人是否有发信息过来
-        for (let i = 0; i < this.messageListItem.length; i++) {
-          for (let j = 0; j < newMessageData.length; j++) {
-            if (this.messageListItem[i].fromUserName === newMessageData[j].fromUserName) {
-              this.messageListItem[i].content = newMessageData[j].content;
-              this.messageListItem[i].timedesc = newMessageData[j].timedesc;
-              this.messageListItem[i].unreadCount = newMessageData[j].unreadCount;
-              break;
-            }
-          }
-        }
-      }
-      // 本地记录大于数据库记录，不应该出现这种情况，按新数据为准
-      else {
-        this.messageListItem = newMessageData;
-      }
+      this.noticeListItem = this.changeLastMessage(newNoticeData, this.noticeListItem);
+      this.messageListItem = this.changeLastMessage(newMessageData, this.messageListItem);
     }
 
   };
+
+  changeLastMessage(newData: any[], oldData: any[]) {
+    // 当后台返回的数据条数大于目前的数据条数，则证明有新的联系人发消息过来
+    //要把新联系人加进来，而且要检查旧联系人是否也有发信息过来
+    if (newData.length > oldData.length) {
+
+      for (let i = 0; i < newData.length; i++) {
+        let flag = true;
+        for (let j = 0; j < oldData.length; j++) {
+          if (newData[i].fromUserName === oldData[j].fromUserName)
+            flag = false;
+        }
+        if (flag) {
+          oldData.push(newData[i]);
+        }
+      }
+
+      // 检查旧联系人是否有发信息过来
+      for (let i = 0; i < oldData.length; i++) {
+        for (let j = 0; j < newData.length; j++) {
+          if (oldData[i].fromUserName === newData[j].fromUserName) {
+            oldData[i].content = newData[j].content;
+            oldData[i].timedesc = newData[j].timedesc;
+            break;
+          }
+        }
+      }
+    }
+    // 记录条数一致
+    else if (newData.length == oldData.length) {
+      // 检查旧联系人是否有发信息过来
+      for (let i = 0; i < oldData.length; i++) {
+        for (let j = 0; j < newData.length; j++) {
+          if (oldData[i].fromUserName === newData[j].fromUserName) {
+            oldData[i].content = newData[j].content;
+            oldData[i].timedesc = newData[j].timedesc;
+            oldData[i].unreadCount = newData[j].unreadCount;
+            break;
+          }
+        }
+      }
+    }
+    // 本地记录大于数据库记录，不应该出现这种情况，按新数据为准
+    else {
+      oldData = newData;
+    }
+    return oldData;
+  }
 
 
   goToMessageDetailPage(item: any) {
@@ -265,19 +272,19 @@ export class MessageComponent implements OnInit {
 
   public sendSingleMsg() {
     // this.jmessageService.sendSingleTextMessageWithExtras('hugh.liang', 'test', { name: 'hejinzhi' });
-    // this.databaseService.deleteAllMessages();
+    this.databaseService.deleteAllMessages();
+    this.databaseService.deleteAllAvatar();
 
     // this.databaseService.getMessageList(this.userinfo.username, 'notice').then((data) => {
     //   console.log(data);
     //   console.log(JSON.parse(data[0].extra));
     // });
 
-    this.databaseService.getAllMessages().then(data => {
-      console.log(data);
-    });
+    // this.databaseService.getAllMessages().then(data => {
+    //   console.log(data);
+    // });
 
-    this.messageListItem[0].unreadCount = 10;
-    // this.ref.detectChanges();
+    // this.messageListItem[0].unreadCount = 10;
 
   }
 

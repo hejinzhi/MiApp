@@ -43,7 +43,6 @@ export class MyAppComponent {
       splashScreen.hide();
       this.jMessage.jmessagePlugin = (<any>window).plugins ? (<any>window).plugins.jmessagePlugin || null : null;
       this.jPushService.jPushPlugin = (<any>window).plugins ? (<any>window).plugins.jPushPlugin || null : null;
-      this.messageservice.getContacts();
 
       if (platform.is('android')) {
         let original = platform.runBackButtonAction;
