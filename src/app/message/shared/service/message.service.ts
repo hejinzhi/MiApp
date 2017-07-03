@@ -28,7 +28,6 @@ export class MessageService {
 
   public async getMessageHistory(loginUsername: string, type?: string, child_type?: string) {
     let history: any[] = await this.databaseService.getMessageList(loginUsername, type, child_type);
-    console.log(history);
     for (let i = 0; i < history.length; i++) {
       // 1.先在本机存储找是否有这个人的头像
       let fromUserAvatarObj = await this.databaseService.getAvatarByUsername(history[i].fromUserName);
@@ -42,7 +41,6 @@ export class MessageService {
       // 3.如果找不到，则请求服务器,并写入本地
       else {
         let fromUserServeObj = this.getUserAvatar(history[i].fromUserName);
-        console.log(fromUserServeObj);
         if (fromUserServeObj.length > 0) {
           history[i].fromUserNickName = fromUserServeObj[0].NICK_NAME;
           history[i].fromUserAvatarSrc = fromUserServeObj[0].AVATAR_URL;
