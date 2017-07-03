@@ -1,24 +1,9 @@
-import {
-  Injectable,
-  EventEmitter
-} from '@angular/core';
-import {
-  Events
-} from 'ionic-angular';
-import {
-  Observable,
-  Subscription,
-  Subject
-} from 'rxjs/Rx';
-import {
-  JMessageService
-} from '../../../core/services/jmessage.service';
-import {
-  DatabaseService
-} from './database.service';
-import {
-  Message
-} from '../classes/Message';
+import { Injectable, EventEmitter } from '@angular/core';
+import { Events } from 'ionic-angular';
+import { Observable, Subscription, Subject } from 'rxjs/Rx';
+import { JMessageService } from '../../../core/services/jmessage.service';
+import { DatabaseService } from './database.service';
+import { Message } from '../classes/Message';
 
 @Injectable()
 export class MessageService {
@@ -49,18 +34,23 @@ export class MessageService {
       let fromUserAvatarObj = await this.databaseService.getAvatarByUsername(history[i].fromUserName);
 
       // 2.如果找到了,新增昵称和头像属性
-      if (fromUserAvatarObj.length > 0) {
-        history[i].fromUserNickName = fromUserAvatarObj[0].USER_NAME;
-        history[i].fromUserAvatarSrc = fromUserAvatarObj[0].AVATAR;
+      if (fromUserAvatarObj.rows.length > 0) {
+        history[i].fromUserNickName = fromUserAvatarObj.rows.item(0).USER_NAME;
+        history[i].fromUserAvatarSrc = fromUserAvatarObj.rows.item(0).AVATAR;
         history[i].timedesc = this.getDateDiff(history[i].time);
       }
       // 3.如果找不到，则请求服务器,并写入本地
       else {
-        let fromUserServeObj = await this.getUserAvatar(history[i].fromUserName);
+        let fromUserServeObj = this.getUserAvatar(history[i].fromUserName);
+        console.log(fromUserServeObj);
         if (fromUserServeObj.length > 0) {
           history[i].fromUserNickName = fromUserServeObj[0].NICK_NAME;
           history[i].fromUserAvatarSrc = fromUserServeObj[0].AVATAR_URL;
           history[i].timedesc = this.getDateDiff(history[i].time);
+          await this.databaseService.insertAvatarTable(history[i].fromUserName, fromUserServeObj[0].AVATAR_URL);
+
+        } else {
+          console.log('err,服务器找不到该员工的信息');
         }
       }
     }

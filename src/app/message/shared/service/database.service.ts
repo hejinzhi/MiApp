@@ -263,10 +263,10 @@ export class DatabaseService {
     let data;
     if (userID) {
       data = [userID, username, avatar];
-      return this.database.executeSql('INSERT INTO MOA_LOCAL_AVATAR (USER_ID,USER_NAME,AVATAR)', data);
+      return this.database.executeSql('INSERT INTO MOA_LOCAL_AVATAR (USER_ID,USER_NAME,AVATAR) VALUES(?,?,?)', data);
     } else {
       data = [username, avatar];
-      return this.database.executeSql('INSERT INTO MOA_LOCAL_AVATAR (USER_NAME,AVATAR)', data);
+      return this.database.executeSql('INSERT INTO MOA_LOCAL_AVATAR (USER_NAME,AVATAR) VALUES(?,?)', data);
     }
   }
 
