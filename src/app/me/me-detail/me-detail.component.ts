@@ -3,8 +3,8 @@ import { NavController, NavParams, ActionSheetController, LoadingController, Loa
 import { BarcodeScanner } from '@ionic-native/barcode-scanner';
 import { Camera, CameraOptions } from '@ionic-native/camera';
 import { JMessageService } from '../../core/services/jmessage.service'
-// import { DataService } from '../../services/data.service';
 import { PluginService } from '../../core/services/plugin.service';
+import { MeService } from '../shared/service/me.service';
 
 import { LanguageConfig } from '../shared/config/language.config';
 
@@ -24,7 +24,7 @@ export class MeDetailComponent {
     private jmessage: JMessageService,
     private plugin: PluginService,
     private loadingCtrl: LoadingController,
-    // private dataService: DataService,
+    private meService: MeService,
     private barcodeScanner: BarcodeScanner,
     private camera: Camera
   ) { }
@@ -45,13 +45,20 @@ export class MeDetailComponent {
   }
 
   async getNewPhoto(type: number, size: number) {
-    this.user.avatarurl = await this.plugin.getNewPhoto(type, size).catch((err) =>{
-      console.log(err)
-    });
-    if(!this.user.avatarurl) return;
+    let temp = await this.plugin.getNewPhoto(type, size);
+    temp = 'data:image/jpeg;base64,' + temp;
+    this.user.avatarUrl = temp;
     this.showLoading();
-    await this.jmessage.updateMyAvatar(this.user.avatarUrl);
+    await this.meService.setAvatar(this.user.id, temp);
+    await this.meService.setLocalAvatar(this.user.username, temp);
+    localStorage.setItem('currentUser', JSON.stringify(this.user));
     this.loading.dismiss();
+    // this.user.avatarurl = await this.plugin.getNewPhoto(type, size);
+    // if (!this.user.avatarurl) return;
+    // this.showLoading();
+    // console.log(this.user.avatarUrl);
+    // await this.jmessage.updateMyAvatar(this.user.avatarUrl);
+    // this.loading.dismiss();
   }
   changePhoto() {
     let actionSheet = this.actionSheetCtrl.create({
@@ -60,12 +67,12 @@ export class MeDetailComponent {
         {
           text: this.languageContent.takePhoto,
           handler: () => {
-            this.getNewPhoto(1,800);
+            this.getNewPhoto(1, 400);
           }
         }, {
           text: this.languageContent.selectPhoto,
           handler: () => {
-            this.getNewPhoto(0,800);
+            this.getNewPhoto(0, 400);
           }
         }, {
           text: this.languageContent.cancel,
@@ -79,7 +86,7 @@ export class MeDetailComponent {
     actionSheet.present();
   }
 
-  showQr():void {
+  showQr(): void {
     // 从前端获取
     let user = JSON.parse(localStorage.getItem('currentUser'));
     this.plugin.setBarcode(user.username);
