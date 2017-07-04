@@ -83,7 +83,8 @@ export class DialogueComponent implements OnInit {
   async ionViewDidEnter() {
     this.events.subscribe('msg.onReceiveMessage', async (msg: any) => {
       if (msg) {
-        this.getNickNameAndAvatar(msg);
+        msg = this.getNickNameAndAvatar(msg);
+        this.list.push(msg);
       } else {
         let data: any[] = await this.messageservice.getMessagesByUsername(this.userName, this.userinfo.username);
         data.forEach((value, index) => {
@@ -160,6 +161,7 @@ export class DialogueComponent implements OnInit {
       targetUser.fromUserNickName = this.toUserNickName;
       targetUser.fromUserAvatarSrc = this.toUserAvatarSrc;
     }
+    return targetUser;
 
   }
 
