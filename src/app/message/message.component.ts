@@ -156,7 +156,7 @@ export class MessageComponent implements OnInit {
     if (res.content.from_id === 'signlist' || res.content.from_id === 'news' || res.content.from_id === 'alert' || res.content.from_id === 'report') {
       this._type = 'notice';
       _content = res.content.msg_body.text;
-      if (res.fromName === 'alert') {
+      if (res.content.from_id === 'alert') {
         child_type = res.content.msg_body.extras.type;
       }
     } else {
