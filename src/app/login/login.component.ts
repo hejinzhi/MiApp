@@ -64,13 +64,15 @@ export class LoginComponent {
         this.currentUser.empno = res.json().User.EMPNO;
         localStorage.setItem('currentUser', JSON.stringify(this.currentUser));
 
-        //把登陆人的头像保存到本地
-        let myAvatar = await this.messageDatabaseService.getAvatarByUsername(this.currentUser.username);
-        if (myAvatar.rows.length > 0) {
-          await this.messageDatabaseService.updateAvatarByUsername(this.currentUser.username, this.currentUser.avatarUrl);
-        }
-        else {
-          await this.messageDatabaseService.insertAvatarTable(this.currentUser.username, this.currentUser.nickname, this.currentUser.avatarUrl);
+        if (this.pluginService.isCordova()) {
+          //把登陆人的头像保存到本地
+          let myAvatar = await this.messageDatabaseService.getAvatarByUsername(this.currentUser.username);
+          if (myAvatar.rows.length > 0) {
+            await this.messageDatabaseService.updateAvatarByUsername(this.currentUser.username, this.currentUser.avatarUrl);
+          }
+          else {
+            await this.messageDatabaseService.insertAvatarTable(this.currentUser.username, this.currentUser.nickname, this.currentUser.avatarUrl);
+          }
         }
 
         this.loading.dismiss();
