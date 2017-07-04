@@ -183,16 +183,18 @@ export class MessageComponent implements OnInit {
 
 
   async refreshData() {
-    if (this.firstTimeRefresh) {
-      this.noticeListItem = await this.messageService.getMessageHistory(this.userinfo.username, 'notice');
-      this.messageListItem = await this.messageService.getMessageHistory(this.userinfo.username, 'dialogue');
-      this.firstTimeRefresh = false;
-    } else {
-      let newNoticeData: any[] = await this.messageService.getMessageHistory(this.userinfo.username, 'notice');
-      let newMessageData: any[] = await this.messageService.getMessageHistory(this.userinfo.username, 'dialogue');
-      this.noticeListItem = this.changeLastMessage(newNoticeData, this.noticeListItem);
-      this.messageListItem = this.changeLastMessage(newMessageData, this.messageListItem);
-    }
+    // if (this.firstTimeRefresh) {
+    //   this.noticeListItem = await this.messageService.getMessageHistory(this.userinfo.username, 'notice');
+    //   this.messageListItem = await this.messageService.getMessageHistory(this.userinfo.username, 'dialogue');
+    //   this.firstTimeRefresh = false;
+    // } else {
+    //   let newNoticeData: any[] = await this.messageService.getMessageHistory(this.userinfo.username, 'notice');
+    //   let newMessageData: any[] = await this.messageService.getMessageHistory(this.userinfo.username, 'dialogue');
+    //   this.noticeListItem = this.changeLastMessage(newNoticeData, this.noticeListItem);
+    //   this.messageListItem = this.changeLastMessage(newMessageData, this.messageListItem);
+    // }
+    this.noticeListItem = await this.messageService.getMessageHistory(this.userinfo.username, 'notice');
+    this.messageListItem = await this.messageService.getMessageHistory(this.userinfo.username, 'dialogue');
 
   };
 
@@ -241,7 +243,10 @@ export class MessageComponent implements OnInit {
     else {
       oldData = newData;
     }
-    return oldData;
+    let sortData = oldData.sort((a, b) => {
+      return b.time - a.time;
+    });
+    return sortData;
   }
 
 

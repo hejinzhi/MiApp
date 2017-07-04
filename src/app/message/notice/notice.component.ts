@@ -60,6 +60,7 @@ export class NoticeComponent implements OnInit {
   async ionViewWillLeave() {
     await this.messageService.setUnreadToZeroByUserName(this.fromUserName, this.alertType);
     this.jmessageService.setSingleConversationUnreadMessageCount(this.fromUserName, null, 0);
+    this.jmessageService.exitConversation();
     this.events.publish('msg.onChangeTabBadge');
   }
 

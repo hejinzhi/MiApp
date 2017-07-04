@@ -195,7 +195,9 @@ export class DatabaseService {
         }
       }
     }
-    return otherPeopleSendToMe;
+    return otherPeopleSendToMe.sort((a, b) => {
+      return b.time - a.time;
+    });
   }
 
 
