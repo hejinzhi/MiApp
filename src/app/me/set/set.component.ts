@@ -17,6 +17,7 @@ export class SetComponent {
 
   languageType: string = localStorage.getItem('languageType');
   languageContent = LanguageConfig.setComponent[this.languageType];
+  plf: string; // 判断是什么平台
 
   constructor(
     public navCtrl: NavController,
@@ -27,15 +28,13 @@ export class SetComponent {
     private app: App,
     private platform: Platform
   ) {
+    if (this.platform.is('ios')) {
+      this.plf = 'ios';
+    } else if (this.platform.is('android')) {
+      this.plf = 'android';
+    }
   }
-  ionViewDidLoad() {
-  }
-  ionViewWillEnter() {
 
-  }
-  ionViewWillLeave() {
-
-  }
 
   checkUpdate() {
     this.plugin.checkAppForUpdate(false);
@@ -105,6 +104,8 @@ export class SetComponent {
         {
           text: this.languageContent.confirm,
           handler: () => {
+            that.jmessage.jmessageHandler.unsubscribe();
+            that.jmessage.jmessageOffline.unsubscribe();
             localStorage.removeItem('currentUser');
             that.jmessage.loginOut();
             this.app.getRootNav().setRoot(LoginComponent);
@@ -129,7 +130,8 @@ export class SetComponent {
         {
           text: this.languageContent.Y,
           handler: () => {
-            // that.jmessage.jmessageHandler.unsubscribe();
+            that.jmessage.jmessageHandler.unsubscribe();
+            that.jmessage.jmessageOffline.unsubscribe();
             that.jmessage.loginOut();
             if (that.platform.is('android')) {
               that.platform.exitApp();

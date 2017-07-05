@@ -103,7 +103,6 @@ export class KeyboardAttachDirective implements OnDestroy {
 
     private setElementPosition(pixels: number) {
         let that = this;
-        console.log('scroll ' + pixels);
         this.elementRef.nativeElement.style.paddingBottom = pixels + 'px';
         this.content.getScrollElement().style.marginBottom = (pixels + 44) + 'px';
         setTimeout(function () {

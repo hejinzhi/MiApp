@@ -29,7 +29,6 @@ export class DialogueComponent implements OnInit {
     userName: string;
     userNickName: string;
     fromUserAvatarSrc: string;
-    unreadCount: number; //未读消息数，如果大于0，退出dialogue页面时把未读消息更新为已读。否则不更新
 
     toUserName: string;
     toUserNickName: string;
@@ -56,7 +55,6 @@ export class DialogueComponent implements OnInit {
         this.userName = params.get('fromUserName');
         this.userNickName = params.get('fromUserNickName');
         this.fromUserAvatarSrc = params.get('fromUserAvatarSrc');
-        this.unreadCount = params.get('unreadCount');
 
         // 这里的toUserName一般是指当前登陆人
         this.toUserName = params.get('toUserName');
@@ -122,9 +120,9 @@ export class DialogueComponent implements OnInit {
     isPlus() {
         this.onPlus = false;
         if (/Android [4-7]/.test(navigator.appVersion)) {
-            window.addEventListener("resize", function() {
+            window.addEventListener("resize", function () {
                 if (document.activeElement.tagName == "INPUT" || document.activeElement.tagName == "TEXTAREA") {
-                    window.setTimeout(function() {
+                    window.setTimeout(function () {
                         document.activeElement.scrollIntoView();
                     }, 0);
                 }
@@ -139,21 +137,30 @@ export class DialogueComponent implements OnInit {
 
     async loadMessage() {
         let data: any[] = await this.messageservice.getMessagesByUsername(this.userName, this.userinfo.username);
+        console.log(data);
         data.forEach((value, index) => {
             this.getNickNameAndAvatar(value);
         });
+        console.log(data);
         this.list = data;
     };
 
     getNickNameAndAvatar(targetUser: any) {
-        if (targetUser.fromUserName === this.userName) {
-            targetUser.fromUserNickName = this.userNickName;
-            targetUser.fromUserAvatarSrc = this.fromUserAvatarSrc;
+        if (targetUser.fromUserName === this.userinfo.username) {
+            console.log(this.userinfo);
+            targetUser.fromUserNickName = this.userinfo.nickname;
+            targetUser.fromUserAvatarSrc = this.userinfo.avatarUrl;
         }
-        // 这里代表是当前登陆人发出去的信息
         else {
-            targetUser.fromUserNickName = this.toUserNickName;
-            targetUser.fromUserAvatarSrc = this.toUserAvatarSrc;
+            if (targetUser.fromUserName === this.userName) {
+                targetUser.fromUserNickName = this.userNickName;
+                targetUser.fromUserAvatarSrc = this.fromUserAvatarSrc;
+            }
+            // 这里代表是当前登陆人发出去的信息
+            else {
+                targetUser.fromUserNickName = this.toUserNickName;
+                targetUser.fromUserAvatarSrc = this.toUserAvatarSrc;
+            }
         }
         return targetUser;
 
@@ -199,7 +206,7 @@ export class DialogueComponent implements OnInit {
         }
         this.list.push(msg)
         this.input_text = '';
-        setTimeout(function() {
+        setTimeout(function () {
             that.scroll_down();
         }, 0);
 
@@ -209,16 +216,16 @@ export class DialogueComponent implements OnInit {
         //  this.sendMessage(2,"'assets/avatar/thumbnail-puppy-1.jpg'");
         let options: CameraOptions = {
             //这些参数可能要配合着使用，比如选择了sourcetype是0，destinationtype要相应的设置
-            quality: 50,                                            //相片质量0-100
+            quality: 20,                                            //相片质量0-100
             allowEdit: true,                                        //在选择之前允许修改截图
             destinationType: this.camera.DestinationType.FILE_URI,
             sourceType: type,                                         //从哪里选择图片：PHOTOLIBRARY=0，相机拍照=1，SAVEDPHOTOALBUM=2。0和1其实都是本地图库
             encodingType: this.camera.EncodingType.JPEG,                   //保存的图片格式： JPEG = 0, PNG = 1
-            targetWidth: 200,                                        //照片宽度
-            targetHeight: 200,                                       //照片高度
+            targetWidth: 400,                                        //照片宽度
+            targetHeight: 400,                                       //照片高度
             mediaType: 0,                                             //可选媒体类型：圖片=0，只允许选择图片將返回指定DestinationType的参数。 視頻格式=1，允许选择视频，最终返回 FILE_URI。ALLMEDIA= 2，允许所有媒体类型的选择。
             cameraDirection: 0,                                       //枪后摄像头类型：Back= 0,Front-facing = 1
-            saveToPhotoAlbum: true                                   //保存进手机相册
+            saveToPhotoAlbum: false                                   //保存进手机相册
         };
         this.camera.getPicture(options).then((imageData) => {
             // imageData is a base64 encoded string
