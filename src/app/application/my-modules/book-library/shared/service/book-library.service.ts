@@ -170,4 +170,9 @@ export class BookLibraryService {
     cancelBook(ids: number[]) {
         return this.myHttp.post(BookLibraryConfig.cancelBookUrl, { borrowID: ids });
     }
+
+    // 获取权限
+    getPrivilege(moduleID: number) {
+        return this.myHttp.get(BookLibraryConfig.getPrivilegeUrl + `?moduleID=${moduleID}`);
+    }
 }
