@@ -51,7 +51,7 @@
       <ion-icon name="disc" color="mac"></ion-icon>
         &nbsp;{{languageContent.logout}}
     </button>
-    <button ion-item class="function-message" (tap)="exit()">
+    <button ion-item class="function-message" (tap)="exit()" *ngIf="plf ==='android'">
       <ion-icon name="disc" color="mac"></ion-icon>
         &nbsp;{{languageContent.exitApp}}
     </button>
