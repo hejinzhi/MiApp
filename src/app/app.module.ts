@@ -14,6 +14,7 @@ import { LoginModule } from './login/login.module';
 import { SharedModule } from './shared/shared.module';
 import { CoreModule } from './core/core.module';
 import { PipesModule } from './shared/pipe/pipes.module';
+import { MeModule } from './me/me.module';
 
 @NgModule({
   declarations: [
@@ -31,6 +32,7 @@ import { PipesModule } from './shared/pipe/pipes.module';
     ApplicationModule,
     MessageModule,
     ContactModule,
+    MeModule,
     SharedModule,
     CoreModule,
     PipesModule

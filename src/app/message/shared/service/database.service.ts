@@ -11,7 +11,7 @@ export class DatabaseService {
 
   constructor(private sqlite: SQLite, private platform: Platform) {
     this.databaseReady = new BehaviorSubject(false);
-    this.platform.ready().then(() => {
+    this.platform.ready().then(async () => {
 
       if (this.platform.is('ios')) {
         this.plf = 'ios';
@@ -20,19 +20,17 @@ export class DatabaseService {
       }
 
       if (this.platform.is('cordova')) {
-        this.sqlite.create({
+        this.database = await this.sqlite.create({
           name: 'message.db',
           location: 'default'
-        }).then((db: SQLiteObject) => {
-          this.database = db;
-          if (localStorage.getItem('messageTableAlreadyCreated') === 'true') { }
-          else {
-            this.createMessageTable().then((res) => {
-              localStorage.setItem('messageTableAlreadyCreated', 'true');
-            });
-          }
-          this.databaseReady.next(true);
         });
+        if (localStorage.getItem('messageTableAlreadyCreated') === 'true') { }
+        else {
+          await this.createMessageTable();
+          await this.createAvatarTable();
+          localStorage.setItem('messageTableAlreadyCreated', 'true');
+          this.databaseReady.next(true);
+        }
       }
 
     });
@@ -62,7 +60,8 @@ export class DatabaseService {
 
   getMessagesByUsername(fromUsername: string, toUsername: string) {
     let sql = `SELECT * FROM MOA_LOCAL_MESSAGE WHERE
-        (FROM_USER_NAME ='${fromUsername}' AND TO_USER_NAME ='${toUsername}' ) OR (TO_USER_NAME='${fromUsername}' AND FROM_USER_NAME='${toUsername}' ) AND TYPE='dialogue' ORDER BY TIME;`;
+        (FROM_USER_NAME ='${fromUsername}' AND TO_USER_NAME ='${toUsername}' ) OR (TO_USER_NAME='${fromUsername}' AND FROM_USER_NAME='${toUsername}' ) 
+        AND TYPE='dialogue' ORDER BY TIME;`;
 
     return this.database.executeSql(sql, {})
       .then((data) => {
@@ -196,7 +195,9 @@ export class DatabaseService {
         }
       }
     }
-    return otherPeopleSendToMe;
+    return otherPeopleSendToMe.sort((a, b) => {
+      return b.time - a.time;
+    });
   }
 
 
@@ -252,6 +253,35 @@ export class DatabaseService {
 
   deleteAllMessages() {
     return this.database.executeSql('DELETE FROM MOA_LOCAL_MESSAGE', {});
+  }
+
+  deleteAllAvatar() {
+    return this.database.executeSql('DELETE FROM MOA_LOCAL_AVATAR', {});
+  }
+
+  // 创建存储头像的table
+  createAvatarTable() {
+    return this.database.executeSql(`CREATE TABLE IF NOT EXISTS MOA_LOCAL_AVATAR
+        (ID INTEGER PRIMARY KEY AUTOINCREMENT,USER_ID VARCHAR2(10), USER_NAME VARCHAR2(100),NICK_NAME VARCHAR2(100),AVATAR VARCHAR2(1000))`, {});
+  }
+
+  insertAvatarTable(username: string, nick_name: string, avatar: string, userID?: string) {
+    let data;
+    if (userID) {
+      data = [userID, username, nick_name, avatar];
+      return this.database.executeSql('INSERT INTO MOA_LOCAL_AVATAR (USER_ID,USER_NAME,NICK_NAME,AVATAR) VALUES(?,?,?,?)', data);
+    } else {
+      data = [username, nick_name, avatar];
+      return this.database.executeSql('INSERT INTO MOA_LOCAL_AVATAR (USER_NAME,NICK_NAME,AVATAR) VALUES(?,?,?)', data);
+    }
+  }
+
+  getAvatarByUsername(username: string) {
+    return this.database.executeSql(`SELECT * FROM MOA_LOCAL_AVATAR WHERE USER_NAME = '${username}' ;`, {});
+  }
+
+  updateAvatarByUsername(username: string, avatar: string) {
+    return this.database.executeSql(`UPDATE MOA_LOCAL_AVATAR SET AVATAR='${avatar}' WHERE USER_NAME='${username}'`, {});
   }
 
 }

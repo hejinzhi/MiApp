@@ -37,7 +37,7 @@ import { Subscription } from 'rxjs/rx';
     selector: '[keyboardAttach]'
 })
 export class KeyboardAttachDirective implements OnDestroy {
-    @Input('keyboardAttach') content: Content;
+    @Input() content: Content;
 
     private onShowSubscription: Subscription;
     private onHideSubscription: Subscription;
