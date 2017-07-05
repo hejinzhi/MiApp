@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, ViewChild, enableProdMode } from '@angular/core';
 import { Platform, Nav, Keyboard, IonicApp, MenuController, App } from 'ionic-angular';
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
@@ -36,6 +36,10 @@ export class MyAppComponent {
     private app: App,
     private jPushService: JPushService
   ) {
+
+    // if (platform.is('cordova')) {
+    //   enableProdMode();
+    // }
 
     this.appInit();
     platform.ready().then(() => {

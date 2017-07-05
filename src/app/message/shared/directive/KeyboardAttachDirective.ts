@@ -49,10 +49,8 @@ export class KeyboardAttachDirective implements OnDestroy {
         private platform: Platform,
         private keyboard: Keyboard
     ) {
-        if (this.platform.is('cordova') && this.platform.is('ios')) {
-            this.onShowSubscription = this.keyboard.onKeyboardShow().subscribe(e => this.onShow(e));
-            this.onHideSubscription = this.keyboard.onKeyboardHide().subscribe(() => this.onHide());
-        }
+        this.onShowSubscription = this.keyboard.onKeyboardShow().subscribe(e => this.onShow(e));
+        this.onHideSubscription = this.keyboard.onKeyboardHide().subscribe(() => this.onHide());
     }
 
     ngOnDestroy() {
@@ -65,40 +63,46 @@ export class KeyboardAttachDirective implements OnDestroy {
     }
 
     private onShow(e: any) {
-        let keyboardHeight: number = e.keyboardHeight || (e.detail && e.detail.keyboardHeight);
-        if (this.attachTime > 1) {
-            if (
-                keyboardHeight == 313 ||
-                keyboardHeight == 258 ||
-                keyboardHeight == 216 ||
-                keyboardHeight == 253 ||
-                keyboardHeight == 226 ||
-                keyboardHeight == 271 ||
-                keyboardHeight == 216 ||
-                keyboardHeight == 264) {
-                this.setElementPosition(0)
-            } else {
-                if (this.attachTime > 2) {
+        if (this.platform.is('cordova') && this.platform.is('ios')) {
+            let keyboardHeight: number = e.keyboardHeight || (e.detail && e.detail.keyboardHeight);
+            if (this.attachTime > 1) {
+                if (
+                    keyboardHeight == 313 ||
+                    keyboardHeight == 258 ||
+                    keyboardHeight == 216 ||
+                    keyboardHeight == 253 ||
+                    keyboardHeight == 226 ||
+                    keyboardHeight == 271 ||
+                    keyboardHeight == 216 ||
+                    keyboardHeight == 264) {
                     this.setElementPosition(0)
                 } else {
-                    this.setElementPosition(keyboardHeight);
+                    if (this.attachTime > 2) {
+                        this.setElementPosition(0)
+                    } else {
+                        this.setElementPosition(keyboardHeight);
+                    }
                 }
+            } else {
+                this.setElementPosition(keyboardHeight);
             }
-        } else {
-            this.setElementPosition(keyboardHeight);
+            this.attachTime++;
+        } else if (this.platform.is('android')) {
+            this.content.scrollToBottom();
         }
-        this.attachTime++
-        // this.setElementPosition(keyboardHeight)
     };
 
     private onHide() {
-        this.setElementPosition(0);
-        this.attachTime = 0
+        if (this.platform.is('cordova') && this.platform.is('ios')) {
+            this.setElementPosition(0);
+            this.attachTime = 0
+        } else if (this.platform.is('android')) {
+
+        }
     };
 
     private setElementPosition(pixels: number) {
         let that = this;
-        console.log('scroll ' + pixels);
         this.elementRef.nativeElement.style.paddingBottom = pixels + 'px';
         this.content.getScrollElement().style.marginBottom = (pixels + 44) + 'px';
         setTimeout(function () {

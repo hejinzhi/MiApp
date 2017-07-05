@@ -113,7 +113,7 @@ export class DatabaseService {
   }
 
   // 获取消息页面数据
-  getMessageList(loginUsername: string, type?: string, child_type?: string) {
+  async getMessageList(loginUsername: string, type?: string, child_type?: string) {
     let sql: string;
     if (type) {
       if (child_type) {
@@ -142,31 +142,27 @@ export class DatabaseService {
                 GROUP BY   FROM_USER_NAME,TO_USER_NAME) B
         WHERE   A.TIME = B.TIME  ORDER BY A.TIME DESC;`
     }
-    return this.database.executeSql(sql, {})
-      .then((data) => {
-        let msgs = [];
-        if (data.rows.length > 0) {
-          for (var i = 0; i < data.rows.length; i++) {
-            msgs.push({
-              id: data.rows.item(i).ID,
-              toUserName: data.rows.item(i).TO_USER_NAME,
-              fromUserName: data.rows.item(i).FROM_USER_NAME,
-              content: data.rows.item(i).CONTENT,
-              contentType: data.rows.item(i).CONTENT_TYPE,
-              time: data.rows.item(i).TIME,
-              type: data.rows.item(i).TYPE,
-              unread: data.rows.item(i).UNREAD,
-              extra: data.rows.item(i).EXTRA,
-              childType: data.rows.item(i).CHILD_TYPE,
-              unreadCount: data.rows.item(i).UNREAD_COUNT
-            });
-          }
-        }
-        return this.findLastContent(msgs, loginUsername);
-      }, err => {
-        console.log('Error: ', err);
-        return [];
-      });
+    let data = await this.database.executeSql(sql, {});
+    let msgs = [];
+    if (data.rows.length > 0) {
+      for (var i = 0; i < data.rows.length; i++) {
+        msgs.push({
+          id: data.rows.item(i).ID,
+          toUserName: data.rows.item(i).TO_USER_NAME,
+          fromUserName: data.rows.item(i).FROM_USER_NAME,
+          content: data.rows.item(i).CONTENT,
+          contentType: data.rows.item(i).CONTENT_TYPE,
+          time: data.rows.item(i).TIME,
+          type: data.rows.item(i).TYPE,
+          unread: data.rows.item(i).UNREAD,
+          extra: data.rows.item(i).EXTRA,
+          childType: data.rows.item(i).CHILD_TYPE,
+          unreadCount: data.rows.item(i).UNREAD_COUNT
+        });
+      }
+    }
+    return this.findLastContent(msgs, loginUsername);
+
   }
 
   findLastContent(msg: any[], loginUsername: string) {
@@ -195,9 +191,39 @@ export class DatabaseService {
         }
       }
     }
-    return otherPeopleSendToMe.sort((a, b) => {
-      return b.time - a.time;
-    });
+    if (otherPeopleSendToMe.length > 0) {
+      let result = otherPeopleSendToMe;
+
+      for (let i = 0; i < iSendToOtherPeople.length; i++) {
+        let flag = true;
+        for (let j = 0; j < otherPeopleSendToMe.length; j++) {
+          // 我有发给别人，别人也有发给我
+          if ((iSendToOtherPeople[i].fromUserName === otherPeopleSendToMe[j].toUserName)&&(iSendToOtherPeople[i].toUserName === otherPeopleSendToMe[j].fromUserName)) {
+            flag = false;
+          }
+        }
+        if (flag) {
+          iSendToOtherPeople[i].fromUserName = iSendToOtherPeople[i].toUserName;
+          result.push(iSendToOtherPeople[i]);
+        }
+      }
+
+      return result.sort((a, b) => {
+        return b.time - a.time;
+      });
+    } else {
+      let result = iSendToOtherPeople;
+      console.log(iSendToOtherPeople);
+      // return result;
+      if (result.length > 0) {
+        for (let i = 0; i < result.length; i++) {
+          result[i].fromUserName = iSendToOtherPeople[i].toUserName;
+        }
+
+      }
+
+      return result;
+    }
   }
 
 

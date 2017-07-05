@@ -3,13 +3,16 @@ sg-dialogue {
   $activecolor: #13b113;
   .page-content {
     height: 100%;
-    overflow: scroll;
+    // overflow: scroll;
   }
   .msg-content {
-    padding: 10px 16px 0 16px; 
+    padding: 10px 16px 0 16px;
     overflow-y: scroll;
+    // margin-bottom: 40px;
     &.up {
-      height: 78% !important;
+      // height: 80%;
+      margin-bottom: 40px;
+      padding-bottom: 40px;
     }
   }
   .selectable {
@@ -19,12 +22,12 @@ sg-dialogue {
     user-select: auto !important;
   }
   .android-height {
-    height: 93%;
+    // height: 93%;
   }
   .msgarea {
     padding: 10px 0px;
     .last {
-      margin-bottom: 14%;
+      // margin-bottom: 14%;
     }
     .clearfix:after {
       content: ".";

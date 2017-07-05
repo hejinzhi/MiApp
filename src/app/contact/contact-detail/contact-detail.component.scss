@@ -3,12 +3,19 @@ sg-contact-detail {
     height: 100%;
     width: 100%;
     .top-half {
-      height: 36%;
+      // height: 36%;
       @media screen and (orientation: portrait) {
-        height: 36%;
+        // height: 36%;
+        // ipone 5
+        // @media screen and (max-width: 600px) and (min-width: 570px) {
+        //   height: 36%;
+        // }
+        // @media screen and (max-width: 700px) and (min-width: 600px) {
+        //   height: 36%;
+        // }
       }
       @media screen and (orientation: landscape) {
-        height: 70%;
+        // height: 70%;
       }
       background-color: #1fb2e8;
       padding-top: 10px;
@@ -43,7 +50,7 @@ sg-contact-detail {
         width: 100%;
         margin-top: 18px;
         text-align: center;
-        height: 90px;
+        height: 80px;
         .tel {
           // height: 45px;
           float: left;
@@ -68,6 +75,7 @@ sg-contact-detail {
       }
     }
     .space {
+      // margin-top: 10px;
       height: 12px;
       width: 100%;
       background-color: #f5f5f5;

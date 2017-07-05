@@ -52,9 +52,9 @@ export class MessageComponent implements OnInit {
   }
 
 
-  ionViewWillEnter() {
+  async ionViewWillEnter() {
     if (this.pluginService.isCordova()) {
-      this.refreshData();
+      await this.refreshData();
     }
 
   }
