@@ -153,3 +153,68 @@ ion-app .alert-ios .alert-wrapper {
 .list-ios[no-lines] ion-list-header, .list-ios[no-lines] ion-item-options, .list-ios[no-lines] .item, .list-ios[no-lines] .item .item-inner {
     border-width: 0!important;
 }
+
+/*
+定义表格样式
+ */
+ .table {
+     width: 100%;
+     max-width: 150%;
+     margin-bottom: 20px;
+     border-spacing: 0;
+     border-collapse: collapse;
+ }
+
+ .table>tbody>tr>td,
+ .table>tbody>tr>th,
+ .table>tfoot>tr>td,
+ .table>tfoot>tr>th,
+ .table>thead>tr>td,
+ .table>thead>tr>th {
+     padding: 8px;
+     line-height: 1.42857143;
+     vertical-align: top;
+     border-top: 1px solid #ddd;
+ }
+.myTable {
+  width: 100%;
+  overflow-x: scroll;
+}
+ .table>caption+thead>tr:first-child>td,
+ .table>caption+thead>tr:first-child>th,
+ .table>colgroup+thead>tr:first-child>td,
+ .table>colgroup+thead>tr:first-child>th,
+ .table>thead:first-child>tr:first-child>td,
+ .table>thead:first-child>tr:first-child>th {
+     border-top: 0;
+ }
+ .table tbody th {
+   font-weight: normal;
+ }
+ .table th.row1 {
+   font-weight: bold;
+ }
+ .table-striped>tbody>tr:nth-of-type(odd) {
+     background-color: #f9f9f9;
+ }
+
+ caption {
+     padding-top: 8px;
+     padding-bottom: 8px;
+     color: #777;
+     text-align: center;
+ }
+
+ .table>thead>tr>th {
+     vertical-align: bottom;
+     border-bottom: 2px solid #ddd;
+ }
+
+ th {
+     text-align: left;
+ }
+
+ td,
+ th {
+     padding: 0;
+ }
