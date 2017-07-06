@@ -1,5 +1,5 @@
 import { Component, ViewChild, OnInit, ChangeDetectorRef } from '@angular/core';
-import { Tabs, Events } from 'ionic-angular'
+import { Tabs, Events, Platform } from 'ionic-angular'
 
 import { MessageComponent } from '../message/message.component';
 import { ContactComponent } from '../contact/contact.component';
@@ -10,6 +10,7 @@ import { MessageService } from '../message/shared/service/message.service';
 import { LanguageConfig } from './shared/config/language.config';
 import { DatabaseService } from '../message/shared/service/database.service';
 import { PluginService } from '../core/services/plugin.service';
+import { JPushService } from '../core/services/jpush.service';
 
 @Component({
   selector: 'sg-tabs',
@@ -32,16 +33,16 @@ export class TabsComponent implements OnInit {
     private plugin: PluginService,
     private databaseService: DatabaseService,
     private ref: ChangeDetectorRef,
+    private platform: Platform,
+    private jPushService: JPushService
   ) {
-    this.events.subscribe('msg.onReceiveMessage', async () => {
-      await this.changeTabBadge();
-      this.ref.detectChanges();
-    });
 
-    this.events.subscribe('msg.onChangeTabBadge', async () => {
-      await this.changeTabBadge();
-      this.ref.detectChanges();
-    });
+    if (this.plugin.isCordova()) {
+      this.events.subscribe('msg.onChangeTabBadge', async () => {
+        await this.changeTabBadge();
+        this.ref.detectChanges();
+      });
+    }
   }
 
 
@@ -60,6 +61,10 @@ export class TabsComponent implements OnInit {
   async changeTabBadge() {
     let data = await this.databaseService.getAllUnreadCount(this.userinfo.username);
     this.unreadCount = data.rows.item(0).COUNT;
+    if (this.platform.is('ios')) {
+      this.jPushService.setBadge(this.unreadCount);
+      this.jPushService.setApplicationIconBadgeNumber(this.unreadCount);
+    }
   }
 
 }

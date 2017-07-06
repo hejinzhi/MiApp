@@ -54,10 +54,13 @@ export class NoticeComponent implements OnInit {
       this.ref.detectChanges();
       this.scroll_down();
     });
+    this.jmessageService.enterSingleConversation(this.fromUserName);
   }
 
-  ionViewWillLeave() {
-    this.messageService.setUnreadToZeroByUserName(this.fromUserName, this.alertType);
+  async ionViewWillLeave() {
+    await this.messageService.setUnreadToZeroByUserName(this.fromUserName, this.alertType);
+    this.jmessageService.setSingleConversationUnreadMessageCount(this.fromUserName, null, 0);
+    this.jmessageService.exitConversation();
     this.events.publish('msg.onChangeTabBadge');
   }
 

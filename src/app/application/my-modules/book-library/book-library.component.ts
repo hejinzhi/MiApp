@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { NavController, ModalController, MenuController, AlertController, LoadingController, App, IonicPage } from 'ionic-angular';
+import { NavController, ModalController, MenuController, AlertController, LoadingController, App, IonicPage, NavParams } from 'ionic-angular';
 import { BarcodeScanner } from '@ionic-native/barcode-scanner';
 import { Observable } from 'rxjs/Rx';
 
@@ -16,6 +16,7 @@ import { LanguageConfig } from './shared/config/language.config';
 export class BookLibraryComponent implements OnInit {
     constructor(
         public navCtrl: NavController,
+        private navParams: NavParams,
         private bookService: BookLibraryService,
         private modalCtrl: ModalController,
         private alertCtrl: AlertController,
@@ -40,11 +41,23 @@ export class BookLibraryComponent implements OnInit {
 
     LastScrollTop: number = 0;
     scroll: any;
+    moduleID: number; // 记录当前module的ID
+    privilege: string = 'common'; // 记录是什么权限,默认是一般用户 common   管理员:super
 
-    ngOnInit() {
+    async ngOnInit() {
         this.user = JSON.parse(localStorage.getItem('currentUser'));
-
-
+        // 进行权限判断
+        this.moduleID = this.navParams.get('moduleID');
+        let res = await this.bookService.getPrivilege(this.moduleID);
+        let resObj = res.json();
+        if (resObj.USER_ROLE.length > 0) {
+            for (let i = 0; i < resObj.USER_ROLE.length; i++) {
+                if (resObj.USER_ROLE[i].ROLE_NAME === 'BOOKLIBRARY_ADMIN') {
+                    this.privilege = 'super';
+                    break;
+                }
+            }
+        }
     }
 
     test() {

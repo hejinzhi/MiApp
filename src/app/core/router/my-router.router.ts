@@ -11,7 +11,7 @@ export class MyRouter {
 
       case 1:
         // app.getRootNav().setRoot(BookLibraryComponent);
-        navCtrl.push('BookLibraryComponent');
+        navCtrl.push('BookLibraryComponent', { moduleID: 1 });
         break;
       case 21:
         navCtrl.push('AttendanceComponent');

@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, ViewChild, enableProdMode } from '@angular/core';
 import { Platform, Nav, Keyboard, IonicApp, MenuController, App } from 'ionic-angular';
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
@@ -37,14 +37,16 @@ export class MyAppComponent {
     private jPushService: JPushService
   ) {
 
+    // if (platform.is('cordova')) {
+    //   enableProdMode();
+    // }
+
     this.appInit();
     platform.ready().then(() => {
       statusBar.styleDefault();
       splashScreen.hide();
       this.jMessage.jmessagePlugin = (<any>window).plugins ? (<any>window).plugins.jmessagePlugin || null : null;
       this.jPushService.jPushPlugin = (<any>window).plugins ? (<any>window).plugins.jPushPlugin || null : null;
-      this.messageservice.getContacts();
-      this.messageservice.history = this.messageservice.getLocalMessageHistory() ? this.messageservice.getLocalMessageHistory() : [];
 
       if (platform.is('android')) {
         let original = platform.runBackButtonAction;
