@@ -107,7 +107,7 @@ export class KeyboardAttachDirective implements OnDestroy {
         this.content.getScrollElement().style.marginBottom = (pixels + 44) + 'px';
         setTimeout(function () {
             that.content.scrollToBottom()
-        }, 10);
+        }, 100);
 
     }
 }
