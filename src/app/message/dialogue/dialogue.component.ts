@@ -128,22 +128,27 @@ export class DialogueComponent implements OnInit {
     }
 
     clickPlus() {
-        this.onPlus = !this.onPlus;
-        setTimeout(() => {
-            if (this.plf === 'ios') {
-                this.content.getScrollElement().style.marginBottom = (200 + 44) + 'px';
-                this.content.resize();
-            }
-            this.scroll_down();
-        }, 100);
+        if (localStorage.getItem('keyboardShow') === 'true') {
+            this.keyboard.close();
+        } else {
+            this.onPlus = !this.onPlus;
+            setTimeout(() => {
+                if (this.plf === 'ios') {
+                    this.content.getScrollElement().style.marginBottom = (200 + 44) + 'px';
+                    this.content.resize();
+                }
+                this.scroll_down();
+            }, 100);
+        }
+
     }
 
     isPlus() {
         this.onPlus = false;
         if (/Android [4-7]/.test(navigator.appVersion)) {
-            window.addEventListener("resize", function() {
+            window.addEventListener("resize", function () {
                 if (document.activeElement.tagName == "INPUT" || document.activeElement.tagName == "TEXTAREA") {
-                    window.setTimeout(function() {
+                    window.setTimeout(function () {
                         document.activeElement.scrollIntoView();
                     }, 0);
                 }
@@ -227,7 +232,7 @@ export class DialogueComponent implements OnInit {
         }
         this.list.push(msg)
         this.input_text = '';
-        setTimeout(function() {
+        setTimeout(function () {
             that.scroll_down();
         }, 0);
 
