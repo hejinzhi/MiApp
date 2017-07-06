@@ -49,8 +49,14 @@ export class KeyboardAttachDirective implements OnDestroy {
         private platform: Platform,
         private keyboard: Keyboard
     ) {
-        this.onShowSubscription = this.keyboard.onKeyboardShow().subscribe(e => this.onShow(e));
-        this.onHideSubscription = this.keyboard.onKeyboardHide().subscribe(() => this.onHide());
+        this.onShowSubscription = this.keyboard.onKeyboardShow().subscribe((e) => {
+            localStorage.setItem('keyboardShow', 'true');
+            this.onShow(e);
+        });
+        this.onHideSubscription = this.keyboard.onKeyboardHide().subscribe(() => {
+            localStorage.setItem('keyboardShow', 'false');
+            this.onHide()
+        });
     }
 
     ngOnDestroy() {
@@ -95,6 +101,7 @@ export class KeyboardAttachDirective implements OnDestroy {
     private onHide() {
         if (this.platform.is('cordova') && this.platform.is('ios')) {
             this.setElementPosition(0);
+            // this.content.resize();
             this.attachTime = 0
         } else if (this.platform.is('android')) {
 
@@ -105,9 +112,9 @@ export class KeyboardAttachDirective implements OnDestroy {
         let that = this;
         this.elementRef.nativeElement.style.paddingBottom = pixels + 'px';
         this.content.getScrollElement().style.marginBottom = (pixels + 44) + 'px';
-        setTimeout(function () {
-            that.content.scrollToBottom()
-        }, 10);
+        // setTimeout(function () {
+        that.content.scrollToBottom()
+        // }, 100);
 
     }
 }
