@@ -26,19 +26,19 @@
         <ion-icon name="bookmark" item-left color="primary"></ion-icon>
         {{languageContent.paybacked_books}}
       </button>
-      <button ion-item (click)="addBooks()">
+      <button ion-item (click)="addBooks()" *ngIf="privilege === 'super'">
         <ion-icon name="briefcase" item-left color="primary"></ion-icon>
         {{languageContent.add_books}}
       </button>
-      <button ion-item (click)="borrowRequest()">
+      <button ion-item (click)="borrowRequest()" *ngIf="privilege === 'super'">
         <ion-icon name="folder" item-left color="primary"></ion-icon>
         {{languageContent.borrow_book_requests}}
       </button>
-      <button ion-item (click)="payBackRequest()">
+      <button ion-item (click)="payBackRequest()" *ngIf="privilege === 'super'">
         <ion-icon name="document" item-left color="primary"></ion-icon>
         {{languageContent.payback_requested}}
       </button>
-      <button ion-item (click)="showSettingModal()">
+      <button ion-item (click)="showSettingModal()" *ngIf="privilege === 'super'">
         <ion-icon name="settings" item-left color="primary"></ion-icon>
         {{languageContent.setting}}
       </button>

@@ -51,4 +51,7 @@ export class BookLibraryConfig {
 
     // 取消预约
     static cancelBookUrl = EnvConfig.baseUrl + 'Lib/OrderCancel';
+
+    // 获取权限
+    static getPrivilegeUrl = EnvConfig.baseUrl + 'Guid/GetUserFunctions';
 }
