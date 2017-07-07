@@ -6,20 +6,27 @@ import * as echarts from 'echarts';
 export class ChartService {
 
   fontFamily:string[] = ['Helvetica', 'Tahoma', 'Arial', 'STXihei', '华文细黑', 'Microsoft YaHei', '微软雅黑', 'sans-serif'];
+  myChart:any;
+  constructor(private myHttp: MyHttpService) {
+  window['hjj'] = echarts;
+}
 
-  constructor(private myHttp: MyHttpService) {  }
-
+  autoResizeChart() {
+    let newChart = {};
+  }
   getECharts() {
     return echarts;
   }
   makeChartWithDom(dom:any,option:any) {
     let myChart = echarts.init(dom);
     myChart.setOption(option);
+    window.addEventListener('resize',() =>myChart.resize());
     return myChart;
   }
   makeChart(id:string,option:any) {
     let myChart = echarts.init(document.getElementById(id));
     myChart.setOption(option);
+    window.addEventListener('resize',() =>myChart.resize());
     return myChart;
   }
   afterInit(option:any) {

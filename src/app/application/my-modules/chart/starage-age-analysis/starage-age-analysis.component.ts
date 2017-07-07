@@ -11,7 +11,6 @@ import { ChartService } from '../shared/service/chart.service';
 })
 export class StarageAgeAnalysisComponent {
 
-  isHere: boolean;
   pageY: number;
   pageX: number;
   @ViewChild('main1') myContent: any;
@@ -194,17 +193,6 @@ export class StarageAgeAnalysisComponent {
 
   reFresh() {
     this.ionViewDidLoad();
-  }
-  ionViewWillEnter() {
-    this.isHere = true;
-    window.addEventListener('resize', () => this.resize());
-  }
-  resize() {
-    if (!this.isHere) return;
-    this.ionViewDidLoad();
-  }
-  ionViewWillLeave() {
-    this.isHere = false;
   }
 
   draftStart(e: any) {
