@@ -98,12 +98,14 @@ export class StarageAgeAnalysisComponent {
       media:[
         {
           query:{
-            maxWidth: 480,
+            maxWidth: 2560,
           },
           option:{
             dataZoom:[{
               type: 'inside',
               disabled:true,
+              start:1,
+              end:100
             }]
           }
         },

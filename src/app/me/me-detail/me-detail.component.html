@@ -24,19 +24,19 @@
           </ion-note>
       </button>
     <ion-item-divider color="light"></ion-item-divider>
-    <button ion-item>
+    <button ion-item (tap)="changeDetail(1)">
         {{languageContent.mobile}}
-        <ion-note item-right>
-        {{user.telephone}}
-        </ion-note>
-    </button>
-    <button ion-item>
-        {{languageContent.telephone}}
         <ion-note item-right>
         {{user.mobile}}
         </ion-note>
     </button>
-    <button ion-item>
+    <button ion-item (tap)="changeDetail(2)">
+        {{languageContent.telephone}}
+        <ion-note item-right>
+        {{user.telephone}}
+        </ion-note>
+    </button>
+    <button ion-item (tap)="changeDetail(3)">
         {{languageContent.mail}}
         <ion-note item-right>
         {{user.email}}

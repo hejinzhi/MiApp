@@ -21,6 +21,7 @@ export class MyRouter {
         // const browser = this.iab.create('http://10.86.0.18:8080/default.aspx?username=jinzhi.he&password=Mitac123', '_seft', 'clearcache=yes');
         const browser = this.iab.create('http://oaweb.mic.com.tw/gsc/mobile/', '_system', 'hardwareback=no');
       // const browser = this.iab.create('http://oaweb.mic.com.tw/gsc/mobile/');
+        break;
       case 41:
         navCtrl.push('ChartComponent');
         break;

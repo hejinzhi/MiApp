@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { NavController, NavParams, IonicPage } from 'ionic-angular';
+import { NavController, NavParams, IonicPage, Platform } from 'ionic-angular';
 
 import { LanguageConfig } from '../shared/config/language.config';
 
@@ -16,6 +16,7 @@ export class StorageComponent {
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
+    public platform: Platform,
    ) {}
 
   ionViewDidLoad() {
@@ -25,5 +26,8 @@ export class StorageComponent {
   }
   quit() {
     console.log(456)
+  }
+  exit() {
+    this.platform.runBackButtonAction();
   }
 }
