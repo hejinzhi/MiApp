@@ -13,7 +13,7 @@
     <ion-card *ngFor="let itemSub of item.INFO">
       <ion-item>
         <ion-avatar item-left>
-          <img src="assets/img/face.png">
+          <img src="assets/img/face.png" getPhoto [user_id] = "itemSub.APPROVER">
         </ion-avatar>
         <h3>{{fontContent.SEQ}}: {{itemSub.SEQ}}</h3>
         <h3>{{itemSub.APPROVER}} <p *ngIf="itemSub.IN_TIME">{{itemSub.IN_TIME.replace('T',' ').substr(0,16)}}</p></h3>

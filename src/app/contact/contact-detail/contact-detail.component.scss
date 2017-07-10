@@ -30,6 +30,12 @@ sg-contact-detail {
         color: #fff;
         font-size: 20px;
         border: 2px solid #fff;
+        &.img {
+          position: absolute;
+          top: 10px;
+          left:50%;
+          margin-left: -40px;
+        }
       }
       .name {
         width: 200px;
@@ -38,6 +44,9 @@ sg-contact-detail {
         text-align: center;
         margin: 0 auto;
         color: #fff;
+        &.hasPhoto {
+          margin-top: 80px;
+        }
       }
       .job-title {
         width: 200px;
@@ -51,6 +60,9 @@ sg-contact-detail {
         margin-top: 18px;
         text-align: center;
         height: 80px;
+        a {
+          text-decoration: none;
+        }
         .tel {
           // height: 45px;
           float: left;

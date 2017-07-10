@@ -1,10 +1,11 @@
 <div class="contacter">
   <div class="contacter-content" *ngFor="let item of contacter">
-    <button class="my-button" (click)="goToDetailPage(item)"> 
+    <button class="my-button" (click)="goToDetailPage(item)">
     <ion-grid>
       <ion-row class="row">
         <ion-col col-2>
-          <span class="avatar">{{item.NICK_NAME.substr(-2) | sgChineseConv}}</span>
+          <img  class="avatar" [src]="item.AVATAR_URL" alt="self-photo" *ngIf="item.AVATAR_URL">
+          <span class="avatar" *ngIf="!item.AVATAR_URL">{{item.NICK_NAME.substr(-2) | sgChineseConv}}</span>
         </ion-col>
         <ion-col col-4>
           <ion-row class="name">{{item.NICK_NAME | sgChineseConv}}</ion-row>
