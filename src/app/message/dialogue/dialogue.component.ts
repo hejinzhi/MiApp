@@ -84,8 +84,12 @@ export class DialogueComponent implements OnInit {
     async ionViewDidEnter() {
         this.events.subscribe('msg.onReceiveMessage', async (msg: any) => {
             if (msg) {
-                this.getNickNameAndAvatar(msg);
-                this.list.push(msg);
+                // 当推送过来的消息发送者跟正在聊天的是同一个人时，在显示在画面
+                if (this.userName === msg.fromUserName) {
+                    this.getNickNameAndAvatar(msg);
+                    this.list.push(msg);
+                }
+
             } else {
                 let data: any[] = await this.messageservice.getMessagesByUsername(this.userName, this.userinfo.username);
                 data.forEach((value, index) => {
