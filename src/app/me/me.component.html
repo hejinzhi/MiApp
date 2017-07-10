@@ -1,6 +1,6 @@
 <ion-header class="head">
   <div class="nav-head" *ngIf="user" (tap)="goToMyDetail()">
-    <i class="iconfontyyy headicon">&#xe613;</i>
+    <i class="iconfontyyy headicon">&#xe614;</i>
     <div class="person">
       <img [src]="user.avatarUrl">
     </div>
@@ -14,7 +14,7 @@
 <ion-content class="content1">
   <ion-list class="myList">
     <ion-item-divider color="light"></ion-item-divider>
-    <button ion-item class="function-message">
+    <button ion-item class="function-message" disabled>
       <ion-icon name="disc" color="keep"></ion-icon>
         &nbsp;{{languageContent.keep}}
     </button>
@@ -23,7 +23,7 @@
       <ion-icon name="expand" color="sao"></ion-icon>
         &nbsp;{{languageContent.scan}}
     </button>
-    <button ion-item class="function-message">
+    <button ion-item class="function-message" disabled>
       <ion-icon name="create" color="advice"></ion-icon>
         &nbsp;{{languageContent.advice}}
     </button>

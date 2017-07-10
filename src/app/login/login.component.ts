@@ -30,6 +30,10 @@ export class LoginComponent {
   registerCredentials = { username: '', password: '' };
   currentUser: UserModel;
 
+  ionViewDidLoad() {
+    let user = JSON.parse(localStorage.getItem('currentUser'));
+    ({ username: this.registerCredentials.username, password: this.registerCredentials.password } = user);
+  }
   public async login() {
     this.showLoading();
     if (this.registerCredentials.username === null || this.registerCredentials.password === null) {
