@@ -100,4 +100,7 @@ export class AttendanceConfig {
   // 获取某月内的加班明细
   static getOverTimeMonthHoursUrl = EnvConfig.baseUrl + 'OverTime/GetOverTimeMonthHours?';
 
+  // 获取用户头像
+  static getUserPhotoUrl = EnvConfig.baseUrl + 'Guid/GetUserPhoto?';
+
 }

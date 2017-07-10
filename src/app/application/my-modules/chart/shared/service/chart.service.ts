@@ -5,36 +5,51 @@ import * as echarts from 'echarts';
 @Injectable()
 export class ChartService {
 
-  fontFamily:string[] = ['Helvetica', 'Tahoma', 'Arial', 'STXihei', '华文细黑', 'Microsoft YaHei', '微软雅黑', 'sans-serif'];
+  fontFamily: string[] = ['Helvetica', 'Tahoma', 'Arial', 'STXihei', '华文细黑', 'Microsoft YaHei', '微软雅黑', 'sans-serif'];
+  private myChart: any;
+  constructor(private myHttp: MyHttpService) {
+    this.autoResizeChart();
+  }
 
-  constructor(private myHttp: MyHttpService) {  }
-
+  autoResizeChart() {
+    let mychart = Object.assign({}, Object.create(echarts).__proto__);
+    mychart.init = function() {
+      let view = echarts.init.apply(this, arguments);
+      window.addEventListener('resize', () => view.resize());
+      return view;
+    }
+    mychart.init.prototype = echarts.init.prototype;
+    this.myChart = mychart;
+  }
+  getAutoResizeChart() {
+    return this.myChart;
+  }
   getECharts() {
     return echarts;
   }
-  makeChartWithDom(dom:any,option:any) {
-    let myChart = echarts.init(dom);
+  makeChartWithDom(dom: any, option: any) {
+    let myChart = this.myChart.init(dom);
     myChart.setOption(option);
     return myChart;
   }
-  makeChart(id:string,option:any) {
-    let myChart = echarts.init(document.getElementById(id));
+  makeChart(id: string, option: any) {
+    let myChart = this.myChart.init(document.getElementById(id));
     myChart.setOption(option);
     return myChart;
   }
-  afterInit(option:any) {
+  afterInit(option: any) {
     option = this.addFontFamily(option);
     return option
   }
-  addFontFamily(option:any,fontFamily: string[] = this.fontFamily) {
-    let add = {fontFamily: fontFamily};
-    Object.assign(option.textStyle,add);
+  addFontFamily(option: any, fontFamily: string[] = this.fontFamily) {
+    let add = { fontFamily: fontFamily };
+    Object.assign(option.textStyle, add);
     return option
   }
   initSingleYChart(title: string,
-    data:{
-      legend_data:string[],
-      xAxis_data:string[],
+    data: {
+      legend_data: string[],
+      xAxis_data: string[],
       series: {
         name: string,
         type: string,
@@ -42,15 +57,15 @@ export class ChartService {
           value: number
         }[],
       }[]
-    }, isY_value:boolean = true) {
-    let mySeries:any = data.series;
+    }, isY_value: boolean = true) {
+    let mySeries: any = data.series;
     mySeries[0].barGap = 0;
-    let option:any = {
+    let option: any = {
       title: {
         text: title, textStyle: {
           fontSize: 18
         },
-        x:'center'
+        x: 'center'
       },
       tooltip: {
         trigger: 'axis'
@@ -73,8 +88,8 @@ export class ChartService {
         fontSize: 18
       }
     }
-    if(isY_value) {
-      option.yAxis = [{type: 'value'}]
+    if (isY_value) {
+      option.yAxis = [{ type: 'value' }]
       option.xAxis = [
         {
           type: 'category',
@@ -85,7 +100,7 @@ export class ChartService {
         }
       ]
     } else {
-      option.xAxis = [{type: 'value'}]
+      option.xAxis = [{ type: 'value' }]
       option.yAxis = [
         {
           type: 'category',
@@ -101,43 +116,43 @@ export class ChartService {
   }
 
   initPieChart(title: string,
-    data:{
-      legend_data:string[],
-      series:{
+    data: {
+      legend_data: string[],
+      series: {
         name: string,
-        data:{value:number, name: string}[]
+        data: { value: number, name: string }[]
       }[]
     }) {
-    let mySeries:any = data.series;
+    let mySeries: any = data.series;
     mySeries[0].type = 'pie';
     mySeries[0].itemStyle = {
       emphasis: {
-          shadowBlur: 10,
-          shadowOffsetX: 0,
-          shadowColor: 'rgba(0, 0, 0, 0.5)'
+        shadowBlur: 10,
+        shadowOffsetX: 0,
+        shadowColor: 'rgba(0, 0, 0, 0.5)'
       }
     };
-    mySeries[0].center =['50%','60%'];
+    mySeries[0].center = ['50%', '60%'];
     let option = {
-    title : {
+      title: {
         text: title,
         textStyle: {
           fontSize: 18
         },
-        x:'center'
-    },
-    tooltip : {
+        x: 'center'
+      },
+      tooltip: {
         trigger: 'item',
         formatter: "{a} <br/>{b} : <br/>{c} ({d}%)"
-    },
-    grid: {
-      left: '3%',
-      right: '4%',
-      bottom: '3%',
-      height: '60%',
-      containLabel: true
-    },
-    legend: {
+      },
+      grid: {
+        left: '3%',
+        right: '4%',
+        bottom: '3%',
+        height: '60%',
+        containLabel: true
+      },
+      legend: {
         orient: 'horizontal',
         top: '7%',
         itemGap: 4,
@@ -145,20 +160,20 @@ export class ChartService {
           fontSize: 13
         },
         data: data.legend_data
-    },
-    series : mySeries,
-    textStyle: {
+      },
+      series: mySeries,
+      textStyle: {
 
+      }
     }
-   }
-   option = this.afterInit(option);
+    option = this.afterInit(option);
     return option;
   }
 
   initDoubleYChart(title: string,
-    data:{
-      legend_data:string[],
-      xAxis_data:string[],
+    data: {
+      legend_data: string[],
+      xAxis_data: string[],
       series: {
         name: string,
         type: string,
@@ -167,25 +182,25 @@ export class ChartService {
         }[],
       }[]
     },
-  data2:{
-    name: string,
-    type: string,
-    data: {
-      value: number
-    }[],
-  }[]) {
-    data2 = data2.map((res:any) => {
+    data2: {
+      name: string,
+      type: string,
+      data: {
+        value: number
+      }[],
+    }[]) {
+    data2 = data2.map((res: any) => {
       res.yAxisIndex = 1;
       return res;
     })
-    let mySeries:any = data.series;
+    let mySeries: any = data.series;
     mySeries[0].barGap = 0;
     let option = {
       title: {
         text: title, textStyle: {
           fontSize: '17'
         },
-        x:'center'
+        x: 'center'
       },
       tooltip: {
         trigger: 'axis'
@@ -215,28 +230,28 @@ export class ChartService {
       ],
       yAxis: [
         {
-            type: 'value',
-            scale: true,
-            name: '',
-            min: 0,
-            boundaryGap: [0.2, 0.2],
-            nameTextStyle: {
-              fontSize: 14
-            }
+          type: 'value',
+          scale: true,
+          name: '',
+          min: 0,
+          boundaryGap: [0.2, 0.2],
+          nameTextStyle: {
+            fontSize: 14
+          }
         },
         {
-            type: 'value',
-            scale: true,
-            name: '',
-            nameTextStyle: {
-              fontSize: 14
-            },
-            min: 0,
-            boundaryGap: [0.2, 0.2],
+          type: 'value',
+          scale: true,
+          name: '',
+          nameTextStyle: {
+            fontSize: 14
+          },
+          min: 0,
+          boundaryGap: [0.2, 0.2],
 
-           splitLine: {
+          splitLine: {
            	show: false
-           }
+          }
         }
       ],
       series: mySeries.concat(data2),

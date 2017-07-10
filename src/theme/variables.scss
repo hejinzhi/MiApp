@@ -123,15 +123,7 @@ ion-app .alert-ios .alert-wrapper {
   background-color: lighten(#CFCFD1, 17%);
   color: #8B8B8B;
 }
-// ion-list.myList .item-block .item-inner {
-//     border-bottom: 1px solid #c8c7cc;
-// }
-// ion-list.myList .item-block:first-child {
-//     border-top: 1px solid #c8c7cc;
-// }
-// ion-list.myList .item-block:last-child{
-//     border-bottom: 1px solid #c8c7cc;
-// }
+
 .list-ios > .item-block:first-child {
     border-top: 1px solid #c8c7cc!important;
 }

@@ -31,7 +31,9 @@ export class PluginService {
         return value;
     }
   }
-
+  getAlert() {
+    return this.alertCtrl;
+  }
   getCodePush() {
     return this.codePush;
   }

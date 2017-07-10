@@ -11,7 +11,6 @@ import { ChartService } from '../shared/service/chart.service';
 })
 export class StarageAgeAnalysisComponent {
 
-  isHere: boolean;
   pageY: number;
   pageX: number;
   @ViewChild('main1') myContent: any;
@@ -99,12 +98,14 @@ export class StarageAgeAnalysisComponent {
       media:[
         {
           query:{
-            maxWidth: 480,
+            maxWidth: 2560,
           },
           option:{
             dataZoom:[{
               type: 'inside',
               disabled:true,
+              start:1,
+              end:100
             }]
           }
         },
@@ -194,17 +195,6 @@ export class StarageAgeAnalysisComponent {
 
   reFresh() {
     this.ionViewDidLoad();
-  }
-  ionViewWillEnter() {
-    this.isHere = true;
-    window.addEventListener('resize', () => this.resize());
-  }
-  resize() {
-    if (!this.isHere) return;
-    this.ionViewDidLoad();
-  }
-  ionViewWillLeave() {
-    this.isHere = false;
   }
 
   draftStart(e: any) {

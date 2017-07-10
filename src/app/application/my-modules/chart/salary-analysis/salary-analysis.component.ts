@@ -11,7 +11,6 @@ import { ChartService } from '../shared/service/chart.service';
 })
 export class SalaryAnalysisComponent {
 
-  isHere:boolean;
   fontFamily:string[] = ['Helvetica', 'Tahoma', 'Arial', 'STXihei', '华文细黑', 'Microsoft YaHei', '微软雅黑', 'sans-serif'];
   constructor(
     public navCtrl: NavController,
@@ -19,7 +18,7 @@ export class SalaryAnalysisComponent {
     private plugin: PluginService,
     private chartService: ChartService
   ) { }
-
+test:any;
   ionViewDidLoad() {
     let option1 = this.chartService.initSingleYChart('IDL年资分析',{
       legend_data:['工程','管理','研发','专业'],
@@ -47,7 +46,7 @@ export class SalaryAnalysisComponent {
       }]
     });
 
-    this.chartService.makeChart('main1',option1);
+    this.test = this.chartService.makeChart('main1',option1);
 
 
     let option2 = this.chartService.initPieChart('IDL年资比例',{
@@ -63,7 +62,7 @@ export class SalaryAnalysisComponent {
        ]
     })
     this.chartService.makeChart('main2',option2);
-    
+
     let option3 = this.chartService.initSingleYChart('DL年资分析',{
       legend_data:['DL'],
       xAxis_data: ['0-1年','1-2年','2-3年','3-4年','4-5年','5-7年','7-9年','9年以上'],
@@ -91,16 +90,5 @@ export class SalaryAnalysisComponent {
   }
   reFresh() {
     this.ionViewDidLoad();
-  }
-  ionViewWillEnter() {
-    this.isHere = true;
-    window.addEventListener('resize',() =>this.resize());
-  }
-  resize() {
-    if(!this.isHere) return;
-    this.ionViewDidLoad();
-  }
-  ionViewWillLeave() {
-    this.isHere = false;
   }
 }

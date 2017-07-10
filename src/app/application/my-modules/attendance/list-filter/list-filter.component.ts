@@ -27,7 +27,6 @@ export class ListFilterComponent implements OnInit {
     this.user = JSON.parse(localStorage.getItem('currentUser'))
     this.type = this.myset.type;
     this.initializeItems();
-    console.log(this.items)
   }
 
   sortItems(type: string) {

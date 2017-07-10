@@ -91,4 +91,45 @@ export class MeDetailComponent {
     let user = JSON.parse(localStorage.getItem('currentUser'));
     this.plugin.setBarcode(user.username);
   }
+
+  changeDetail(type: number) {
+    let title = '';
+    switch (Number(type)) {
+      case 1:
+        title = '修改手机号码';
+        break;
+      case 2:
+        title = '修改固话号码';
+        break;
+      case 3:
+        title = '修改邮箱地址';
+        break;
+      default:
+        break;
+    }
+
+    let prompt = this.plugin.getAlert().create({
+      title: title,
+      inputs: [
+        {
+          name: 'del',
+          placeholder: ''
+        },
+      ],
+      buttons: [
+        {
+          text: '取消',
+          handler: data => {
+          }
+        },
+        {
+          text: '修改',
+          handler: data => {
+            console.log(data);
+          }
+        }
+      ]
+    });
+    prompt.present();
+  }
 }
