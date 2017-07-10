@@ -43,12 +43,23 @@ export class MyAppComponent {
 
     this.appInit();
     platform.ready().then(() => {
+
+      this.platform.resume.subscribe(() => {
+        console.log('resume');
+      });
+
+      this.platform.pause.subscribe(() => {
+        console.log('pause');
+      });
+
+
+
       statusBar.styleDefault();
       splashScreen.hide();
       this.jMessage.jmessagePlugin = (<any>window).plugins ? (<any>window).plugins.jmessagePlugin || null : null;
       this.jPushService.jPushPlugin = (<any>window).plugins ? (<any>window).plugins.jPushPlugin || null : null;
 
-      if (platform.is('android')) {
+      if (platform.is('cordova') && platform.is('android')) {
         let original = platform.runBackButtonAction;
         let __this = this;
         platform.runBackButtonAction = function (): void {
@@ -75,6 +86,13 @@ export class MyAppComponent {
             return activeNav.canGoBack() ? original.apply(platform) : cordova.plugins.backgroundMode.moveToBackground();
           }
         }
+      } else if (platform.is('cordova') && platform.is('ios')) {
+        // 当应用每次从后台变成前台时，检查jmessage是否已登录，检查app是否有新版本
+        this.platform.resume.subscribe(async () => {
+          let currentUser = JSON.parse(localStorage.getItem('currentUser'));
+          await this.jMessage.autoLogin(currentUser.username, 'pass');
+          this.plugin.checkAppForUpdate();
+        });
       }
     });
 

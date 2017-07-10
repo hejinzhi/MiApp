@@ -43,6 +43,7 @@ export class LoginComponent {
       }
       catch (err) {
         this.showError('Username or password error,please try again.');
+        return;
       }
 
       // let jmessageLogin = await this.jmessageService.autoLogin(this.registerCredentials.username, this.registerCredentials.password);

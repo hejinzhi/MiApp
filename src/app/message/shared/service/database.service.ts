@@ -198,7 +198,7 @@ export class DatabaseService {
         let flag = true;
         for (let j = 0; j < otherPeopleSendToMe.length; j++) {
           // 我有发给别人，别人也有发给我
-          if ((iSendToOtherPeople[i].fromUserName === otherPeopleSendToMe[j].toUserName)&&(iSendToOtherPeople[i].toUserName === otherPeopleSendToMe[j].fromUserName)) {
+          if ((iSendToOtherPeople[i].fromUserName === otherPeopleSendToMe[j].toUserName) && (iSendToOtherPeople[i].toUserName === otherPeopleSendToMe[j].fromUserName)) {
             flag = false;
           }
         }
@@ -213,8 +213,6 @@ export class DatabaseService {
       });
     } else {
       let result = iSendToOtherPeople;
-      console.log(iSendToOtherPeople);
-      // return result;
       if (result.length > 0) {
         for (let i = 0; i < result.length; i++) {
           result[i].fromUserName = iSendToOtherPeople[i].toUserName;
