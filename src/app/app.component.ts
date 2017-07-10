@@ -49,6 +49,7 @@ export class MyAppComponent {
       this.jPushService.jPushPlugin = (<any>window).plugins ? (<any>window).plugins.jPushPlugin || null : null;
 
       if (platform.is('android')) {
+        this.plugin.checkAppForUpdate();
         let original = platform.runBackButtonAction;
         let __this = this;
         platform.runBackButtonAction = function (): void {
