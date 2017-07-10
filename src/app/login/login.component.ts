@@ -27,7 +27,7 @@ export class LoginComponent {
   }
 
   loading: Loading;
-  registerCredentials = { username: 'jinzhi.he', password: 'pass' };
+  registerCredentials = { username: '', password: '' };
   currentUser: UserModel;
 
   public async login() {
@@ -56,16 +56,12 @@ export class LoginComponent {
 
       let token = res.json().Token;
       if (token) {
-        let user = res.json().User
-        this.currentUser.id = user.ID;
-        this.currentUser.avatarUrl = user.AVATAR_URL;
-        this.currentUser.nickname = user.NICK_NAME;
-        this.currentUser.position = user.JOB_TITLE;
-        this.currentUser.department = user.DEPT_NAME;
-        this.currentUser.empno = user.EMPNO;
-        this.currentUser.mobile = user.MOBILE;
-        this.currentUser.email = user.EMAIL;
-        this.currentUser.telephone = user.TELEPHONE;
+        this.currentUser.id = res.json().User.ID;
+        this.currentUser.avatarUrl = res.json().User.AVATAR_URL;
+        this.currentUser.nickname = res.json().User.NICK_NAME;
+        this.currentUser.position = res.json().User.JOB_TITLE;
+        this.currentUser.department = res.json().User.DEPT_NAME;
+        this.currentUser.empno = res.json().User.EMPNO;
         localStorage.setItem('currentUser', JSON.stringify(this.currentUser));
 
         if (this.pluginService.isCordova()) {
