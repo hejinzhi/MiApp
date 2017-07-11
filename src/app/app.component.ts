@@ -14,6 +14,8 @@ import { JPushService } from './core/services/jpush.service'
 
 import { OrganizationComponent } from './contact/organization/organization.component';
 
+import { EnvConfig } from './shared/config/env.config';
+
 declare var cordova: any;
 
 @Component({
@@ -112,6 +114,9 @@ export class MyAppComponent {
     }
     if (!localStorage.getItem('languageType')) {
       localStorage.setItem('languageType', 'simple_Chinese');
+    }
+    if (!localStorage.getItem('appVersion')) {
+      localStorage.setItem('appVersion',EnvConfig.appVersion);
     }
   }
 
