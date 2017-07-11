@@ -195,7 +195,7 @@ export class PluginService {
   getNewPhoto(type: number, size: number): Promise<any> {
     let options: CameraOptions = {
       //这些参数可能要配合着使用，比如选择了sourcetype是0，destinationtype要相应的设置
-      quality: 20,                                            //相片质量0-100
+      quality: 50,                                            //相片质量0-100
       allowEdit: true,                                         //在选择之前允许修改截图
       destinationType: this.camera.DestinationType.DATA_URL, //DATA_URL : 0, Return image as base64-encoded string, FILE_URI : 1, Return image file URI, NATIVE_URI : 2 Return image native URI (e.g., assets-library:// on iOS or content:// on Android)
       sourceType: type,                                         //从哪里选择图片：PHOTOLIBRARY=0，相机拍照=1，SAVEDPHOTOALBUM=2。0和1其实都是本地图库

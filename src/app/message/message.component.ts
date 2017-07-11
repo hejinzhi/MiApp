@@ -2,6 +2,7 @@ import { Component, OnInit, ChangeDetectorRef, EventEmitter } from '@angular/cor
 import { NavController, NavParams, AlertController, Platform, App, Loading, Events } from 'ionic-angular';
 import { Observable, Subscription, Subject } from 'rxjs/Rx';
 import { MessageModel } from '../shared/models/message.model';
+// import { Geolocation } from '@ionic-native/geolocation';
 
 import { JMessageService } from '../core/services/jmessage.service';
 import { MessageService } from './shared/service/message.service';
@@ -34,6 +35,7 @@ export class MessageComponent implements OnInit {
   userinfo: any; //登录人信息
   plf: string; // 记录是什么平台
   firstTimeRefresh: boolean = true; // 是否第一次进入这个画面
+  // pos: number[] = [106.487744, 29.569733];
 
 
   constructor(public navCtrl: NavController,
@@ -47,7 +49,8 @@ export class MessageComponent implements OnInit {
     private myHttp: MyHttpService,
     private events: Events,
     private databaseService: DatabaseService,
-    private pluginService: PluginService
+    private pluginService: PluginService,
+    private geolocation: Geolocation
   ) {
   }
 
@@ -116,6 +119,7 @@ export class MessageComponent implements OnInit {
     if (res.contentType === 'text') {
       _content = res.content.text;
     } else if (res.contentType === 'image') {
+      console.log(res);
       _content = res.content.localThumbnailPath;
     }
 
@@ -297,5 +301,6 @@ export class MessageComponent implements OnInit {
   public deleteAllMsgs() {
     this.databaseService.deleteAllMessages();
   }
+
 }
 

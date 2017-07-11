@@ -27,7 +27,7 @@ export class LoginComponent {
   }
   appVersion:string;
   loading: Loading;
-  registerCredentials = { username: '', password: '' };
+  registerCredentials = { username: 'hugh.liang', password: 'pass' };
   currentUser: UserModel;
 
   ionViewDidLoad() {

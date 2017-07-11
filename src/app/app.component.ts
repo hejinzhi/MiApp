@@ -22,7 +22,7 @@ declare var cordova: any;
   templateUrl: 'app.html'
 })
 export class MyAppComponent {
-  rootPage: any = LoginComponent;
+  rootPage: any;
   backButtonPressed: boolean = false;  //用于判断返回键是否触发
   @ViewChild(Nav) nav: Nav;
 
@@ -44,21 +44,11 @@ export class MyAppComponent {
     //   enableProdMode();
     // }
 
-    this.appInit();
+    // this.appInit();
     platform.ready().then(() => {
-
-      this.platform.resume.subscribe(() => {
-        console.log('resume');
-      });
-
-      this.platform.pause.subscribe(() => {
-        console.log('pause');
-      });
-
-
-
       statusBar.styleDefault();
       splashScreen.hide();
+      this.appInit();
       this.jMessage.jmessagePlugin = (<any>window).plugins ? (<any>window).plugins.jmessagePlugin || null : null;
       this.jPushService.jPushPlugin = (<any>window).plugins ? (<any>window).plugins.jPushPlugin || null : null;
       this.loginJmes();
@@ -116,9 +106,9 @@ export class MyAppComponent {
       // 已经有用户信息和设定为要验证手势密码
       this.rootPage = PatternLockComponent;
       // this.rootPage = OrganizationComponent;
-    } else if(user){
+    } else if (user) {
       this.rootPage = TabsComponent;
-    }else {
+    } else {
       this.rootPage = LoginComponent;
       // this.rootPage = OrganizationComponent;
     }
@@ -152,7 +142,7 @@ export class MyAppComponent {
         return;
       }
       let activeVC = this.nav.getActive();
-      console.log(activeVC);
+      // console.log(activeVC);
 
       if (activeVC.instance instanceof LoginComponent) {
         this.platform.exitApp();
@@ -161,7 +151,7 @@ export class MyAppComponent {
       } else {
         let tabs = activeVC.instance.tabRef;
         let activeNav = tabs.getSelected();
-        console.log(activeNav);
+        // console.log(activeNav);
         return activeNav.canGoBack() ? activeNav.pop() : cordova.plugins.backgroundMode.moveToBackground();
       }
     }, 1);

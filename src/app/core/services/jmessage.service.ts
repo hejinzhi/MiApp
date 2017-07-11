@@ -100,6 +100,7 @@ export class JMessageService {
             this.jmessagePlugin.login(username, password, (suc: any) => {
                 resolve(true);
             }, (err: any) => {
+                console.log(err);
                 resolve(false);
             });
         });

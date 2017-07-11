@@ -1,28 +1,34 @@
 <ion-header>
-    <ion-navbar>
-        <ion-title>{{fromUserNickName | sgChineseConv}}</ion-title>
-    </ion-navbar>
+  <ion-navbar>
+    <ion-title>{{fromUserNickName | sgChineseConv}}</ion-title>
+  </ion-navbar>
 </ion-header>
 <ion-content class="page-content">
-    <div class='msg-content'>
-        <ion-list *ngFor="let item of list" class="page-list">
-            <div class="list-time">
-                <div class="list-time-content">{{item.time | sgTimeDesc | sgChineseConv}}</div>
-            </div>
-            <ion-card [ngSwitch]="item.extra.content_type">
-                <ion-card-header class="card-header">
-                    {{item.extra.title | sgChineseConv}}
-                </ion-card-header>
-                <ng-template [ngSwitchCase]="'text'">
-                    <ion-card-content class="card-content" [innerHTML]="item.extra.content | sgChangeSpace | sgChineseConv ">
-                    </ion-card-content>
-                </ng-template>
-                <ng-template [ngSwitchCase]="'image'">
-                    <ion-card-content class="card-content">
-                        <img src={{item.extra.content}} class='img_content' (tap)="openPhoto(item.extra.content)">
-                    </ion-card-content>
-                </ng-template>
-            </ion-card>
-        </ion-list>
-    </div>
+  <div class='msg-content'>
+    <ion-list *ngFor="let item of list;let i=index " class="page-list">
+      <div class="list-time">
+        <div class="list-time-content">{{item.time | sgTimeDesc | sgChineseConv}}</div>
+      </div>
+      <ion-card [ngSwitch]="item.extra.content_type">
+        <ion-card-header class="card-header">
+          {{item.extra.title | sgChineseConv}}
+        </ion-card-header>
+        <ng-template [ngSwitchCase]="'text'">
+          <ion-card-content class="card-content" [innerHTML]="item.extra.content | sgChangeSpace | sgChineseConv ">
+          </ion-card-content>
+        </ng-template>
+        <ng-template [ngSwitchCase]="'image'">
+          <ion-card-content class="card-content">
+            <img src={{item.extra.content}} class='img_content' (tap)="openPhoto(item.extra.content)">
+          </ion-card-content>
+        </ng-template>
+        <ng-template [ngSwitchCase]="'json'">
+          <ion-card-content class="card-content">
+            <sg-chartcomponent [content]="item.extra.content"></sg-chartcomponent>
+          </ion-card-content>
+        </ng-template>
+      </ion-card>
+    </ion-list>
+  </div>
+  
 </ion-content>
