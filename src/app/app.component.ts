@@ -34,7 +34,8 @@ export class MyAppComponent {
     private messageservice: MessageService,
     private plugin: PluginService,
     private app: App,
-    private jPushService: JPushService
+    private jPushService: JPushService,
+    private jmessageService: JMessageService
   ) {
 
     // if (platform.is('cordova')) {
@@ -47,7 +48,8 @@ export class MyAppComponent {
       splashScreen.hide();
       this.jMessage.jmessagePlugin = (<any>window).plugins ? (<any>window).plugins.jmessagePlugin || null : null;
       this.jPushService.jPushPlugin = (<any>window).plugins ? (<any>window).plugins.jPushPlugin || null : null;
-
+      this.loginJmes();
+      this.plugin.checkAppForUpdate();
       if (platform.is('cordova') && platform.is('android')) {
         let original = platform.runBackButtonAction;
         let __this = this;
@@ -84,19 +86,26 @@ export class MyAppComponent {
         });
       }
     });
-
-
-
   }
-
-
+  async loginJmes() {
+    if (this.plugin.isCordova()) {
+      let user = JSON.parse(localStorage.getItem('currentUser'));
+      let jmessageLogin = await this.jmessageService.autoLogin(user.username, 'pass');
+      if (!jmessageLogin) {
+        this.plugin.showToast('Jmessage Login Error: ' + jmessageLogin);
+        return;
+      };
+    }
+  }
   appInit() {
     let user = JSON.parse(localStorage.getItem('currentUser'));
     if (user && user.myNineCode) {
       // 已经有用户信息和设定为要验证手势密码
       this.rootPage = PatternLockComponent;
       // this.rootPage = OrganizationComponent;
-    } else {
+    } else if(user){
+      this.rootPage = TabsComponent;
+    }else {
       this.rootPage = LoginComponent;
       // this.rootPage = OrganizationComponent;
     }

@@ -9,7 +9,9 @@ export class UserModel {
     department: string;
     patternCode: string;
     myNineCode: string;
-
+    mobile: string;
+    telephone: string;
+    email: string;
     constructor(username: string, password: string) {
         this.username = username;
         this.password = password;

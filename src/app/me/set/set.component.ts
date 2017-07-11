@@ -104,14 +104,16 @@ export class SetComponent {
         {
           text: this.languageContent.confirm,
           handler: () => {
-            if (that.jmessage.jmessageHandler) {
-              that.jmessage.jmessageHandler.unsubscribe();
+            if (this.plugin.isCordova()) {
+              if (that.jmessage.jmessageHandler) {
+                that.jmessage.jmessageHandler.unsubscribe();
+              }
+              if (that.jmessage.jmessageOffline) {
+                that.jmessage.jmessageOffline.unsubscribe();
+              }
+              that.jmessage.loginOut();
             }
-            if (that.jmessage.jmessageOffline) {
-              that.jmessage.jmessageOffline.unsubscribe();
-            }
-            localStorage.removeItem('currentUser');
-            that.jmessage.loginOut();
+            // localStorage.removeItem('currentUser');
             this.app.getRootNav().setRoot(LoginComponent);
           }
         }

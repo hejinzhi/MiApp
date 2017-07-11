@@ -1,45 +1,99 @@
 sg-login {
-  .scroll-content {
-    overflow-y: hidden;
-  }
+  $color : #3773F7;
   .login-content {
     background-image: url('../assets/bg/entry.png');
     background-size: 100% 100%;
     background-repeat: no-repeat;
+
     .login-box {
       display: flex;
       height: 100%;
       justify-content: center;
       align-items: center;
     }
+
     form {
       width: 100%;
     }
+
     ion-item {
-      border-radius: 30px !important;
-      padding-left: 30px !important;
       font-size: 0.9em;
       margin-bottom: 10px;
-      border: 1px solid #ffffff;
-      border-bottom: 0px !important;
+      border-bottom: 0 !important;
       box-shadow: none !important;
+      background-color: transparent;
     }
+
     .signup-col {
-      margin: 0px 16px 0px 16px;
+      margin: 0 16px;
       padding-bottom: 20px;
     }
+
     .item-inner {
       border-bottom-color: #ffffff !important;
       box-shadow: none !important;
+      padding-left: 30px;
+    }
+    [col-11] {
+      width: 100%;
+      max-width: 100%;
+      margin-left: -5.3%;
+    }
+    .input-has-focus .item-inner{
+      border-bottom-color: $color !important;
     }
     .submit-btn {
-      background: green;
+      background: $color;
       border-radius: 30px !important;
       border: 1px solid #ffffff;
     }
+
     .register-btn {
-      color: green;
+      color: $color;
       font-size: 0.8em;
     }
+  }
+
+  .list-ios > .item-block:first-child {
+    border-top: none!important;
+  }
+
+  .list-ios .item-block .item-inner {
+    border-bottom: none!important;
+  }
+
+  .list-ios > .item-block:last-child,
+  .list-ios > .item-wrapper:last-child .item-block {
+    border-bottom: none!important;
+  }
+
+  .list-ios > .item-block:last-child .item-inner,
+  .list-ios > .item-wrapper:last-child .item-block .item-inner {
+    border-bottom: none!important;
+  }
+
+  .rightBottom {
+    position: absolute;
+    bottom: 5px;
+    right: 5px;
+    color: $color;
+  }
+
+  .text-input-ios {
+    margin: 3px 8px 3px 0 !important;
+    padding: 0;
+    font-size: 20px;
+  }
+  .icon {
+    display: flex;
+    text-align: center;
+    justify-content: center;
+  }
+  .iconfontyyy {
+    height: 30px;
+    margin-top: 16px;
+    margin-left: 60px;
+    font-size: 20px;
+    color:$color;
   }
 }
