@@ -27,7 +27,7 @@ export class LoginComponent {
   }
 
   loading: Loading;
-  registerCredentials = { username: '', password: '' };
+  registerCredentials = { username: 'hugh.liang', password: 'pass' };
   currentUser: UserModel;
 
   public async login() {

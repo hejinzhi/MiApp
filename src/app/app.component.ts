@@ -43,17 +43,6 @@ export class MyAppComponent {
 
     this.appInit();
     platform.ready().then(() => {
-
-      this.platform.resume.subscribe(() => {
-        console.log('resume');
-      });
-
-      this.platform.pause.subscribe(() => {
-        console.log('pause');
-      });
-
-
-
       statusBar.styleDefault();
       splashScreen.hide();
       this.jMessage.jmessagePlugin = (<any>window).plugins ? (<any>window).plugins.jmessagePlugin || null : null;

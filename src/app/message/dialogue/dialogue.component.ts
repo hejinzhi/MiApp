@@ -3,6 +3,7 @@ import { Subscription } from 'rxjs/Rx';
 import { NavParams, Events, Content, Platform } from 'ionic-angular';
 import { Camera, CameraOptions } from '@ionic-native/camera';
 import { Keyboard } from '@ionic-native/keyboard';
+import { PhotoViewer } from '@ionic-native/photo-viewer';
 
 import { MessageService } from '../shared/service/message.service';
 import { JMessageService } from '../../core/services/jmessage.service';
@@ -51,7 +52,9 @@ export class DialogueComponent implements OnInit {
         public camera: Camera,
         private events: Events,
         private platform: Platform,
-        private databaseService: DatabaseService) {
+        private databaseService: DatabaseService,
+        private photoViewer: PhotoViewer
+    ) {
 
         this.userName = params.get('fromUserName');
         this.userNickName = params.get('fromUserNickName');
@@ -109,6 +112,10 @@ export class DialogueComponent implements OnInit {
             this.scroll_down();
         }
 
+    }
+
+    openPhoto(url: string) {
+        this.photoViewer.show(url);
     }
 
     async ionViewWillLeave() {
@@ -251,8 +258,8 @@ export class DialogueComponent implements OnInit {
             destinationType: this.camera.DestinationType.FILE_URI,
             sourceType: type,                                         //从哪里选择图片：PHOTOLIBRARY=0，相机拍照=1，SAVEDPHOTOALBUM=2。0和1其实都是本地图库
             encodingType: this.camera.EncodingType.JPEG,                   //保存的图片格式： JPEG = 0, PNG = 1
-            targetWidth: 200,                                        //照片宽度
-            targetHeight: 200,                                       //照片高度
+            // targetWidth: 200,                                        //照片宽度
+            // targetHeight: 200,                                       //照片高度
             mediaType: 0,                                             //可选媒体类型：圖片=0，只允许选择图片將返回指定DestinationType的参数。 視頻格式=1，允许选择视频，最终返回 FILE_URI。ALLMEDIA= 2，允许所有媒体类型的选择。
             cameraDirection: 0,                                       //枪后摄像头类型：Back= 0,Front-facing = 1
             saveToPhotoAlbum: false                                   //保存进手机相册
