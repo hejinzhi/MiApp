@@ -47,7 +47,6 @@ export class TabsComponent implements OnInit {
 
 
   ngOnInit() {
-    this.plugin.checkAppForUpdate();
     this.userinfo = JSON.parse(localStorage.getItem('currentUser'));
   }
 

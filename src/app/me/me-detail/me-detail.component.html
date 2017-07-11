@@ -20,27 +20,28 @@
     <button ion-item (tap)="showQr()">
          {{languageContent.Qr}}
           <ion-note item-right>
-          <i class="iconfontyyy">&#xe613;</i>
+          <i class="iconfontyyy">&#xe614;</i>
           </ion-note>
       </button>
     <ion-item-divider color="light"></ion-item-divider>
-    <button ion-item>
+    <button ion-item (tap)="changeDetailRequest(1)">
         {{languageContent.mobile}}
-        <ion-note item-right>
-        {{user.telephone}}
-        </ion-note>
-    </button>
-    <button ion-item>
-        {{languageContent.telephone}}
         <ion-note item-right>
         {{user.mobile}}
         </ion-note>
     </button>
-    <button ion-item>
+    <button ion-item (tap)="changeDetailRequest(2)">
+        {{languageContent.telephone}}
+        <ion-note item-right>
+        {{user.telephone}}
+        </ion-note>
+    </button>
+    <button ion-item (tap)="changeDetailRequest(3)">
         {{languageContent.mail}}
         <ion-note item-right>
         {{user.email}}
         </ion-note>
     </button>
+    <div class="error" *ngIf="errMes">{{errMes}}</div>
   </ion-list>
 </ion-content>
