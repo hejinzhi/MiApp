@@ -4,6 +4,8 @@ import { ContactService } from '../shared/service/contact.service';
 import { LanguageConfig } from '../shared/config/language.config';
 import { DialogueComponent } from '../../message/dialogue/dialogue.component';
 
+import { PluginService } from '../../core/services/plugin.service';
+
 @Component({
     selector: 'sg-contact-detail',
     templateUrl: 'contact-detail.component.html'
@@ -18,7 +20,8 @@ export class ContactDetailComponent implements OnInit {
     constructor(
         public navCtrl: NavController,
         public navParams: NavParams,
-        public contactService: ContactService
+        public contactService: ContactService,
+        private plugin: PluginService
     ) { }
 
     ngOnInit() {
@@ -33,6 +36,10 @@ export class ContactDetailComponent implements OnInit {
             fromUserAvatarSrc: this.personData.AVATAR_URL,
             toUserName: this.loginUsername
         });
+    }
+
+    sendMail() {
+      this.plugin.showToast(this.languageContent.toMail)
     }
 
 }

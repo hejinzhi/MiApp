@@ -17,7 +17,6 @@ export class MoreApplicationComponent implements OnInit {
     //   router: MyRouter = new MyRouter();
 
     moveItemToAppPage(id: number): void {
-        this.items.filter
         this.appService.moveItemToAppPage(id);
         this.updateLocalModuleList(id);
         this.refreshData();
@@ -29,7 +28,7 @@ export class MoreApplicationComponent implements OnInit {
 
     ngOnInit() {
         let moduleList = JSON.parse(localStorage.getItem('moduleList'));
-        this.items = moduleList.filter((value, index, newArray) => {
+        this.items = moduleList.filter((value: any, index: any, newArray: any) => {
             return value.DISPLAY === 'N';
         });
     }
@@ -42,7 +41,7 @@ export class MoreApplicationComponent implements OnInit {
         this.showBtn = false;
     }
 
-    updateLocalModuleList(id) {
+    updateLocalModuleList(id: any) {
         let list: any[] = JSON.parse(localStorage.getItem('moduleList'));
         for (let i = 0; i < list.length; i++) {
             if (list[i].MODULE_ID === id) {
@@ -54,7 +53,7 @@ export class MoreApplicationComponent implements OnInit {
 
     refreshData(): void {
         let moduleList = JSON.parse(localStorage.getItem('moduleList'));
-        this.items = moduleList.filter((value, index, newArray) => {
+        this.items = moduleList.filter((value: any, index: any, newArray: any) => {
             return value.DISPLAY === 'N';
         });
     }

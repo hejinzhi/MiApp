@@ -3,6 +3,7 @@ import { Subscription } from 'rxjs/Rx';
 import { NavParams, Events, Content, Platform } from 'ionic-angular';
 import { Camera, CameraOptions } from '@ionic-native/camera';
 import { Keyboard } from '@ionic-native/keyboard';
+import { PhotoViewer } from '@ionic-native/photo-viewer';
 
 import { MessageService } from '../shared/service/message.service';
 import { JMessageService } from '../../core/services/jmessage.service';
@@ -29,6 +30,7 @@ export class DialogueComponent implements OnInit {
     userName: string;
     userNickName: string;
     fromUserAvatarSrc: string;
+    unreadCount: number; //未读消息数，如果大于0，退出dialogue页面时把未读消息更新为已读。否则不更新
 
     toUserName: string;
     toUserNickName: string;
@@ -39,7 +41,7 @@ export class DialogueComponent implements OnInit {
     keyboardOpen: boolean;
     msgContent: string;
     plf: string;
-    testParams: boolean = true;
+    onShowSubscription: Subscription;
 
 
     constructor(private messageservice: MessageService,
@@ -50,11 +52,14 @@ export class DialogueComponent implements OnInit {
         public camera: Camera,
         private events: Events,
         private platform: Platform,
-        private databaseService: DatabaseService) {
+        private databaseService: DatabaseService,
+        private photoViewer: PhotoViewer
+    ) {
 
         this.userName = params.get('fromUserName');
         this.userNickName = params.get('fromUserNickName');
         this.fromUserAvatarSrc = params.get('fromUserAvatarSrc');
+        this.unreadCount = params.get('unreadCount');
 
         // 这里的toUserName一般是指当前登陆人
         this.toUserName = params.get('toUserName');
@@ -82,8 +87,12 @@ export class DialogueComponent implements OnInit {
     async ionViewDidEnter() {
         this.events.subscribe('msg.onReceiveMessage', async (msg: any) => {
             if (msg) {
-                msg = this.getNickNameAndAvatar(msg);
-                this.list.push(msg);
+                // 当推送过来的消息发送者跟正在聊天的是同一个人时，在显示在画面
+                if (this.userName === msg.fromUserName) {
+                    this.getNickNameAndAvatar(msg);
+                    this.list.push(msg);
+                }
+
             } else {
                 let data: any[] = await this.messageservice.getMessagesByUsername(this.userName, this.userinfo.username);
                 data.forEach((value, index) => {
@@ -97,10 +106,22 @@ export class DialogueComponent implements OnInit {
 
         await this.messageservice.setUnreadToZeroByUserName(this.userName);
         this.jmessageservice.enterSingleConversation(this.userName);
-        this.scroll_down(100);
+
+        // this.scroll_down();
+        if (this.plf === 'ios') {
+            this.scroll_down();
+        }
+
+    }
+
+    openPhoto(url: string) {
+        this.photoViewer.show(url);
     }
 
     async ionViewWillLeave() {
+        if (this.onShowSubscription) {
+            this.onShowSubscription.unsubscribe();
+        }
         this.events.unsubscribe('msg.onReceiveMessage');
         await this.messageservice.setUnreadToZeroByUserName(this.userName);
         this.jmessageservice.setSingleConversationUnreadMessageCount(this.userName, null, 0);
@@ -108,13 +129,29 @@ export class DialogueComponent implements OnInit {
         this.jmessageservice.exitConversation();
     }
 
+    ionViewWillEnter() {
+        if (this.plf === 'android') {
+            setTimeout(() => {
+                this.scroll_down();
+            }, 100);
+        }
+
+    }
 
     clickPlus() {
-        this.onPlus = !this.onPlus;
-        // setTimeout(() => {
-        //     this.content.scrollToBottom();
-        // }, 0);
-        this.scroll_down(100);
+        if (localStorage.getItem('keyboardShow') === 'true') {
+            this.keyboard.close();
+        } else {
+            this.onPlus = !this.onPlus;
+            setTimeout(() => {
+                if (this.plf === 'ios') {
+                    this.content.getScrollElement().style.marginBottom = (200 + 44) + 'px';
+                    this.content.resize();
+                }
+                this.scroll_down();
+            }, 100);
+        }
+
     }
 
     isPlus() {
@@ -127,50 +164,49 @@ export class DialogueComponent implements OnInit {
                     }, 0);
                 }
             })
-        }
-        setTimeout(() => {
             this.scroll_down();
-        }, 10);
 
+            this.onShowSubscription = this.keyboard.onKeyboardShow().subscribe(() => {
+                setTimeout(() => {
+                    this.scroll_down();
+                }, 10);
+            })
+        }
 
     }
 
     async loadMessage() {
         let data: any[] = await this.messageservice.getMessagesByUsername(this.userName, this.userinfo.username);
-        console.log(data);
         data.forEach((value, index) => {
             this.getNickNameAndAvatar(value);
         });
-        console.log(data);
         this.list = data;
     };
 
     getNickNameAndAvatar(targetUser: any) {
-        if (targetUser.fromUserName === this.userinfo.username) {
-            console.log(this.userinfo);
-            targetUser.fromUserNickName = this.userinfo.nickname;
-            targetUser.fromUserAvatarSrc = this.userinfo.avatarUrl;
+        if (targetUser.fromUserName === this.userName) {
+            targetUser.fromUserNickName = this.userNickName;
+            targetUser.fromUserAvatarSrc = this.fromUserAvatarSrc;
         }
+        // 这里代表是当前登陆人发出去的信息
         else {
-            if (targetUser.fromUserName === this.userName) {
-                targetUser.fromUserNickName = this.userNickName;
-                targetUser.fromUserAvatarSrc = this.fromUserAvatarSrc;
-            }
-            // 这里代表是当前登陆人发出去的信息
-            else {
-                targetUser.fromUserNickName = this.toUserNickName;
-                targetUser.fromUserAvatarSrc = this.toUserAvatarSrc;
-            }
+            targetUser.fromUserNickName = this.toUserNickName;
+            targetUser.fromUserAvatarSrc = this.toUserAvatarSrc;
         }
-        return targetUser;
 
     }
 
-    scroll_down(time?: number) {
-        if (time) {
-            this.content.scrollToBottom(time);
+    scroll_down() {
+        let that = this;
+        if (this.plf === 'android') {
+            setTimeout(() => {
+                var div = document.getElementsByClassName('msg-content');
+                div[0].scrollTop = div[0].scrollHeight;
+            }, 100);
         } else {
-            this.content.scrollToBottom(10);
+            // setTimeout(function() {
+            that.content.scrollToBottom();
+            // }, 100);
         }
 
     }
@@ -186,6 +222,7 @@ export class DialogueComponent implements OnInit {
             contentType = "image";
         }
 
+        // let history = this.messageservice.history;
         let msg = {
             toUserName: this.userName,
             fromUserName: this.userinfo.username,
@@ -216,13 +253,13 @@ export class DialogueComponent implements OnInit {
         //  this.sendMessage(2,"'assets/avatar/thumbnail-puppy-1.jpg'");
         let options: CameraOptions = {
             //这些参数可能要配合着使用，比如选择了sourcetype是0，destinationtype要相应的设置
-            quality: 20,                                            //相片质量0-100
-            allowEdit: true,                                        //在选择之前允许修改截图
+            quality: 50,                                            //相片质量0-100
+            allowEdit: false,                                        //在选择之前允许修改截图
             destinationType: this.camera.DestinationType.FILE_URI,
             sourceType: type,                                         //从哪里选择图片：PHOTOLIBRARY=0，相机拍照=1，SAVEDPHOTOALBUM=2。0和1其实都是本地图库
             encodingType: this.camera.EncodingType.JPEG,                   //保存的图片格式： JPEG = 0, PNG = 1
-            targetWidth: 400,                                        //照片宽度
-            targetHeight: 400,                                       //照片高度
+            // targetWidth: 200,                                        //照片宽度
+            // targetHeight: 200,                                       //照片高度
             mediaType: 0,                                             //可选媒体类型：圖片=0，只允许选择图片將返回指定DestinationType的参数。 視頻格式=1，允许选择视频，最终返回 FILE_URI。ALLMEDIA= 2，允许所有媒体类型的选择。
             cameraDirection: 0,                                       //枪后摄像头类型：Back= 0,Front-facing = 1
             saveToPhotoAlbum: false                                   //保存进手机相册

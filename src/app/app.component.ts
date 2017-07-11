@@ -20,7 +20,7 @@ declare var cordova: any;
   templateUrl: 'app.html'
 })
 export class MyAppComponent {
-  rootPage: any = LoginComponent;
+  rootPage: any;
   backButtonPressed: boolean = false;  //用于判断返回键是否触发
   @ViewChild(Nav) nav: Nav;
 
@@ -34,21 +34,24 @@ export class MyAppComponent {
     private messageservice: MessageService,
     private plugin: PluginService,
     private app: App,
-    private jPushService: JPushService
+    private jPushService: JPushService,
+    private jmessageService: JMessageService
   ) {
 
     // if (platform.is('cordova')) {
     //   enableProdMode();
     // }
 
-    this.appInit();
+    // this.appInit();
     platform.ready().then(() => {
       statusBar.styleDefault();
       splashScreen.hide();
+      this.appInit();
       this.jMessage.jmessagePlugin = (<any>window).plugins ? (<any>window).plugins.jmessagePlugin || null : null;
       this.jPushService.jPushPlugin = (<any>window).plugins ? (<any>window).plugins.jPushPlugin || null : null;
-
-      if (platform.is('android')) {
+      this.loginJmes();
+      this.plugin.checkAppForUpdate();
+      if (platform.is('cordova') && platform.is('android')) {
         let original = platform.runBackButtonAction;
         let __this = this;
         platform.runBackButtonAction = function (): void {
@@ -75,20 +78,34 @@ export class MyAppComponent {
             return activeNav.canGoBack() ? original.apply(platform) : cordova.plugins.backgroundMode.moveToBackground();
           }
         }
+      } else if (platform.is('cordova') && platform.is('ios')) {
+        // 当应用每次从后台变成前台时，检查jmessage是否已登录，检查app是否有新版本
+        this.platform.resume.subscribe(async () => {
+          let currentUser = JSON.parse(localStorage.getItem('currentUser'));
+          await this.jMessage.autoLogin(currentUser.username, 'pass');
+          this.plugin.checkAppForUpdate();
+        });
       }
     });
-
-
-
   }
-
-
+  async loginJmes() {
+    if (this.plugin.isCordova()) {
+      let user = JSON.parse(localStorage.getItem('currentUser'));
+      let jmessageLogin = await this.jmessageService.autoLogin(user.username, 'pass');
+      if (!jmessageLogin) {
+        this.plugin.showToast('Jmessage Login Error: ' + jmessageLogin);
+        return;
+      };
+    }
+  }
   appInit() {
     let user = JSON.parse(localStorage.getItem('currentUser'));
     if (user && user.myNineCode) {
       // 已经有用户信息和设定为要验证手势密码
       this.rootPage = PatternLockComponent;
       // this.rootPage = OrganizationComponent;
+    } else if (user) {
+      this.rootPage = TabsComponent;
     } else {
       this.rootPage = LoginComponent;
       // this.rootPage = OrganizationComponent;
@@ -120,7 +137,7 @@ export class MyAppComponent {
         return;
       }
       let activeVC = this.nav.getActive();
-      console.log(activeVC);
+      // console.log(activeVC);
 
       if (activeVC.instance instanceof LoginComponent) {
         this.platform.exitApp();
@@ -129,7 +146,7 @@ export class MyAppComponent {
       } else {
         let tabs = activeVC.instance.tabRef;
         let activeNav = tabs.getSelected();
-        console.log(activeNav);
+        // console.log(activeNav);
         return activeNav.canGoBack() ? activeNav.pop() : cordova.plugins.backgroundMode.moveToBackground();
       }
     }, 1);

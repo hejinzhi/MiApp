@@ -824,6 +824,18 @@ export class AttendanceService {
         return value;
     }
   }
+
+  // 获取用户头像
+  getUserPhoto(id:string) {
+    return this.myHttp.get(AttendanceConfig.getUserPhotoUrl + `userName=${id.toLowerCase()}`).then((res) => {
+      let newData = res.json()? res.json().AVATAR_URL:'';
+      return Promise.resolve({ content: newData, status: true });
+    }).catch((err) => {
+      console.log(err)
+      let errTip = this.errorDeal(err);
+      return Promise.resolve({ content: '', status: false })
+    });
+  }
   errorDeal(err: any, showAlert: boolean = false) {
     let errTip = '';
     switch (err.status) {

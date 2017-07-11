@@ -41,8 +41,11 @@ $colors: ( primary: #387ef5, secondary: #32db64, danger: #f53d3d, light: #f4f4f4
 @font-face {
   font-family: 'iconfontyyy';
   /* project id 234366 */
-  src: url('http://at.alicdn.com/t/font_yvgnepw3nogh9f6r.eot');
-  src: url('http://at.alicdn.com/t/font_yvgnepw3nogh9f6r.eot?#iefix') format('embedded-opentype'), url('http://at.alicdn.com/t/font_yvgnepw3nogh9f6r.woff') format('woff'), url('http://at.alicdn.com/t/font_yvgnepw3nogh9f6r.ttf') format('truetype'), url('http://at.alicdn.com/t/font_yvgnepw3nogh9f6r.svg#iconfont') format('svg');
+  src: url('http://at.alicdn.com/t/font_34c3wtsh5o3nxw29.eot');
+  src: url('http://at.alicdn.com/t/font_34c3wtsh5o3nxw29.eot?#iefix') format('embedded-opentype'),
+  url('http://at.alicdn.com/t/font_34c3wtsh5o3nxw29.woff') format('woff'),
+  url('http://at.alicdn.com/t/font_34c3wtsh5o3nxw29.ttf') format('truetype'),
+  url('http://at.alicdn.com/t/font_34c3wtsh5o3nxw29.svg#iconfont') format('svg');
 }
 
 .iconfontyyy {
@@ -123,15 +126,7 @@ ion-app .alert-ios .alert-wrapper {
   background-color: lighten(#CFCFD1, 17%);
   color: #8B8B8B;
 }
-// ion-list.myList .item-block .item-inner {
-//     border-bottom: 1px solid #c8c7cc;
-// }
-// ion-list.myList .item-block:first-child {
-//     border-top: 1px solid #c8c7cc;
-// }
-// ion-list.myList .item-block:last-child{
-//     border-bottom: 1px solid #c8c7cc;
-// }
+
 .list-ios > .item-block:first-child {
     border-top: 1px solid #c8c7cc!important;
 }

@@ -63,9 +63,10 @@ export class MessageComponent implements OnInit {
   }
 
   ionViewDidLeave() {
-    if (this.pluginService.isCordova()) {
-      this.jmessageService.jmessageOffline.unsubscribe();
-    }
+    // IOS锁屏后重新进入会认为是离线状态，所以不能把它unsubscribe掉
+    // if (this.pluginService.isCordova()) {
+    //   this.jmessageService.jmessageOffline.unsubscribe();
+    // }
   }
 
   ngOnInit() {
@@ -118,6 +119,7 @@ export class MessageComponent implements OnInit {
     if (res.contentType === 'text') {
       _content = res.content.text;
     } else if (res.contentType === 'image') {
+      console.log(res);
       _content = res.content.localThumbnailPath;
     }
 
