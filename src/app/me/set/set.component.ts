@@ -104,10 +104,12 @@ export class SetComponent {
         {
           text: this.languageContent.confirm,
           handler: () => {
-            that.jmessage.jmessageHandler.unsubscribe();
-            that.jmessage.jmessageOffline.unsubscribe();
-            localStorage.removeItem('currentUser');
-            that.jmessage.loginOut();
+            if(this.plugin.isCordova()) {
+              that.jmessage.jmessageHandler.unsubscribe();
+              that.jmessage.jmessageOffline.unsubscribe();
+              that.jmessage.loginOut();
+            }
+            // localStorage.removeItem('currentUser');
             this.app.getRootNav().setRoot(LoginComponent);
           }
         }

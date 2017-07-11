@@ -18,6 +18,7 @@ export class MeDetailComponent {
   languageType: string = localStorage.getItem('languageType');
   languageContent = LanguageConfig.MeDetailComponent[this.languageType];
 
+  errMes: string
   constructor(public navCtrl: NavController,
     public navParams: NavParams,
     private actionSheetCtrl: ActionSheetController,
@@ -34,6 +35,7 @@ export class MeDetailComponent {
   loading: Loading;
 
   ionViewDidLoad() {
+    this.errMes = '';
     this.user = this.navParams.data.user;
   }
 
@@ -45,11 +47,15 @@ export class MeDetailComponent {
   }
 
   async getNewPhoto(type: number, size: number) {
+    if (!this.plugin.isCordova()) return;
     let temp = await this.plugin.getNewPhoto(type, size);
     temp = 'data:image/jpeg;base64,' + temp;
     this.user.avatarUrl = temp;
     this.showLoading();
-    await this.meService.setAvatar(this.user.id, temp);
+    await this.meService.setAvatar(temp).catch((err) => {
+      console.log(err);
+      this.plugin.errorDeal(err);
+    });
     await this.meService.setLocalAvatar(this.user.username, temp);
     localStorage.setItem('currentUser', JSON.stringify(this.user));
     this.loading.dismiss();
@@ -88,13 +94,13 @@ export class MeDetailComponent {
 
   showQr(): void {
     // 从前端获取
-    let user = JSON.parse(localStorage.getItem('currentUser'));
-    this.plugin.setBarcode(user.username);
+    this.plugin.setBarcode(this.user.username);
   }
 
-  changeDetail(type: number) {
+  changeDetailRequest(type: number) {
     let title = '';
-    switch (Number(type)) {
+    type = Number(type);
+    switch (type) {
       case 1:
         title = '修改手机号码';
         break;
@@ -125,11 +131,93 @@ export class MeDetailComponent {
         {
           text: '修改',
           handler: data => {
-            console.log(data);
+            if (!this.validate(type, data.del)) return;
+            this.toChangeDetail(type, data.del);
           }
         }
       ]
     });
     prompt.present();
+  }
+  toChangeDetail(type: number, newData: string) {
+    switch (type) {
+      case 1:
+        this.meService.changeMobile(newData).then((res) => {
+          if (Number(res.status) === 200) {
+            this.user.mobile = newData;
+            this.updataSucc();
+          }
+        }).catch((err) => {
+          console.log(err);
+          this.plugin.errorDeal(err);
+        })
+        break;
+      case 2:
+        this.meService.changeTele(newData).then((res) => {
+          if (Number(res.status) === 200) {
+            this.user.telephone = newData;
+            this.updataSucc();
+          }
+        }).catch((err) => {
+          console.log(err);
+          this.plugin.errorDeal(err);
+        })
+        break;
+      case 3:
+        this.meService.changeMobile(newData).then((res) => {
+          if (Number(res.status) === 200) {
+            this.user.email = newData;
+            this.updataSucc();
+          }
+        }).catch((err) => {
+          console.log(err);
+          this.plugin.errorDeal(err);
+        })
+        break;
+      default:
+        break;
+    }
+  }
+  updataSucc() {
+    this.updateUser();
+    this.plugin.showToast('修改成功')
+  }
+  updateUser() {
+    localStorage.setItem('currentUser', JSON.stringify(this.user))
+  }
+  isSame() {
+    this.plugin.showToast('与原资料一致,不需要修改');
+  }
+  validate(type: number, newData: string) {
+    let res = false;
+    switch (type) {
+      case 1:
+        if (newData === this.user.mobile) {
+          this.isSame();
+          return;
+        }
+        res = /^1\d{10}$/.test(newData);
+        this.errMes = res ? '' : newData + ': ' + '不是正确的手机号码';
+        break;
+      case 2:
+        if (newData === this.user.telephone) {
+          this.isSame();
+          return;
+        }
+        res = /^\d{4}\-\d{8}$/.test(newData) || /^\d{4}$/.test(newData);
+        this.errMes = res ? '' : newData + ': ' + '不是正确的固话号码或短号';
+        break;
+      case 3:
+        if (newData === this.user.email) {
+          this.isSame();
+          return;
+        }
+        res = /^([a-zA-Z0-9_-])+(.[a-zA-Z0-9_-]*)*\@([a-zA-Z0-9_-])+(.[a-zA-Z0-9_-])+(.[a-zA-Z0-9_-])*/.test(newData);
+        this.errMes = res ? '' : newData + ': ' + '不是正确的邮箱地址';
+        break;
+      default:
+        break;
+    }
+    return res;
   }
 }

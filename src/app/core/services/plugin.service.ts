@@ -218,4 +218,31 @@ export class PluginService {
       content: content
     });
   }
+
+  errorDeal(err: any, showAlert: boolean = false) {
+    let errTip = '';
+    switch (err.status) {
+      case 404:
+        this.showToast(this.chineseConv('未找到结果'));
+        break;
+      case 400:
+        // if (showAlert) {
+        //   this.plugin.createBasicAlert(this.chineseConv(err.json().ExceptionMessage));
+        // } else {
+        //   this.plugin.showToast(this.chineseConv(err.json().ExceptionMessage));
+        // }
+        errTip = this.chineseConv(err.json().ExceptionMessage);
+        break;
+      case 0:
+        this.showToast(this.chineseConv('连接服务器失败'));
+        break;
+      case 500:
+        this.showToast(this.chineseConv('服务器没响应'));
+        break;
+      default:
+        this.showToast(this.chineseConv('出现未定义连接错误') + err.status);
+        break;
+    }
+    return errTip
+  }
 }
