@@ -136,8 +136,12 @@ export class SetComponent {
         {
           text: this.languageContent.Y,
           handler: () => {
-            that.jmessage.jmessageHandler.unsubscribe();
-            that.jmessage.jmessageOffline.unsubscribe();
+            if (that.jmessage.jmessageHandler) {
+              that.jmessage.jmessageHandler.unsubscribe();
+            }
+            if (that.jmessage.jmessageOffline) {
+              that.jmessage.jmessageOffline.unsubscribe();
+            }
             that.jmessage.loginOut();
             if (that.platform.is('android')) {
               that.platform.exitApp();
