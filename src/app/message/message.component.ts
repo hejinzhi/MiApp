@@ -116,6 +116,7 @@ export class MessageComponent implements OnInit {
     if (res.contentType === 'text') {
       _content = res.content.text;
     } else if (res.contentType === 'image') {
+      console.log(res);
       _content = res.content.localThumbnailPath;
     }
 

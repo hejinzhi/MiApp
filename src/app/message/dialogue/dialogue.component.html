@@ -16,7 +16,7 @@
               <div [class.selectable]="selectable === i" [innerHTML]="item.content | sgChangeSpace | sgChineseConv " (touchstart)="selectable=i"></div>
             </div>
           </ng-template>
-          <ng-template [ngSwitchCase]="'image'"><img src={{item.content}} class='img_content'></ng-template>
+          <ng-template [ngSwitchCase]="'image'"><img src={{item.content}} class='img_content' (tap)="openPhoto(item.content)"></ng-template>
           <div class="clearfix"></div>
         </div>
       </div>
