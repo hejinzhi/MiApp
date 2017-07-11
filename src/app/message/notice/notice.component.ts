@@ -45,7 +45,7 @@ export class NoticeComponent implements OnInit {
   ionViewWillEnter() {
     setTimeout(() => {
       this.scroll_down();
-    }, 0);
+    }, 100);
   }
 
   ionViewDidEnter() {
@@ -65,7 +65,7 @@ export class NoticeComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.userInfo = JSON.parse(localStorage.getItem('currentUser'));
+    this.userInfo = JSON.parse(localStorage.getItem('currentUser'));  
     this.loadMessage();
 
   }
@@ -73,8 +73,6 @@ export class NoticeComponent implements OnInit {
   async loadMessage() {
 
     this.list = await this.messageService.getMessagesByUsername(this.fromUserName, this.userInfo.username);
-
-    // this.list = await this.messageService.getNoticeHistoryByID(this.fromUserName);
     if (this.fromUserName === 'alert') {
       this.list = this.list.filter((v: any) => (v.childType === this.alertType));
     }
@@ -87,8 +85,8 @@ export class NoticeComponent implements OnInit {
   scroll_down() {
     var div = document.getElementsByClassName('msg-content');
     div[0].scrollTop = div[0].scrollHeight;
-  }
 
+  }
 
 }
 
