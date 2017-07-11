@@ -104,9 +104,13 @@ export class SetComponent {
         {
           text: this.languageContent.confirm,
           handler: () => {
-            if(this.plugin.isCordova()) {
-              that.jmessage.jmessageHandler.unsubscribe();
-              that.jmessage.jmessageOffline.unsubscribe();
+            if (this.plugin.isCordova()) {
+              if (that.jmessage.jmessageHandler) {
+                that.jmessage.jmessageHandler.unsubscribe();
+              }
+              if (that.jmessage.jmessageOffline) {
+                that.jmessage.jmessageOffline.unsubscribe();
+              }
               that.jmessage.loginOut();
             }
             // localStorage.removeItem('currentUser');

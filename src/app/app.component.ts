@@ -49,8 +49,8 @@ export class MyAppComponent {
       this.jMessage.jmessagePlugin = (<any>window).plugins ? (<any>window).plugins.jmessagePlugin || null : null;
       this.jPushService.jPushPlugin = (<any>window).plugins ? (<any>window).plugins.jPushPlugin || null : null;
       this.loginJmes();
-      if (platform.is('android')) {
-        this.plugin.checkAppForUpdate();
+      this.plugin.checkAppForUpdate();
+      if (platform.is('cordova') && platform.is('android')) {
         let original = platform.runBackButtonAction;
         let __this = this;
         platform.runBackButtonAction = function (): void {
