@@ -106,7 +106,7 @@ export class MyAppComponent {
       // 已经有用户信息和设定为要验证手势密码
       this.rootPage = PatternLockComponent;
       // this.rootPage = OrganizationComponent;
-    } else if (user) {
+    } else if (user && user.autoLogin) {
       this.rootPage = TabsComponent;
     } else {
       this.rootPage = LoginComponent;
