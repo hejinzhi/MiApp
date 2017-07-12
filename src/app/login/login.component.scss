@@ -1,6 +1,8 @@
 sg-login {
   $color: #3773F7;
-
+  .scroll-content {
+    padding-bottom: 0!important;
+  }
   .login-content {
     background-image: url('../assets/bg/entry.png');
     background-size: 100% 100%;
@@ -91,7 +93,9 @@ sg-login {
     right: 5px;
     color: $color;
   }
-
+  ion-input {
+    margin-left: 20px!important;;
+  }
   .text-input-ios {
     margin: 3px 8px 3px 0 !important;
     padding: 0;

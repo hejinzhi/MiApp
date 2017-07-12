@@ -12,6 +12,7 @@ export class UserModel {
     mobile: string;
     telephone: string;
     email: string;
+    autoLogin: boolean;
     constructor(username: string, password: string) {
         this.username = username;
         this.password = password;

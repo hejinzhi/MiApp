@@ -73,6 +73,7 @@ export class LoginComponent {
          this.currentUser.mobile = user.MOBILE;
          this.currentUser.email = user.EMAIL;
          this.currentUser.telephone = user.TELEPHONE;
+         this.currentUser.autoLogin = true;
         localStorage.setItem('currentUser', JSON.stringify(this.currentUser));
 
         if (this.pluginService.isCordova()) {

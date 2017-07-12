@@ -20,7 +20,6 @@ import { Keyboard } from '@ionic-native/keyboard';
 import { KeyboardAttachDirective } from './shared/directive/KeyboardAttachDirective';
 import { MyBMapDirective } from './shared/directive/BmapDirective';
 import { DrawChartDirective } from './shared/directive/DrawChartDirective';
-import { ImageViewerController } from 'ionic-img-viewer';
 
 
 @NgModule({
@@ -28,6 +27,6 @@ import { ImageViewerController } from 'ionic-img-viewer';
   declarations: [MessageComponent, DialogueComponent, NoticeComponent, TimeDescPipe, AlertComponent, ChangeSpace, KeyboardAttachDirective, MyBMapDirective, ChartComponent, DrawChartDirective],
   entryComponents: [MessageComponent, DialogueComponent, NoticeComponent, AlertComponent, ChartComponent],
   exports: [MessageComponent, DialogueComponent, NoticeComponent, AlertComponent, ChartComponent],
-  providers: [MessageService, Keyboard, Camera, DatabaseService, PhotoViewer, ImageViewerController]
+  providers: [MessageService, Keyboard, Camera, DatabaseService, PhotoViewer]
 })
 export class MessageModule { }

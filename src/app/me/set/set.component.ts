@@ -113,6 +113,7 @@ export class SetComponent {
               }
               that.jmessage.loginOut();
             }
+            this.removeAutoLogin();
             // localStorage.removeItem('currentUser');
             this.app.getRootNav().setRoot(LoginComponent);
           }
@@ -120,6 +121,11 @@ export class SetComponent {
       ]
     });
     confirm.present();
+  }
+  removeAutoLogin() {
+    let user = JSON.parse(localStorage.getItem('currentUser'));
+    user.autoLogin = false;
+    localStorage.setItem('currentUser',JSON.stringify(user));
   }
   exit() {
     let that = this;
