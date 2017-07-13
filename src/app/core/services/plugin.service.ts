@@ -20,6 +20,7 @@ export class PluginService {
     private platform: Platform
   ) { }
 
+  appNewVersion:string = '';
   chineseConv(value: string) {
     let fontType: string = localStorage.getItem('languageType');
     switch (fontType) {
@@ -74,6 +75,7 @@ export class PluginService {
           break;
         case SyncStatus.UPDATE_INSTALLED:
           this.showConfirmUpdate('1');
+          this.updateAppVersion(this.appNewVersion);
           let confirm = this.alertCtrl.create({
             title: this.chineseConv(`更新成功`),
             message: this.chineseConv(`马上重启应用体验最新版本?`),
@@ -102,6 +104,9 @@ export class PluginService {
       }
     });
   }
+  updateAppVersion(v:string) {
+    localStorage.setItem('appVersion',v);
+  }
   checkAppForUpdate(auto: boolean = true) {
     if (!this.isCordova()) return;
     return this.codePush.checkForUpdate().then((apk) => {
@@ -112,9 +117,13 @@ export class PluginService {
         }
         return;
       };
+      let des = apk.description.split('&&');
+      if(des.length>1){
+        this.appNewVersion = des[0];
+      }
       let confirm = this.alertCtrl.create({
         title: this.chineseConv(`检测到应用有更新,是否升级`),
-        subTitle: this.chineseConv(`更新内容: ${apk.description}`),
+        subTitle: this.chineseConv(`更新内容: ${des[des.length-1]}`),
         message: this.chineseConv(`应用大小: ${(apk.packageSize / Math.pow(1024, 2)).toFixed(2)}M`),
         buttons: [
           {

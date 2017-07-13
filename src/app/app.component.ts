@@ -14,6 +14,8 @@ import { JPushService } from './core/services/jpush.service'
 
 import { OrganizationComponent } from './contact/organization/organization.component';
 
+import { EnvConfig } from './shared/config/env.config';
+
 declare var cordova: any;
 
 @Component({
@@ -107,7 +109,7 @@ export class MyAppComponent {
       // 已经有用户信息和设定为要验证手势密码
       this.rootPage = PatternLockComponent;
       // this.rootPage = OrganizationComponent;
-    } else if (user) {
+    } else if (user && user.autoLogin) {
       this.rootPage = TabsComponent;
     } else {
       this.rootPage = LoginComponent;
@@ -115,6 +117,9 @@ export class MyAppComponent {
     }
     if (!localStorage.getItem('languageType')) {
       localStorage.setItem('languageType', 'simple_Chinese');
+    }
+    if (!localStorage.getItem('appVersion')) {
+      localStorage.setItem('appVersion',EnvConfig.appVersion);
     }
   }
 

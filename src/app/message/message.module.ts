@@ -9,6 +9,7 @@ import { DialogueComponent } from './dialogue/dialogue.component';
 import { NoticeComponent } from './notice/notice.component';
 import { ChartComponent } from './chart/chart.component';
 import { AlertComponent } from './alert/alert.component';
+import { TableComponent } from './table/table.component';
 import { Camera } from '@ionic-native/camera';
 import { PhotoViewer } from '@ionic-native/photo-viewer';
 // import { Geolocation } from '@ionic-native/geolocation';
@@ -20,14 +21,13 @@ import { Keyboard } from '@ionic-native/keyboard';
 import { KeyboardAttachDirective } from './shared/directive/KeyboardAttachDirective';
 import { MyBMapDirective } from './shared/directive/BmapDirective';
 import { DrawChartDirective } from './shared/directive/DrawChartDirective';
-import { ImageViewerController } from 'ionic-img-viewer';
 
 
 @NgModule({
   imports: [CommonModule, IonicModule, SharedModule, PipesModule],
-  declarations: [MessageComponent, DialogueComponent, NoticeComponent, TimeDescPipe, AlertComponent, ChangeSpace, KeyboardAttachDirective, MyBMapDirective, ChartComponent, DrawChartDirective],
+  declarations: [MessageComponent, DialogueComponent, NoticeComponent, TimeDescPipe, AlertComponent, ChangeSpace, KeyboardAttachDirective, MyBMapDirective, ChartComponent, DrawChartDirective,TableComponent],
   entryComponents: [MessageComponent, DialogueComponent, NoticeComponent, AlertComponent, ChartComponent],
   exports: [MessageComponent, DialogueComponent, NoticeComponent, AlertComponent, ChartComponent],
-  providers: [MessageService, Keyboard, Camera, DatabaseService, PhotoViewer, ImageViewerController]
+  providers: [MessageService, Keyboard, Camera, DatabaseService, PhotoViewer]
 })
 export class MessageModule { }
