@@ -49,8 +49,7 @@ export class MessageComponent implements OnInit {
     private myHttp: MyHttpService,
     private events: Events,
     private databaseService: DatabaseService,
-    private pluginService: PluginService,
-    private geolocation: Geolocation
+    private pluginService: PluginService
   ) {
   }
 
