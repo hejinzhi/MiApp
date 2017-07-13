@@ -112,15 +112,34 @@ export class MyAppComponent {
       this.rootPage = LoginComponent;
       // this.rootPage = OrganizationComponent;
     }
-    if (!localStorage.getItem('languageType')) {
-      localStorage.setItem('languageType', 'simple_Chinese');
-    }
+    this.setDefaultLanguage();
     if (!localStorage.getItem('appVersion')) {
       localStorage.setItem('appVersion',EnvConfig.appVersion);
     }
   }
-
-
+  
+  setDefaultLanguage() {
+    if(localStorage.getItem('languageType')) return;
+    let userLanguage = window.navigator.language.toLowerCase();
+    let languageType = ['zh']
+    let index = -1;
+    languageType.forEach((val,idx) => {
+      if(userLanguage.indexOf(val) > -1) {
+        index = idx;
+        return;
+      }
+    })
+    if(index === 0) {
+      if(userLanguage === 'zh-cn') {
+        localStorage.setItem('languageType', 'simple_Chinese');
+      } else {
+        localStorage.setItem('languageType', 'traditional_Chinese');
+      }
+    }
+    if(index === -1) {
+      localStorage.setItem('languageType', 'simple_Chinese');
+    }
+  }
 
   registerBackButtonAction() {
     this.platform.registerBackButtonAction(() => {
