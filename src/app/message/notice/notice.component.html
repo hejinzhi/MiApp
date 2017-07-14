@@ -23,12 +23,14 @@
           </ion-card-content>
         </ng-template>
         <ng-template [ngSwitchCase]="'json'">
-          <ion-card-content class="card-content">
-            <sg-chartcomponent [content]="item.extra.content"></sg-chartcomponent>
+          <ion-card-content class="card-content" (tap)="toggleChart(item)">
+            <p class="chart-text">{{item.content | sgChineseConv}}</p>
+            <p class="show-detail" *ngIf="!item.extra.showChart">{{languageContent.showDetail | sgChineseConv}}</p>
+            <p class="show-detail" *ngIf="item.extra.showChart">{{languageContent.hideDetail | sgChineseConv}}</p>
+            <sg-chartcomponent [content]="item.extra.content" *ngIf="item.extra.showChart"></sg-chartcomponent>
           </ion-card-content>
         </ng-template>
       </ion-card>
     </ion-list>
   </div>
-  
 </ion-content>
