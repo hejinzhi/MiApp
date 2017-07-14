@@ -1,7 +1,6 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { NavParams, Events } from 'ionic-angular';
 import { PhotoViewer } from '@ionic-native/photo-viewer';
-import { ImageViewerController } from 'ionic-img-viewer';
 
 import { MessageService } from '../shared/service/message.service';
 import { JMessageService } from '../../core/services/jmessage.service';
@@ -16,14 +15,14 @@ import { LanguageConfig } from '../shared/config/language.config';
 export class NoticeComponent implements OnInit {
 
   languageType: string = localStorage.getItem('languageType');
-  languageContent = LanguageConfig.AlertComponent[this.languageType];
+  languageContent = LanguageConfig.NoticeComponent[this.languageType];
 
   fromUserNickName: string;
   fromUserName: string;
   list: any;
   userInfo: any; // 登录人信息
   alertType: string;
-  _imageViewerCtrl: ImageViewerController;
+  showChartFlag: boolean = false;
 
   constructor(
     public params: NavParams,
@@ -32,11 +31,10 @@ export class NoticeComponent implements OnInit {
     private ref: ChangeDetectorRef,
     private events: Events,
     private photoViewer: PhotoViewer,
-    public  imageViewerCtrl: ImageViewerController) {
+    public imageViewerCtrl: ImageViewerController) {
 
     this.fromUserName = params.get('fromUserName');
     this.fromUserNickName = params.get('fromUserNickName');
-    this._imageViewerCtrl = imageViewerCtrl;
 
     if (this.fromUserName === 'alert') {
       this.alertType = params.data.childType;
@@ -44,9 +42,7 @@ export class NoticeComponent implements OnInit {
   }
 
   ionViewWillEnter() {
-    setTimeout(() => {
-      this.scroll_down();
-    }, 100);
+    this.scroll_down();
   }
 
   ionViewDidEnter() {
@@ -66,9 +62,17 @@ export class NoticeComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.userInfo = JSON.parse(localStorage.getItem('currentUser'));  
+    this.userInfo = JSON.parse(localStorage.getItem('currentUser'));
     this.loadMessage();
 
+  }
+
+  toggleChart(item: any) {
+    this.showChartFlag = !this.showChartFlag;
+    item.extra.showChart = this.showChartFlag;
+    // setTimeout(() => {
+    //   this.scroll_down();
+    // }, 100);
   }
 
   async loadMessage() {
@@ -80,15 +84,14 @@ export class NoticeComponent implements OnInit {
   };
 
   openPhoto(url: string) {
-    // this.photoViewer.show(url);
-
-    const imageViewer = this._imageViewerCtrl.create(url);
-    imageViewer.present();
+    this.photoViewer.show(url);
   }
 
   scroll_down() {
-    var div = document.getElementsByClassName('msg-content');
-    div[0].scrollTop = div[0].scrollHeight;
+    setTimeout(() => {
+      var div = document.getElementsByClassName('msg-content');
+      div[0].scrollTop = div[0].scrollHeight;
+    }, 100);
 
   }
 

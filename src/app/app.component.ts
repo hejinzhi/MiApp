@@ -48,10 +48,9 @@ export class MyAppComponent {
     platform.ready().then(() => {
       statusBar.styleDefault();
       splashScreen.hide();
-      this.appInit();
       this.jMessage.jmessagePlugin = (<any>window).plugins ? (<any>window).plugins.jmessagePlugin || null : null;
       this.jPushService.jPushPlugin = (<any>window).plugins ? (<any>window).plugins.jPushPlugin || null : null;
-      this.loginJmes();
+      this.appInit();
       this.plugin.checkAppForUpdate();
       if (platform.is('cordova') && platform.is('android')) {
         let original = platform.runBackButtonAction;
@@ -93,11 +92,14 @@ export class MyAppComponent {
   async loginJmes() {
     if (this.plugin.isCordova()) {
       let user = JSON.parse(localStorage.getItem('currentUser'));
-      let jmessageLogin = await this.jmessageService.autoLogin(user.username, 'pass');
-      if (!jmessageLogin) {
-        this.plugin.showToast('Jmessage Login Error: ' + jmessageLogin);
-        return;
-      };
+      if (user) {
+        let jmessageLogin = await this.jmessageService.autoLogin(user.username, 'pass');
+        if (!jmessageLogin) {
+          this.plugin.showToast('Jmessage Login Error: ' + jmessageLogin);
+          return;
+        };
+      }
+
     }
   }
   appInit() {
@@ -105,22 +107,43 @@ export class MyAppComponent {
     if (user && user.myNineCode) {
       // 已经有用户信息和设定为要验证手势密码
       this.rootPage = PatternLockComponent;
+      this.appInit();
       // this.rootPage = OrganizationComponent;
     } else if (user && user.autoLogin) {
       this.rootPage = TabsComponent;
+      this.appInit();
     } else {
       this.rootPage = LoginComponent;
       // this.rootPage = OrganizationComponent;
     }
-    if (!localStorage.getItem('languageType')) {
-      localStorage.setItem('languageType', 'simple_Chinese');
-    }
+    this.setDefaultLanguage();
     if (!localStorage.getItem('appVersion')) {
       localStorage.setItem('appVersion',EnvConfig.appVersion);
     }
   }
 
-
+  setDefaultLanguage() {
+    if(localStorage.getItem('languageType')) return;
+    let userLanguage = window.navigator.language.toLowerCase();
+    let languageType = ['zh']
+    let index = -1;
+    languageType.forEach((val,idx) => {
+      if(userLanguage.indexOf(val) > -1) {
+        index = idx;
+        return;
+      }
+    })
+    if(index === 0) {
+      if(userLanguage === 'zh-cn') {
+        localStorage.setItem('languageType', 'simple_Chinese');
+      } else {
+        localStorage.setItem('languageType', 'traditional_Chinese');
+      }
+    }
+    if(index === -1) {
+      localStorage.setItem('languageType', 'simple_Chinese');
+    }
+  }
 
   registerBackButtonAction() {
     this.platform.registerBackButtonAction(() => {

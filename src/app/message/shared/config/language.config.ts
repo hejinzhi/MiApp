@@ -60,6 +60,14 @@ export class LanguageConfig {
   };
 
   static NoticeComponent = {
+    traditional_Chinese: {
+      showDetail: '點擊查看詳情',
+      hideDetail: '點擊隱藏'
+    },
 
+    simple_Chinese: {
+      showDetail: '点击查看详情',
+      hideDetail: '点击隐藏'
+    }
   };
 }

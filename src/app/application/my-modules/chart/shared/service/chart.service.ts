@@ -18,7 +18,7 @@ export class ChartService {
       window.addEventListener('resize', () => view.resize());
       return view;
     }
-    mychart.init.prototype = echarts.init.prototype;
+    mychart.init.prototype = Object.create(echarts.init.prototype);
     this.myChart = mychart;
   }
   getAutoResizeChart() {
