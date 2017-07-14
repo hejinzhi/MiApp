@@ -48,10 +48,9 @@ export class MyAppComponent {
     platform.ready().then(() => {
       statusBar.styleDefault();
       splashScreen.hide();
-      this.appInit();
       this.jMessage.jmessagePlugin = (<any>window).plugins ? (<any>window).plugins.jmessagePlugin || null : null;
       this.jPushService.jPushPlugin = (<any>window).plugins ? (<any>window).plugins.jPushPlugin || null : null;
-      this.loginJmes();
+      this.appInit();
       this.plugin.checkAppForUpdate();
       if (platform.is('cordova') && platform.is('android')) {
         let original = platform.runBackButtonAction;
@@ -105,9 +104,11 @@ export class MyAppComponent {
     if (user && user.myNineCode) {
       // 已经有用户信息和设定为要验证手势密码
       this.rootPage = PatternLockComponent;
+      this.appInit();
       // this.rootPage = OrganizationComponent;
     } else if (user && user.autoLogin) {
       this.rootPage = TabsComponent;
+      this.appInit();
     } else {
       this.rootPage = LoginComponent;
       // this.rootPage = OrganizationComponent;
@@ -117,7 +118,7 @@ export class MyAppComponent {
       localStorage.setItem('appVersion',EnvConfig.appVersion);
     }
   }
-  
+
   setDefaultLanguage() {
     if(localStorage.getItem('languageType')) return;
     let userLanguage = window.navigator.language.toLowerCase();
