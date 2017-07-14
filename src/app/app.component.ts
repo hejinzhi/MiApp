@@ -92,11 +92,14 @@ export class MyAppComponent {
   async loginJmes() {
     if (this.plugin.isCordova()) {
       let user = JSON.parse(localStorage.getItem('currentUser'));
-      let jmessageLogin = await this.jmessageService.autoLogin(user.username, 'pass');
-      if (!jmessageLogin) {
-        this.plugin.showToast('Jmessage Login Error: ' + jmessageLogin);
-        return;
-      };
+      if (user) {
+        let jmessageLogin = await this.jmessageService.autoLogin(user.username, 'pass');
+        if (!jmessageLogin) {
+          this.plugin.showToast('Jmessage Login Error: ' + jmessageLogin);
+          return;
+        };
+      }
+
     }
   }
   appInit() {
