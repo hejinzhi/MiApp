@@ -279,6 +279,11 @@ export class DatabaseService {
     return this.database.executeSql('DELETE FROM MOA_LOCAL_MESSAGE', {});
   }
 
+  deleteMessagesByUser(fromUsername:string, toUserName:string) {
+    return this.database.executeSql(`DELETE FROM MOA_LOCAL_MESSAGE WHERE  (FROM_USER_NAME='${fromUsername}' AND TO_USER_NAME='${toUserName}')
+          OR (TO_USER_NAME='${fromUsername}' AND FROM_USER_NAME='${toUserName}')`, {});
+  }
+
   deleteAllAvatar() {
     return this.database.executeSql('DELETE FROM MOA_LOCAL_AVATAR', {});
   }

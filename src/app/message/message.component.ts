@@ -2,7 +2,7 @@ import { Component, OnInit, ChangeDetectorRef, EventEmitter } from '@angular/cor
 import { NavController, NavParams, AlertController, Platform, App, Loading, Events } from 'ionic-angular';
 import { Observable, Subscription, Subject } from 'rxjs/Rx';
 import { MessageModel } from '../shared/models/message.model';
-// import { Geolocation } from '@ionic-native/geolocation';
+import { Geolocation } from '@ionic-native/geolocation';
 
 import { JMessageService } from '../core/services/jmessage.service';
 import { MessageService } from './shared/service/message.service';
@@ -35,7 +35,7 @@ export class MessageComponent implements OnInit {
   userinfo: any; //登录人信息
   plf: string; // 记录是什么平台
   firstTimeRefresh: boolean = true; // 是否第一次进入这个画面
-  // pos: number[] = [106.487744, 29.569733];
+  pos: number[] = [113.200585, 22.889573];
 
 
   constructor(public navCtrl: NavController,
@@ -49,7 +49,8 @@ export class MessageComponent implements OnInit {
     private myHttp: MyHttpService,
     private events: Events,
     private databaseService: DatabaseService,
-    private pluginService: PluginService
+    private pluginService: PluginService,
+    private geolocation: Geolocation
   ) {
   }
 
@@ -62,10 +63,9 @@ export class MessageComponent implements OnInit {
   }
 
   ionViewDidLeave() {
-    // IOS锁屏后重新进入会认为是离线状态，所以不能把它unsubscribe掉
-    // if (this.pluginService.isCordova()) {
-    //   this.jmessageService.jmessageOffline.unsubscribe();
-    // }
+    if (this.pluginService.isCordova()) {
+      this.jmessageService.jmessageOffline.unsubscribe();
+    }
   }
 
   ngOnInit() {
@@ -118,7 +118,6 @@ export class MessageComponent implements OnInit {
     if (res.contentType === 'text') {
       _content = res.content.text;
     } else if (res.contentType === 'image') {
-      console.log(res);
       _content = res.content.localThumbnailPath;
     }
 
@@ -287,7 +286,7 @@ export class MessageComponent implements OnInit {
     // this.databaseService.getMessageList(this.userinfo.username, 'notice').then((data) => {
     //   console.log(data);
     //   console.log(JSON.parse(data[0].extra));
-    // });
+    // });~
 
     // this.databaseService.getAllMessages().then(data => {
     //   console.log(data);
@@ -297,8 +296,32 @@ export class MessageComponent implements OnInit {
 
   }
 
+  public async deleteMessage(item: any) {
+    let alert = this.alertCtrl.create();
+    alert.setTitle(this.languageContent.deleteMessageAlertTitle);
+    alert.addButton(this.languageContent.cancel);
+    alert.addButton({
+      text: this.languageContent.confirm,
+      handler: (data: string) => {
+        this.databaseService.deleteMessagesByUser(item.fromUserName, item.toUserName);
+        this.refreshData();
+        this.ref.detectChanges();
+        this.events.publish('msg.onChangeTabBadge');
+      }
+    });
+    alert.present();
+    // await this.refreshData();
+  }
+
   public deleteAllMsgs() {
     this.databaseService.deleteAllMessages();
   }
 
+  showMap() {
+    this.geolocation.getCurrentPosition().then((resp) => {
+      this.pos = [resp.coords.latitude, resp.coords.longitude];
+    }).catch((error) => {
+      console.log('Error getting location', error);
+    });
+  }
 }
