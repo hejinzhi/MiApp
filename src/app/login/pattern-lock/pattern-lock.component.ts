@@ -1,5 +1,5 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
-import { NavController, NavParams } from 'ionic-angular';
+import { NavController, NavParams, Platform } from 'ionic-angular';
 import { LoginComponent } from '../login.component';
 import { TabsComponent } from '../../tabs/tabs.component';
 
@@ -36,7 +36,8 @@ export class PatternLockComponent implements OnInit {
     public myHttp: MyHttpService,
     private jmessageService: JMessageService,
     private plugin: PluginService,
-    private ref: ChangeDetectorRef
+    private ref: ChangeDetectorRef,
+    private platform: Platform
   ) {
     // 判定是否是进行验证功能还是更改功能
     // this.needNineCode = localStorage.getItem('needPassNineCode') == 'true' ? true : false;
@@ -301,13 +302,15 @@ export class PatternLockComponent implements OnInit {
             //   // to do loadUnreadMessage
             //   this.navCtrl.setRoot(TabsComponent);
             // });
-            this.jmessageService.autoLogin(this.user.username, this.user.password).then((res) => {
-              if (res) {
-                this.navCtrl.setRoot(TabsComponent);
-              } else {
-                this.message = 'Jmessage error';
-              }
-            });
+            if (this.platform.is('cordova')) {
+              this.jmessageService.autoLogin(this.user.username, this.user.password).then((res) => {
+                if (res) {
+                  this.navCtrl.setRoot(TabsComponent);
+                } else {
+                  this.message = 'Jmessage error';
+                }
+              });
+            }
           } else {
             this.message = '密码错误！！！';
           }
