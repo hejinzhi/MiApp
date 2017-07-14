@@ -1,7 +1,7 @@
-
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { NavParams, Events } from 'ionic-angular';
 import { PhotoViewer } from '@ionic-native/photo-viewer';
+import { ImageViewerController } from 'ionic-img-viewer';
 
 import { MessageService } from '../shared/service/message.service';
 import { JMessageService } from '../../core/services/jmessage.service';
@@ -23,7 +23,7 @@ export class NoticeComponent implements OnInit {
   list: any;
   userInfo: any; // 登录人信息
   alertType: string;
-
+  _imageViewerCtrl: ImageViewerController;
 
   constructor(
     public params: NavParams,
@@ -31,11 +31,12 @@ export class NoticeComponent implements OnInit {
     public jmessageService: JMessageService,
     private ref: ChangeDetectorRef,
     private events: Events,
-    private photoViewer: PhotoViewer) {
+    private photoViewer: PhotoViewer,
+    public  imageViewerCtrl: ImageViewerController) {
 
     this.fromUserName = params.get('fromUserName');
     this.fromUserNickName = params.get('fromUserNickName');
-
+    this._imageViewerCtrl = imageViewerCtrl;
 
     if (this.fromUserName === 'alert') {
       this.alertType = params.data.childType;
@@ -79,7 +80,10 @@ export class NoticeComponent implements OnInit {
   };
 
   openPhoto(url: string) {
-    this.photoViewer.show(url);
+    // this.photoViewer.show(url);
+
+    const imageViewer = this._imageViewerCtrl.create(url);
+    imageViewer.present();
   }
 
   scroll_down() {

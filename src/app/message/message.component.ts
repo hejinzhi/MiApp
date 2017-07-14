@@ -2,7 +2,7 @@ import { Component, OnInit, ChangeDetectorRef, EventEmitter } from '@angular/cor
 import { NavController, NavParams, AlertController, Platform, App, Loading, Events } from 'ionic-angular';
 import { Observable, Subscription, Subject } from 'rxjs/Rx';
 import { MessageModel } from '../shared/models/message.model';
-// import { Geolocation } from '@ionic-native/geolocation';
+import { Geolocation } from '@ionic-native/geolocation';
 
 import { JMessageService } from '../core/services/jmessage.service';
 import { MessageService } from './shared/service/message.service';
@@ -35,7 +35,7 @@ export class MessageComponent implements OnInit {
   userinfo: any; //登录人信息
   plf: string; // 记录是什么平台
   firstTimeRefresh: boolean = true; // 是否第一次进入这个画面
-  // pos: number[] = [106.487744, 29.569733];
+  pos: number[] = [113.200585 ,22.889573];
 
 
   constructor(public navCtrl: NavController,
@@ -63,10 +63,9 @@ export class MessageComponent implements OnInit {
   }
 
   ionViewDidLeave() {
-    // IOS锁屏后重新进入会认为是离线状态，所以不能把它unsubscribe掉
-    // if (this.pluginService.isCordova()) {
-    //   this.jmessageService.jmessageOffline.unsubscribe();
-    // }
+    if (this.pluginService.isCordova()) {
+      this.jmessageService.jmessageOffline.unsubscribe();
+    }
   }
 
   ngOnInit() {
@@ -119,7 +118,6 @@ export class MessageComponent implements OnInit {
     if (res.contentType === 'text') {
       _content = res.content.text;
     } else if (res.contentType === 'image') {
-      console.log(res);
       _content = res.content.localThumbnailPath;
     }
 
@@ -288,7 +286,7 @@ export class MessageComponent implements OnInit {
     // this.databaseService.getMessageList(this.userinfo.username, 'notice').then((data) => {
     //   console.log(data);
     //   console.log(JSON.parse(data[0].extra));
-    // });
+    // });~
 
     // this.databaseService.getAllMessages().then(data => {
     //   console.log(data);
@@ -302,5 +300,15 @@ export class MessageComponent implements OnInit {
     this.databaseService.deleteAllMessages();
   }
 
+  showMap() {    
+    this.geolocation.getCurrentPosition().then((resp) => {
+      console.log(resp,222);
+      console.log(resp.coords.latitude,11);
+      console.log(resp.coords.longitude,22);
+       this.pos=[resp.coords.latitude,resp.coords.longitude];
+    }).catch((error) => {
+      console.log('Error getting location', error);
+    });
+  }
 }
 

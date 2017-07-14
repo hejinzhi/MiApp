@@ -54,21 +54,21 @@ export class MyBMapDirective implements AfterViewInit {
 	// 	}        
 	// },{enableHighAccuracy: true})
 
-    // let translateCallback = function (data: any) {
-    //   if (data.status === 0) {
-    //     let marker = new BMap.Marker(data.points[0]);
-    //     map.addOverlay(marker);
-    //     let label = new BMap.Label("转换后的百度坐标（正确）", { offset: new BMap.Size(20, -10) });
-    //     marker.setLabel(label); //添加百度label
-    //     map.setCenter(data.points[0]);
-    //   }
-    // }
+    let translateCallback = function (data: any) {
+      if (data.status === 0) {
+        let marker = new BMap.Marker(data.points[0]);
+        map.addOverlay(marker);
+        let label = new BMap.Label("转换后的百度坐标（正确）", { offset: new BMap.Size(20, -10) });
+        marker.setLabel(label); //添加百度label
+        map.setCenter(data.points[0]);
+      }
+    }
 
-    // setTimeout(function () {
-    //   var convertor = new BMap.Convertor();
-    //   var pointArr = [];
-    //   pointArr.push(point);
-    //   convertor.translate(pointArr, 1, 5, translateCallback)
-    // }, 1000);
+    setTimeout(function () {
+      var convertor = new BMap.Convertor();
+      var pointArr = [];
+      pointArr.push(point);
+      convertor.translate(pointArr, 1, 5, translateCallback)
+    }, 1000);
   }
 }

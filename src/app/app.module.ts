@@ -15,6 +15,7 @@ import { SharedModule } from './shared/shared.module';
 import { CoreModule } from './core/core.module';
 import { PipesModule } from './shared/pipe/pipes.module';
 import { MeModule } from './me/me.module';
+import { IonicImageViewerModule } from 'ionic-img-viewer';
 
 @NgModule({
   declarations: [
@@ -35,7 +36,8 @@ import { MeModule } from './me/me.module';
     MeModule,
     SharedModule,
     CoreModule,
-    PipesModule
+    PipesModule,
+    IonicImageViewerModule
     // BookLibraryModule
   ],
   bootstrap: [IonicApp],
@@ -46,7 +48,7 @@ import { MeModule } from './me/me.module';
   providers: [
     StatusBar,
     SplashScreen,
-    { provide: ErrorHandler, useClass: IonicErrorHandler }
+    { provide: ErrorHandler, useClass: IonicErrorHandler}
   ]
 })
 export class AppModule { }
