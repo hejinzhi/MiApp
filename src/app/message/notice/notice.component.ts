@@ -30,8 +30,7 @@ export class NoticeComponent implements OnInit {
     public jmessageService: JMessageService,
     private ref: ChangeDetectorRef,
     private events: Events,
-    private photoViewer: PhotoViewer,
-    public imageViewerCtrl: ImageViewerController) {
+    private photoViewer: PhotoViewer) {
 
     this.fromUserName = params.get('fromUserName');
     this.fromUserNickName = params.get('fromUserNickName');

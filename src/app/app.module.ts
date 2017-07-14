@@ -15,7 +15,6 @@ import { SharedModule } from './shared/shared.module';
 import { CoreModule } from './core/core.module';
 import { PipesModule } from './shared/pipe/pipes.module';
 import { MeModule } from './me/me.module';
-import { IonicImageViewerModule } from 'ionic-img-viewer';
 
 @NgModule({
   declarations: [
@@ -36,8 +35,7 @@ import { IonicImageViewerModule } from 'ionic-img-viewer';
     MeModule,
     SharedModule,
     CoreModule,
-    PipesModule,
-    IonicImageViewerModule
+    PipesModule
     // BookLibraryModule
   ],
   bootstrap: [IonicApp],
