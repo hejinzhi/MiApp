@@ -1,15 +1,15 @@
 <div class="myTable">
   <table class="table table-striped table-bordered">
-      <caption>{{tableData.caption}}</caption>
-      <thead>
-          <tr>
-              <th *ngFor="let item of tableData.data[0]">{{item}}</th>
-          </tr>
-      </thead>
-      <tbody>
-          <tr *ngFor="let item1 of tableData.data.slice(1)">
-              <th scope="row" [class.row1]="i == 0" *ngFor="let subitem of item1;let i = index">{{subitem}}</th>
-          </tr>
-      </tbody>
+    <caption *ngIf="tableData.caption">{{tableData.caption}}1</caption>
+    <thead>
+      <tr>
+        <th *ngFor="let item of tableData.data[0]">{{item}}</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let item1 of tableData.data.slice(1)">
+        <th scope="row" [class.row1]="i == 0" *ngFor="let subitem of item1;let i = index">{{subitem}}</th>
+      </tr>
+    </tbody>
   </table>
 </div>
