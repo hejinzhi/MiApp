@@ -107,11 +107,11 @@ export class MyAppComponent {
     if (user && user.myNineCode) {
       // 已经有用户信息和设定为要验证手势密码
       this.rootPage = PatternLockComponent;
-      this.appInit();
+      this.loginJmes();
       // this.rootPage = OrganizationComponent;
     } else if (user && user.autoLogin) {
       this.rootPage = TabsComponent;
-      this.appInit();
+      this.loginJmes();
     } else {
       this.rootPage = LoginComponent;
       // this.rootPage = OrganizationComponent;

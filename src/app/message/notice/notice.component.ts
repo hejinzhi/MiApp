@@ -1,4 +1,3 @@
-
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { NavParams, Events } from 'ionic-angular';
 import { PhotoViewer } from '@ionic-native/photo-viewer';
@@ -35,7 +34,6 @@ export class NoticeComponent implements OnInit {
 
     this.fromUserName = params.get('fromUserName');
     this.fromUserNickName = params.get('fromUserNickName');
-
 
     if (this.fromUserName === 'alert') {
       this.alertType = params.data.childType;

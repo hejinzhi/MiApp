@@ -12,7 +12,7 @@ import { AlertComponent } from './alert/alert.component';
 import { TableComponent } from './table/table.component';
 import { Camera } from '@ionic-native/camera';
 import { PhotoViewer } from '@ionic-native/photo-viewer';
-// import { Geolocation } from '@ionic-native/geolocation';
+import { Geolocation } from '@ionic-native/geolocation';
 import { TimeDescPipe } from './shared/pipe/timedesc.pipe';
 import { ChangeSpace } from './shared/pipe/changespace.pipe';
 import { PipesModule } from '../shared/pipe/pipes.module';
@@ -28,6 +28,7 @@ import { DrawChartDirective } from './shared/directive/DrawChartDirective';
   declarations: [MessageComponent, DialogueComponent, NoticeComponent, TimeDescPipe, AlertComponent, ChangeSpace, KeyboardAttachDirective, MyBMapDirective, ChartComponent, DrawChartDirective,TableComponent],
   entryComponents: [MessageComponent, DialogueComponent, NoticeComponent, AlertComponent, ChartComponent],
   exports: [MessageComponent, DialogueComponent, NoticeComponent, AlertComponent, ChartComponent],
-  providers: [MessageService, Keyboard, Camera, DatabaseService, PhotoViewer]
+  providers: [MessageService, Keyboard, Camera, DatabaseService, PhotoViewer,Geolocation]
+
 })
 export class MessageModule { }
