@@ -25,12 +25,13 @@ export class LoginComponent {
     private messageDatabaseService: DatabaseService
   ) {
   }
-
+  appVersion:string;
   loading: Loading;
   registerCredentials = { username: 'hugh.liang', password: 'pass' };
   currentUser: UserModel;
 
   ionViewDidLoad() {
+    this.appVersion = localStorage.getItem('appVersion');
     if(!localStorage.getItem('currentUser')) return;
     let user = JSON.parse(localStorage.getItem('currentUser'));
     ({ username: this.registerCredentials.username, password: this.registerCredentials.password } = user);
@@ -72,6 +73,7 @@ export class LoginComponent {
          this.currentUser.mobile = user.MOBILE;
          this.currentUser.email = user.EMAIL;
          this.currentUser.telephone = user.TELEPHONE;
+         this.currentUser.autoLogin = true;
         localStorage.setItem('currentUser', JSON.stringify(this.currentUser));
 
         if (this.pluginService.isCordova()) {
