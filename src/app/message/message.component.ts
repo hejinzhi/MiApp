@@ -35,7 +35,7 @@ export class MessageComponent implements OnInit {
   userinfo: any; //登录人信息
   plf: string; // 记录是什么平台
   firstTimeRefresh: boolean = true; // 是否第一次进入这个画面
-  pos: number[] = [113.200585 ,22.889573];
+  pos: number[] = [113.200585, 22.889573];
 
 
   constructor(public navCtrl: NavController,
@@ -49,7 +49,8 @@ export class MessageComponent implements OnInit {
     private myHttp: MyHttpService,
     private events: Events,
     private databaseService: DatabaseService,
-    private pluginService: PluginService
+    private pluginService: PluginService,
+    private geolocation: Geolocation
   ) {
   }
 
@@ -295,16 +296,30 @@ export class MessageComponent implements OnInit {
 
   }
 
+  public async deleteMessage(item: any) {
+    let alert = this.alertCtrl.create();
+    alert.setTitle(this.languageContent.deleteMessageAlertTitle);
+    alert.addButton(this.languageContent.cancel);
+    alert.addButton({
+      text: this.languageContent.confirm,
+      handler: (data: string) => {
+        this.databaseService.deleteMessagesByUser(item.fromUserName, item.toUserName);
+        this.refreshData();
+        this.ref.detectChanges();
+        this.events.publish('msg.onChangeTabBadge');
+      }
+    });
+    alert.present();
+    // await this.refreshData();
+  }
+
   public deleteAllMsgs() {
     this.databaseService.deleteAllMessages();
   }
 
-  showMap() {    
+  showMap() {
     this.geolocation.getCurrentPosition().then((resp) => {
-      console.log(resp,222);
-      console.log(resp.coords.latitude,11);
-      console.log(resp.coords.longitude,22);
-       this.pos=[resp.coords.latitude,resp.coords.longitude];
+      this.pos = [resp.coords.latitude, resp.coords.longitude];
     }).catch((error) => {
       console.log('Error getting location', error);
     });
