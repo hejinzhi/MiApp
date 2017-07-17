@@ -23,6 +23,7 @@
     "@ionic-native/camera": "^3.5.0",
     "@ionic-native/code-push": "^3.12.1",
     "@ionic-native/core": "3.10.2",
+    "@ionic-native/geolocation": "^4.0.0",
     "@ionic-native/in-app-browser": "^3.12.1",
     "@ionic-native/keyboard": "^3.12.1",
     "@ionic-native/network": "^3.12.1",

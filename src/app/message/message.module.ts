@@ -13,7 +13,7 @@ import { TableComponent } from './table/table.component';
 import { EmojiComponent } from './emoji/emoji.component';
 import { Camera } from '@ionic-native/camera';
 import { PhotoViewer } from '@ionic-native/photo-viewer';
-// import { Geolocation } from '@ionic-native/geolocation';
+import { Geolocation } from '@ionic-native/geolocation';
 import { TimeDescPipe } from './shared/pipe/timedesc.pipe';
 import { ChangeSpace } from './shared/pipe/changespace.pipe';
 import { PipesModule } from '../shared/pipe/pipes.module';
@@ -30,6 +30,6 @@ import { Ng2EmojiService } from './shared/service/emojis.service';
   declarations: [MessageComponent, DialogueComponent, NoticeComponent, TimeDescPipe, AlertComponent, ChangeSpace, KeyboardAttachDirective, MyBMapDirective, ChartComponent, DrawChartDirective,TableComponent,Ng2EmojiPipe,EmojiComponent],
   entryComponents: [MessageComponent, DialogueComponent, NoticeComponent, AlertComponent, ChartComponent],
   exports: [MessageComponent, DialogueComponent, NoticeComponent, AlertComponent, ChartComponent],
-  providers: [MessageService, Keyboard, Camera, DatabaseService, PhotoViewer, Ng2EmojiService]
+  providers: [MessageService, Keyboard, Camera, DatabaseService, PhotoViewer, Geolocation, Ng2EmojiService]
 })
 export class MessageModule { }
