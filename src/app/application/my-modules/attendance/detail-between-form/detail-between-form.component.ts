@@ -66,7 +66,6 @@ export class DetailBetweenFormComponent {
     for (let prop in this.myValidators) {
       this.todo.controls[prop].valueChanges.subscribe((value: any) => this.check(value, prop));
     }
-    this.myValidators['startTime'].value = this.myValidators['endTime'].value = today;
   }
   initValidator() {
     let newValidator = new MyValidatorModel([
@@ -76,7 +75,7 @@ export class DetailBetweenFormComponent {
       {name:'endTime',valiItems:[
         {valiName:'DateNotSmaller',errMessage:this.fontContent.endTime_DateNotSmaller_err,valiValue:'startTime'}
       ]}
-    ])
+    ],this.betweenMes)
     return newValidator;
   }
   //初始化原始數據

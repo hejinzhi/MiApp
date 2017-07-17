@@ -10,6 +10,7 @@ import { NoticeComponent } from './notice/notice.component';
 import { ChartComponent } from './chart/chart.component';
 import { AlertComponent } from './alert/alert.component';
 import { TableComponent } from './table/table.component';
+import { EmojiComponent } from './emoji/emoji.component';
 import { Camera } from '@ionic-native/camera';
 import { PhotoViewer } from '@ionic-native/photo-viewer';
 // import { Geolocation } from '@ionic-native/geolocation';
@@ -21,13 +22,14 @@ import { Keyboard } from '@ionic-native/keyboard';
 import { KeyboardAttachDirective } from './shared/directive/KeyboardAttachDirective';
 import { MyBMapDirective } from './shared/directive/BmapDirective';
 import { DrawChartDirective } from './shared/directive/DrawChartDirective';
-
+import { Ng2EmojiPipe } from './shared/pipe/emojis.pipe';
+import { Ng2EmojiService } from './shared/service/emojis.service';
 
 @NgModule({
   imports: [CommonModule, IonicModule, SharedModule, PipesModule],
-  declarations: [MessageComponent, DialogueComponent, NoticeComponent, TimeDescPipe, AlertComponent, ChangeSpace, KeyboardAttachDirective, MyBMapDirective, ChartComponent, DrawChartDirective,TableComponent],
+  declarations: [MessageComponent, DialogueComponent, NoticeComponent, TimeDescPipe, AlertComponent, ChangeSpace, KeyboardAttachDirective, MyBMapDirective, ChartComponent, DrawChartDirective,TableComponent,Ng2EmojiPipe,EmojiComponent],
   entryComponents: [MessageComponent, DialogueComponent, NoticeComponent, AlertComponent, ChartComponent],
   exports: [MessageComponent, DialogueComponent, NoticeComponent, AlertComponent, ChartComponent],
-  providers: [MessageService, Keyboard, Camera, DatabaseService, PhotoViewer]
+  providers: [MessageService, Keyboard, Camera, DatabaseService, PhotoViewer, Ng2EmojiService]
 })
 export class MessageModule { }
