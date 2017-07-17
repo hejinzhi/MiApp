@@ -105,7 +105,7 @@ export class SearchFormComponent {
           { valiName: 'DateNotSmaller', errMessage: this.fontContent.endTime_DateNotSmaller_err, valiValue: 'startTime' }
         ]
       }
-    ])
+    ],this.searchMes)
     return newValidator;
   }
   //初始化原始數據

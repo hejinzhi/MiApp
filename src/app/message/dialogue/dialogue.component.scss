@@ -6,10 +6,10 @@ sg-dialogue {
     overflow: scroll;
   }
   .msg-content {
-    padding: 10px 16px 0 16px; 
+    padding: 10px 16px 0 16px;
     overflow-y: scroll;
     &.up {
-      height: 78% !important;
+      height: 58% !important;
     }
   }
   .selectable {
@@ -121,7 +121,10 @@ sg-dialogue {
     background-color: #ededed;
     font-size: 11px;
     &.up {
-      height: 22%;
+      height: 42%;
+    }
+    .myEmoji {
+      height: 200px;
     }
     .input_layout {
       position: relative;

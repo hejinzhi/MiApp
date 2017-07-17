@@ -19,6 +19,7 @@ import { KeyboardAttachDirective } from '../shared/directive/KeyboardAttachDirec
 
 export class DialogueComponent implements OnInit {
     @ViewChild(Content) content: Content;
+    @ViewChild('newInput') newInput: any;
     languageType: string = localStorage.getItem('languageType');
     languageContent = LanguageConfig.DialogueComponent[this.languageType];
     list: any;
@@ -26,7 +27,7 @@ export class DialogueComponent implements OnInit {
     userinfo: any;
     onPlus: boolean = false;
     selectable: number;
-
+    showExtra:number;
     userName: string;
     userNickName: string;
     fromUserAvatarSrc: string;
@@ -35,6 +36,7 @@ export class DialogueComponent implements OnInit {
     toUserName: string;
     toUserNickName: string;
     toUserAvatarSrc: string;
+    myInput_text: string ='';
 
 
     jmessageHandler: Subscription; //接收句柄，再view被关闭的时候取消订阅，否则对已关闭的view进行数据脏检查会报错
@@ -74,8 +76,9 @@ export class DialogueComponent implements OnInit {
         this.keyboard.hideKeyboardAccessoryBar(true);
         this.keyboard.disableScroll(true);
         this.userinfo = JSON.parse(localStorage.getItem('currentUser'));
+        this.list = []
 
-        // 获取当前登录人的昵称和头像
+        //获取当前登录人的昵称和头像
         let res = await this.messageservice.getUserAvatar(this.toUserName)
         let toUserObj = res.json();
         this.toUserNickName = toUserObj.NICK_NAME;
@@ -142,7 +145,7 @@ export class DialogueComponent implements OnInit {
         if (localStorage.getItem('keyboardShow') === 'true') {
             this.keyboard.close();
         } else {
-            this.onPlus = !this.onPlus;
+            this.onPlus = true;
             setTimeout(() => {
                 if (this.plf === 'ios') {
                     this.content.getScrollElement().style.marginBottom = (200 + 44) + 'px';
@@ -173,6 +176,12 @@ export class DialogueComponent implements OnInit {
             })
         }
 
+    }
+
+    addEmoji(emoji:string) {
+
+      this.input_text +=emoji
+      // this.myInput_text = this.newInput.nativeElement.innerHTML+emoji
     }
 
     async loadMessage() {
@@ -294,4 +303,3 @@ export class DialogueComponent implements OnInit {
         this.keyboard.close()
     }
 }
-

@@ -39,12 +39,16 @@
           <ion-option *ngFor="let item of businessType" [value]="item.type">{{item.name | sgChineseConv}}</ion-option>
         </ion-select>
       </ion-item>
-      <div class="myitem">
+      <!-- <div class="myitem">
         <ion-label>{{fontContent.autoSet}}</ion-label>
         <div class="myToggle">
           <ion-toggle formControlName="autoSet"></ion-toggle>
         </div>
-      </div>
+      </div> -->
+      <ion-item>
+        <ion-label>{{fontContent.autoSet}}</ion-label>
+        <ion-toggle formControlName="autoSet"></ion-toggle>
+      </ion-item>
       <ion-item [class.has-error]="myValidators.businessTime.error" [class.has-success]="myValidators.businessTime.pass">
         <ion-label>*{{fontContent.businessTime}}</ion-label>
         <ion-datetime displayFormat="YYYY/MM/DD" formControlName="businessTime"
