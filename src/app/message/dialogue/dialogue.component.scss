@@ -21,6 +21,14 @@ sg-dialogue {
   .android-height {
     height: 93%;
   }
+  .emoji {
+    transform: scale(0.7) translate(0px,16px);
+    margin-top:-10px;
+  }
+  .emoji-out {
+    width:18px;
+    height:18px;
+  }
   .msgarea {
     padding: 10px 0px;
     .last {
@@ -154,12 +162,13 @@ sg-dialogue {
         margin-left: 50px;
         margin-right: 120px;
         vertical-align: middle;
-        line-height: 30px;
-        height: 30px;
+        line-height: 18px;
+        height: 18px;
+        max-height: 100px;
         width: 63%;
         font-size: 18px;
         color: #000;
-        border-radius: 6px;
+        border: 1px solid #000;
       }
       .send {
         background-color: #14b012;

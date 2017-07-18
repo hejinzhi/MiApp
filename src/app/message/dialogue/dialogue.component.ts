@@ -11,6 +11,8 @@ import { LanguageConfig } from '../shared/config/language.config';
 import { DatabaseService } from '../shared/service/database.service';
 import { KeyboardAttachDirective } from '../shared/directive/KeyboardAttachDirective';
 
+import { Ng2EmojiService } from '../shared/service/emojis.service';
+
 @Component({
     selector: 'sg-dialogue',
     templateUrl: 'dialogue.component.html'
@@ -36,7 +38,6 @@ export class DialogueComponent implements OnInit {
     toUserName: string;
     toUserNickName: string;
     toUserAvatarSrc: string;
-    myInput_text: string ='';
 
 
     jmessageHandler: Subscription; //接收句柄，再view被关闭的时候取消订阅，否则对已关闭的view进行数据脏检查会报错
@@ -55,7 +56,8 @@ export class DialogueComponent implements OnInit {
         private events: Events,
         private platform: Platform,
         private databaseService: DatabaseService,
-        private photoViewer: PhotoViewer
+        private photoViewer: PhotoViewer,
+        private emojiService: Ng2EmojiService
     ) {
 
         this.userName = params.get('fromUserName');
@@ -77,43 +79,43 @@ export class DialogueComponent implements OnInit {
         this.keyboard.disableScroll(true);
         this.userinfo = JSON.parse(localStorage.getItem('currentUser'));
         this.list = []
-
+        document.onselectionchange=()=>this.getPosition();
         //获取当前登录人的昵称和头像
-        let res = await this.messageservice.getUserAvatar(this.toUserName)
-        let toUserObj = res.json();
-        this.toUserNickName = toUserObj.NICK_NAME;
-        this.toUserAvatarSrc = toUserObj.AVATAR_URL;
-        await this.loadMessage();
+        // let res = await this.messageservice.getUserAvatar(this.toUserName)
+        // let toUserObj = res.json();
+        // this.toUserNickName = toUserObj.NICK_NAME;
+        // this.toUserAvatarSrc = toUserObj.AVATAR_URL;
+        // await this.loadMessage();
     }
 
 
     async ionViewDidEnter() {
-        this.events.subscribe('msg.onReceiveMessage', async (msg: any) => {
-            if (msg) {
-                // 当推送过来的消息发送者跟正在聊天的是同一个人时，在显示在画面
-                if (this.userName === msg.fromUserName) {
-                    this.getNickNameAndAvatar(msg);
-                    this.list.push(msg);
-                }
-
-            } else {
-                let data: any[] = await this.messageservice.getMessagesByUsername(this.userName, this.userinfo.username);
-                data.forEach((value, index) => {
-                    this.getNickNameAndAvatar(value);
-                });
-                this.list = data;
-            }
-            this.ref.detectChanges();
-            this.scroll_down();
-        });
-
-        await this.messageservice.setUnreadToZeroByUserName(this.userName);
-        this.jmessageservice.enterSingleConversation(this.userName);
-
-        // this.scroll_down();
-        if (this.plf === 'ios') {
-            this.scroll_down();
-        }
+        // this.events.subscribe('msg.onReceiveMessage', async (msg: any) => {
+        //     if (msg) {
+        //         // 当推送过来的消息发送者跟正在聊天的是同一个人时，在显示在画面
+        //         if (this.userName === msg.fromUserName) {
+        //             this.getNickNameAndAvatar(msg);
+        //             this.list.push(msg);
+        //         }
+        //
+        //     } else {
+        //         let data: any[] = await this.messageservice.getMessagesByUsername(this.userName, this.userinfo.username);
+        //         data.forEach((value, index) => {
+        //             this.getNickNameAndAvatar(value);
+        //         });
+        //         this.list = data;
+        //     }
+        //     this.ref.detectChanges();
+        //     this.scroll_down();
+        // });
+        //
+        // await this.messageservice.setUnreadToZeroByUserName(this.userName);
+        // this.jmessageservice.enterSingleConversation(this.userName);
+        //
+        // // this.scroll_down();
+        // if (this.plf === 'ios') {
+        //     this.scroll_down();
+        // }
 
     }
 
@@ -177,13 +179,104 @@ export class DialogueComponent implements OnInit {
         }
 
     }
-
+    insertAfter(newElement:any,targetElement:any)
+{
+    var parent = targetElement.parentNode;
+    if(parent.lastChild == targetElement)
+    {
+        parent.appendChild(newElement);
+        }
+    else
+    {
+        parent.insertBefore(newElement,targetElement.nextSibling);
+        }
+    }
     addEmoji(emoji:string) {
-
       this.input_text +=emoji
+      let emojiText = document.createElement('i');
+      emojiText.setAttribute('class',`emoji icon-ng2_em_${emoji.replace(/\:/g,'')}`);
+      emojiText.setAttribute('style',`display:inline-block;`);
+      emojiText.setAttribute('contenteditable','false');
+      let outContent = document.createElement('span');
+      outContent.setAttribute('class','emoji-out');
+      outContent.appendChild(emojiText);
       // this.myInput_text = this.newInput.nativeElement.innerHTML+emoji
+      // 获取编辑框对象
+      // debugger
+      var edit = this.newInput.nativeElement;
+      // 编辑框设置焦点
+      edit.focus()
+      // 获取选定对象
+      var selection:any = getSelection()
+      // 判断是否有最后光标对象存在
+      if (this.lastEditRange) {
+          // 存在最后光标对象，选定对象清除所有光标并添加最后光标还原之前的状态
+          selection.removeAllRanges()
+          selection.addRange(this.lastEditRange)
+      }
+      // 判断选定对象范围是编辑框还是文本节点
+      if (selection.anchorNode.nodeName != '#text') {
+          // 如果是编辑框范围。则创建表情文本节点进行插入
+          if (edit.childNodes.length > 0) {
+              // 如果文本框的子元素大于0，则表示有其他元素，则按照位置插入表情节点
+              for (var i = 0; i < edit.childNodes.length; i++) {
+                  if (i == selection.anchorOffset) {
+                      edit.insertBefore(outContent, edit.childNodes[i])
+                  }
+              }
+          } else {
+              // 否则直接插入一个表情元素
+              edit.appendChild(outContent)
+          }
+      } else {
+          // 如果是文本节点则先获取光标对象
+          let range = selection.getRangeAt(0)
+          // 获取光标对象的范围界定对象，一般就是textNode对象
+          let textNode:any = range.startContainer;
+          // 获取光标位置
+          let rangeStartOffset = range.startOffset;
+          // 重新插入元素
+          let textNode1 = document.createTextNode(textNode.data.substr(0,rangeStartOffset));
+          let textNode2 = document.createTextNode(textNode.data.substr(rangeStartOffset));
+          let nextNode = textNode.nextSibling;
+          textNode.remove();
+          if(nextNode){
+            edit.insertBefore(textNode1, nextNode)
+          } else {
+            edit.appendChild(textNode1);
+          }
+          this.insertAfter(outContent,textNode1);
+          this.insertAfter(textNode2,outContent);
+      }
+      // 创建新的光标对象
+      var range = document.createRange()
+      let space = document.createTextNode('');
+      // edit.appendChild(space);
+      this.insertAfter(space,outContent)
+      // 光标对象的范围界定为新建的表情节点
+      range.selectNodeContents(space)
+      // 光标位置定位在表情节点的最大长度
+      range.setStart(space, space.length)
+      // 使光标开始和光标结束重叠
+      range.collapse(true)
+      // 清除选定对象的所有光标对象
+      selection.removeAllRanges()
+      // 插入新的光标对象
+      selection.addRange(range)
+      // 无论如何都要记录最后光标对象
+      this.lastEditRange = selection.getRangeAt(0)
     }
 
+    lastEditRange:any;
+    lastEditSelection:any;
+    getPosition() {
+      // 获取选定对象
+      this.lastEditSelection = getSelection()
+      console.log(this.lastEditSelection);
+      // 设置最后光标对象
+      this.lastEditRange = this.lastEditSelection.getRangeAt(0);
+      console.log(this.lastEditRange)
+    }
     async loadMessage() {
         let data: any[] = await this.messageservice.getMessagesByUsername(this.userName, this.userinfo.username);
         data.forEach((value, index) => {
@@ -241,15 +334,16 @@ export class DialogueComponent implements OnInit {
             type: "dialogue",
             unread: 'N',
         };
-        this.getNickNameAndAvatar(msg);
-        await this.databaseService.addMessage(msg.toUserName, msg.fromUserName, msg.content, msg.contentType, msg.time, msg.type, msg.unread, null, null);
+        // this.getNickNameAndAvatar(msg);
+        // await this.databaseService.addMessage(msg.toUserName, msg.fromUserName, msg.content, msg.contentType, msg.time, msg.type, msg.unread, null, null);
+        //
+        // if (type === 1) {
+        //     this.jmessageservice.sendSingleTextMessage(this.userName, content);
+        // }
+        // else if (type === 2) {
+        //     this.jmessageservice.sendSingleImageMessage(this.userName, content);
+        // }
 
-        if (type === 1) {
-            this.jmessageservice.sendSingleTextMessage(this.userName, content);
-        }
-        else if (type === 2) {
-            this.jmessageservice.sendSingleImageMessage(this.userName, content);
-        }
         this.list.push(msg)
         this.input_text = '';
         setTimeout(function () {
