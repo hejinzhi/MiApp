@@ -13,7 +13,7 @@
             <div class="msg">
               <span [ngClass]="item.toUserName === userinfo.username ? ' arrow_l_int' : ' arrow_r_int'"></span>
               <span [ngClass]="item.toUserName === userinfo.username ? ' arrow_l_out' : ' arrow_r_out'"></span>
-              <div [class.selectable]="selectable === i" [innerHTML]="item.content | sgChangeSpace | sgChineseConv " (touchstart)="selectable=i"></div>
+              <div [class.selectable]="selectable === i" [innerHTML]="item.content | sgChangeSpace | sgChineseConv | sgEmojis" (touchstart)="selectable=i"></div>
             </div>
           </ng-template>
           <ng-template [ngSwitchCase]="'image'"><img src={{item.content}} class='img_content' (tap)="openPhoto(item.content)"></ng-template>
@@ -22,39 +22,48 @@
       </div>
     </div>
   </div>
-  <div class="input" id="input" [ngClass]="onPlus?'up':'down'" *ngIf="plf ==='android'">
+  <div class="input" id="input" [ngClass]="onPlus?'up':'down'" *ngIf="plf === 'android' ">
     <div class="input_layout">
       <span class="iconfontyyy input_icon voice">&#xe68b;</span>
-      <span class="iconfontyyy input_icon face">&#xe61e;</span>
-      <span class="iconfontyyy input_icon plus" *ngIf="!input_text" (tap)="clickPlus()">&#xe649;</span>
+      <span class="iconfontyyy input_icon face" (tap)="clickPlus();showExtra=2">&#xe61e;</span>
+      <span class="iconfontyyy input_icon plus" *ngIf="!input_text" (tap)="clickPlus();showExtra=1">&#xe649;</span>
       <input class="input_text" [(ngModel)]="input_text" name="input_text" (focus)="isPlus()">
+      <!-- <div class="input_text" contenteditable #newInput [innerHTML]="myInput_text | sgEmojis">
+
+      </div> -->
       <div *ngIf="input_text" class="send" (tap)="sendMessage(1,input_text)" tappable>發送</div>
     </div>
-    <div class="button-bar" *ngIf="onPlus">
-      <div class="btt">
-        <button ion-button color="light" class="button-ion" large icon-only (tap)=getPhoto(0)>
-                   <ion-icon name='image' class="icon-img" ></ion-icon>
-                </button>
-        <div class="icon-content">{{languageContent.picture}}</div>
+    <div *ngIf="onPlus">
+      <div *ngIf="showExtra==2" class="myEmoji">
+        <sg-emoji (selectEmoji)="addEmoji($event)"></sg-emoji>
       </div>
-      <div class="btt">
-        <button ion-button color="light" class="button-ion" large icon-only (tap)=getPhoto(1)>
-                    <ion-icon name='camera' class="icon-img" ></ion-icon>
-                </button>
-        <div class="icon-content">{{languageContent.camera}}</div>
+      <div class="button-bar" *ngIf="showExtra==1">
+        <div class="btt">
+          <button ion-button color="light" class="button-ion" large icon-only (tap)=getPhoto(0)>
+                     <ion-icon name='image' class="icon-img" ></ion-icon>
+                  </button>
+          <div class="icon-content">{{languageContent.picture}}</div>
+        </div>
+        <div class="btt">
+          <button ion-button color="light" class="button-ion" large icon-only (tap)=getPhoto(1)>
+                      <ion-icon name='camera' class="icon-img" ></ion-icon>
+                  </button>
+          <div class="icon-content">{{languageContent.camera}}</div>
+        </div>
+        <div class="btt">
+          <button ion-button color="light" class="button-ion" large icon-only>
+                     <ion-icon name='person' class="icon-img" ></ion-icon>
+                  </button>
+          <div class="icon-content">{{languageContent.personcard}}</div>
+        </div>
+        <div class="btt">
+          <button ion-button color="light" class="button-ion" large icon-only (tap)=getLocation()>
+                     <ion-icon name='pin' class="icon-img" ></ion-icon>
+                  </button>
+          <div class="icon-content">{{languageContent.location}}</div>
+        </div>
       </div>
-      <div class="btt">
-        <button ion-button color="light" class="button-ion" large icon-only>
-                   <ion-icon name='person' class="icon-img" ></ion-icon>
-                </button>
-        <div class="icon-content">{{languageContent.personcard}}</div>
-      </div>
-      <div class="btt">
-        <button ion-button color="light" class="button-ion" large icon-only (tap)=getLocation()>
-                   <ion-icon name='pin' class="icon-img" ></ion-icon>
-                </button>
-        <div class="icon-content">{{languageContent.location}}</div>
-      </div>
+
     </div>
   </div>
 </ion-content>

@@ -1,0 +1,32 @@
+<ion-slides pager>
+
+  <ion-slide>
+
+    <ion-row>
+      <ion-col *ngFor="let item of emojis.slice(0,17)" col-2 (tap)="select(item)"><span class="message-container"  [innerHTML]="':'+item+':' | sgEmojis"></span></ion-col>
+      <ion-col  col-2 class="cancle iconfontyyy" (tap)="cancel()">&#xe602;</ion-col>
+    </ion-row>
+
+  </ion-slide>
+
+  <ion-slide>
+    <ion-row>
+    <ion-col *ngFor="let item of emojis.slice(17,34)" col-2 (tap)="select(item)"><span class="message-container"  [innerHTML]="':'+item+':' | sgEmojis"></span></ion-col>
+    <ion-col  col-2 class="cancle iconfontyyy" (tap)="cancel()">&#xe602;</ion-col>
+    </ion-row>
+  </ion-slide>
+
+  <ion-slide>
+    <ion-row>
+    <ion-col *ngFor="let item of emojis.slice(34,51)" col-2 (tap)="select(item)"><span class="message-container"  [innerHTML]="':'+item+':' | sgEmojis"></span></ion-col>
+    <ion-col  col-2 class="cancle iconfontyyy" (tap)="cancel()">&#xe602;</ion-col>
+    </ion-row>
+  </ion-slide>
+  <ion-slide>
+    <ion-row>
+    <ion-col *ngFor="let item of emojis.slice(51)" col-2 (tap)="select(item)"><span class="message-container"  [innerHTML]="':'+item+':' | sgEmojis"></span></ion-col>
+    <ion-col  col-2 class="cancle iconfontyyy" (tap)="cancel()">&#xe602;</ion-col>
+    </ion-row>
+  </ion-slide>
+
+</ion-slides>
