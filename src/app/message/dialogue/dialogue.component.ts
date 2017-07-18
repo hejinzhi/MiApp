@@ -19,7 +19,6 @@ import { KeyboardAttachDirective } from '../shared/directive/KeyboardAttachDirec
 
 export class DialogueComponent implements OnInit {
     @ViewChild(Content) content: Content;
-    @ViewChild('newInput') newInput: any;
     languageType: string = localStorage.getItem('languageType');
     languageContent = LanguageConfig.DialogueComponent[this.languageType];
     list: any;
@@ -27,7 +26,7 @@ export class DialogueComponent implements OnInit {
     userinfo: any;
     onPlus: boolean = false;
     selectable: number;
-    showExtra:number;
+
     userName: string;
     userNickName: string;
     fromUserAvatarSrc: string;
@@ -36,7 +35,6 @@ export class DialogueComponent implements OnInit {
     toUserName: string;
     toUserNickName: string;
     toUserAvatarSrc: string;
-    myInput_text: string ='';
 
 
     jmessageHandler: Subscription; //接收句柄，再view被关闭的时候取消订阅，否则对已关闭的view进行数据脏检查会报错
@@ -76,9 +74,8 @@ export class DialogueComponent implements OnInit {
         this.keyboard.hideKeyboardAccessoryBar(true);
         this.keyboard.disableScroll(true);
         this.userinfo = JSON.parse(localStorage.getItem('currentUser'));
-        this.list = []
 
-        //获取当前登录人的昵称和头像
+        // 获取当前登录人的昵称和头像
         let res = await this.messageservice.getUserAvatar(this.toUserName)
         let toUserObj = res.json();
         this.toUserNickName = toUserObj.NICK_NAME;
@@ -97,7 +94,7 @@ export class DialogueComponent implements OnInit {
                 }
 
             } else {
-                let data: any[] = await this.messageservice.getMessagesByUsername(this.userName, this.userinfo.username);
+                let data: any[] = await this.messageservice.getMessagesByUsername(this.userinfo.username, this.userName, this.userinfo.username);
                 data.forEach((value, index) => {
                     this.getNickNameAndAvatar(value);
                 });
@@ -107,7 +104,7 @@ export class DialogueComponent implements OnInit {
             this.scroll_down();
         });
 
-        await this.messageservice.setUnreadToZeroByUserName(this.userName);
+        await this.messageservice.setUnreadToZeroByUserName(this.userinfo.username, this.userName);
         this.jmessageservice.enterSingleConversation(this.userName);
 
         // this.scroll_down();
@@ -126,7 +123,7 @@ export class DialogueComponent implements OnInit {
             this.onShowSubscription.unsubscribe();
         }
         this.events.unsubscribe('msg.onReceiveMessage');
-        await this.messageservice.setUnreadToZeroByUserName(this.userName);
+        await this.messageservice.setUnreadToZeroByUserName(this.userinfo.username, this.userName);
         this.jmessageservice.setSingleConversationUnreadMessageCount(this.userName, null, 0);
         this.events.publish('msg.onChangeTabBadge');
         this.jmessageservice.exitConversation();
@@ -145,7 +142,7 @@ export class DialogueComponent implements OnInit {
         if (localStorage.getItem('keyboardShow') === 'true') {
             this.keyboard.close();
         } else {
-            this.onPlus = true;
+            this.onPlus = !this.onPlus;
             setTimeout(() => {
                 if (this.plf === 'ios') {
                     this.content.getScrollElement().style.marginBottom = (200 + 44) + 'px';
@@ -178,14 +175,8 @@ export class DialogueComponent implements OnInit {
 
     }
 
-    addEmoji(emoji:string) {
-
-      this.input_text +=emoji
-      // this.myInput_text = this.newInput.nativeElement.innerHTML+emoji
-    }
-
     async loadMessage() {
-        let data: any[] = await this.messageservice.getMessagesByUsername(this.userName, this.userinfo.username);
+        let data: any[] = await this.messageservice.getMessagesByUsername(this.userinfo.username, this.userName, this.userinfo.username);
         data.forEach((value, index) => {
             this.getNickNameAndAvatar(value);
         });
@@ -242,7 +233,7 @@ export class DialogueComponent implements OnInit {
             unread: 'N',
         };
         this.getNickNameAndAvatar(msg);
-        await this.databaseService.addMessage(msg.toUserName, msg.fromUserName, msg.content, msg.contentType, msg.time, msg.type, msg.unread, null, null);
+        await this.databaseService.addMessage(msg.toUserName, msg.fromUserName, this.userinfo.username, msg.content, msg.contentType, msg.time, msg.type, msg.unread, null, null);
 
         if (type === 1) {
             this.jmessageservice.sendSingleTextMessage(this.userName, content);
@@ -303,3 +294,4 @@ export class DialogueComponent implements OnInit {
         this.keyboard.close()
     }
 }
+

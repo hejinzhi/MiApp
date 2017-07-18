@@ -141,7 +141,7 @@ export class MessageComponent implements OnInit {
       unread: true
     };
 
-    await this.databaseService.addMessage(res.targetInfo.userName, res.fromName, _content, res.contentType, res.createTimeInMillis, this._type, 'Y',
+    await this.databaseService.addMessage(res.targetInfo.userName, res.fromName, this.userinfo.username, _content, res.contentType, res.createTimeInMillis, this._type, 'Y',
       JSON.stringify(res.content.extras), child_type);
 
     return msg;
@@ -176,7 +176,7 @@ export class MessageComponent implements OnInit {
       unread: true
     };
 
-    await this.databaseService.addMessage(res.content.target_id, res.content.from_id, _content, res.content.msg_type, res.content.create_time, this._type, 'Y',
+    await this.databaseService.addMessage(res.content.target_id, res.content.from_id, this.userinfo.username, _content, res.content.msg_type, res.content.create_time, this._type, 'Y',
       JSON.stringify(res.content.msg_body.extras), child_type);
 
     return msg;
@@ -280,17 +280,17 @@ export class MessageComponent implements OnInit {
 
   public sendSingleMsg() {
     // this.jmessageService.sendSingleTextMessageWithExtras('hugh.liang', 'test', { name: 'hejinzhi' });
-    this.databaseService.deleteAllMessages();
-    this.databaseService.deleteAllAvatar();
+    // this.databaseService.deleteAllMessages();
+    // this.databaseService.deleteAllAvatar();
 
     // this.databaseService.getMessageList(this.userinfo.username, 'notice').then((data) => {
     //   console.log(data);
     //   console.log(JSON.parse(data[0].extra));
     // });~
 
-    // this.databaseService.getAllMessages().then(data => {
-    //   console.log(data);
-    // });
+    this.databaseService.getAllMessages().then(data => {
+      console.log(data);
+    });
 
     // this.messageListItem[0].unreadCount = 10;
 
@@ -303,7 +303,7 @@ export class MessageComponent implements OnInit {
     alert.addButton({
       text: this.languageContent.confirm,
       handler: (data: string) => {
-        this.databaseService.deleteMessagesByUser(item.fromUserName, item.toUserName);
+        this.databaseService.deleteMessagesByUser(this.userinfo.username, item.fromUserName, item.toUserName);
         this.refreshData();
         this.ref.detectChanges();
         this.events.publish('msg.onChangeTabBadge');

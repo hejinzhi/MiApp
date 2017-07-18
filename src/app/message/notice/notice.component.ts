@@ -54,7 +54,7 @@ export class NoticeComponent implements OnInit {
   }
 
   async ionViewWillLeave() {
-    await this.messageService.setUnreadToZeroByUserName(this.fromUserName, this.alertType);
+    await this.messageService.setUnreadToZeroByUserName(this.userInfo.username, this.fromUserName, this.alertType);
     this.jmessageService.setSingleConversationUnreadMessageCount(this.fromUserName, null, 0);
     this.jmessageService.exitConversation();
     this.events.publish('msg.onChangeTabBadge');
@@ -76,7 +76,7 @@ export class NoticeComponent implements OnInit {
 
   async loadMessage() {
 
-    this.list = await this.messageService.getMessagesByUsername(this.fromUserName, this.userInfo.username);
+    this.list = await this.messageService.getMessagesByUsername(this.userInfo.username, this.fromUserName, this.userInfo.username);
     if (this.fromUserName === 'alert') {
       this.list = this.list.filter((v: any) => (v.childType === this.alertType));
     }
