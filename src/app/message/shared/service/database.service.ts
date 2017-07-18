@@ -38,29 +38,29 @@ export class DatabaseService {
   }
 
 
-  setUnreadToZeroByUserName(username: string, child_type?: string) {
+  setUnreadToZeroByUserName(owner: string, username: string, child_type?: string) {
     let sql;
     if (child_type) {
-      sql = `UPDATE MOA_LOCAL_MESSAGE SET UNREAD='N' WHERE FROM_USER_NAME='${username}' AND CHILD_TYPE='${child_type}';`;
+      sql = `UPDATE MOA_LOCAL_MESSAGE SET UNREAD='N' WHERE OWNER='${owner}' AND FROM_USER_NAME='${username}' AND CHILD_TYPE='${child_type}';`;
     } else {
-      sql = `UPDATE MOA_LOCAL_MESSAGE SET UNREAD='N' WHERE FROM_USER_NAME='${username}';`;
+      sql = `UPDATE MOA_LOCAL_MESSAGE SET UNREAD='N' WHERE OWNER='${owner}' AND FROM_USER_NAME='${username}';`;
     }
     return this.database.executeSql(sql, {});
   }
 
   createMessageTable() {
     return this.database.executeSql(`CREATE TABLE IF NOT EXISTS MOA_LOCAL_MESSAGE
-        (ID INTEGER PRIMARY KEY AUTOINCREMENT,TO_USER_NAME VARCHAR2(100),FROM_USER_NAME VARCHAR2(100),CONTENT VARCHAR2(100),CONTENT_TYPE VARCHAR2(100),
+        (ID INTEGER PRIMARY KEY AUTOINCREMENT,TO_USER_NAME VARCHAR2(100),FROM_USER_NAME VARCHAR2(100),OWNER VARCHAR2(100),CONTENT VARCHAR2(100),CONTENT_TYPE VARCHAR2(100),
         TIME INTEGER, TYPE VARCHAR2(100),UNREAD VARCHAR2(100),EXTRA VARCHAR2(1000),CHILD_TYPE VARCHAR2(20));`, {});
   }
 
-  getAllUnreadCount(toUsername: string) {
-    return this.database.executeSql(`SELECT COUNT(*) COUNT FROM MOA_LOCAL_MESSAGE WHERE UNREAD='Y' AND TO_USER_NAME ='${toUsername}';`, {});
+  getAllUnreadCount(owner: string, toUsername: string) {
+    return this.database.executeSql(`SELECT COUNT(*) COUNT FROM MOA_LOCAL_MESSAGE WHERE OWNER='${owner}' AND UNREAD='Y' AND TO_USER_NAME ='${toUsername}';`, {});
   }
 
-  getMessagesByUsername(fromUsername: string, toUsername: string) {
-    let sql = `SELECT * FROM MOA_LOCAL_MESSAGE WHERE
-        (FROM_USER_NAME ='${fromUsername}' AND TO_USER_NAME ='${toUsername}' ) OR (TO_USER_NAME='${fromUsername}' AND FROM_USER_NAME='${toUsername}' ) 
+  getMessagesByUsername(owner: string, fromUsername: string, toUsername: string) {
+    let sql = `SELECT * FROM MOA_LOCAL_MESSAGE WHERE OWNER='${owner}' AND
+        ((FROM_USER_NAME ='${fromUsername}' AND TO_USER_NAME ='${toUsername}' ) OR (TO_USER_NAME='${fromUsername}' AND FROM_USER_NAME='${toUsername}' )) 
         AND TYPE='dialogue' ORDER BY TIME;`;
 
     return this.database.executeSql(sql, {})
@@ -118,27 +118,30 @@ export class DatabaseService {
     if (type) {
       if (child_type) {
         sql = `SELECT   A.*,
-         (SELECT   COUNT ( * ) FROM   MOA_LOCAL_MESSAGE WHERE   FROM_USER_NAME = A.FROM_USER_NAME AND UNREAD = 'Y') AS UNREAD_COUNT
+         (SELECT   COUNT ( * ) FROM   MOA_LOCAL_MESSAGE WHERE  OWNER='${loginUsername}' AND FROM_USER_NAME = A.FROM_USER_NAME AND UNREAD = 'Y') AS UNREAD_COUNT
          FROM   MOA_LOCAL_MESSAGE A,
          (  SELECT   FROM_USER_NAME, MAX (TIME) TIME
                 FROM   MOA_LOCAL_MESSAGE
+                 WHERE  OWNER='${loginUsername}'
                 GROUP BY   FROM_USER_NAME,TO_USER_NAME) B
-        WHERE   A.TIME = B.TIME AND A.TYPE='${type}' AND A.CHILD_TYPE='${child_type}' ORDER BY A.TIME DESC;`;
+        WHERE    A.TIME = B.TIME AND A.TYPE='${type}' AND A.CHILD_TYPE='${child_type}' ORDER BY A.TIME DESC;`;
       } else {
         sql = `SELECT   A.*,
-         (SELECT   COUNT ( * ) FROM   MOA_LOCAL_MESSAGE WHERE   FROM_USER_NAME = A.FROM_USER_NAME AND UNREAD = 'Y') AS UNREAD_COUNT
+         (SELECT   COUNT ( * ) FROM   MOA_LOCAL_MESSAGE WHERE  OWNER='${loginUsername}' AND  FROM_USER_NAME = A.FROM_USER_NAME AND UNREAD = 'Y') AS UNREAD_COUNT
          FROM   MOA_LOCAL_MESSAGE A,
          (  SELECT   FROM_USER_NAME, MAX (TIME) TIME
                 FROM   MOA_LOCAL_MESSAGE
+                WHERE  OWNER='${loginUsername}'
                 GROUP BY   FROM_USER_NAME,TO_USER_NAME) B
         WHERE   A.TIME = B.TIME AND A.TYPE='${type}'  ORDER BY A.TIME DESC;`;
       }
     } else {
       sql = `SELECT   A.*,
-         (SELECT   COUNT ( * ) FROM   MOA_LOCAL_MESSAGE WHERE   FROM_USER_NAME = A.FROM_USER_NAME AND UNREAD = 'Y') AS UNREAD_COUNT
+         (SELECT   COUNT ( * ) FROM   MOA_LOCAL_MESSAGE WHERE  OWNER='${loginUsername}' AND  FROM_USER_NAME = A.FROM_USER_NAME AND UNREAD = 'Y') AS UNREAD_COUNT
          FROM   MOA_LOCAL_MESSAGE A,
          (  SELECT   FROM_USER_NAME, MAX (TIME) TIME
                 FROM   MOA_LOCAL_MESSAGE
+                WHERE  OWNER='${loginUsername}'
                 GROUP BY   FROM_USER_NAME,TO_USER_NAME) B
         WHERE   A.TIME = B.TIME  ORDER BY A.TIME DESC;`
     }
@@ -225,11 +228,11 @@ export class DatabaseService {
   }
 
 
-  addMessage(toUsername: string, fromUserName: string, content: string, contentType: string, time: number, type: string, unread: string, extra: string, child_type: string) {
+  addMessage(toUsername: string, fromUserName: string, owner: string, content: string, contentType: string, time: number, type: string, unread: string, extra: string, child_type: string) {
     if (toUsername != fromUserName) {
-      let data = [toUsername, fromUserName, content, contentType, time, type, unread, extra, child_type];
-      return this.database.executeSql(`INSERT INTO MOA_LOCAL_MESSAGE (TO_USER_NAME, FROM_USER_NAME, CONTENT,CONTENT_TYPE,TIME,TYPE,UNREAD,EXTRA,CHILD_TYPE)
-        VALUES (?,?,?,?,?,?,?,?,?)`, data).then(data => {
+      let data = [toUsername, fromUserName, owner, content, contentType, time, type, unread, extra, child_type];
+      return this.database.executeSql(`INSERT INTO MOA_LOCAL_MESSAGE (TO_USER_NAME, FROM_USER_NAME,OWNER, CONTENT,CONTENT_TYPE,TIME,TYPE,UNREAD,EXTRA,CHILD_TYPE)
+        VALUES (?,?,?,?,?,?,?,?,?,?)`, data).then(data => {
           return data;
         }, err => {
           console.log('Error: ', err);
@@ -247,6 +250,7 @@ export class DatabaseService {
           msgs.push({
             id: data.rows.item(i).ID,
             toUserName: data.rows.item(i).TO_USER_NAME,
+            owner: data.rows.item(i).OWNER,
             fromUserName: data.rows.item(i).FROM_USER_NAME,
             content: data.rows.item(i).CONTENT,
             contentType: data.rows.item(i).CONTENT_TYPE,
@@ -279,8 +283,8 @@ export class DatabaseService {
     return this.database.executeSql('DELETE FROM MOA_LOCAL_MESSAGE', {});
   }
 
-  deleteMessagesByUser(fromUsername:string, toUserName:string) {
-    return this.database.executeSql(`DELETE FROM MOA_LOCAL_MESSAGE WHERE  (FROM_USER_NAME='${fromUsername}' AND TO_USER_NAME='${toUserName}')
+  deleteMessagesByUser(owner: string, fromUsername: string, toUserName: string) {
+    return this.database.executeSql(`DELETE FROM MOA_LOCAL_MESSAGE WHERE OWNER='${owner}' AND  (FROM_USER_NAME='${fromUsername}' AND TO_USER_NAME='${toUserName}')
           OR (TO_USER_NAME='${fromUsername}' AND FROM_USER_NAME='${toUserName}')`, {});
   }
 
