@@ -58,7 +58,7 @@ export class TabsComponent implements OnInit {
   }
 
   async changeTabBadge() {
-    let data = await this.databaseService.getAllUnreadCount(this.userinfo.username);
+    let data = await this.databaseService.getAllUnreadCount(this.userinfo.username, this.userinfo.username);
     this.unreadCount = data.rows.item(0).COUNT;
     if (this.platform.is('ios')) {
       this.jPushService.setBadge(this.unreadCount);

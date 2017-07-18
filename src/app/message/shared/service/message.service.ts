@@ -22,8 +22,8 @@ export class MessageService {
   // history: Message[];  // 历史消息
 
 
-  getMessagesByUsername(fromUsername: string, toUsername: string) {
-    return this.databaseService.getMessagesByUsername(fromUsername, toUsername);
+  getMessagesByUsername(owner: string, fromUsername: string, toUsername: string) {
+    return this.databaseService.getMessagesByUsername(owner, fromUsername, toUsername);
   }
 
 
@@ -133,8 +133,8 @@ export class MessageService {
     return v;
   }
 
-  async setUnreadToZeroByUserName(username: string, child_type?: string) {
-    await this.databaseService.setUnreadToZeroByUserName(username, child_type);
+  async setUnreadToZeroByUserName(owner: string, username: string, child_type?: string) {
+    await this.databaseService.setUnreadToZeroByUserName(owner, username, child_type);
   }
 
   getUserAvatar(username: string) {
