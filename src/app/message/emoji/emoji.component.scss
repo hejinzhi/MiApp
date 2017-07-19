@@ -3,4 +3,11 @@ sg-emoji {
     font-size: 28px;
     color:#888;
   }
+  .emoji {
+    transform: none;
+    position: static;
+  }
+  ion-slide {
+    width:100%!important;
+  }
 }
