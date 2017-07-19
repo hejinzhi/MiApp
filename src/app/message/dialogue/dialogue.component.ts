@@ -11,7 +11,6 @@ import { LanguageConfig } from '../shared/config/language.config';
 import { DatabaseService } from '../shared/service/database.service';
 import { KeyboardAttachDirective } from '../shared/directive/KeyboardAttachDirective';
 
-import { Ng2EmojiService } from '../shared/service/emojis.service';
 
 @Component({
   selector: 'sg-dialogue',
@@ -57,8 +56,7 @@ export class DialogueComponent implements OnInit {
     private events: Events,
     private platform: Platform,
     private databaseService: DatabaseService,
-    private photoViewer: PhotoViewer,
-    private emojiService: Ng2EmojiService
+    private photoViewer: PhotoViewer
   ) {
 
     this.userName = params.get('fromUserName');
@@ -391,3 +389,19 @@ export class DialogueComponent implements OnInit {
     this.keyboard.close()
   }
 }
+
+
+  keyup(event: any) {
+    this.msgContent = event.target.innerText
+  }
+
+  onFocus(event: any) {
+    this.keyboardOpen = true
+  }
+
+  closeKeyboard() {
+    this.keyboardOpen = false
+    this.keyboard.close()
+  }
+}
+

@@ -69,7 +69,7 @@ export class AlertComponent implements OnInit {
   }
 
   async loadMessage() {
-    this.list = await this.messageService.getMessagesByUsername(this.userName, this.userinfo.username);
+    this.list = await this.messageService.getMessagesByUsername(this.userinfo.username, this.userName, this.userinfo.username);
     console.log(this.list);
     this.att_unread = this.getUnreadCount('att');
     this.pro_unread = this.getUnreadCount('pro');
