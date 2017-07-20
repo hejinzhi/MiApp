@@ -31,11 +31,9 @@ export class MyAppComponent {
     private ionicApp: IonicApp,
     private menuCtrl: MenuController,
     private jMessage: JMessageService,
-    private messageservice: MessageService,
     private plugin: PluginService,
     private app: App,
     private jPushService: JPushService,
-    private jmessageService: JMessageService,
     private loginService: LoginService
   ) {
 
@@ -88,19 +86,19 @@ export class MyAppComponent {
       }
     });
   }
-  async loginJmes() {
-    if (this.plugin.isCordova()) {
-      let user = JSON.parse(localStorage.getItem('currentUser'));
-      if (user) {
-        let jmessageLogin = await this.jmessageService.autoLogin(user.username, 'pass');
-        if (!jmessageLogin) {
-          this.plugin.showToast('Jmessage Login Error: ' + jmessageLogin);
-          return;
-        };
-      }
+  // async loginJmes() {
+  //   if (this.plugin.isCordova()) {
+  //     let user = JSON.parse(localStorage.getItem('currentUser'));
+  //     if (user) {
+  //       let jmessageLogin = await this.jmessageService.autoLogin(user.username, 'pass');
+  //       if (!jmessageLogin) {
+  //         this.plugin.showToast('Jmessage Login Error: ' + jmessageLogin);
+  //         return;
+  //       };
+  //     }
 
-    }
-  }
+  //   }
+  // }
   async appInit() {
     let user = JSON.parse(localStorage.getItem('currentUser'));
     if (user) {
