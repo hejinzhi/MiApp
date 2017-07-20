@@ -19,6 +19,7 @@ import { KeyboardAttachDirective } from '../shared/directive/KeyboardAttachDirec
 
 export class DialogueComponent implements OnInit {
     @ViewChild(Content) content: Content;
+    @ViewChild('newInput') newInput: any;
     languageType: string = localStorage.getItem('languageType');
     languageContent = LanguageConfig.DialogueComponent[this.languageType];
     list: any;
@@ -36,6 +37,9 @@ export class DialogueComponent implements OnInit {
     toUserNickName: string;
     toUserAvatarSrc: string;
 
+    showExtra: number;
+    lastEditRange: any;
+    lastEditSelection: any;
 
     jmessageHandler: Subscription; //接收句柄，再view被关闭的时候取消订阅，否则对已关闭的view进行数据脏检查会报错
     keyboardOpen: boolean;
@@ -75,6 +79,8 @@ export class DialogueComponent implements OnInit {
         this.keyboard.hideKeyboardAccessoryBar(true);
         this.keyboard.disableScroll(true);
         this.userinfo = JSON.parse(localStorage.getItem('currentUser'));
+
+        document.onselectionchange = () => this.getPosition();
 
         // 获取当前登录人的昵称和头像
         let res = await this.messageservice.getUserAvatar(this.toUserName)
@@ -128,6 +134,7 @@ export class DialogueComponent implements OnInit {
         this.jmessageservice.setSingleConversationUnreadMessageCount(this.userName, null, 0);
         this.events.publish('msg.onChangeTabBadge');
         this.jmessageservice.exitConversation();
+        document.onselectionchange = function(){ }
     }
 
     ionViewWillEnter() {
@@ -143,7 +150,7 @@ export class DialogueComponent implements OnInit {
         if (localStorage.getItem('keyboardShow') === 'true') {
             this.keyboard.close();
         } else {
-            this.onPlus = !this.onPlus;
+            this.onPlus = true;
             setTimeout(() => {
                 if (this.plf === 'ios') {
                     this.content.getScrollElement().style.marginBottom = (200 + 44) + 'px';
@@ -174,6 +181,96 @@ export class DialogueComponent implements OnInit {
             })
         }
 
+    }
+
+    insertAfter(newElement: any, targetElement: any) {
+      var parent = targetElement.parentNode;
+      if (parent.lastChild == targetElement) {
+        parent.appendChild(newElement);
+      }
+      else {
+        parent.insertBefore(newElement, targetElement.nextSibling);
+      }
+    }
+    addEmoji(emoji: string) {
+      let emojiText = document.createElement('i');
+      emojiText.setAttribute('class', `emoji icon-ng2_em_${emoji.replace(/\:/g, '')}`);
+      emojiText.setAttribute('style', `display:inline-block;`);
+      emojiText.setAttribute('contenteditable', 'false');
+      // let outContent = document.createElement('span');
+      // outContent.setAttribute('class','emoji-out');
+      // outContent.setAttribute('contenteditable','false');
+      // outContent.appendChild(emojiText);
+      // 获取编辑框对象
+      // debugger
+      var edit = this.newInput.nativeElement;
+      // 编辑框设置焦点
+      edit.focus()
+      // 获取选定对象
+      var selection: any = getSelection()
+      // 判断是否有最后光标对象存在
+      if (this.lastEditRange) {
+        // 存在最后光标对象，选定对象清除所有光标并添加最后光标还原之前的状态
+        selection.removeAllRanges()
+        selection.addRange(this.lastEditRange)
+      }
+      // 判断选定对象范围是编辑框还是文本节点
+      if (selection.anchorNode.nodeName != '#text') {
+        // 如果是编辑框范围。则创建表情文本节点进行插入
+        if (edit.childNodes.length > 0) {
+          // 如果文本框的子元素大于0，则表示有其他元素，则按照位置插入表情节点
+          for (var i = 0; i < edit.childNodes.length; i++) {
+            if (i == selection.anchorOffset) {
+              edit.insertBefore(emojiText, edit.childNodes[i])
+            }
+          }
+        } else {
+          // 否则直接插入一个表情元素
+          edit.appendChild(emojiText)
+        }
+      } else {
+        // 如果是文本节点则先获取光标对象
+        let range = selection.getRangeAt(0)
+        // 获取光标对象的范围界定对象，一般就是textNode对象
+        let textNode: any = range.startContainer;
+        // 获取光标位置
+        let rangeStartOffset = range.startOffset;
+        // 重新插入元素
+        let textNode1 = document.createTextNode(textNode.data.substr(0, rangeStartOffset));
+        let textNode2 = document.createTextNode(textNode.data.substr(rangeStartOffset));
+        let nextNode = textNode.nextSibling;
+        textNode.remove();
+        if (nextNode) {
+          edit.insertBefore(textNode1, nextNode)
+        } else {
+          edit.appendChild(textNode1);
+        }
+        this.insertAfter(emojiText, textNode1);
+        this.insertAfter(textNode2, emojiText);
+      }
+      // 创建新的光标对象
+      var range = document.createRange()
+      let space = document.createTextNode(' ');
+      // edit.appendChild(space);
+      this.insertAfter(space, emojiText)
+      // 光标对象的范围界定为新建的表情节点
+      range.selectNodeContents(space)
+      // 光标位置定位在表情节点的最大长度
+      range.setStart(space, space.length)
+      // 使光标开始和光标结束重叠
+      range.collapse(true)
+      // 清除选定对象的所有光标对象
+      selection.removeAllRanges()
+      // 插入新的光标对象
+      selection.addRange(range)
+      // 无论如何都要记录最后光标对象
+      this.lastEditRange = selection.getRangeAt(0)
+    }
+    getPosition() {
+      // 获取选定对象
+      this.lastEditSelection = getSelection()
+      // 设置最后光标对象
+      this.lastEditRange = this.lastEditSelection.getRangeAt(0);
     }
 
     async loadMessage() {
@@ -258,7 +355,7 @@ export class DialogueComponent implements OnInit {
             this.jmessageservice.sendSingleImageMessage(this.userName, content);
         }
         this.list.push(msg)
-        this.input_text = '';
+        this.newInput.nativeElement.innerHTML = '';
         setTimeout(function () {
             that.scroll_down();
         }, 0);
@@ -327,4 +424,3 @@ export class DialogueComponent implements OnInit {
         this.keyboard.close()
     }
 }
-

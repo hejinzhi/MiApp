@@ -2,6 +2,9 @@ sg-message {
     #allmap{
     height: 300px;
   }
+  .emoji {
+    transform: scale(0.7) translate(0px,10px);
+  }
   .list-avatar-page {
     ion-note {
       font-size: 12px;

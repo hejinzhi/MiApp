@@ -21,8 +21,19 @@ sg-dialogue {
   .android-height {
     height: 93%;
   }
+  .emoji {
+    transform: scale(0.7) translate(0px,10px);
+    // margin-top:-10px;
+  }
+  .emoji-out {
+    width:18px;
+    height:18px;
+  }
   .msgarea {
     padding: 10px 0px;
+    .msg-detail {
+
+    }
     .last {
       margin-bottom: 14%;
     }
@@ -168,10 +179,9 @@ sg-dialogue {
   }
   .input {
     color: $fontcolor; // height: 7.5%;
-    width: 100%;
+    height: 7%;
+    min-height: 50px;
     border-top: 1px solid #d8d8d8;
-    background-color: #ededed;
-    font-size: 11px;
     &.up {
       height: 42%;
     }
@@ -179,39 +189,43 @@ sg-dialogue {
       height: 200px;
     }
     .input_layout {
+      border-bottom: 1px solid #d8d8d8;
+      background-color: #ededed;
       position: relative;
-      height: 40px;
-      line-height: 40px;
+      min-height: 50px;
+      // max-height: 110px;
+      line-height: 38px;
       .input_icon {
         position: absolute;
         display: inline-block;
-        top: 10%;
         font-size: 35px;
         &.voice {
           left: 2%;
-          top: 6%;
+          bottom: 3%;
         }
         &.face {
-          right: 13%;
-          top: -4%;
+          right: 0%;
+          bottom: 10%;
         }
         &.plus {
-          right: 2%;
-          top: -6%;
+          right: 7%;
+          bottom: 10%;
         }
       }
       .input_text {
         border-bottom: 1px solid #d8d8d8;
         text-indent: 5px;
-        margin-left: 50px;
-        margin-right: 120px;
+        margin-left: -11%;
         vertical-align: middle;
-        line-height: 30px;
-        height: 30px;
-        width: 63%;
+        line-height: 33px;
+        // height: 18px;
+        max-height: 100px;
+        overflow-y: scroll;
+        overflow-x: hidden;
+        width: 123%;
         font-size: 18px;
         color: #000;
-        border-radius: 6px;
+        background-color: #fff;
       }
       .send {
         background-color: #14b012;
@@ -220,10 +234,10 @@ sg-dialogue {
         position: absolute;
         border: 1px solid #378c37;
         border-radius: 2px;
-        right: 1%;
-        bottom: 1%;
-        width: 11%;
-        height: 40px;
+        right: 8%;
+        bottom: 6%;
+        height: 38px;
+        width: 40px;
         line-height: 36px;
         color: white;
         text-align: center;

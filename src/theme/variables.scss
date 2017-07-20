@@ -37,7 +37,9 @@ $colors: ( primary: #387ef5, secondary: #32db64, danger: #f53d3d, light: #f4f4f4
 // --------------------------------------------------
 @import "roboto";
 @import "noto-sans";
-
+.emoji {
+  display: inline-block;
+}
 .icon-ng2_em_\+1 {
   background-image: url("../assets/img/ng2-emoji.png");
   background-position: -844px -384px;
