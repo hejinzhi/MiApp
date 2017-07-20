@@ -97,6 +97,7 @@ export class MessageComponent implements OnInit {
 
       // 监听是否有消息推送过来
       this.jmessageService.jmessageHandler = this.jmessageService.onReceiveMessage().subscribe(async (res) => {
+        console.log(res);
         let msg: any;
         if (this.plf === 'ios') {
           msg = await this.handleReceiveMessageIos(res);
@@ -144,11 +145,13 @@ export class MessageComponent implements OnInit {
       contentType: res.contentType,
       time: res.createTimeInMillis,
       type: this._type,
-      unread: true
+      unread: true,
+      imageHeight: res.content.height,
+      imageWidth: res.content.width
     };
 
     await this.databaseService.addMessage(res.targetInfo.userName, res.fromName, this.userinfo.username, _content, res.contentType, res.createTimeInMillis, this._type, 'Y',
-      JSON.stringify(res.content.extras), child_type);
+      JSON.stringify(res.content.extras), child_type, res.content.height, res.content.width);
 
     return msg;
   }
@@ -183,11 +186,13 @@ export class MessageComponent implements OnInit {
       contentType: res.content.msg_type,
       time: res.content.create_time,
       type: this._type,
-      unread: true
+      unread: true,
+      imageHeight: res.content.height,
+      imageWidth: res.content.width
     };
 
     await this.databaseService.addMessage(res.content.target_id, res.content.from_id, this.userinfo.username, _content, res.content.msg_type, res.content.create_time, this._type, 'Y',
-      JSON.stringify(res.content.msg_body.extras), child_type);
+      JSON.stringify(res.content.msg_body.extras), child_type, res.content.height, res.content.width);
 
     return msg;
 
@@ -208,7 +213,6 @@ export class MessageComponent implements OnInit {
     // }
     this.noticeListItem = await this.messageService.getMessageHistory(this.userinfo.username, 'notice');
     this.messageListItem = await this.messageService.getMessageHistory(this.userinfo.username, 'dialogue');
-
   };
 
   changeLastMessage(newData: any[], oldData: any[]) {
@@ -307,16 +311,19 @@ export class MessageComponent implements OnInit {
   }
 
   public async deleteMessage(item: any) {
+    let that = this;
     let alert = this.alertCtrl.create();
     alert.setTitle(this.languageContent.deleteMessageAlertTitle);
     alert.addButton(this.languageContent.cancel);
     alert.addButton({
       text: this.languageContent.confirm,
       handler: (data: string) => {
-        this.databaseService.deleteMessagesByUser(this.userinfo.username, item.fromUserName, item.toUserName);
-        this.refreshData();
-        this.ref.detectChanges();
-        this.events.publish('msg.onChangeTabBadge');
+        // that.databaseService.deleteMessagesByUser(that.userinfo.username, item.fromUserName, item.toUserName).then((res) => {
+        that.databaseService.deleteMessagesByUser(that.userinfo.username, item.owner, item.toUserName).then((res) => {
+          that.refreshData();
+          that.ref.detectChanges();
+          that.events.publish('msg.onChangeTabBadge');
+        });
       }
     });
     alert.present();

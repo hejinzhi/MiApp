@@ -22,6 +22,7 @@ import { KeyboardAttachDirective } from '../shared/directive/KeyboardAttachDirec
 
 export class DialogueComponent implements OnInit {
     @ViewChild(Content) content: Content;
+    @ViewChild('newInput') newInput: any;
     languageType: string = localStorage.getItem('languageType');
     languageContent = LanguageConfig.DialogueComponent[this.languageType];
     list: any;
@@ -39,6 +40,9 @@ export class DialogueComponent implements OnInit {
     toUserNickName: string;
     toUserAvatarSrc: string;
 
+    showExtra: number;
+    lastEditRange: any;
+    lastEditSelection: any;
 
     jmessageHandler: Subscription; //接收句柄，再view被关闭的时候取消订阅，否则对已关闭的view进行数据脏检查会报错
     keyboardOpen: boolean;
@@ -64,6 +68,7 @@ export class DialogueComponent implements OnInit {
     ) {
 
         this.userName = params.get('fromUserName');
+        // this.userName = params.get('owner');
         this.userNickName = params.get('fromUserNickName');
         this.fromUserAvatarSrc = params.get('fromUserAvatarSrc');
         this.unreadCount = params.get('unreadCount');
@@ -81,6 +86,8 @@ export class DialogueComponent implements OnInit {
         this.keyboard.hideKeyboardAccessoryBar(true);
         this.keyboard.disableScroll(true);
         this.userinfo = JSON.parse(localStorage.getItem('currentUser'));
+
+        document.onselectionchange = () => this.getPosition();
 
         // 获取当前登录人的昵称和头像
         let res = await this.messageservice.getUserAvatar(this.toUserName)
@@ -134,6 +141,7 @@ export class DialogueComponent implements OnInit {
         this.jmessageservice.setSingleConversationUnreadMessageCount(this.userName, null, 0);
         this.events.publish('msg.onChangeTabBadge');
         this.jmessageservice.exitConversation();
+        document.onselectionchange = function () { }
     }
 
     ionViewWillEnter() {
@@ -149,7 +157,7 @@ export class DialogueComponent implements OnInit {
         if (localStorage.getItem('keyboardShow') === 'true') {
             this.keyboard.close();
         } else {
-            this.onPlus = !this.onPlus;
+            this.onPlus = true;
             setTimeout(() => {
                 if (this.plf === 'ios') {
                     this.content.getScrollElement().style.marginBottom = (200 + 44) + 'px';
@@ -182,23 +190,126 @@ export class DialogueComponent implements OnInit {
 
     }
 
+    insertAfter(newElement: any, targetElement: any) {
+        var parent = targetElement.parentNode;
+        if (parent.lastChild == targetElement) {
+            parent.appendChild(newElement);
+        }
+        else {
+            parent.insertBefore(newElement, targetElement.nextSibling);
+        }
+    }
+    addEmoji(emoji: string) {
+        let emojiText = document.createElement('i');
+        emojiText.setAttribute('class', `emoji icon-ng2_em_${emoji.replace(/\:/g, '')}`);
+        emojiText.setAttribute('style', `display:inline-block;`);
+        emojiText.setAttribute('contenteditable', 'false');
+        // let outContent = document.createElement('span');
+        // outContent.setAttribute('class','emoji-out');
+        // outContent.setAttribute('contenteditable','false');
+        // outContent.appendChild(emojiText);
+        // 获取编辑框对象
+        // debugger
+        var edit = this.newInput.nativeElement;
+        // 编辑框设置焦点
+        edit.focus()
+        // 获取选定对象
+        var selection: any = getSelection()
+        // 判断是否有最后光标对象存在
+        if (this.lastEditRange) {
+            // 存在最后光标对象，选定对象清除所有光标并添加最后光标还原之前的状态
+            selection.removeAllRanges()
+            selection.addRange(this.lastEditRange)
+        }
+        // 判断选定对象范围是编辑框还是文本节点
+        if (selection.anchorNode.nodeName != '#text') {
+            // 如果是编辑框范围。则创建表情文本节点进行插入
+            if (edit.childNodes.length > 0) {
+                // 如果文本框的子元素大于0，则表示有其他元素，则按照位置插入表情节点
+                for (var i = 0; i < edit.childNodes.length; i++) {
+                    if (i == selection.anchorOffset) {
+                        edit.insertBefore(emojiText, edit.childNodes[i])
+                    }
+                }
+            } else {
+                // 否则直接插入一个表情元素
+                edit.appendChild(emojiText)
+            }
+        } else {
+            // 如果是文本节点则先获取光标对象
+            let range = selection.getRangeAt(0)
+            // 获取光标对象的范围界定对象，一般就是textNode对象
+            let textNode: any = range.startContainer;
+            // 获取光标位置
+            let rangeStartOffset = range.startOffset;
+            // 重新插入元素
+            let textNode1 = document.createTextNode(textNode.data.substr(0, rangeStartOffset));
+            let textNode2 = document.createTextNode(textNode.data.substr(rangeStartOffset));
+            let nextNode = textNode.nextSibling;
+            textNode.remove();
+            if (nextNode) {
+                edit.insertBefore(textNode1, nextNode)
+            } else {
+                edit.appendChild(textNode1);
+            }
+            this.insertAfter(emojiText, textNode1);
+            this.insertAfter(textNode2, emojiText);
+        }
+        // 创建新的光标对象
+        var range = document.createRange()
+        let space = document.createTextNode(' ');
+        // edit.appendChild(space);
+        this.insertAfter(space, emojiText)
+        // 光标对象的范围界定为新建的表情节点
+        range.selectNodeContents(space)
+        // 光标位置定位在表情节点的最大长度
+        range.setStart(space, space.length)
+        // 使光标开始和光标结束重叠
+        range.collapse(true)
+        // 清除选定对象的所有光标对象
+        selection.removeAllRanges()
+        // 插入新的光标对象
+        selection.addRange(range)
+        // 无论如何都要记录最后光标对象
+        this.lastEditRange = selection.getRangeAt(0)
+    }
+    getPosition() {
+        // 获取选定对象
+        this.lastEditSelection = getSelection()
+        // 设置最后光标对象
+        this.lastEditRange = this.lastEditSelection.getRangeAt(0);
+    }
+
     async loadMessage() {
         let data: any[] = await this.messageservice.getMessagesByUsername(this.userinfo.username, this.userName, this.userinfo.username);
+        console.log(1);
+        console.log(data);
         data.forEach((value, index) => {
             this.getNickNameAndAvatar(value);
         });
         this.list = data;
+        // console.log(this.list);
     };
 
-    getNickNameAndAvatar(targetUser: any) {
-        if (targetUser.fromUserName === this.userName) {
-            targetUser.fromUserNickName = this.userNickName;
-            targetUser.fromUserAvatarSrc = this.fromUserAvatarSrc;
-        }
-        // 这里代表是当前登陆人发出去的信息
-        else {
-            targetUser.fromUserNickName = this.toUserNickName;
-            targetUser.fromUserAvatarSrc = this.toUserAvatarSrc;
+    async getNickNameAndAvatar(targetUser: any) {
+        // if (targetUser.fromUserName === this.userName) {
+        //     targetUser.fromUserNickName = this.userNickName;
+        //     targetUser.fromUserAvatarSrc = this.fromUserAvatarSrc;
+        // }
+        // // 这里代表是当前登陆人发出去的信息
+        // else {
+        //     targetUser.fromUserNickName = this.toUserNickName;
+        //     targetUser.fromUserAvatarSrc = this.toUserAvatarSrc;
+        // }
+        //  await this.databaseService.getAvatarByUsername(targetUser.fromUserName);
+
+        let fromUserAvatarObj = await this.databaseService.getAvatarByUsername(targetUser.fromUserName);
+
+        // 2.如果找到了,新增昵称和头像属性
+        if (fromUserAvatarObj.rows.length > 0) {
+            targetUser.fromUserNickName = fromUserAvatarObj.rows.item(0).NICK_NAME;
+            targetUser.fromUserAvatarSrc = fromUserAvatarObj.rows.item(0).AVATAR;
+            // history[i].timedesc = this.getDateDiff(history[i].time);
         }
 
     }
@@ -219,7 +330,7 @@ export class DialogueComponent implements OnInit {
     }
 
     //type: 1是文字，2是圖片
-    async sendMessage(type: number, content: string, extra?: any, childType?: any) {
+    async sendMessage(type: number, content: string, extra?: any, childType?: any, imageHeight?: number, imageWidth?: number) {
         let contentType: string;
         let that = this;
         let _extra;
@@ -240,10 +351,12 @@ export class DialogueComponent implements OnInit {
             type: "dialogue",
             unread: 'N',
             extra: extra ? JSON.parse(extra) : '',
-            childType: childType
+            childType: childType,
+            imageHeight: imageHeight,
+            imageWidth: imageWidth
         };
         this.getNickNameAndAvatar(msg);
-        await this.databaseService.addMessage(msg.toUserName, msg.fromUserName, this.userinfo.username, msg.content, msg.contentType, msg.time, msg.type, msg.unread, extra ? JSON.stringify(msg.extra) : '', childType);
+        await this.databaseService.addMessage(msg.toUserName, msg.fromUserName, this.userinfo.username, msg.content, msg.contentType, msg.time, msg.type, msg.unread, extra ? JSON.stringify(msg.extra) : '', childType, imageHeight, imageWidth);
 
         if (type === 1) {
             if (extra) {
@@ -257,8 +370,7 @@ export class DialogueComponent implements OnInit {
             this.jmessageservice.sendSingleImageMessage(this.userName, content);
         }
         this.list.push(msg)
-        console.log(this.list, 555);
-        this.input_text = '';
+        this.newInput.nativeElement.innerHTML = '';
         setTimeout(function () {
             that.scroll_down();
         }, 0);
@@ -267,9 +379,10 @@ export class DialogueComponent implements OnInit {
 
     getPhoto(type: number) {
         //  this.sendMessage(2,"'assets/avatar/thumbnail-puppy-1.jpg'");
+        let that = this;
         let options: CameraOptions = {
             //这些参数可能要配合着使用，比如选择了sourcetype是0，destinationtype要相应的设置
-            quality: 50,                                            //相片质量0-100
+            quality: 80,                                            //相片质量0-100
             allowEdit: false,                                        //在选择之前允许修改截图
             destinationType: this.camera.DestinationType.FILE_URI,
             sourceType: type,                                         //从哪里选择图片：PHOTOLIBRARY=0，相机拍照=1，SAVEDPHOTOALBUM=2。0和1其实都是本地图库
@@ -282,7 +395,13 @@ export class DialogueComponent implements OnInit {
         };
         this.camera.getPicture(options).then((imageData) => {
             // imageData is a base64 encoded string
-            this.sendMessage(2, imageData);
+            var image = new Image();
+            image.src = imageData;
+            image.onload = async function () {
+                await that.sendMessage(2, imageData, '', '', image.height, image.width);
+                that.ref.detectChanges();
+            }
+            // this.sendMessage(2, imageData);
         }, (err) => {
             console.log(err);
         });
@@ -296,6 +415,16 @@ export class DialogueComponent implements OnInit {
             console.log('Error getting location', error);
         });
     };
+
+    getImageClass(height: number, width: number) {
+        if (height === width) {
+            return 'img_fang';
+        } else if (height < width) {
+            return 'img_heng'
+        } else {
+            return 'img_shu';
+        }
+    }
 
     onBlur(event: any) {
         if (this.keyboardOpen) {
@@ -320,4 +449,3 @@ export class DialogueComponent implements OnInit {
         this.navCtrl.push(MapComponent, content);
     }
 }
-

@@ -51,7 +51,7 @@ export class DatabaseService {
   createMessageTable() {
     return this.database.executeSql(`CREATE TABLE IF NOT EXISTS MOA_LOCAL_MESSAGE
         (ID INTEGER PRIMARY KEY AUTOINCREMENT,TO_USER_NAME VARCHAR2(100),FROM_USER_NAME VARCHAR2(100),OWNER VARCHAR2(100),CONTENT VARCHAR2(100),CONTENT_TYPE VARCHAR2(100),
-        TIME INTEGER, TYPE VARCHAR2(100),UNREAD VARCHAR2(100),EXTRA VARCHAR2(1000),CHILD_TYPE VARCHAR2(20));`, {});
+        TIME INTEGER, TYPE VARCHAR2(100),UNREAD VARCHAR2(100),EXTRA VARCHAR2(1000),CHILD_TYPE VARCHAR2(20),IMAGE_HEIGHT NUMBER,IMAGE_WIDTH NUMBER);`, {});
   }
 
   getAllUnreadCount(owner: string, toUsername: string) {
@@ -61,7 +61,7 @@ export class DatabaseService {
   getMessagesByUsername(owner: string, fromUsername: string, toUsername: string) {
     let sql = `SELECT * FROM MOA_LOCAL_MESSAGE WHERE OWNER='${owner}' AND
         ((FROM_USER_NAME ='${fromUsername}' AND TO_USER_NAME ='${toUsername}' ) OR (TO_USER_NAME='${fromUsername}' AND FROM_USER_NAME='${toUsername}' )) 
-        ORDER BY TIME;`;
+         ORDER BY TIME;`;
 
     return this.database.executeSql(sql, {})
       .then((data) => {
@@ -79,7 +79,9 @@ export class DatabaseService {
               type: data.rows.item(i).TYPE,
               unread: data.rows.item(i).UNREAD,
               childType: data.rows.item(i).CHILD_TYPE,
-              extra: extra
+              extra: extra,
+              imageHeight: data.rows.item(i).IMAGE_HEIGHT,
+              imageWidth: data.rows.item(i).IMAGE_WIDTH
             });
           }
         }
@@ -160,7 +162,8 @@ export class DatabaseService {
           unread: data.rows.item(i).UNREAD,
           extra: data.rows.item(i).EXTRA,
           childType: data.rows.item(i).CHILD_TYPE,
-          unreadCount: data.rows.item(i).UNREAD_COUNT
+          unreadCount: data.rows.item(i).UNREAD_COUNT,
+          owner: data.rows.item(i).FROM_USER_NAME
         });
       }
     }
@@ -169,6 +172,7 @@ export class DatabaseService {
   }
 
   findLastContent(msg: any[], loginUsername: string) {
+    // return msg;
     let otherPeopleSendToMe: any[] = [];
     let iSendToOtherPeople: any[] = [];
 
@@ -228,11 +232,13 @@ export class DatabaseService {
   }
 
 
-  addMessage(toUsername: string, fromUserName: string, owner: string, content: string, contentType: string, time: number, type: string, unread: string, extra: string, child_type: string) {
+  addMessage(toUsername: string, fromUserName: string, owner: string, content: string, contentType: string,
+    time: number, type: string, unread: string, extra: string, child_type: string,
+    image_height: number, image_width: number) {
     if (toUsername != fromUserName) {
-      let data = [toUsername, fromUserName, owner, content, contentType, time, type, unread, extra, child_type];
-      return this.database.executeSql(`INSERT INTO MOA_LOCAL_MESSAGE (TO_USER_NAME, FROM_USER_NAME,OWNER, CONTENT,CONTENT_TYPE,TIME,TYPE,UNREAD,EXTRA,CHILD_TYPE)
-        VALUES (?,?,?,?,?,?,?,?,?,?)`, data).then(data => {
+      let data = [toUsername, fromUserName, owner, content, contentType, time, type, unread, extra, child_type, image_height, image_width];
+      return this.database.executeSql(`INSERT INTO MOA_LOCAL_MESSAGE (TO_USER_NAME, FROM_USER_NAME,OWNER, CONTENT,CONTENT_TYPE,TIME,TYPE,UNREAD,EXTRA,CHILD_TYPE,IMAGE_HEIGHT,IMAGE_WIDTH)
+        VALUES (?,?,?,?,?,?,?,?,?,?,?,?)`, data).then(data => {
           return data;
         }, err => {
           console.log('Error: ', err);
@@ -258,7 +264,9 @@ export class DatabaseService {
             type: data.rows.item(i).TYPE,
             unread: data.rows.item(i).UNREAD,
             childType: data.rows.item(i).CHILD_TYPE,
-            extra: data.rows.item(i).EXTRA
+            extra: data.rows.item(i).EXTRA,
+            imageHeight: data.rows.item(i).IMAGE_HEIGHT,
+            imageWidth: data.rows.item(i).IMAGE_WIDTH
           });
         }
       }

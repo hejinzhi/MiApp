@@ -16,4 +16,7 @@ export class EmojiComponent implements OnInit {
   select(item:any) {
     this.selectEmoji.emit(':'+item+':');
   }
+  cancel() {
+    
+  }
 }
