@@ -145,6 +145,7 @@ export class DialogueComponent implements OnInit {
     }
 
     ionViewWillEnter() {
+        this.newInput.nativeElement.innerHTML = '';
         if (this.plf === 'android') {
             setTimeout(() => {
                 this.scroll_down();

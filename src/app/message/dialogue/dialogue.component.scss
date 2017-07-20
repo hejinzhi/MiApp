@@ -22,18 +22,16 @@ sg-dialogue {
     height: 93%;
   }
   .emoji {
-    transform: scale(0.7) translate(0px,10px);
+    transform: scale(0.7) translate(0px, 10px);
     // margin-top:-10px;
   }
   .emoji-out {
-    width:18px;
-    height:18px;
+    width: 18px;
+    height: 18px;
   }
   .msgarea {
     padding: 10px 0px;
-    .msg-detail {
-
-    }
+    .msg-detail {}
     .last {
       margin-bottom: 14%;
     }
@@ -179,8 +177,8 @@ sg-dialogue {
   }
   .input {
     color: $fontcolor; // height: 7.5%;
-    height: 7%;
-    min-height: 50px;
+    height: 6%;
+    // min-height: 50px;
     border-top: 1px solid #d8d8d8;
     &.up {
       height: 42%;
