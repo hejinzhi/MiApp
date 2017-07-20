@@ -61,7 +61,7 @@ export class DatabaseService {
   getMessagesByUsername(owner: string, fromUsername: string, toUsername: string) {
     let sql = `SELECT * FROM MOA_LOCAL_MESSAGE WHERE OWNER='${owner}' AND
         ((FROM_USER_NAME ='${fromUsername}' AND TO_USER_NAME ='${toUsername}' ) OR (TO_USER_NAME='${fromUsername}' AND FROM_USER_NAME='${toUsername}' )) 
-        AND TYPE='dialogue' ORDER BY TIME;`;
+        ORDER BY TIME;`;
 
     return this.database.executeSql(sql, {})
       .then((data) => {

@@ -115,6 +115,7 @@ export class MessageComponent implements OnInit {
   async handleReceiveMessageAndroid(res: any) {
     let _content: string;
     let child_type: string;
+
     if (res.contentType === 'text') {
       _content = res.content.text;
     } else if (res.contentType === 'image') {
@@ -124,11 +125,16 @@ export class MessageComponent implements OnInit {
     if (res.fromName === 'signlist' || res.fromName === 'news' || res.fromName === 'alert' || res.fromName === 'report') {
       this._type = 'notice';
       _content = res.content.text;
-      if (res.fromName === 'alert') {
-        child_type = res.content.extras.members.type.value;
-      }
+
+      //  if (res.fromName === 'alert') {
+      //    child_type = res.content.extras.members.type.value;
+      //  }
     } else {
       this._type = 'dialogue';
+    }
+
+    if (typeof res.content.extras.members.type === "object" && !(res.content.extras.members.type instanceof Array)) {
+      child_type = res.content.extras.members.type.value;
     }
 
     let msg: Message = {
@@ -159,11 +165,15 @@ export class MessageComponent implements OnInit {
     if (res.content.from_id === 'signlist' || res.content.from_id === 'news' || res.content.from_id === 'alert' || res.content.from_id === 'report') {
       this._type = 'notice';
       _content = res.content.msg_body.text;
-      if (res.content.from_id === 'alert') {
-        child_type = res.content.msg_body.extras.type;
-      }
+      // if (res.content.from_id === 'alert') {
+      //   child_type = res.content.msg_body.extras.type;
+      // }
     } else {
       this._type = 'dialogue';
+    }
+
+    if (typeof res.content.msg_body.extras.type === "object" && !(res.content.msg_body.extras.type instanceof Array)) {
+      child_type = res.content.msg_body.extras.type;
     }
 
     let msg: Message = {

@@ -10,10 +10,16 @@
         <div [ngClass]="item.toUserName === userinfo.username ? 'other' : 'me'" [ngSwitch]="item.contentType">
           <img class="icon" [src]="item.fromUserAvatarSrc">
           <ng-template [ngSwitchCase]="'text'">
-            <div class="msg">
+            <div class="msg" *ngIf="!item.childType">
               <span [ngClass]="item.toUserName === userinfo.username ? ' arrow_l_int' : ' arrow_r_int'"></span>
               <span [ngClass]="item.toUserName === userinfo.username ? ' arrow_l_out' : ' arrow_r_out'"></span>
               <div [class.selectable]="selectable === i" [innerHTML]="item.content | sgChangeSpace | sgChineseConv | sgEmojis" (touchstart)="selectable=i"></div>
+            </div>
+            <div class="msg"  *ngIf="item.childType" (tap)="openMap(item.extra.content)">
+              <span [ngClass]="item.toUserName === userinfo.username ? ' arrow_l_int' : ' arrow_r_int'"></span>
+              <span [ngClass]="item.toUserName === userinfo.username ? ' arrow_l_out' : ' arrow_r_out'"></span>
+              <!--<div myBMap id="allmap" class="map" [pos]="item.extra.content" [addCtrl]="addCtrl" (tap)="openMap(item.extra.content)"></div>-->
+              <div [class.selectable]="selectable === i" [innerHTML]="item.content | sgChangeSpace | sgChineseConv | sgEmojis" (touchstart)="selectable=i" ></div>
             </div>
           </ng-template>
           <ng-template [ngSwitchCase]="'image'"><img src={{item.content}} class='img_content' (tap)="openPhoto(item.content)"></ng-template>
@@ -48,7 +54,7 @@
           <button ion-button color="light" class="button-ion" large icon-only (tap)=getPhoto(1)>
                       <ion-icon name='camera' class="icon-img" ></ion-icon>
                   </button>
-          <div class="icon-content">{{languageContent.camera}}</div> 
+          <div class="icon-content">{{languageContent.camera}}</div>
         </div>
         <div class="btt">
           <button ion-button color="light" class="button-ion" large icon-only>
@@ -57,7 +63,7 @@
           <div class="icon-content">{{languageContent.personcard}}</div>
         </div>
         <div class="btt">
-          <button ion-button color="light" class="button-ion" large icon-only (tap)=getLocation()>
+          <button ion-button color="light" class="button-ion" large icon-only (tap)=sendLocation()>
                      <ion-icon name='pin' class="icon-img" ></ion-icon>
                   </button>
           <div class="icon-content">{{languageContent.location}}</div>

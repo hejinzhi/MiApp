@@ -1,9 +1,12 @@
 import { Component, OnInit, ChangeDetectorRef, ViewChild } from '@angular/core';
 import { Subscription } from 'rxjs/Rx';
-import { NavParams, Events, Content, Platform } from 'ionic-angular';
+import { NavParams, NavController, Events, Content, Platform } from 'ionic-angular';
 import { Camera, CameraOptions } from '@ionic-native/camera';
 import { Keyboard } from '@ionic-native/keyboard';
 import { PhotoViewer } from '@ionic-native/photo-viewer';
+import { Geolocation } from '@ionic-native/geolocation';
+
+import { MapComponent } from '../map/map.component';
 
 import { MessageService } from '../shared/service/message.service';
 import { JMessageService } from '../../core/services/jmessage.service';
@@ -42,6 +45,8 @@ export class DialogueComponent implements OnInit {
     msgContent: string;
     plf: string;
     onShowSubscription: Subscription;
+    // pos: number[] = [113.200585, 22.889573];
+    addCtrl: string = 'N';
 
 
     constructor(private messageservice: MessageService,
@@ -53,7 +58,9 @@ export class DialogueComponent implements OnInit {
         private events: Events,
         private platform: Platform,
         private databaseService: DatabaseService,
-        private photoViewer: PhotoViewer
+        private photoViewer: PhotoViewer,
+        private geolocation: Geolocation,
+        public navCtrl: NavController
     ) {
 
         this.userName = params.get('fromUserName');
@@ -212,9 +219,10 @@ export class DialogueComponent implements OnInit {
     }
 
     //type: 1是文字，2是圖片
-    async sendMessage(type: number, content: string) {
+    async sendMessage(type: number, content: string, extra?: any, childType?: any) {
         let contentType: string;
         let that = this;
+        let _extra;
 
         if (type === 1) {
             contentType = "text";
@@ -231,17 +239,25 @@ export class DialogueComponent implements OnInit {
             time: +new Date(),
             type: "dialogue",
             unread: 'N',
+            extra: extra ? JSON.parse(extra) : '',
+            childType: childType
         };
         this.getNickNameAndAvatar(msg);
-        await this.databaseService.addMessage(msg.toUserName, msg.fromUserName, this.userinfo.username, msg.content, msg.contentType, msg.time, msg.type, msg.unread, null, null);
+        await this.databaseService.addMessage(msg.toUserName, msg.fromUserName, this.userinfo.username, msg.content, msg.contentType, msg.time, msg.type, msg.unread, extra ? JSON.stringify(msg.extra) : '', childType);
 
         if (type === 1) {
-            this.jmessageservice.sendSingleTextMessage(this.userName, content);
+            if (extra) {
+                this.jmessageservice.sendSingleTextMessageWithExtras(this.userName, content, extra);
+            }
+            else {
+                this.jmessageservice.sendSingleTextMessage(this.userName, content);
+            }
         }
         else if (type === 2) {
             this.jmessageservice.sendSingleImageMessage(this.userName, content);
         }
         this.list.push(msg)
+        console.log(this.list, 555);
         this.input_text = '';
         setTimeout(function () {
             that.scroll_down();
@@ -272,7 +288,13 @@ export class DialogueComponent implements OnInit {
         });
     }
 
-    getLocation() {
+    sendLocation() {
+        this.geolocation.getCurrentPosition().then((resp) => {
+            let extra = { type: "location", title: "位置", content_type: "text", content: resp.coords.longitude + "," + resp.coords.latitude };
+            this.sendMessage(1, '[位置]', JSON.stringify(extra), 'location');
+        }).catch((error) => {
+            console.log('Error getting location', error);
+        });
     };
 
     onBlur(event: any) {
@@ -292,6 +314,10 @@ export class DialogueComponent implements OnInit {
     closeKeyboard() {
         this.keyboardOpen = false
         this.keyboard.close()
+    }
+
+    openMap(content: string) {
+        this.navCtrl.push(MapComponent, content);
     }
 }
 
