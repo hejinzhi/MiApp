@@ -1,0 +1,86 @@
+<ion-header>
+
+  <ion-navbar>
+    <ion-title>OBS PO分析(週報)</ion-title>
+  </ion-navbar>
+
+</ion-header>
+
+
+<ion-content>
+  <div id="main1a" class="chart">
+  </div>
+  <div id="main1b" class="chart">
+  </div>
+  <div id="main1c" class="chart">
+  </div>
+  <sg-table [tableData]="tempData"></sg-table>
+  <div padding>
+    <ion-segment [(ngModel)]="mi_bu" (ionChange)="changeShow()">
+      <ion-segment-button value="CBU">
+        CBU
+      </ion-segment-button>
+      <ion-segment-button value="EBU">
+        EBU
+      </ion-segment-button>
+      <ion-segment-button value="MBU">
+        MBU
+      </ion-segment-button>
+      <ion-segment-button value="TBU">
+        TBU
+      </ion-segment-button>
+    </ion-segment>
+
+
+  </div>
+  <div [ngSwitch]="mi_bu" class = "segment">
+    <div *ngSwitchCase="'CBU'">
+      <div id="main2a" class="chart" >
+
+      </div>
+      <div id="main2b" class="chart" >
+
+      </div>
+      <div id="main2c" class="chart" >
+
+      </div>
+      <sg-table [tableData]="tempData2"></sg-table>
+    </div>
+    <div *ngSwitchCase="'EBU'">
+      <div id="main2a" class="chart" >
+
+      </div>
+      <div id="main2b" class="chart" >
+
+      </div>
+      <div id="main2c" class="chart" >
+
+      </div>
+      <sg-table [tableData]="tempData2"></sg-table>
+    </div>
+    <div *ngSwitchCase="'MBU'">
+      <div id="main2a" class="chart" >
+
+      </div>
+      <div id="main2b" class="chart" >
+
+      </div>
+      <div id="main2c" class="chart" >
+
+      </div>
+      <sg-table [tableData]="tempData2"></sg-table>
+    </div>
+    <div *ngSwitchCase="'TBU'">
+      <div id="main2a" class="chart" >
+
+      </div>
+      <div id="main2b" class="chart" >
+
+      </div>
+      <div id="main2c" class="chart" >
+
+      </div>
+      <sg-table [tableData]="tempData2"></sg-table>
+    </div>
+  </div>
+</ion-content>

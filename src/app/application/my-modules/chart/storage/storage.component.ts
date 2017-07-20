@@ -24,6 +24,15 @@ export class StorageComponent {
   starage_age() {
     this.navCtrl.push('StarageAgeAnalysisComponent')
   }
+  storage_flow() {
+    this.navCtrl.push('StorageFlowComponent')
+  }
+  obs_storage() {
+    this.navCtrl.push('ObsStorageComponent')
+  }
+  obs_po() {
+    this.navCtrl.push('ObsPoComponent')
+  }
   quit() {
     console.log(456)
   }
