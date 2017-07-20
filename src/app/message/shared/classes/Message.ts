@@ -6,6 +6,8 @@ export class Message {
     time: number;
     type: string;
     unread: boolean;
+    imageHeight: string;
+    imageWidth: string;
 }
 
 export class NoticeContent {
