@@ -57,6 +57,7 @@ export class DialogueComponent implements OnInit {
     ) {
 
         this.userName = params.get('fromUserName');
+        // this.userName = params.get('owner');
         this.userNickName = params.get('fromUserNickName');
         this.fromUserAvatarSrc = params.get('fromUserAvatarSrc');
         this.unreadCount = params.get('unreadCount');
@@ -177,21 +178,34 @@ export class DialogueComponent implements OnInit {
 
     async loadMessage() {
         let data: any[] = await this.messageservice.getMessagesByUsername(this.userinfo.username, this.userName, this.userinfo.username);
+        console.log(1);
+        console.log(data);
         data.forEach((value, index) => {
             this.getNickNameAndAvatar(value);
         });
         this.list = data;
+        // console.log(this.list);
     };
 
-    getNickNameAndAvatar(targetUser: any) {
-        if (targetUser.fromUserName === this.userName) {
-            targetUser.fromUserNickName = this.userNickName;
-            targetUser.fromUserAvatarSrc = this.fromUserAvatarSrc;
-        }
-        // 这里代表是当前登陆人发出去的信息
-        else {
-            targetUser.fromUserNickName = this.toUserNickName;
-            targetUser.fromUserAvatarSrc = this.toUserAvatarSrc;
+    async getNickNameAndAvatar(targetUser: any) {
+        // if (targetUser.fromUserName === this.userName) {
+        //     targetUser.fromUserNickName = this.userNickName;
+        //     targetUser.fromUserAvatarSrc = this.fromUserAvatarSrc;
+        // }
+        // // 这里代表是当前登陆人发出去的信息
+        // else {
+        //     targetUser.fromUserNickName = this.toUserNickName;
+        //     targetUser.fromUserAvatarSrc = this.toUserAvatarSrc;
+        // }
+        //  await this.databaseService.getAvatarByUsername(targetUser.fromUserName);
+
+        let fromUserAvatarObj = await this.databaseService.getAvatarByUsername(targetUser.fromUserName);
+
+        // 2.如果找到了,新增昵称和头像属性
+        if (fromUserAvatarObj.rows.length > 0) {
+            targetUser.fromUserNickName = fromUserAvatarObj.rows.item(0).NICK_NAME;
+            targetUser.fromUserAvatarSrc = fromUserAvatarObj.rows.item(0).AVATAR;
+            // history[i].timedesc = this.getDateDiff(history[i].time);
         }
 
     }
@@ -212,7 +226,7 @@ export class DialogueComponent implements OnInit {
     }
 
     //type: 1是文字，2是圖片
-    async sendMessage(type: number, content: string) {
+    async sendMessage(type: number, content: string, imageHeight?: number, imageWidth?: number) {
         let contentType: string;
         let that = this;
 
@@ -231,9 +245,11 @@ export class DialogueComponent implements OnInit {
             time: +new Date(),
             type: "dialogue",
             unread: 'N',
+            imageHeight: imageHeight,
+            imageWidth: imageWidth
         };
         this.getNickNameAndAvatar(msg);
-        await this.databaseService.addMessage(msg.toUserName, msg.fromUserName, this.userinfo.username, msg.content, msg.contentType, msg.time, msg.type, msg.unread, null, null);
+        await this.databaseService.addMessage(msg.toUserName, msg.fromUserName, this.userinfo.username, msg.content, msg.contentType, msg.time, msg.type, msg.unread, null, null, imageHeight, imageWidth);
 
         if (type === 1) {
             this.jmessageservice.sendSingleTextMessage(this.userName, content);
@@ -251,9 +267,10 @@ export class DialogueComponent implements OnInit {
 
     getPhoto(type: number) {
         //  this.sendMessage(2,"'assets/avatar/thumbnail-puppy-1.jpg'");
+        let that = this;
         let options: CameraOptions = {
             //这些参数可能要配合着使用，比如选择了sourcetype是0，destinationtype要相应的设置
-            quality: 50,                                            //相片质量0-100
+            quality: 80,                                            //相片质量0-100
             allowEdit: false,                                        //在选择之前允许修改截图
             destinationType: this.camera.DestinationType.FILE_URI,
             sourceType: type,                                         //从哪里选择图片：PHOTOLIBRARY=0，相机拍照=1，SAVEDPHOTOALBUM=2。0和1其实都是本地图库
@@ -266,7 +283,13 @@ export class DialogueComponent implements OnInit {
         };
         this.camera.getPicture(options).then((imageData) => {
             // imageData is a base64 encoded string
-            this.sendMessage(2, imageData);
+            var image = new Image();
+            image.src = imageData;
+            image.onload = async function () {
+                await that.sendMessage(2, imageData, image.height, image.width);
+                that.ref.detectChanges();
+            }
+            // this.sendMessage(2, imageData);
         }, (err) => {
             console.log(err);
         });
@@ -274,6 +297,16 @@ export class DialogueComponent implements OnInit {
 
     getLocation() {
     };
+
+    getImageClass(height: number, width: number) {
+        if (height === width) {
+            return 'img_fang';
+        } else if (height < width) {
+            return 'img_heng'
+        } else {
+            return 'img_shu';
+        }
+    }
 
     onBlur(event: any) {
         if (this.keyboardOpen) {

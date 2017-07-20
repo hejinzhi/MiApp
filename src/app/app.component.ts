@@ -11,10 +11,8 @@ import { MessageService } from './message/shared/service/message.service';
 import { PluginService } from './core/services/plugin.service';
 import { JMessageService } from './core/services/jmessage.service';
 import { JPushService } from './core/services/jpush.service'
-
-import { OrganizationComponent } from './contact/organization/organization.component';
-
 import { EnvConfig } from './shared/config/env.config';
+import { LoginService } from './login/shared/service/login.service';
 
 declare var cordova: any;
 
@@ -37,7 +35,8 @@ export class MyAppComponent {
     private plugin: PluginService,
     private app: App,
     private jPushService: JPushService,
-    private jmessageService: JMessageService
+    private jmessageService: JMessageService,
+    private loginService: LoginService
   ) {
 
     // if (platform.is('cordova')) {
@@ -45,12 +44,12 @@ export class MyAppComponent {
     // }
 
     // this.appInit();
-    platform.ready().then(() => {
+    platform.ready().then(async () => {
       statusBar.styleDefault();
       splashScreen.hide();
       this.jMessage.jmessagePlugin = (<any>window).plugins ? (<any>window).plugins.jmessagePlugin || null : null;
       this.jPushService.jPushPlugin = (<any>window).plugins ? (<any>window).plugins.jPushPlugin || null : null;
-      this.appInit();
+      await this.appInit();
       this.plugin.checkAppForUpdate();
       if (platform.is('cordova') && platform.is('android')) {
         let original = platform.runBackButtonAction;
@@ -102,45 +101,53 @@ export class MyAppComponent {
 
     }
   }
-  appInit() {
+  async appInit() {
     let user = JSON.parse(localStorage.getItem('currentUser'));
-    if (user && user.myNineCode) {
-      // 已经有用户信息和设定为要验证手势密码
-      this.rootPage = PatternLockComponent;
-      this.loginJmes();
-      // this.rootPage = OrganizationComponent;
-    } else if (user && user.autoLogin) {
-      this.rootPage = TabsComponent;
-      this.loginJmes();
+    if (user) {
+      let ADloginSuccess = await this.loginService.myADLogin(user.username, user.password);
+      if (ADloginSuccess) {
+        let jMsgLoginSuccess = await this.loginService.jMessageLogin(user.username, user.password);
+        if (jMsgLoginSuccess && user.myNineCode) {
+          // 已经有用户信息和设定为要验证手势密码
+          this.rootPage = PatternLockComponent;
+          // this.loginJmes();
+        } else if (jMsgLoginSuccess && user.autoLogin) {
+          this.rootPage = TabsComponent;
+          // this.loginJmes();
+        } else {
+          this.rootPage = LoginComponent;
+        }
+      } else {
+        this.rootPage = LoginComponent;
+      }
     } else {
       this.rootPage = LoginComponent;
-      // this.rootPage = OrganizationComponent;
     }
     this.setDefaultLanguage();
     if (!localStorage.getItem('appVersion')) {
-      localStorage.setItem('appVersion',EnvConfig.appVersion);
+      localStorage.setItem('appVersion', EnvConfig.appVersion);
     }
   }
 
   setDefaultLanguage() {
-    if(localStorage.getItem('languageType')) return;
+    if (localStorage.getItem('languageType')) return;
     let userLanguage = window.navigator.language.toLowerCase();
     let languageType = ['zh']
     let index = -1;
-    languageType.forEach((val,idx) => {
-      if(userLanguage.indexOf(val) > -1) {
+    languageType.forEach((val, idx) => {
+      if (userLanguage.indexOf(val) > -1) {
         index = idx;
         return;
       }
     })
-    if(index === 0) {
-      if(userLanguage === 'zh-cn') {
+    if (index === 0) {
+      if (userLanguage === 'zh-cn') {
         localStorage.setItem('languageType', 'simple_Chinese');
       } else {
         localStorage.setItem('languageType', 'traditional_Chinese');
       }
     }
-    if(index === -1) {
+    if (index === -1) {
       localStorage.setItem('languageType', 'simple_Chinese');
     }
   }

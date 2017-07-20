@@ -16,7 +16,12 @@
               <div [class.selectable]="selectable === i" [innerHTML]="item.content | sgChangeSpace | sgChineseConv | sgEmojis" (touchstart)="selectable=i"></div>
             </div>
           </ng-template>
-          <ng-template [ngSwitchCase]="'image'"><img src={{item.content}} class='img_content' (tap)="openPhoto(item.content)"></ng-template>
+          <ng-template [ngSwitchCase]="'image'">
+            <!-- <img src={{item.content}} class='img_content' (tap)="openPhoto(item.content)"> -->
+            <!-- <img src={{item.content}} [ngClass]='getImageClass(item.imageHeight,item.imageWidth)' (tap)="openPhoto(item.content)"> -->
+            <img src={{item.content}} [ngClass]="{'img_fang':item.imageHeight === item.imageWidth,'img_heng':item.imageHeight < item.imageWidth,'img_shu':item.imageHeight > item.imageWidth}"
+              (tap)="openPhoto(item.content)">
+          </ng-template>
           <div class="clearfix"></div>
         </div>
       </div>
@@ -31,7 +36,7 @@
       <!-- <div class="input_text" contenteditable #newInput [innerHTML]="myInput_text | sgEmojis">
 
       </div> -->
-      <div *ngIf="input_text" class="send" (tap)="sendMessage(1,input_text)" tappable>發送</div>
+      <div *ngIf="input_text" class="send" (tap)="sendMessage(1,input_text)" tappable>{{languageContent.send}}</div>
     </div>
     <div *ngIf="onPlus">
       <div *ngIf="showExtra==2" class="myEmoji">
@@ -48,7 +53,7 @@
           <button ion-button color="light" class="button-ion" large icon-only (tap)=getPhoto(1)>
                       <ion-icon name='camera' class="icon-img" ></ion-icon>
                   </button>
-          <div class="icon-content">{{languageContent.camera}}</div> 
+          <div class="icon-content">{{languageContent.camera}}</div>
         </div>
         <div class="btt">
           <button ion-button color="light" class="button-ion" large icon-only>
@@ -63,7 +68,6 @@
           <div class="icon-content">{{languageContent.location}}</div>
         </div>
       </div>
-
     </div>
   </div>
 </ion-content>
