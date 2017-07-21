@@ -8,6 +8,12 @@
 
 
 <ion-content>
+  <ion-item>
+  <ion-label>查询开始时间</ion-label><ion-datetime displayFormat="YYYY/MM"
+  [cancelText]="'取消'" [doneText]="'确认'" [(ngModel)]="startTime"
+  min="2000" (ionChange)="search()"
+  ></ion-datetime>
+  </ion-item>
   <div id="main1" class="chart">
   </div>
   <sg-table [tableData]="tempData"></sg-table>
