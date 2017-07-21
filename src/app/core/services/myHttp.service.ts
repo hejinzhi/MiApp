@@ -1,11 +1,21 @@
 import { Injectable } from '@angular/core';
+import { AlertController, App } from 'ionic-angular';
 import { Http, Headers, RequestOptions } from '@angular/http';
 import { LoginConfig } from '../../login/shared/config/login.config';
+import { LoginComponent } from '../../login/login.component';
+import { LanguageConfig } from '../config/language.config';
 
 @Injectable()
 export class MyHttpService {
 
-    constructor(private http: Http) { }
+    languageType: string = localStorage.getItem('languageType');
+    languageContent = LanguageConfig.MyHttpService[this.languageType];
+
+    constructor(
+        private http: Http,
+        private alertCtrl: AlertController,
+        private app: App
+    ) { }
 
     postWithoutToken(url: string, body: any) {
         let headers = new Headers({ 'Content-Type': 'application/json; charset=utf-8' });
@@ -20,7 +30,18 @@ export class MyHttpService {
         if (token && !this.isTokenExpired() && !loginFlag) {
             headers.append('access_token', token);
         } else {
-            let res = await this.getNewToken();
+            let res;
+            try {
+                res = await this.getNewToken();
+            } catch (err) {
+                if (!loginFlag) {
+                    this.showError(this.languageContent.prompt, this.languageContent.logoutText, () => {
+                        this.app.getRootNav().setRoot(LoginComponent);
+                    });
+                    return;
+                }
+
+            }
             let newToken = res.json().Token;
             localStorage.setItem('moduleList', JSON.stringify(res.json().Modules));
             localStorage.setItem('access_token', JSON.stringify(newToken));
@@ -29,6 +50,20 @@ export class MyHttpService {
         }
         let options = new RequestOptions({ headers: headers });
         return options;
+    }
+
+    showError(title: string, message: string, cb: any) {
+        let alert = this.alertCtrl.create({
+            title: title,
+            message: message,
+            buttons: [{
+                text: '确定',
+                handler: () => {
+                    cb();
+                }
+            }]
+        });
+        alert.present();
     }
 
     async post(url: string, body: any, loginFlag: boolean = false) {

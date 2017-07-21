@@ -30,7 +30,7 @@ export class LanguageConfig {
       logout: '註銷',
       exitApp: '退出',
       languageChangeAlertTitle: '語言版本選擇',
-      simple_Chinese: '間體中文',
+      simple_Chinese: '簡體中文',
       traditional_Chinese: '繁體中文',
       cancel: '取消',
       confirm: '確認',
