@@ -10,13 +10,24 @@
         <div [ngClass]="item.toUserName === userinfo.username ? 'other' : 'me'" [ngSwitch]="item.contentType">
           <img class="icon" [src]="item.fromUserAvatarSrc">
           <ng-template [ngSwitchCase]="'text'">
-            <div class="msg">
+            <div class="msg" *ngIf="!item.childType">
               <span [ngClass]="item.toUserName === userinfo.username ? ' arrow_l_int' : ' arrow_r_int'"></span>
               <span [ngClass]="item.toUserName === userinfo.username ? ' arrow_l_out' : ' arrow_r_out'"></span>
               <div [class.selectable]="selectable === i" class="msg-detail" [innerHTML]="item.content | sgChineseConv " (touchstart)="selectable=i"></div>
             </div>
+            <div class="msg"  *ngIf="item.childType" (tap)="openMap(item.extra.content)">
+              <span [ngClass]="item.toUserName === userinfo.username ? ' arrow_l_int' : ' arrow_r_int'"></span>
+              <span [ngClass]="item.toUserName === userinfo.username ? ' arrow_l_out' : ' arrow_r_out'"></span>
+              <!--<div myBMap id="allmap" class="map" [pos]="item.extra.content" [addCtrl]="addCtrl" (tap)="openMap(item.extra.content)"></div>-->
+              <div [class.selectable]="selectable === i" [innerHTML]="item.content | sgChangeSpace | sgChineseConv | sgEmojis" (touchstart)="selectable=i" ></div>
+            </div>
           </ng-template>
-          <ng-template [ngSwitchCase]="'image'"><img src={{item.content}} class='img_content' (tap)="openPhoto(item.content)"></ng-template>
+          <ng-template [ngSwitchCase]="'image'">
+            <!-- <img src={{item.content}} class='img_content' (tap)="openPhoto(item.content)"> -->
+            <!-- <img src={{item.content}} [ngClass]='getImageClass(item.imageHeight,item.imageWidth)' (tap)="openPhoto(item.content)"> -->
+            <img src={{item.content}} [ngClass]="{'img_fang':item.imageHeight === item.imageWidth,'img_heng':item.imageHeight < item.imageWidth,'img_shu':item.imageHeight > item.imageWidth}"
+              (tap)="openPhoto(item.content)">
+          </ng-template>
           <div class="clearfix"></div>
         </div>
       </div>
@@ -26,11 +37,13 @@
     <div class="input_layout">
       <ion-row>
         <ion-col col-2><span class="iconfontyyy input_icon voice">&#xe68b;</span></ion-col>
-        <ion-col col-6><div class="input_text" contenteditable #newInput>
-
-        </div></ion-col>
+        <ion-col col-6>
+          <div class="input_text" contenteditable #newInput>
+          </div>
+        </ion-col>
         <ion-col col-2><span class="iconfontyyy input_icon face" (tap)="clickPlus();showExtra=2">&#xe61e;</span></ion-col>
-        <ion-col col-2><div *ngIf="newInput.innerHTML" class="send" (tap)="sendMessage(1,newInput.innerHTML)" tappable>發送</div>
+        <ion-col col-2>
+          <div *ngIf="newInput.innerHTML" class="send" (tap)="sendMessage(1,newInput.innerHTML)" tappable>{{languageContent.send}}</div>
           <span class="iconfontyyy input_icon plus" *ngIf="!newInput.innerHTML" (tap)="clickPlus();showExtra=1">&#xe649;</span></ion-col>
       </ion-row>
       <!-- <span class="iconfontyyy input_icon voice">&#xe68b;</span>
@@ -40,7 +53,7 @@
       <!-- <div class="input_text" contenteditable #newInput>
 
       </div>
-      <div *ngIf="newInput.innerHTML" class="send" (tap)="sendMessage(1,newInput.innerHTML)" tappable>發送</div> -->
+      <div *ngIf="newInput.innerHTML" class="send" (tap)="sendMessage(1,newInput.innerHTML)" tappable>{{languageContent.send}}</div> -->
     </div>
     <div *ngIf="onPlus">
       <div *ngIf="showExtra==2" class="myEmoji">
@@ -66,13 +79,12 @@
           <div class="icon-content">{{languageContent.personcard}}</div>
         </div>
         <div class="btt">
-          <button ion-button color="light" class="button-ion" large icon-only (tap)=getLocation()>
+          <button ion-button color="light" class="button-ion" large icon-only (tap)=sendLocation()>
                      <ion-icon name='pin' class="icon-img" ></ion-icon>
                   </button>
           <div class="icon-content">{{languageContent.location}}</div>
         </div>
       </div>
-
     </div>
   </div>
 </ion-content>
@@ -81,11 +93,13 @@
     <div class="input_layout">
       <ion-row>
         <ion-col col-2><span class="iconfontyyy input_icon voice">&#xe68b;</span></ion-col>
-        <ion-col col-6><div class="input_text" contenteditable #newInput>
-
-        </div></ion-col>
+        <ion-col col-6>
+          <div class="input_text" contenteditable #newInput>
+          </div>
+        </ion-col>
         <ion-col col-2><span class="iconfontyyy input_icon face" (tap)="clickPlus();showExtra=2">&#xe61e;</span></ion-col>
-        <ion-col col-2><div *ngIf="newInput.innerHTML" class="send" (tap)="sendMessage(1,newInput.innerHTML)" tappable>發送</div>
+        <ion-col col-2>
+          <div *ngIf="newInput.innerHTML" class="send" (tap)="sendMessage(1,newInput.innerHTML)" tappable>發送</div>
           <span class="iconfontyyy input_icon plus" *ngIf="!newInput.innerHTML" (tap)="clickPlus();showExtra=1">&#xe649;</span></ion-col>
       </ion-row>
       <!-- <span class="iconfontyyy input_icon voice">&#xe68b;</span>

@@ -4,18 +4,18 @@ export class LanguageConfig {
       title: '消息',
       messagetype: '圖片',
       delete: '删除',
-      deleteMessageAlertTitle:'你確認刪除與該用戶交互的記錄嗎?',
-      cancel:'取消',
-      confirm:'確認'
+      deleteMessageAlertTitle: '你確認刪除與該用戶交互的記錄嗎?',
+      cancel: '取消',
+      confirm: '確認'
     },
 
     simple_Chinese: {
       title: '消息',
       messagetype: '图片',
       delete: '刪除',
-      deleteMessageAlertTitle:'你确认删除与该用户交互的记录吗?',
-      cancel:'取消',
-      confirm:'确认'
+      deleteMessageAlertTitle: '你确认删除与该用户交互的记录吗?',
+      cancel: '取消',
+      confirm: '确认'
     }
   };
 
@@ -24,14 +24,16 @@ export class LanguageConfig {
       picture: '照片',
       camera: '拍攝',
       personcard: '個人名片',
-      location: '位置'
+      location: '位置',
+      send: '發送'
     },
 
     simple_Chinese: {
       picture: '照片',
       camera: '拍摄',
       personcard: '个人名片',
-      location: '位置'
+      location: '位置',
+      send: '发送'
     }
   };
 
