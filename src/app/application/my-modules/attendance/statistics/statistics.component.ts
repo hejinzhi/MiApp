@@ -34,6 +34,14 @@ export class StatisticsComponent {
   myLeave:{name:string,value:number}[]
   OTday:{name:string,value:number}[];
   leaveDay:{name:string,value:number}[];
+  // caches:any ={
+  //   myOTday:{
+  //   },
+  //   myLeaveDay:{
+  //
+  //   }
+  // };
+  caches:any;
   isHere:boolean;
   constructor(
     public navCtrl: NavController,
@@ -43,6 +51,7 @@ export class StatisticsComponent {
   ) { }
 
   ionViewDidLoad() {
+    this.caches = this.initCache();
     this.leaveDay = this.OTday = this.initDays();
     this.reFresh();
   }
@@ -58,6 +67,100 @@ export class StatisticsComponent {
   }
   ionViewWillLeave() {
     this.isHere = false;
+  }
+
+  initCache() {
+    let util = {
+      initDays() {
+        let date = new Date();
+        let monthDays = new Date(date.getFullYear(),date.getMonth()+1,0).getDate();
+        let days:{name:string,value:number}[]= []
+        for(let i=0;i<monthDays;i++) {
+          days.push({name:i+1+'',value:0});
+        }
+        return days;
+      }
+    }
+    let __cache__ ={
+      cache:{
+        myOTday:{
+        },
+        myLeaveDay:{
+
+        }
+      },
+      init:function() {
+        this.cache = JSON.parse(localStorage.getItem('att_days') || '{}');
+      },
+      clear() {
+        localStorage.setItem('att_days','{}');
+      },
+      update(){
+        localStorage.setItem('att_days',JSON.stringify(this.cache));
+      },
+      // 1:OT; 2:Leave
+      get: function(type:number,month:string,load:boolean = false) {
+        if(type ===1) {
+          this.cache.myOTday = this.cache.myOTday || {};
+          let data = this.cache.myOTday[month];
+          if(!load && data) {
+            return Promise.resolve(data);
+          } else {
+            return this.load(type,month)
+          }
+        }
+      },
+      load(type:number,month:string){
+        if(type ===1) {
+          return this.loadOT(month);
+        }else {
+          return this.loadLeave(month);
+        }
+      },
+      loadOT(month:string) {
+        return this.attendanceService.getOverTimeMonthHours(month).then((res:any) => {
+          let newData = []
+          if(res.status) {
+            let data = res.content;
+            newData = util.initDays();
+            for(let i = 0;i<data.length;i++) {
+              newData = newData.map((item:any) => {
+                if(item.name == data[i].name) {
+                  item.value = data[i].value;
+                }
+                return item;
+              })
+            }
+            this.cache.myOTday = this.cache.myOTday || {};
+            this.cache.myOTday[month] = newData;
+            this.update();
+          }
+          return Promise.resolve(newData);
+        })
+      },
+      loadLeave(month:string) {
+        return this.attendanceService.getOffDutyMonthHours(month).then((res:any) => {
+          let newData = []
+          if(res.status) {
+            let data = res.content;
+            newData = util.initDays();
+            for(let i = 0;i<data.length;i++) {
+              newData = newData.map((item:any) => {
+                if(item.name == data[i].name) {
+                  item.value = data[i].value;
+                }
+                return item;
+              })
+            }
+            this.cache.myLeaveDay = this.cache.myLeaveDay || {};
+            this.cache.myLeaveDay[month] = newData;
+            this.update();
+          }
+          return Promise.resolve(newData);
+        })
+      }
+    }
+    return __cache__;
   }
   async reFresh() {
     let loading = this.plugin.createLoading();
@@ -106,7 +209,7 @@ export class StatisticsComponent {
     let date = new Date();
     let monthDays = new Date(date.getFullYear(),date.getMonth()+1,0).getDate();
     let days:{name:string,value:number}[]= []
-    for(let i=0;i<monthDays+1;i++) {
+    for(let i=0;i<monthDays;i++) {
       days.push({name:i+1+'',value:0});
     }
     return days;
