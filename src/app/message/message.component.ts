@@ -162,7 +162,9 @@ export class MessageComponent implements OnInit {
     if (res.content.msg_type === 'text') {
       _content = res.content.msg_body.text;
     } else if (res.content.msg_type === 'image') {
-      _content = res.content.localThumbnailPath;
+      let tempStr: string = res.resourcePath;
+      tempStr = tempStr.replace('large', 'thumb');
+      _content = tempStr;
     }
 
     if (res.content.from_id === 'signlist' || res.content.from_id === 'news' || res.content.from_id === 'alert' || res.content.from_id === 'report') {
