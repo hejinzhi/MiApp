@@ -164,21 +164,18 @@ export class MessageComponent implements OnInit {
     } else if (res.content.msg_type === 'image') {
       let tempStr: string = res.resourcePath;
       tempStr = tempStr.replace('large', 'thumb');
+      console.log(tempStr);
       _content = tempStr;
     }
 
     if (res.content.from_id === 'signlist' || res.content.from_id === 'news' || res.content.from_id === 'alert' || res.content.from_id === 'report') {
       this._type = 'notice';
       _content = res.content.msg_body.text;
-      // if (res.content.from_id === 'alert') {
-      //   child_type = res.content.msg_body.extras.type;
-      // }
+      if (res.content.from_id === 'alert') {
+        child_type = res.content.msg_body.extras.type;
+      }
     } else {
       this._type = 'dialogue';
-    }
-
-    if (typeof res.content.msg_body.extras.type === "object" && !(res.content.msg_body.extras.type instanceof Array)) {
-      child_type = res.content.msg_body.extras.type;
     }
 
     let msg: Message = {
@@ -189,16 +186,17 @@ export class MessageComponent implements OnInit {
       time: res.content.create_time,
       type: this._type,
       unread: true,
-      imageHeight: res.content.height,
-      imageWidth: res.content.width
+      imageHeight: res.content.msg_body.height,
+      imageWidth: res.content.msg_body.width
     };
 
     await this.databaseService.addMessage(res.content.target_id, res.content.from_id, this.userinfo.username, _content, res.content.msg_type, res.content.create_time, this._type, 'Y',
-      JSON.stringify(res.content.msg_body.extras), child_type, res.content.height, res.content.width);
+      JSON.stringify(res.content.msg_body.extras), child_type, res.content.msg_body.height, res.content.msg_body.width);
 
     return msg;
 
   }
+
 
 
 
