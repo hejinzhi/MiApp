@@ -72,4 +72,14 @@ export class LanguageConfig {
       hideDetail: '点击隐藏'
     }
   };
+
+  static MapComponent = {
+    traditional_Chinese: {
+      title: '地圖'
+    },
+
+    simple_Chinese: {
+      title: '地图'
+    }
+  };
 }

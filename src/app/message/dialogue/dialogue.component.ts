@@ -4,6 +4,7 @@ import { NavParams, NavController, Events, Content, Platform } from 'ionic-angul
 import { Camera, CameraOptions } from '@ionic-native/camera';
 import { Keyboard } from '@ionic-native/keyboard';
 import { Geolocation } from '@ionic-native/geolocation';
+import { Http } from '@angular/http';
 
 import { MapComponent } from '../map/map.component';
 
@@ -62,7 +63,8 @@ export class DialogueComponent implements OnInit {
         private platform: Platform,
         private databaseService: DatabaseService,
         private geolocation: Geolocation,
-        public navCtrl: NavController
+        public navCtrl: NavController,
+        private http: Http
     ) {
 
         this.userName = params.get('fromUserName');
@@ -278,13 +280,10 @@ export class DialogueComponent implements OnInit {
 
     async loadMessage() {
         let data: any[] = await this.messageservice.getMessagesByUsername(this.userinfo.username, this.userName, this.userinfo.username);
-        console.log(1);
-        console.log(data);
         data.forEach((value, index) => {
             this.getNickNameAndAvatar(value);
         });
         this.list = data;
-        // console.log(this.list);
     };
 
     async getNickNameAndAvatar(targetUser: any) {
@@ -403,14 +402,36 @@ export class DialogueComponent implements OnInit {
         });
     }
 
-    sendLocation() {
-        this.geolocation.getCurrentPosition().then((resp) => {
-            let extra = { type: "location", title: "位置", content_type: "text", content: resp.coords.longitude + "," + resp.coords.latitude };
-            this.sendMessage(1, '[位置]', JSON.stringify(extra), 'location');
-        }).catch((error) => {
+    async sendLocation() {
+        let extra: any;
+        try {
+            let geolocationresult = await this.geolocation.getCurrentPosition();
+            try {
+                let changeresult = await this.httpGet('http://api.map.baidu.com/geoconv/v1/?coords=' + geolocationresult.coords.longitude + ',' + geolocationresult.coords.latitude + '&from=1&to=5&ak=GTN4sZg5bVt9b7Aa9p37nSoDT4FOFUFv&mcode=F0:17:9A:F1:53:94:B3:28:CB:57:BA:47:EC:1F:C5:A3:7A:92:F6:94;io.ionic.starter')
+                let changelongitude = changeresult.json().result[0].x;
+                let changelatitude = changeresult.json().result[0].y;
+                extra = { type: "location", title: "位置", content_type: "text", content: changelongitude + ',' + changelatitude };
+                try {
+                    let addressresult: any = await this.httpGet('http://api.map.baidu.com/geocoder/v2/?callback=renderReverse&location=' + changelatitude + ',' + changelongitude + '&output=json&pois=1&ak=GTN4sZg5bVt9b7Aa9p37nSoDT4FOFUFv&mcode=F0:17:9A:F1:53:94:B3:28:CB:57:BA:47:EC:1F:C5:A3:7A:92:F6:94;io.ionic.starter')
+                    let result = JSON.parse(addressresult._body.substring(29).slice(0, -1)).result;
+                    let address = result.formatted_address + result.sematic_description;
+                    this.sendMessage(1, '[' + address + ']', JSON.stringify(extra), 'location');
+                }
+                catch (err) {
+                    console.log(err);
+                }
+            }
+            catch (err) {
+                console.log(err);
+            }
+        } catch (error) {
             console.log('Error getting location', error);
-        });
+        };
     };
+
+    httpGet(url: string) {
+        return this.http.get(url).toPromise();
+    }
 
     getImageClass(height: number, width: number) {
         if (height === width) {
