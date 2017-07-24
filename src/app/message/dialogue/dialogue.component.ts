@@ -101,6 +101,7 @@ export class DialogueComponent implements OnInit {
 
 
     async ionViewDidEnter() {
+      this.newInput.nativeElement.innerHTML = '';
         this.events.subscribe('msg.onReceiveMessage', async (msg: any) => {
             if (msg) {
                 // 当推送过来的消息发送者跟正在聊天的是同一个人时，在显示在画面
@@ -147,6 +148,7 @@ export class DialogueComponent implements OnInit {
     }
 
     ionViewWillEnter() {
+        this.newInput.nativeElement.innerHTML = '';
         if (this.plf === 'android') {
             setTimeout(() => {
                 this.scroll_down();

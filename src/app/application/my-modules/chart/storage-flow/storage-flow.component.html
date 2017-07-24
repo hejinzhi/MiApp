@@ -1,0 +1,64 @@
+<ion-header>
+
+  <ion-navbar>
+    <ion-title>存貨周轉天數(月報)</ion-title>
+  </ion-navbar>
+
+</ion-header>
+
+
+<ion-content>
+  <ion-item>
+  <ion-label>查询开始时间</ion-label><ion-datetime displayFormat="YYYY/MM"
+  [cancelText]="'取消'" [doneText]="'确认'" [(ngModel)]="startTime"
+  min="2000" (ionChange)="search()"
+  ></ion-datetime>
+  </ion-item>
+  <div id="main1" class="chart">
+  </div>
+  <sg-table [tableData]="tempData"></sg-table>
+  <div padding>
+    <ion-segment [(ngModel)]="mi_bu" (ionChange)="changeShow()">
+      <ion-segment-button value="CBU">
+        CBU
+      </ion-segment-button>
+      <ion-segment-button value="EBU">
+        EBU
+      </ion-segment-button>
+      <ion-segment-button value="MBU">
+        MBU
+      </ion-segment-button>
+      <ion-segment-button value="TBU">
+        TBU
+      </ion-segment-button>
+    </ion-segment>
+
+
+  </div>
+  <div [ngSwitch]="mi_bu" class = "segment">
+    <div *ngSwitchCase="'CBU'">
+      <div id="main2" class="chart" >
+
+      </div>
+      <sg-table [tableData]="tempData"></sg-table>
+    </div>
+    <div *ngSwitchCase="'EBU'">
+      <div id="main2" class="chart" >
+
+      </div>
+      <sg-table [tableData]="tempData"></sg-table>
+    </div>
+    <div *ngSwitchCase="'MBU'">
+      <div id="main2" class="chart" >
+
+      </div>
+      <sg-table [tableData]="tempData"></sg-table>
+    </div>
+    <div *ngSwitchCase="'TBU'">
+      <div id="main2" class="chart" >
+
+      </div>
+      <sg-table [tableData]="tempData"></sg-table>
+    </div>
+  </div>
+</ion-content>
