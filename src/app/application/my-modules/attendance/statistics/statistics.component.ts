@@ -32,8 +32,7 @@ export class StatisticsComponent {
   ]
   myOT:{name:string,value:number}[]
   myLeave:{name:string,value:number}[]
-  OTday:{name:string,value:number}[];
-  leaveDay:{name:string,value:number}[];
+  caches:any;
   isHere:boolean;
   constructor(
     public navCtrl: NavController,
@@ -43,8 +42,8 @@ export class StatisticsComponent {
   ) { }
 
   ionViewDidLoad() {
-    this.leaveDay = this.OTday = this.initDays();
-    this.reFresh();
+    this.caches = this.initCache();
+    this.reFresh(false);
   }
   ionViewWillEnter() {
     this.isHere = true;
@@ -59,7 +58,110 @@ export class StatisticsComponent {
   ionViewWillLeave() {
     this.isHere = false;
   }
-  async reFresh() {
+
+  initCache() {
+    let util = {
+      initDays(month:number | string) {
+        let date = new Date();
+        let monthDays = new Date(date.getFullYear(),Number(month),0).getDate();
+        let days:{name:string,value:number}[]= []
+        for(let i=0;i<monthDays;i++) {
+          days.push({name:i+1+'',value:0});
+        }
+        return days;
+      },
+      attendanceService:this.attendanceService
+    }
+    let __cache__ ={
+      cache:{
+        myOTday:{
+        },
+        myLeaveDay:{
+
+        }
+      },
+      init() {
+        this.cache = JSON.parse(localStorage.getItem('att_days') || '{}');
+      },
+      clear() {
+        localStorage.setItem('att_days','{}');
+      },
+      update(){
+        localStorage.setItem('att_days',JSON.stringify(this.cache));
+      },
+      // 1:OT; 2:Leave
+      get(type:number,month:string,load:boolean = false) {
+        this.init();
+        let data
+        if(type ===1) {
+          this.cache.myOTday = this.cache.myOTday || {};
+          data = this.cache.myOTday[month];
+        }else {
+          this.cache.myLeaveDay = this.cache.myLeaveDay || {};
+          data = this.cache.myLeaveDay[month];
+        }
+        if(!load && data) {
+          return Promise.resolve(data);
+        } else {
+          return this.load(type,month)
+        }
+      },
+      load(type:number,month:string){
+        if(type ===1) {
+          return this.loadOT(month);
+        }else {
+          return this.loadLeave(month);
+        }
+      },
+      loadOT(month:string) {
+        return util.attendanceService.getOverTimeMonthHours(month).then((res:any) => {
+          let newData = []
+          if(res.status) {
+            let data = res.content;
+            newData = util.initDays(month);
+            for(let i = 0;i<data.length;i++) {
+              newData = newData.map((item:any) => {
+                if(item.name == data[i].name) {
+                  item.value = data[i].value;
+                }
+                return item;
+              })
+            }
+            this.cache.myOTday = this.cache.myOTday || {};
+            this.cache.myOTday[month] = newData;
+            this.update();
+          }
+          return Promise.resolve(newData);
+        })
+      },
+      loadLeave(month:string) {
+        return util.attendanceService.getOffDutyMonthHours(month).then((res:any) => {
+          let newData = []
+          if(res.status) {
+            let data = res.content;
+            newData = util.initDays(month);
+            for(let i = 0;i<data.length;i++) {
+              newData = newData.map((item:any) => {
+                if(item.name == data[i].name) {
+                  item.value = data[i].value;
+                }
+                return item;
+              })
+            }
+            this.cache.myLeaveDay = this.cache.myLeaveDay || {};
+            this.cache.myLeaveDay[month] = newData;
+            this.update();
+          }
+          return Promise.resolve(newData);
+        })
+      }
+    }
+    return __cache__;
+  }
+  async reFresh(clear:false) {
+    if(clear) {
+      this.caches.clear();
+    }
     let loading = this.plugin.createLoading();
     loading.present()
     await this.editMonthLeave();
@@ -102,15 +204,6 @@ export class StatisticsComponent {
       return item;
     })
   }
-  initDays() {
-    let date = new Date();
-    let monthDays = new Date(date.getFullYear(),date.getMonth()+1,0).getDate();
-    let days:{name:string,value:number}[]= []
-    for(let i=0;i<monthDays+1;i++) {
-      days.push({name:i+1+'',value:0});
-    }
-    return days;
-  }
   async editMonthOT() {
     let res: any = await this.attendanceService.getOverTimeTotalHours();
     if (res.status) {
@@ -134,42 +227,21 @@ export class StatisticsComponent {
   initOTMonthChart() {
     let monthChart = this.initChart1('main2', this.fontContent.my+this.fontContent.OT, this.myOT, true, this.fontContent.hour);
     monthChart.on('click', (params: any) => {
-      this.attendanceService.getOverTimeMonthHours(params.dataIndex+1).then((res) => {
-        if(res.status) {
-          let data = res.content;
-          this.OTday = this.initDays();
-          for(let i = 0;i<data.length;i++) {
-            this.OTday = this.OTday.map((item:any) => {
-              if(item.name == data[i].name) {
-                item.value = data[i].value;
-              }
-              return item;
-            })
-          }
-          this.initLineChat('main2', (params.dataIndex + 1) + this.fontContent.month+this.fontContent.OT, this.OTday, true, this.initOTMonthChart, this.fontContent.hour);
-        }
-      })
-
+      let month = params.dataIndex+1;
+      let load = new Date().getMonth() === (month-1)? true : false;
+      this.caches.get(1,month,load).then((res:any) => {
+        this.initLineChat('main2', month + this.fontContent.month+this.fontContent.OT, res, true, this.initOTMonthChart, this.fontContent.hour);
+      });
     })
   }
   initLeaveMonthChart() {
     let monthChart = this.initChart1('main3', this.fontContent.my+this.fontContent.leave, this.myLeave, true,'天');
     monthChart.on('click', (params: any) => {
-      this.attendanceService.getOffDutyMonthHours(params.dataIndex+1).then((res) => {
-        if(res.status) {
-          let data = res.content;
-          this.leaveDay = this.initDays();
-          for(let i = 0;i<data.length;i++) {
-            this.leaveDay = this.leaveDay.map((item:any) => {
-              if(item.name == data[i].name) {
-                item.value = data[i].value;
-              }
-              return item;
-            })
-          }
-          this.initLineChat('main3', (params.dataIndex + 1) + this.fontContent.month + this.fontContent.leave, this.leaveDay, true, this.initLeaveMonthChart,'天');
-        }
-      })
+      let month = params.dataIndex+1;
+      let load = new Date().getMonth() === (month-1)? true : false;
+      this.caches.get(2,month,load).then((res:any) => {
+        this.initLineChat('main3', month + this.fontContent.month + this.fontContent.leave, res, true, this.initLeaveMonthChart,'天');
+      });
     })
   }
   initChart1(name: string, title: string, target: Chart[], showTool: boolean = false, unit:string, color: string = '#3773F7', fontFamily: string[] = ['Helvetica', 'Tahoma', 'Arial', 'STXihei', '华文细黑', 'Microsoft YaHei', '微软雅黑', 'sans-serif']) {
