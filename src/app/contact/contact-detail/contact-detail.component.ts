@@ -39,7 +39,7 @@ export class ContactDetailComponent implements OnInit {
     }
 
     sendMail() {
-      this.plugin.showToast(this.languageContent.toMail)
+      // this.plugin.showToast(this.languageContent.toMail)
     }
 
 }

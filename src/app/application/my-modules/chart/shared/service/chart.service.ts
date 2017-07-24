@@ -1,5 +1,7 @@
 import { Injectable } from '@angular/core';
 import { MyHttpService } from '../../../../../core/services/myHttp.service';
+import { PluginService }   from '../../../../../core/services/plugin.service';
+
 import * as echarts from 'echarts';
 
 @Injectable()
@@ -7,7 +9,7 @@ export class ChartService {
 
   fontFamily: string[] = ['Helvetica', 'Tahoma', 'Arial', 'STXihei', '华文细黑', 'Microsoft YaHei', '微软雅黑', 'sans-serif'];
   private myChart: any;
-  constructor(private myHttp: MyHttpService) {
+  constructor(private myHttp: MyHttpService,private plugin:PluginService) {
     this.autoResizeChart();
   }
 
@@ -40,6 +42,10 @@ export class ChartService {
   afterInit(option: any) {
     option = this.addFontFamily(option);
     return option
+  }
+  optionConv(option:string) {
+    let temp = JSON.parse(option);
+    return JSON.parse(this.plugin.chineseConv(temp));
   }
   addFontFamily(option: any, fontFamily: string[] = this.fontFamily) {
     let add = { fontFamily: fontFamily };
