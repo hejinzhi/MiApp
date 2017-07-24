@@ -1,5 +1,6 @@
 import { Directive, ElementRef, Input, AfterViewInit } from '@angular/core';
 import { MyHttpService } from '../../../core/services/myHttp.service';
+import { Http } from '@angular/http';
 
 @Directive({ selector: '[myBMap]' })
 
@@ -11,7 +12,7 @@ export class MyBMapDirective implements AfterViewInit {
 
   constructor(
     private el: ElementRef,
-    private myHttp: MyHttpService
+    private http: Http
   ) {
 
   }
@@ -62,32 +63,35 @@ export class MyBMapDirective implements AfterViewInit {
       //  map.enableScrollWheelZoom(true);
       map.disableDragging();
     }
-
+    // let marker = new BMap.Marker(..._this.poss);
+    // map.addOverlay(marker);
     var point = new BMap.Point(..._this.poss);  // 创建点坐标
+    let marker = new BMap.Marker(point);
+    map.addOverlay(marker);
     map.centerAndZoom(point, 17);                 // 初始化地图，设置中心点坐标和地图级别
 
 
-    let translateCallback = function (data: any) {
-      if (data.status === 0) {
-        let marker = new BMap.Marker(data.points[0]);
-        var gc = new BMap.Geocoder();
-        gc.getLocation(data.points[0], function (rs: any) {
-          var addComp = rs.addressComponents;
-          // console.log(addComp, 555);
-          // console.log(addComp.province + ", " + addComp.city + ", " + addComp.district + ", " + addComp.street + ", " + addComp.streetNumber);
-        });
-        map.addOverlay(marker);
-        // let label = new BMap.Label("转换后的百度坐标（正确）", { offset: new BMap.Size(20, -10) });
-        // marker.setLabel(label); //添加百度label
-        map.setCenter(data.points[0]);
-      }
-    }
+    // let translateCallback = function (data: any) {
+    //   if (data.status === 0) {
+    //     console.log(data.points[0], 565);
+    //     let marker = new BMap.Marker(data.points[0]);
+    //     var gc = new BMap.Geocoder();
+    //     // gc.getLocation(data.points[0], function (rs: any) {
+    //     //   var addComp = rs.addressComponents;
+    //     //  console.log(addComp.province + ", " + addComp.city + ", " + addComp.district + ", " + addComp.street + ", " + addComp.streetNumber);
+    //     // });
+    //     map.addOverlay(marker);
+    //     // let label = new BMap.Label("转换后的百度坐标（正确）", { offset: new BMap.Size(20, -10) });
+    //     // marker.setLabel(label); //添加百度label
+    //     map.setCenter(data.points[0]);
+    //   }
+    // }
 
-    setTimeout(function () {
-      var convertor = new BMap.Convertor();
-      var pointArr = [];
-      pointArr.push(point);
-      convertor.translate(pointArr, 1, 5, translateCallback)
-    }, 100);
+    // setTimeout(function () {
+    //   var convertor = new BMap.Convertor();
+    //   var pointArr = [];
+    //   pointArr.push(point);
+    //   convertor.translate(pointArr, 1, 5, translateCallback)
+    // }, 100);
   }
 }
