@@ -189,12 +189,12 @@ export class MessageComponent implements OnInit {
       time: res.content.create_time,
       type: this._type,
       unread: true,
-      imageHeight: res.content.height,
-      imageWidth: res.content.width
+      imageHeight: res.content.msg_body.height,
+      imageWidth: res.content.msg_body.width
     };
 
     await this.databaseService.addMessage(res.content.target_id, res.content.from_id, this.userinfo.username, _content, res.content.msg_type, res.content.create_time, this._type, 'Y',
-      JSON.stringify(res.content.msg_body.extras), child_type, res.content.height, res.content.width);
+      JSON.stringify(res.content.msg_body.extras), child_type, res.content.msg_body.height, res.content.msg_body.width);
 
     return msg;
 
