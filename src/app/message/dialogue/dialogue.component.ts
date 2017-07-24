@@ -3,7 +3,6 @@ import { Subscription } from 'rxjs/Rx';
 import { NavParams, NavController, Events, Content, Platform } from 'ionic-angular';
 import { Camera, CameraOptions } from '@ionic-native/camera';
 import { Keyboard } from '@ionic-native/keyboard';
-import { PhotoViewer } from '@ionic-native/photo-viewer';
 import { Geolocation } from '@ionic-native/geolocation';
 import { Http } from '@angular/http';
 
@@ -63,7 +62,6 @@ export class DialogueComponent implements OnInit {
         private events: Events,
         private platform: Platform,
         private databaseService: DatabaseService,
-        private photoViewer: PhotoViewer,
         private geolocation: Geolocation,
         public navCtrl: NavController,
         private http: Http
@@ -130,11 +128,7 @@ export class DialogueComponent implements OnInit {
         }
 
     }
-
-    openPhoto(url: string) {
-        this.photoViewer.show(url);
-    }
-
+    
     async ionViewWillLeave() {
         if (this.onShowSubscription) {
             this.onShowSubscription.unsubscribe();
