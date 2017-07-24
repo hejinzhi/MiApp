@@ -15,6 +15,7 @@ import { JPushService } from './services/jpush.service.ts';
 import { ArrayUtilService } from './services/arrayUtil.service';
 import { PluginService } from './services/plugin.service';
 import { ValidateService } from './services/validate.service';
+import { EncryptUtilService } from './services/encryptUtil.service';
 
 
 
@@ -33,7 +34,8 @@ import { ValidateService } from './services/validate.service';
         InAppBrowser,
         CodePush,
         Network,
-        SQLite
+        SQLite,
+        EncryptUtilService
     ],
     exports: []
 })

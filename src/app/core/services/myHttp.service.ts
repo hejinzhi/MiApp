@@ -4,6 +4,7 @@ import { Http, Headers, RequestOptions } from '@angular/http';
 import { LoginConfig } from '../../login/shared/config/login.config';
 import { LoginComponent } from '../../login/login.component';
 import { LanguageConfig } from '../config/language.config';
+import { EncryptUtilService } from './encryptUtil.service';
 
 @Injectable()
 export class MyHttpService {
@@ -14,7 +15,8 @@ export class MyHttpService {
     constructor(
         private http: Http,
         private alertCtrl: AlertController,
-        private app: App
+        private app: App,
+        private encryptUtilService: EncryptUtilService
     ) { }
 
     postWithoutToken(url: string, body: any) {
@@ -57,7 +59,7 @@ export class MyHttpService {
             title: title,
             message: message,
             buttons: [{
-                text: '确定',
+                text: this.languageContent.confirm,
                 handler: () => {
                     cb();
                 }
@@ -93,7 +95,9 @@ export class MyHttpService {
 
     public getNewToken() {
         let user = JSON.parse(localStorage.getItem('currentUser'));
-        return this.postWithoutToken(LoginConfig.loginUrl, { userName: user.username, password: user.password });
+        let enUsername = this.encryptUtilService.AesEncrypt(user.username, this.encryptUtilService.key, this.encryptUtilService.iv);
+        let enPassword = this.encryptUtilService.AesEncrypt(user.password, this.encryptUtilService.key, this.encryptUtilService.iv);
+        return this.postWithoutToken(LoginConfig.loginUrl, { userName: enUsername, password: enPassword });
     }
 
 }

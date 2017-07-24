@@ -7,6 +7,8 @@ import { JMessageService } from '../../../core/services/jmessage.service';
 import { PluginService } from '../../../core/services/plugin.service';
 import { LoginConfig } from '../../shared/config/login.config';
 import { DatabaseService } from '../../../message/shared/service/database.service';
+import { EncryptUtilService } from '../../../core/services/encryptUtil.service';
+
 
 @Injectable()
 export class LoginService {
@@ -18,7 +20,8 @@ export class LoginService {
         private myHttp: MyHttpService,
         private jmessageService: JMessageService,
         private pluginService: PluginService,
-        private messageDatabaseService: DatabaseService
+        private messageDatabaseService: DatabaseService,
+        private encryptUtilService: EncryptUtilService
     ) {
 
     }
@@ -40,9 +43,6 @@ export class LoginService {
             this.loading.dismiss();
             return false;
         }
-
-
-
     }
 
     async jMessageLogin(username: string, password: string, noErrorMsg: boolean = true) {
@@ -66,7 +66,10 @@ export class LoginService {
         localStorage.setItem('currentUser', JSON.stringify(this.currentUser));
         let res;
         try {
-            res = await this.myHttp.post(LoginConfig.loginUrl, { userName: username, password: password }, true);
+            let enUsername = this.encryptUtilService.AesEncrypt(username, this.encryptUtilService.key, this.encryptUtilService.iv);
+            let enPassword = this.encryptUtilService.AesEncrypt(password, this.encryptUtilService.key, this.encryptUtilService.iv);
+            // res = await this.myHttp.post(LoginConfig.loginUrl, { userName: username, password: password }, true);
+            res = await this.myHttp.post(LoginConfig.loginUrl, { userName: enUsername, password: enPassword }, true);
         }
         catch (err) {
             if (!noErrorMsg) {
