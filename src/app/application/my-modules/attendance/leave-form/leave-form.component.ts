@@ -122,26 +122,47 @@ export class LeaveFormComponent {
   addSubcribe() {
     for (let prop in this.myValidators) {
       this.todo.controls[prop].valueChanges.subscribe((value: any) => this.check(value, prop));
-    }
-    let timeCheck = ['reasonType', 'startDate', 'endDate', 'startTime', 'endTime']
+    };
+    this.todo.controls['reasonType'].valueChanges.subscribe((value:string) => {
+      let endDate = this.todo.controls.endDate;
+      let startDate = this.todo.controls.startDate;
+      switch(value) {
+        case 'H1':
+          endDate.setValue(this.formatDate(startDate.value,1000*60*60*24*14));
+          break;
+        default:
+          this.timeCheck();
+      }
+    })
+    let timeCheck = ['startDate', 'endDate', 'startTime', 'endTime'];
     for (let i = 0; i < timeCheck.length; i++) {
       let check = timeCheck[i];
       this.todo.controls[check].valueChanges.subscribe((value: any) => {
-        let values = this.todo.controls
-        console.log(values)
-        if (values.startDate.value && values.endDate.value && values.startTime.value && values.endTime.value) {
-          let startTime = values.startDate.value + ' ' + values.startTime.value;
-          let endTime = values.endDate.value + ' ' + values.endTime.value;
-          this.timeError = (Date.parse(endTime) - Date.parse(startTime) <= 0) ? this.fontContent.time_err : '';
-        }
-        if (!this.timeError) {
-          this.askForDuring();
-        } else {
-          this.hourLeave = '';
-          this.dayLeave = '';
-        }
+        this.timeCheck();
       })
     }
+  }
+  timeCheck() {
+    let values = this.todo.controls
+    console.log(values)
+    if (values.startDate.value && values.endDate.value && values.startTime.value && values.endTime.value) {
+      let startTime = values.startDate.value + ' ' + values.startTime.value;
+      let endTime = values.endDate.value + ' ' + values.endTime.value;
+      this.timeError = (Date.parse(endTime) - Date.parse(startTime) <= 0) ? this.fontContent.time_err : '';
+    }
+    if (!this.timeError) {
+      this.askForDuring();
+    } else {
+      this.hourLeave = '';
+      this.dayLeave = '';
+    }
+  }
+  formatDate(date:string,add:number) {
+    if(!Date.parse(date)) return;
+    let newDate = new Date(Date.parse(date)+add);
+    let month = (newDate.getMonth()+1)>9?(newDate.getMonth()+1):'0'+(newDate.getMonth()+1);
+    let day = newDate.getDate()>9?newDate.getDate():'0'+newDate.getDate();
+    return newDate.getFullYear() + '-' + month + '-' +day;
   }
   initValidator(bind: any) {
     let newValidator = new MyValidatorModel([
@@ -192,6 +213,7 @@ export class LeaveFormComponent {
   // 获得最近工作日，范围包括今天
   async getWorkDay() {
     let day: string = await this.attendanceService.getWorkDay();
+    console.log(day)
     return day
   }
   //單獨輸入塊驗證
