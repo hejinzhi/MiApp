@@ -322,6 +322,7 @@ export class AttendanceService {
       return res;
     }
     res = res.json()
+    console.log(res.json())
     let formateRes: { STADATE: string, detail_used: { type: string, value: string }[], detail_canUse: { type: string, value: string }[] } = {
       STADATE: '',
       detail_used: [],
