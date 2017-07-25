@@ -321,8 +321,7 @@ export class AttendanceService {
     if (res.length === 0) {
       return res;
     }
-    res = res.json()
-    console.log(res.json())
+    res = res.json();
     let formateRes: { STADATE: string, detail_used: { type: string, value: string }[], detail_canUse: { type: string, value: string }[] } = {
       STADATE: '',
       detail_used: [],
@@ -341,6 +340,17 @@ export class AttendanceService {
     }
 
     return formateRes;
+  }
+  // 获得最大请假天数
+  getMaxDays(type:string) {
+    let url = AttendanceConfig.getMaxDaysUrl.replace('{type}',type);
+    return this.myHttp.get(url).then((res:any) => {
+      let days = res.json()?res.json().ABSENT_DAY:''
+      return Promise.resolve({content:days,status:true})
+    }).catch((err) => {
+      this.errorDeal(err);
+      return Promise.resolve({content:'',status:false})
+    });
   }
   // 获得代理人
   getAgent(name: string): Observable<any> {

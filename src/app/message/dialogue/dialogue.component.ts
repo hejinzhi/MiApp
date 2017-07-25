@@ -87,7 +87,7 @@ export class DialogueComponent implements OnInit {
         this.keyboard.disableScroll(true);
         this.userinfo = JSON.parse(localStorage.getItem('currentUser'));
 
-        document.onselectionchange = () => this.getPosition();
+        // document.onselectionchange = () => this.getPosition();
 
         // 获取当前登录人的昵称和头像
         let res = await this.messageservice.getUserAvatar(this.toUserName)
@@ -128,7 +128,7 @@ export class DialogueComponent implements OnInit {
         }
 
     }
-    
+
     async ionViewWillLeave() {
         if (this.onShowSubscription) {
             this.onShowSubscription.unsubscribe();
@@ -276,6 +276,7 @@ export class DialogueComponent implements OnInit {
         this.lastEditSelection = getSelection()
         // 设置最后光标对象
         this.lastEditRange = this.lastEditSelection.getRangeAt(0);
+        console.log(this.lastEditRange)
     }
 
     async loadMessage() {
