@@ -171,7 +171,8 @@ export class DialogueComponent implements OnInit {
         this.onPlus = false;
         if (/Android [4-7]/.test(navigator.appVersion)) {
             window.addEventListener("resize", function () {
-                if (document.activeElement.tagName == "INPUT" || document.activeElement.tagName == "TEXTAREA") {
+              let tagName = document.activeElement.tagName;
+                if (tagName == "INPUT" || tagName == "TEXTAREA" || tagName == "DIV") {
                     window.setTimeout(function () {
                         document.activeElement.scrollIntoView();
                     }, 0);
@@ -207,7 +208,7 @@ export class DialogueComponent implements OnInit {
         // outContent.setAttribute('contenteditable','false');
         // outContent.appendChild(emojiText);
         // 获取编辑框对象
-        // debugger
+        debugger
         var edit = this.newInput.nativeElement;
         // 编辑框设置焦点
         edit.focus()
@@ -219,49 +220,54 @@ export class DialogueComponent implements OnInit {
             selection.removeAllRanges()
             selection.addRange(this.lastEditRange)
         }
+        let parent1 = selection.anchorNode;
         // 判断选定对象范围是编辑框还是文本节点
         if (selection.anchorNode.nodeName != '#text') {
             // 如果是编辑框范围。则创建表情文本节点进行插入
-            if (edit.childNodes.length > 0) {
+            if (parent1.childNodes.length > 0) {
                 // 如果文本框的子元素大于0，则表示有其他元素，则按照位置插入表情节点
-                for (var i = 0; i < edit.childNodes.length; i++) {
+                for (var i = 0; i < parent1.childNodes.length; i++) {
                     if (i == selection.anchorOffset) {
-                        edit.insertBefore(emojiText, edit.childNodes[i])
+                        parent1.insertBefore(emojiText, parent1.childNodes[i])
                     }
                 }
             } else {
                 // 否则直接插入一个表情元素
-                edit.appendChild(emojiText)
+                parent1.appendChild(emojiText)
             }
         } else {
             // 如果是文本节点则先获取光标对象
-            let range = selection.getRangeAt(0)
+            let range = getSelection().getRangeAt(0)
             // 获取光标对象的范围界定对象，一般就是textNode对象
             let textNode: any = range.startContainer;
+            console.log(textNode)
             // 获取光标位置
             let rangeStartOffset = range.startOffset;
             // 重新插入元素
             let textNode1 = document.createTextNode(textNode.data.substr(0, rangeStartOffset));
             let textNode2 = document.createTextNode(textNode.data.substr(rangeStartOffset));
+            let parent = textNode.parentNode;
             let nextNode = textNode.nextSibling;
             textNode.remove();
             if (nextNode) {
-                edit.insertBefore(textNode1, nextNode)
+                parent.insertBefore(textNode1, nextNode)
             } else {
-                edit.appendChild(textNode1);
+                parent.appendChild(textNode1);
             }
             this.insertAfter(emojiText, textNode1);
             this.insertAfter(textNode2, emojiText);
         }
         // 创建新的光标对象
         var range = document.createRange()
-        let space = document.createTextNode(' ');
+        let space = document.createTextNode('5');
         // edit.appendChild(space);
         this.insertAfter(space, emojiText)
         // 光标对象的范围界定为新建的表情节点
         range.selectNodeContents(space)
+        space.deleteData(0, 1)
         // 光标位置定位在表情节点的最大长度
-        range.setStart(space, space.length)
+        range.setStart(space, 0)
+        range.setEnd(space, 0)
         // 使光标开始和光标结束重叠
         range.collapse(true)
         // 清除选定对象的所有光标对象
@@ -269,14 +275,15 @@ export class DialogueComponent implements OnInit {
         // 插入新的光标对象
         selection.addRange(range)
         // 无论如何都要记录最后光标对象
-        this.lastEditRange = selection.getRangeAt(0)
+        if(selection.type !=='None') {
+          this.lastEditRange = selection.getRangeAt(0)
+        }
     }
     getPosition() {
         // 获取选定对象
         this.lastEditSelection = getSelection()
         // 设置最后光标对象
         this.lastEditRange = this.lastEditSelection.getRangeAt(0);
-        console.log(this.lastEditRange)
     }
 
     async loadMessage() {
