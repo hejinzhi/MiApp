@@ -37,8 +37,8 @@
     <div class="input_layout">
       <ion-row>
         <ion-col col-2><span class="iconfontyyy input_icon voice">&#xe68b;</span></ion-col>
-        <ion-col col-6>
-          <div class="input_text" contenteditable #newInput>
+        <ion-col col-6 >
+          <div class="input_text" contenteditable #newInput tabIndex="-1" (click)="getPosition()" (blur)="getPosition()">
           </div>
         </ion-col>
         <ion-col col-2><span class="iconfontyyy input_icon face" (tap)="clickPlus();showExtra=2">&#xe61e;</span></ion-col>
