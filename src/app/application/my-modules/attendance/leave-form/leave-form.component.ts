@@ -126,13 +126,13 @@ export class LeaveFormComponent {
     this.todo.controls['reasonType'].valueChanges.subscribe((value:string) => {
       let endDate = this.todo.controls.endDate;
       let startDate = this.todo.controls.startDate;
-      switch(value) {
-        case 'H1':
-          endDate.setValue(this.formatDate(startDate.value,1000*60*60*24*14));
-          break;
-        default:
+      this.attendanceService.getMaxDays(value).then((res) => {
+        if(res.status && res.content) {
+          endDate.setValue(this.formatDate(startDate.value,1000*60*60*24*(Number(res.content)-1)));
+        } else {
           this.timeCheck();
-      }
+        }
+      })
     })
     let timeCheck = ['startDate', 'endDate', 'startTime', 'endTime'];
     for (let i = 0; i < timeCheck.length; i++) {
@@ -143,8 +143,7 @@ export class LeaveFormComponent {
     }
   }
   timeCheck() {
-    let values = this.todo.controls
-    console.log(values)
+    let values = this.todo.controls;
     if (values.startDate.value && values.endDate.value && values.startTime.value && values.endTime.value) {
       let startTime = values.startDate.value + ' ' + values.startTime.value;
       let endTime = values.endDate.value + ' ' + values.endTime.value;
@@ -158,7 +157,7 @@ export class LeaveFormComponent {
     }
   }
   formatDate(date:string,add:number) {
-    if(!Date.parse(date)) return;
+    if(!Date.parse(date)) return this.todo.controls.startDate.value;
     let newDate = new Date(Date.parse(date)+add);
     let month = (newDate.getMonth()+1)>9?(newDate.getMonth()+1):'0'+(newDate.getMonth()+1);
     let day = newDate.getDate()>9?newDate.getDate():'0'+newDate.getDate();
