@@ -80,14 +80,17 @@ export class StatisticsComponent {
 
         }
       },
+      user: {},
       init() {
-        this.cache = JSON.parse(localStorage.getItem('att_days') || '{}');
+        this.user = JSON.parse(localStorage.getItem('currentUser'));
+        this.cache = this.user.att_days?this.user.att_days:{};
       },
       clear() {
         localStorage.setItem('att_days','{}');
       },
       update(){
-        localStorage.setItem('att_days',JSON.stringify(this.cache));
+        this.user.att_days = this.cache;
+        localStorage.setItem('currentUser', JSON.stringify(this.user));
       },
       // 1:OT; 2:Leave
       get(type:number,month:string,load:boolean = false) {

@@ -29,8 +29,23 @@ export class StorageFlowComponent {
     ]
   }
   mi_bu: string;
+  offsetTop:number;
+  content: any;
+  f:any;
   ionViewDidLoad() {
     this.chartService.makeChart('main1', this.chartService.optionConv(OptionsConfig.storageFlow.option1))
+  }
+  getOffsetTop() {
+    let el:any=document.querySelector('#mySegment');
+    this.offsetTop = el.offsetTop;
+  }
+  ionViewDidEnter() {
+    this.getOffsetTop()
+    this.content = document.querySelector('sg-storage-flow .scroll-content');
+    window.addEventListener('resize',this.f = this.getOffsetTop.bind(this));
+  }
+  ionViewWillLeave() {
+    window.removeEventListener('resize',this.f);
   }
   changeShow() {
     switch (this.mi_bu) {
@@ -58,8 +73,7 @@ export class StorageFlowComponent {
   }
   scroll_down() {
     setTimeout(() => {
-      var div = document.querySelector('sg-storage-flow .scroll-content');
-      div.scrollTop = div.scrollHeight;
+      this.content.scrollTop = this.offsetTop;
     }, 200);
   }
   search() {

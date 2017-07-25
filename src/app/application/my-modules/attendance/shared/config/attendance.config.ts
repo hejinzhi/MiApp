@@ -40,7 +40,8 @@ export class AttendanceConfig {
   // 取消送签
   static callBackSignUrl = EnvConfig.baseUrl + 'Attendance/CancelSign';
 
-
+  // 获得最大请假天数
+  static getMaxDaysUrl = EnvConfig.baseUrl + 'OffDuty/GetOffDutyDays?type={type}';
 
   // 加班单申请
   static saveOverTimeUrl = EnvConfig.baseUrl + 'OverTime/AddOverTime';
