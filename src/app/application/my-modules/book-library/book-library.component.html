@@ -67,11 +67,12 @@
   </ion-navbar>
 </ion-header>
 <ion-content class="page" #maincontent>
+  <!-- <ion-searchbar (ionInput)="queryBooks($event)" #bookInput ion-fixed></ion-searchbar> -->
   <ion-searchbar (ionInput)="queryBooks($event)" #bookInput></ion-searchbar>
   <div class="my-book-list" #booklist>
     <sg-book-list [books]="books" (onClick)="goToDetailPage($event)"></sg-book-list>
   </div>
-  <ion-infinite-scroll (ionInfinite)="doInfinite($event)" enabled="!isLastPageReached()">
+  <ion-infinite-scroll (ionInfinite)="doInfinite($event)" [enabled]="!isLastPageReached()">
     <ion-infinite-scroll-content></ion-infinite-scroll-content>
   </ion-infinite-scroll>
 </ion-content>

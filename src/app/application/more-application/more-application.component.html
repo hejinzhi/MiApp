@@ -6,6 +6,6 @@
     </ion-buttons>
   </ion-navbar>
 </ion-header>
-<ion-content>
+<ion-content no-bounce>
   <sg-application-grid [items]="items" type="add" [showBtn]="showBtn" (onSelect)="moveItemToAppPage($event)" (onClick)="goToDetailPage($event)"></sg-application-grid>
 </ion-content>

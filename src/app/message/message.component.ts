@@ -177,7 +177,7 @@ export class MessageComponent implements OnInit {
       this._type = 'dialogue';
     }
 
-    if (typeof res.content.msg_body.extras.type === "object" && !(res.content.msg_body.extras.type instanceof Array)) {
+    if (res.content.msg_body.extras && typeof res.content.msg_body.extras.type === "object" && !(res.content.msg_body.extras.type instanceof Array)) {
       child_type = res.content.msg_body.extras.type;
     }
 

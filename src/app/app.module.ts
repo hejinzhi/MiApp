@@ -27,6 +27,7 @@ import { MeModule } from './me/me.module';
       tabsHideOnSubPages: true,
       mode: 'ios',
       backButtonText: '返回',
+      swipeBackEnabled: false
     }),
     LoginModule,
     ApplicationModule,

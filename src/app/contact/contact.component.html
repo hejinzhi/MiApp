@@ -3,7 +3,7 @@
     <ion-title>{{languageContent.title}}</ion-title>
   </ion-navbar>
 </ion-header>
-<ion-content>
+<ion-content no-bounce>
   <ion-searchbar placeholder={{languageContent.placeholder}} (ionInput)="getItems($event)"></ion-searchbar>
   <div class="main-wrapper" *ngIf="!searchFilter">
     <div class="department-group">

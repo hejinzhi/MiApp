@@ -1,21 +1,21 @@
 <ion-header>
-    <ion-navbar>
-        <ion-buttons end>
-            <button ion-button (click)="showEditBtn()" *ngIf="!showBtn">{{languageContent.edit}}</button>
-            <button ion-button (click)="hideEditBtn()" *ngIf="showBtn">{{languageContent.done}}</button>
-        </ion-buttons>
-        <ion-title>{{languageContent.title}}</ion-title>
-    </ion-navbar>
+  <ion-navbar>
+    <ion-buttons end>
+      <button ion-button (click)="showEditBtn()" *ngIf="!showBtn">{{languageContent.edit}}</button>
+      <button ion-button (click)="hideEditBtn()" *ngIf="showBtn">{{languageContent.done}}</button>
+    </ion-buttons>
+    <ion-title>{{languageContent.title}}</ion-title>
+  </ion-navbar>
 </ion-header>
-<ion-content>
-    <div class="grid-wrapper" *ngFor="let items of itemsByGroup">
-        <div class="grid-header">{{items[0].GROUP_NAME|sgChineseConv}}</div>
-        <sg-application-grid [items]="items" type="remove" [showBtn]="showBtn" (onSelect)="moveItemToMoreGroup($event)" (onClick)="goToDetailPage($event)"></sg-application-grid>
-        <div class="grid-footer"></div>
-    </div>
-    <ion-list no-lines>
-        <button ion-item (click)="goToMorePage()">
+<ion-content no-bounce>
+  <div class="grid-wrapper" *ngFor="let items of itemsByGroup">
+    <div class="grid-header">{{items[0].GROUP_NAME|sgChineseConv}}</div>
+    <sg-application-grid [items]="items" type="remove" [showBtn]="showBtn" (onSelect)="moveItemToMoreGroup($event)" (onClick)="goToDetailPage($event)"></sg-application-grid>
+    <div class="grid-footer"></div>
+  </div>
+  <ion-list no-lines>
+    <button ion-item (click)="goToMorePage()">
     {{languageContent.more}}
   </button>
-    </ion-list>
+  </ion-list>
 </ion-content>
