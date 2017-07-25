@@ -19,7 +19,7 @@
         </ng-template>
         <ng-template [ngSwitchCase]="'image'">
           <ion-card-content class="card-content">
-            <img src={{item.extra.content}} class='img_content' (tap)="openPhoto(item.extra.content)">
+            <img src={{item.extra.content}} class='img_content' imageViewer>
           </ion-card-content>
         </ng-template>
         <ng-template [ngSwitchCase]="'json'">
