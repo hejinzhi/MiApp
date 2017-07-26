@@ -2,9 +2,9 @@
   <ion-navbar>
     <ion-title>{{title}}</ion-title>
     <ion-buttons end>
-      <button ion-button (click)="borrowConfirm()" [disabled]="selectIDs.length === 0" *ngIf="showBorrow">{{languageContent.borrow}}</button>
-      <button ion-button (click)="cancelBook()" [disabled]="selectIDs.length === 0" *ngIf="showCancelBook">{{languageContent.cancelBook}}</button>
-      <button ion-button (click)="paybackConfirm()" [disabled]="selectIDs.length === 0" *ngIf="showPayback">{{languageContent.payback}}</button>
+      <button ion-button (click)="borrowConfirm()" [disabled]="selectIDs.length === 0" *ngIf="showBorrow">{{'borrow'|translate}}</button>
+      <button ion-button (click)="cancelBook()" [disabled]="selectIDs.length === 0" *ngIf="showCancelBook">{{'cancelBook'|translate}}</button>
+      <button ion-button (click)="paybackConfirm()" [disabled]="selectIDs.length === 0" *ngIf="showPayback">{{'payback'|translate}}</button>
       <!--<button ion-button (click)="cancelBook()" *ngIf="showCancelBook" [disabled]="enableBtn">取消预约</button>-->
     </ion-buttons>
   </ion-navbar>

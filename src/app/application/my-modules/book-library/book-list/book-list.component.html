@@ -5,16 +5,16 @@
     </div>
     <div class="book-info">
       <div class="book-info-style">
-        <div>{{languageContent.title}}: {{book.TITLE |sgChineseConv}}</div>
-        <div>{{languageContent.author}}: {{book.AUTHOR | sgChineseConv}}</div>
-        <div>{{languageContent.price}}: {{book.PRICE|sgChineseConv}}</div>
-        <div>{{languageContent.publisher}}: {{book.PUBLISHER|sgChineseConv}}</div>
-        <div *ngIf="!showAddBookInput && !showPayBackDate && !showActualBackDate">{{languageContent.qty}}: {{book.QTY}}</div>
+        <div>{{'booklistTitle'|translate}}: {{book.TITLE |sgChineseConv}}</div>
+        <div>{{'booklistAuthor'|translate}}: {{book.AUTHOR | sgChineseConv}}</div>
+        <div>{{'price'|translate}}: {{book.PRICE|sgChineseConv}}</div>
+        <div>{{'publisher'|translate}}: {{book.PUBLISHER|sgChineseConv}}</div>
+        <div *ngIf="!showAddBookInput && !showPayBackDate && !showActualBackDate">{{'qty'|translate}}: {{book.QTY}}</div> 
         <div *ngIf="showAddBookInput">
-          {{languageContent.addQty}}:<input type="text" style="text-indent: 5px;" (input)="inputChange($event)" value="1" />
+          {{'addQty'|translate}}:<input type="text" style="text-indent: 5px;" (input)="inputChange($event)" value="1" />
         </div>
-        <div *ngIf="showPayBackDate">{{languageContent.shouldPayBackDate}}: {{book.SHOULD_PAYBACK_DATE | date:"y-MM-dd"}}</div>
-        <div *ngIf="showActualBackDate">{{languageContent.actualPaybackDate}}: {{book.ACTUAL_PAYBACK_DATE | date:"y-MM-dd"}}</div>
+        <div *ngIf="showPayBackDate">{{'shouldPayBackDate'|translate}}: {{book.SHOULD_PAYBACK_DATE | date:"y-MM-dd"}}</div>
+        <div *ngIf="showActualBackDate">{{'actualPaybackDate'|translate}}: {{book.ACTUAL_PAYBACK_DATE | date:"y-MM-dd"}}</div>
       </div>
     </div>
   </button>

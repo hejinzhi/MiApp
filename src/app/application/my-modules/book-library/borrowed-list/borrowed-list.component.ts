@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { NavParams, IonicPage } from 'ionic-angular';
 import { LanguageConfig } from '../shared/config/language.config';
+import { TranslateService } from '@ngx-translate/core';
 
 @IonicPage()
 @Component({
@@ -10,6 +11,7 @@ import { LanguageConfig } from '../shared/config/language.config';
 export class BorrowedListComponent implements OnInit {
     constructor(
         public navParams: NavParams,
+        public translate: TranslateService
     ) {
 
     }
@@ -24,17 +26,26 @@ export class BorrowedListComponent implements OnInit {
         this.books = this.navParams.get('books');
         this.type = this.navParams.get('type');
         if (this.type === 'book') {
-            this.title = this.languageContent.booked;
+            // this.title = this.languageContent.booked;
+            this.translate.get('booked').subscribe((title) => {
+                this.title = title;
+            });
             this.showPayBackDate = false;
             this.showActualBackDate = false;
         }
         else if (this.type === 'borrow') {
-            this.title = this.languageContent.borrowed;
+            // this.title = this.languageContent.borrowed;
+            this.translate.get('borrowed').subscribe((title) => {
+                this.title = title;
+            });
             this.showPayBackDate = true;
             this.showActualBackDate = false;
         }
         else if (this.type === 'payback') {
-            this.title = this.languageContent.payback;;
+            // this.title = this.languageContent.payback;
+            this.translate.get('paybacked').subscribe((title) => {
+                this.title = title;
+            });
             this.showPayBackDate = false;
             this.showActualBackDate = true;
         }
