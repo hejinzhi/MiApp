@@ -1,10 +1,10 @@
 <ion-header>
   <ion-navbar>
-    <ion-title>{{languageContent.title}}</ion-title>
+    <ion-title>{{'contactTitle'| translate}}</ion-title>
   </ion-navbar>
 </ion-header>
 <ion-content no-bounce>
-  <ion-searchbar placeholder={{languageContent.placeholder}} (ionInput)="getItems($event)"></ion-searchbar>
+  <ion-searchbar placeholder={{placeholder}} (ionInput)="getItems($event)"></ion-searchbar>
   <div class="main-wrapper" *ngIf="!searchFilter">
     <div class="department-group">
       <ion-grid>
@@ -12,13 +12,13 @@
           <ion-col class="col">
             <button (click)="goToSearchDetail('sameDept')" class="contact-btn">
               <img src="assets/icon/person.ico" class="col-img">
-              <span class="desc">{{languageContent.sameDept}}</span>
+              <span class="desc">{{'sameDept'| translate}}</span>
             </button>
           </ion-col>
           <ion-col class="col">
             <button (click)="goToSearchDetail('subordinated')" class="contact-btn">
               <img src="assets/icon/xiashu.ico" class="col-img">
-              <span class="desc">{{languageContent.subordinated}}</span>
+              <span class="desc">{{'subordinated'| translate}}</span>
             </button>
           </ion-col>
         </ion-row>
@@ -26,13 +26,13 @@
           <ion-col class="col">
             <button class="contact-btn" (click)="goToOrganizationPage()">
               <img src="assets/icon/department.ico" class="col-img" >
-              <span class="desc">{{languageContent.organization}}</span>
+              <span class="desc">{{'organization'| translate}}</span>
             </button>
           </ion-col>
           <ion-col class="col">
             <button (click)="goToSearchDetail('all')" class="contact-btn">
               <img src="assets/icon/all.ico" class="col-img">
-              <span class="desc">{{languageContent.all}}</span>
+              <span class="desc">{{'all'| translate}}</span>
             </button>
           </ion-col>
         </ion-row>
@@ -40,7 +40,7 @@
     </div>
     <div class="contacter">
       <div class="contacter-header">
-        {{languageContent.nearby}}
+        {{'nearby'}}
       </div>
       <sg-contact-list [contacter]="contacter" (onClick)="goToDetailPage($event)"></sg-contact-list>
     </div>
