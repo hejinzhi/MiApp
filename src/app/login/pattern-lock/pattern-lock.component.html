@@ -1,5 +1,5 @@
 <ion-header [class.head]='isVal' [class.secHead]='!isVal' id='headCode'>
-  <ion-navbar [class.hide] = "isVal">
+  <ion-navbar [class.hide]="isVal">
     <ion-title>手势密码</ion-title>
   </ion-navbar>
   <ion-list *ngIf="!isVal">
@@ -18,7 +18,7 @@
     </div>
   </div>
 </ion-header>
-<ion-content class="main">
+<ion-content class="main" no-bounce>
   <div [class.layer]="!needNineCode && !isVal">
   </div>
   <canvas id="lockCanvas"></canvas>

@@ -4,13 +4,13 @@ import { Tabs, Events, Platform } from 'ionic-angular'
 import { MessageComponent } from '../message/message.component';
 import { ContactComponent } from '../contact/contact.component';
 import { ApplicationComponent } from '../application/application.component';
-
-import { MeComponent } from '../me/me.component';
+// import { MeComponent } from '../me/me.component';
 import { MessageService } from '../message/shared/service/message.service';
 import { LanguageConfig } from './shared/config/language.config';
 import { DatabaseService } from '../message/shared/service/database.service';
 import { PluginService } from '../core/services/plugin.service';
 import { JPushService } from '../core/services/jpush.service';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'sg-tabs',
@@ -26,6 +26,7 @@ export class TabsComponent implements OnInit {
   tab4Root = 'MeComponent';
   unreadCount: number;
   userinfo: any; //登录人信息
+  titles: string[];
 
   constructor(
     private messageService: MessageService,
@@ -34,8 +35,10 @@ export class TabsComponent implements OnInit {
     private databaseService: DatabaseService,
     private ref: ChangeDetectorRef,
     private platform: Platform,
-    private jPushService: JPushService
+    private jPushService: JPushService,
+    private translate: TranslateService
   ) {
+
 
     if (this.plugin.isCordova()) {
       this.events.subscribe('msg.onChangeTabBadge', async () => {
@@ -48,6 +51,9 @@ export class TabsComponent implements OnInit {
 
   ngOnInit() {
     this.userinfo = JSON.parse(localStorage.getItem('currentUser'));
+    this.translate.get(['message', 'application', 'contact', 'me']).subscribe((titles) => {
+      this.titles = titles;
+    })
   }
 
   async ionViewDidEnter() {

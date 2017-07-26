@@ -10,9 +10,10 @@ import { ContactListComponent } from './contact-list/contact-list.component';
 import { OrganizationComponent } from './organization/organization.component';
 import { ContactService } from './shared/service/contact.service';
 import { PipesModule } from '../shared/pipe/pipes.module';
+import { TranslateModule } from '@ngx-translate/core';
 
 @NgModule({
-    imports: [CommonModule, IonicModule, SharedModule, PipesModule],
+    imports: [CommonModule, IonicModule, SharedModule, PipesModule, TranslateModule.forChild()],
     declarations: [ContactComponent, SearchResultComponent, ContactDetailComponent, ContactListComponent, OrganizationComponent],
     entryComponents: [ContactComponent, SearchResultComponent, ContactDetailComponent, ContactListComponent, OrganizationComponent],
     exports: [ContactComponent, SearchResultComponent, ContactDetailComponent, ContactListComponent, OrganizationComponent],

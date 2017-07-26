@@ -32,6 +32,8 @@
     "@ionic-native/sqlite": "^3.12.1",
     "@ionic-native/status-bar": "3.10.2",
     "@ionic/storage": "2.0.1",
+    "@ngx-translate/core": "^7.1.0",
+    "@ngx-translate/http-loader": "^0.1.0",
     "angular2-jwt": "^0.2.0",
     "chinese-conv": "^1.0.1",
     "com-sarriaroman-photoviewer": "~1.1.10",
