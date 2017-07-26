@@ -7,7 +7,9 @@ import { ContactService } from './shared/service/contact.service';
 import { SearchResultComponent } from './search-result/search-result.component';
 import { ContactDetailComponent } from './contact-detail/contact-detail.component';
 import { OrganizationComponent } from './organization/organization.component';
-import {LanguageConfig} from './shared/config/language.config';
+import { LanguageConfig } from './shared/config/language.config';
+import { TranslateService } from '@ngx-translate/core';
+
 
 @Component({
   selector: 'sg-contact',
@@ -15,19 +17,24 @@ import {LanguageConfig} from './shared/config/language.config';
 })
 export class ContactComponent {
 
-    languageType: string = localStorage.getItem('languageType');
-    languageContent = LanguageConfig.contactComponent[this.languageType];
+  languageType: string = localStorage.getItem('languageType');
+  languageContent = LanguageConfig.contactComponent[this.languageType];
   contacter: any[] = [];
   searchFilter: string; // 记录搜索条件
   searchResult: any[] = []; // 保存通过searchbar搜索后返回的结果
+  placeholder: string;
   constructor(
     public navCtrl: NavController,
-    public contactService: ContactService
+    public contactService: ContactService,
+    public translate: TranslateService
   ) {
   }
 
   ionViewWillEnter() {
     this.contacter = this.contactService.getLocalStorage('viewHistory');
+    this.translate.get('placeholder').subscribe((placeholder) => {
+      this.placeholder = placeholder;
+    })
   }
 
 

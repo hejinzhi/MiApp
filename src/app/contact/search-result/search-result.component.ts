@@ -7,6 +7,7 @@ import { ContactDetailComponent } from '../contact-detail/contact-detail.compone
 import { ContactConfig } from '../shared/config/contact.config';
 import { EnvConfig } from '../../shared/config/env.config.ts';
 import { LanguageConfig } from '../shared/config/language.config';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
     selector: 'sg-search-result',
@@ -26,7 +27,8 @@ export class SearchResultComponent implements OnInit {
     constructor(
         public navCtrl: NavController,
         public navParams: NavParams,
-        public contactService: ContactService
+        public contactService: ContactService,
+        public translate: TranslateService
     ) {
 
     }
@@ -34,15 +36,24 @@ export class SearchResultComponent implements OnInit {
     async ngOnInit() {
         this.type = this.navParams.get('type');
         if (this.type === 'sameDept') {
-            this.typeDesc = '同部门';
+            // this.typeDesc = '同部门';
+            this.translate.get('sameDept').subscribe((res) => {
+                this.typeDesc = res;
+            });
             let originRes = await this.contactService.getSameDeptPerson();
             this.formatAndSaveData(originRes.json());
         } else if (this.type === 'subordinated') {
-            this.typeDesc = '我的下属';
+            // this.typeDesc = '我的下属';
+            this.translate.get('subordinated').subscribe((res) => {
+                this.typeDesc = res;
+            });
             let originRes = await this.contactService.getSubordinate();
             this.formatAndSaveData(originRes.json());
         } else if (this.type === 'all') {
-            this.typeDesc = '所有人';
+            // this.typeDesc = '所有人';
+            this.translate.get('all').subscribe((res) => {
+                this.typeDesc = res;
+            });
             let originRes = await this.contactService.getAllPersonByPage(EnvConfig.companyID, 1, ContactConfig.pageSize);
             this.formatAndSaveData(originRes.json());
         }

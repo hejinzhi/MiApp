@@ -6,7 +6,7 @@
 <ion-content>
   <div class="main-wrapper">
     <div class="top-half">
-      <img  class="avatar img" [src]="personData.AVATAR_URL" alt="self-photo" *ngIf="personData.AVATAR_URL">
+      <img class="avatar img" [src]="personData.AVATAR_URL" alt="self-photo" *ngIf="personData.AVATAR_URL">
       <div class="avatar" *ngIf="!personData.AVATAR_URL">{{personData.NICK_NAME.substr(-2) | sgChineseConv}}</div>
       <div class="name" [class.hasPhoto]="personData.AVATAR_URL" *ngIf="personData">{{personData.NICK_NAME | sgChineseConv}}</div>
       <div class="job-title">{{personData.JOB_TITLE | sgChineseConv}}</div>
@@ -16,7 +16,7 @@
             <ion-icon name="ios-call-outline"></ion-icon>
           </div>
           <div class="my-text">
-            {{languageContent.makeCall}}
+            {{'makeCall'| translate}}
           </div>
         </a>
         <span class="line"></span>
@@ -25,7 +25,7 @@
             <ion-icon name="ios-chatboxes-outline"></ion-icon>
           </div>
           <div class="my-text">
-            {{languageContent.sendMessage}}
+            {{'sendMessage'| translate}}
           </div>
         </div>
         <span class="line"></span>
@@ -34,7 +34,7 @@
             <ion-icon name="ios-mail-outline"></ion-icon>
           </div>
           <div class="my-text">
-            {{languageContent.sendEmail}}
+            {{'sendEmail'| translate}}
           </div>
         </a>
         <span class="line"></span>
@@ -43,7 +43,7 @@
             <ion-icon name="ios-calendar-outline"></ion-icon>
           </div>
           <div class="my-text">
-            {{languageContent.schedule}}
+            {{'schedule'| translate}}
           </div>
         </div>
       </div>
@@ -52,27 +52,27 @@
     <div class="bottom-half">
       <ion-list>
         <ion-item>
-          <div class="left">{{languageContent.englishName}}</div>
+          <div class="left">{{'englishName'| translate}}</div>
           <div class="right">{{personData.USER_NAME}}</div>
         </ion-item>
         <ion-item>
-          <div class="left">{{languageContent.mobile}}</div>
+          <div class="left">{{'mobile'| translate}}</div>
           <div class="right">{{personData.MOBILE}}</div>
         </ion-item>
         <ion-item>
-          <div class="left">{{languageContent.telephone}}</div>
+          <div class="left">{{'telephone'| translate}}</div>
           <div class="right">{{personData.TELEPHONE}}</div>
         </ion-item>
         <ion-item>
-          <div class="left">{{languageContent.email}}</div>
+          <div class="left">{{'email'| translate}}</div>
           <div class="right">{{personData.EMAIL}}</div>
         </ion-item>
         <ion-item>
-          <div class="left">{{languageContent.jobTitle}}</div>
+          <div class="left">{{'jobTitle'| translate}}</div>
           <div class="right">{{personData.JOB_TITLE}}</div>
         </ion-item>
         <ion-item>
-          <div class="left">{{languageContent.deptName}}</div>
+          <div class="left">{{'deptName'| translate}}</div>
           <div class="right">{{personData.DEPT_NAME}}</div>
         </ion-item>
       </ion-list>
