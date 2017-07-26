@@ -2,6 +2,7 @@ import { Component, ViewChild, enableProdMode } from '@angular/core';
 import { Platform, Nav, Keyboard, IonicApp, MenuController, App } from 'ionic-angular';
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
+import { TranslateService } from '@ngx-translate/core';
 
 import { LoginComponent } from './login/login.component';
 import { TabsComponent } from './tabs/tabs.component';
@@ -15,6 +16,7 @@ import { EnvConfig } from './shared/config/env.config';
 import { LoginService } from './login/shared/service/login.service';
 
 declare var cordova: any;
+
 
 @Component({
   templateUrl: 'app.html'
@@ -34,7 +36,8 @@ export class MyAppComponent {
     private plugin: PluginService,
     private app: App,
     private jPushService: JPushService,
-    private loginService: LoginService
+    private loginService: LoginService,
+    private translate: TranslateService
   ) {
 
     // if (platform.is('cordova')) {
@@ -85,20 +88,9 @@ export class MyAppComponent {
         });
       }
     });
+    translate.setDefaultLang('zh-TW');
   }
-  // async loginJmes() {
-  //   if (this.plugin.isCordova()) {
-  //     let user = JSON.parse(localStorage.getItem('currentUser'));
-  //     if (user) {
-  //       let jmessageLogin = await this.jmessageService.autoLogin(user.username, 'pass');
-  //       if (!jmessageLogin) {
-  //         this.plugin.showToast('Jmessage Login Error: ' + jmessageLogin);
-  //         return;
-  //       };
-  //     }
 
-  //   }
-  // }
   async appInit() {
     let user = JSON.parse(localStorage.getItem('currentUser'));
     if (user) {

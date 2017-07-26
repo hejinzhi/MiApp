@@ -4,6 +4,7 @@ import { CheckList } from '../../../../shared/models/check-list.model';
 import { ArrayUtilService } from '../../../../core/services/arrayUtil.service';
 import { BookLibraryService } from '../shared/service/book-library.service';
 import { LanguageConfig } from '../shared/config/language.config';
+import { TranslateService } from '@ngx-translate/core';
 
 @IonicPage()
 @Component({
@@ -30,23 +31,33 @@ export class BorrowRequestComponent implements OnInit {
         private bookService: BookLibraryService,
         private alertCtrl: AlertController,
         private ref: ChangeDetectorRef,
+        private translate: TranslateService
     ) { }
 
     ngOnInit() {
         this.books = this.navParams.get('books');
         this.type = this.navParams.get('type');
         if (this.type === 'borrow') {
-            this.title = this.languageContent.borrowRequest;
+            // this.title = this.languageContent.borrowRequest;
+            this.translate.get('borrowRequest').subscribe((title) => {
+                this.title = title;
+            });
             this.showBorrow = true;
             this.showPayback = false;
             this.showCancelBook = false;
         } else if (this.type === 'payback') {
-            this.title = this.languageContent.paybackRequest;
+            // this.title = this.languageContent.paybackRequest;
+            this.translate.get('paybackRequest').subscribe((title) => {
+                this.title = title;
+            });
             this.showBorrow = false;
             this.showPayback = true;
             this.showCancelBook = false;
         } else if (this.type === 'cancelbook') {
-            this.title = this.languageContent.cancelBook;
+            // this.title = this.languageContent.cancelBook;
+            this.translate.get('cancelBook').subscribe((title) => {
+                this.title = title;
+            });
             this.showBorrow = false;
             this.showPayback = false;
             this.showCancelBook = true;
