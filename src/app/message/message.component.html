@@ -6,7 +6,7 @@
   </ion-navbar>
 </ion-header>
 <ion-content class="list-avatar-page">
-  <ion-searchbar></ion-searchbar>
+  <!-- <ion-searchbar></ion-searchbar> -->
   <ion-list class="list-page" *ngFor="let item of noticeListItem">
     <ion-item-sliding>
       <ion-item (tap)="goToMessageDetailPage(item)" [ngSwitch]="item.contentType">
@@ -58,7 +58,7 @@
       </ion-item-options>
     </ion-item-sliding>
   </ion-list>
-   <!--<button ion-button (click)="sendSingleMsg()">发送</button> -->
+  <!--<button ion-button (click)="sendSingleMsg()">发送</button> -->
   <!--<button ion-button (click)="deleteAllMsgs()">删除</button>-->
   <!--<button ion-button (click)="showMap()">顯示地圖</button>
   <div myBMap id="allmap" [pos]="pos" ></div>-->
