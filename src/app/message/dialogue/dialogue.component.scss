@@ -9,7 +9,7 @@ sg-dialogue {
     padding: 10px 16px 0 16px;
     overflow-y: scroll;
     &.up {
-      height: 58% !important;
+      height: 78% !important;
     }
   }
   .selectable {
@@ -21,17 +21,8 @@ sg-dialogue {
   .android-height {
     height: 93%;
   }
-  .emoji {
-    transform: scale(0.7) translate(0px, 10px);
-    // margin-top:-10px;
-  }
-  .emoji-out {
-    width: 18px;
-    height: 18px;
-  }
   .msgarea {
     padding: 10px 0px;
-    .msg-detail {}
     .last {
       margin-bottom: 14%;
     }
@@ -77,36 +68,10 @@ sg-dialogue {
           left: 100%;
         }
       }
-      // .img_content {
-      //   background-color: #9fe757;
-      //   float: right;
-      //   margin-right: 10px;
-      // }
-      .img_heng {
+      .img_content {
         background-color: #9fe757;
         float: right;
         margin-right: 10px;
-        //横屏
-        height: 113px;
-        max-width: 145px;
-        width: auto;
-      }
-      .img_shu {
-        background-color: #9fe757;
-        float: right;
-        margin-right: 10px;
-        // 竖屏
-        height: auto;
-        max-height: 150px;
-        width: 80px;
-      }
-      .img_fang {
-        background-color: #9fe757;
-        float: right;
-        margin-right: 10px;
-        // 正方形
-        height: 145px;
-        width: 145px;
       }
       .icon {
         float: right;
@@ -138,36 +103,10 @@ sg-dialogue {
           right: 98%;
         }
       }
-      // .img_content {
-      //   background-color: #fff;
-      //   float: left;
-      //   margin-left: 10px;
-      // }
-      .img_heng {
+      .img_content {
         background-color: #fff;
         float: left;
         margin-left: 10px;
-        //横屏
-        height: 113px;
-        max-width: 145px;
-        width: auto;
-      }
-      .img_shu {
-        background-color: #fff;
-        float: left;
-        margin-left: 10px;
-        // 竖屏
-        height: auto;
-        max-height: 150px;
-        width: 80px;
-      }
-      .img_fang {
-        background-color: #fff;
-        float: left;
-        margin-left: 10px;
-        // 正方形
-        height: 145px;
-        width: 145px;
       }
       .icon {
         float: left;
@@ -177,53 +116,47 @@ sg-dialogue {
   }
   .input {
     color: $fontcolor; // height: 7.5%;
-    height: 6%;
-    // min-height: 50px;
+    width: 100%;
     border-top: 1px solid #d8d8d8;
+    background-color: #ededed;
+    font-size: 11px;
     &.up {
-      height: 42%;
-    }
-    .myEmoji {
-      height: 200px;
+      height: 22%;
     }
     .input_layout {
-      border-bottom: 1px solid #d8d8d8;
-      background-color: #ededed;
       position: relative;
-      min-height: 50px;
-      // max-height: 110px;
-      line-height: 38px;
+      height: 40px;
+      line-height: 40px;
       .input_icon {
         position: absolute;
         display: inline-block;
+        top: 10%;
         font-size: 35px;
         &.voice {
           left: 2%;
-          bottom: 3%;
+          top: 6%;
         }
         &.face {
-          right: 0%;
-          bottom: 10%;
+          right: 13%;
+          top: -4%;
         }
         &.plus {
-          right: 7%;
-          bottom: 10%;
+          right: 2%;
+          top: -6%;
         }
       }
       .input_text {
         border-bottom: 1px solid #d8d8d8;
         text-indent: 5px;
-        margin-left: -11%;
+        margin-left: 50px;
+        margin-right: 120px;
         vertical-align: middle;
-        line-height: 33px;
-        // height: 18px;
-        max-height: 100px;
-        overflow-y: scroll;
-        overflow-x: hidden;
-        width: 123%;
+        line-height: 30px;
+        height: 30px;
+        width: 63%;
         font-size: 18px;
         color: #000;
-        background-color: #fff;
+        border-radius: 6px;
       }
       .send {
         background-color: #14b012;
@@ -232,10 +165,10 @@ sg-dialogue {
         position: absolute;
         border: 1px solid #378c37;
         border-radius: 2px;
-        right: 8%;
-        bottom: 6%;
-        height: 38px;
-        width: 40px;
+        right: 1%;
+        bottom: 1%;
+        width: 11%;
+        height: 40px;
         line-height: 36px;
         color: white;
         text-align: center;
