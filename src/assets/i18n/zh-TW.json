@@ -52,7 +52,8 @@
     "settingTitle": "設置",
     "scan": "掃碼錄入",
     "batchAddBooks": "連續錄入",
-    "goBack": "返回"
+    "goBack": "返回",
+    "xuejie": "續借"
   },
   "placeholder": "請輸入中文名/英文名/工號",
   "contactTitle": "通訊錄",
