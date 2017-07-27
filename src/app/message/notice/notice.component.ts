@@ -1,5 +1,5 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
-import { NavParams, Events } from 'ionic-angular';
+import { NavParams, Events, NavController } from 'ionic-angular';
 import { MessageService } from '../shared/service/message.service';
 import { JMessageService } from '../../core/services/jmessage.service';
 
@@ -23,6 +23,7 @@ export class NoticeComponent implements OnInit {
   showChartFlag: boolean = false;
 
   constructor(
+    public navCtrl: NavController,
     public params: NavParams,
     public messageService: MessageService,
     public jmessageService: JMessageService,
@@ -69,6 +70,11 @@ export class NoticeComponent implements OnInit {
     // setTimeout(() => {
     //   this.scroll_down();
     // }, 100);
+  }
+
+  goToDetail(page: string) {
+    console.log(page);
+    this.navCtrl.push(page);
   }
 
   async loadMessage() {

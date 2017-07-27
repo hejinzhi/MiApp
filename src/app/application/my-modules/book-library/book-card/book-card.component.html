@@ -6,7 +6,7 @@
   <div class="card-content" *ngFor="let book of bookList.BOOKS">
     <ion-checkbox color="primary" [checked]="book.selectItem" class="content-cb" (ionChange)="singleSelect($event,book.ID)"></ion-checkbox>
     <div class="content-list">
-      <sg-book-list [books]="[book]"></sg-book-list>
+      <sg-book-list [books]="[book]" [showPayBackDate]="showPayBackDate"></sg-book-list>
     </div>
     <div class="line"></div>
   </div>

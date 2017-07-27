@@ -8,7 +8,6 @@ import { SearchResultComponent } from './search-result/search-result.component';
 import { ContactDetailComponent } from './contact-detail/contact-detail.component';
 import { OrganizationComponent } from './organization/organization.component';
 import { LanguageConfig } from './shared/config/language.config';
-import { TranslateService } from '@ngx-translate/core';
 
 
 @Component({
@@ -26,15 +25,11 @@ export class ContactComponent {
   constructor(
     public navCtrl: NavController,
     public contactService: ContactService,
-    public translate: TranslateService
   ) {
   }
 
   ionViewWillEnter() {
     this.contacter = this.contactService.getLocalStorage('viewHistory');
-    this.translate.get('placeholder').subscribe((placeholder) => {
-      this.placeholder = placeholder;
-    })
   }
 
 

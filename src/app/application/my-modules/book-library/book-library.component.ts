@@ -207,7 +207,8 @@ export class BookLibraryComponent implements OnInit {
         let res = await this.bookService.getBorrowedBooks(currentUser.username);
         let books = res.json();
         await this.menuCtrl.close();
-        this.navCtrl.push('BorrowedListComponent', { books: books, type: 'borrow' });
+        // this.navCtrl.push('BorrowedListComponent', { books: books, type: 'borrow' });
+        this.navCtrl.push('BorrowRequestComponent', { books: books, type: 'xujie' });
     }
 
     // 已归还的图书

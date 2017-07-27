@@ -24,7 +24,9 @@ export class BorrowRequestComponent implements OnInit {
     showBorrow: boolean = false; // 是否借书申请转跳过来的
     showPayback: boolean = false; // 是否还书转跳过来的
     showCancelBook: boolean = false; // 是否取消预约转跳过来的
+    showXuejie: boolean = false; // 是否續借
     enableBtn: boolean = false; // 控制右上角的按钮是否可以被点击
+    showPayBackDate: boolean = false;
     constructor(
         public navParams: NavParams,
         private arrayService: ArrayUtilService,
@@ -39,7 +41,7 @@ export class BorrowRequestComponent implements OnInit {
         this.type = this.navParams.get('type');
         if (this.type === 'borrow') {
             // this.title = this.languageContent.borrowRequest;
-            this.translate.get('borrowRequest').subscribe((title) => {
+            this.translate.get('bookLibrary.borrowRequest').subscribe((title) => {
                 this.title = title;
             });
             this.showBorrow = true;
@@ -47,7 +49,7 @@ export class BorrowRequestComponent implements OnInit {
             this.showCancelBook = false;
         } else if (this.type === 'payback') {
             // this.title = this.languageContent.paybackRequest;
-            this.translate.get('paybackRequest').subscribe((title) => {
+            this.translate.get('bookLibrary.paybackRequest').subscribe((title) => {
                 this.title = title;
             });
             this.showBorrow = false;
@@ -55,12 +57,23 @@ export class BorrowRequestComponent implements OnInit {
             this.showCancelBook = false;
         } else if (this.type === 'cancelbook') {
             // this.title = this.languageContent.cancelBook;
-            this.translate.get('cancelBook').subscribe((title) => {
+            this.translate.get('bookLibrary.booked').subscribe((title) => {
                 this.title = title;
             });
             this.showBorrow = false;
             this.showPayback = false;
             this.showCancelBook = true;
+        }
+        else if (this.type === 'xujie') {
+            // this.title = this.languageContent.cancelBook;
+            this.translate.get('bookLibrary.borrowed_books').subscribe((title) => {
+                this.title = title;
+            });
+            this.showBorrow = false;
+            this.showPayback = false;
+            this.showCancelBook = false;
+            this.showXuejie = true;
+            this.showPayBackDate = true;
         }
         if (this.books) {
             this.userListAfterTransform = this.transformUserList(this.books);
@@ -127,6 +140,11 @@ export class BorrowRequestComponent implements OnInit {
         catch (err) {
             this.showError('还书失败! ' + err);
         }
+    }
+
+    //续借
+    async xujie() {
+
     }
 
     // 当把后台的数据更新后，同步把本地的数据也删除，刷新页面

@@ -1,18 +1,18 @@
 <ion-header>
   <ion-navbar>
-    <ion-title>{{'settingTitle'| translate}}</ion-title>
+    <ion-title>{{'bookLibrary.settingTitle'| translate}}</ion-title>
   </ion-navbar>
 </ion-header>
 <ion-content padding>
   <ion-list>
     <ion-item>
-      <ion-label>{{'scan'| translate}}</ion-label>
+      <ion-label>{{'bookLibrary.scan'| translate}}</ion-label>
       <ion-toggle [(ngModel)]="scanFlag"></ion-toggle>
     </ion-item>
     <ion-item>
-      <ion-label>{{'batchAddBooks'| translate}}</ion-label>
+      <ion-label>{{'bookLibrary.batchAddBooks'| translate}}</ion-label>
       <ion-toggle [(ngModel)]="batchAddBooks"></ion-toggle>
     </ion-item>
   </ion-list>
-  <button ion-button block (click)="dismiss()">{{'goBack'| translate}}</button>
+  <button ion-button block (click)="dismiss()">{{'bookLibrary.goBack'| translate}}</button>
 </ion-content>

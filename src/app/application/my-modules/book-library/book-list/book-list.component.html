@@ -5,16 +5,16 @@
     </div>
     <div class="book-info">
       <div class="book-info-style">
-        <div>{{'booklistTitle'|translate}}: {{book.TITLE |sgChineseConv}}</div>
-        <div>{{'booklistAuthor'|translate}}: {{book.AUTHOR | sgChineseConv}}</div>
-        <div>{{'price'|translate}}: {{book.PRICE|sgChineseConv}}</div>
-        <div>{{'publisher'|translate}}: {{book.PUBLISHER|sgChineseConv}}</div>
-        <div *ngIf="!showAddBookInput && !showPayBackDate && !showActualBackDate">{{'qty'|translate}}: {{book.QTY}}</div> 
+        <div>{{'bookLibrary.booklistTitle'|translate}}: {{book.TITLE |sgChineseConv}}</div>
+        <div>{{'bookLibrary.booklistAuthor'|translate}}: {{book.AUTHOR | sgChineseConv}}</div>
+        <div>{{'bookLibrary.price'|translate}}: {{book.PRICE|sgChineseConv}}</div>
+        <div>{{'bookLibrary.publisher'|translate}}: {{book.PUBLISHER|sgChineseConv}}</div>
+        <div *ngIf="!showAddBookInput && !showPayBackDate && !showActualBackDate">{{'bookLibrary.qty'|translate}}: {{book.QTY}}</div> 
         <div *ngIf="showAddBookInput">
-          {{'addQty'|translate}}:<input type="text" style="text-indent: 5px;" (input)="inputChange($event)" value="1" />
+          {{'bookLibrary.addQty'|translate}}:<input type="text" style="text-indent: 5px;" (input)="inputChange($event)" value="1" />
         </div>
-        <div *ngIf="showPayBackDate">{{'shouldPayBackDate'|translate}}: {{book.SHOULD_PAYBACK_DATE | date:"y-MM-dd"}}</div>
-        <div *ngIf="showActualBackDate">{{'actualPaybackDate'|translate}}: {{book.ACTUAL_PAYBACK_DATE | date:"y-MM-dd"}}</div>
+        <div *ngIf="showPayBackDate">{{'bookLibrary.shouldPayBackDate'|translate}}: {{book.SHOULD_PAYBACK_DATE | date:"y-MM-dd"}}</div>
+        <div *ngIf="showActualBackDate">{{'bookLibrary.actualPaybackDate'|translate}}: {{book.ACTUAL_PAYBACK_DATE | date:"y-MM-dd"}}</div>
       </div>
     </div>
   </button>
