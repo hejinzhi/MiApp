@@ -4,7 +4,7 @@
   </ion-navbar>
 </ion-header>
 <ion-content no-bounce>
-  <ion-searchbar placeholder={{placeholder}} (ionInput)="getItems($event)"></ion-searchbar>
+  <ion-searchbar placeholder="{{'placeholder' | translate }}" (ionInput)="getItems($event)"></ion-searchbar>
   <div class="main-wrapper" *ngIf="!searchFilter">
     <div class="department-group">
       <ion-grid>

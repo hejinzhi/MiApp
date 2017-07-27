@@ -39,7 +39,7 @@ export class BorrowRequestComponent implements OnInit {
         this.type = this.navParams.get('type');
         if (this.type === 'borrow') {
             // this.title = this.languageContent.borrowRequest;
-            this.translate.get('borrowRequest').subscribe((title) => {
+            this.translate.get('bookLibrary.borrowRequest').subscribe((title) => {
                 this.title = title;
             });
             this.showBorrow = true;
@@ -47,7 +47,7 @@ export class BorrowRequestComponent implements OnInit {
             this.showCancelBook = false;
         } else if (this.type === 'payback') {
             // this.title = this.languageContent.paybackRequest;
-            this.translate.get('paybackRequest').subscribe((title) => {
+            this.translate.get('bookLibrary.paybackRequest').subscribe((title) => {
                 this.title = title;
             });
             this.showBorrow = false;
@@ -55,7 +55,7 @@ export class BorrowRequestComponent implements OnInit {
             this.showCancelBook = false;
         } else if (this.type === 'cancelbook') {
             // this.title = this.languageContent.cancelBook;
-            this.translate.get('cancelBook').subscribe((title) => {
+            this.translate.get('bookLibrary.booked').subscribe((title) => {
                 this.title = title;
             });
             this.showBorrow = false;
