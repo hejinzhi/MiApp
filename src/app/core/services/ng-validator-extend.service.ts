@@ -1,16 +1,15 @@
+/**
+ * [Injectable 验证服务]
+ * version: '0.01'
+ * name: 'ngValidatorExtend.js'
+ * author: 'gary.h'
+ */
 import { Injectable } from '@angular/core';
 import { AbstractControl } from '@angular/forms';
 
 @Injectable()
 export class NgValidatorExtendService {
-  /*
-    扩展说明
-   */
-  description= {
-    version: '0.01',
-    name: 'ngValidatorExtend.js',
-    author: 'gary.h'
-  };
+
   constructor() { }
 
   /**
