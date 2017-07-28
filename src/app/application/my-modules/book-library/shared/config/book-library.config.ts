@@ -54,4 +54,7 @@ export class BookLibraryConfig {
 
     // 获取权限
     static getPrivilegeUrl = EnvConfig.baseUrl + 'Guid/GetUserFunctions';
+
+    // 续借
+    static renewBooksUrl = EnvConfig.baseUrl + 'Lib/RenewBorrow';
 }
