@@ -25,12 +25,13 @@ import { DrawChartDirective } from './shared/directive/DrawChartDirective';
 import { Ng2EmojiPipe } from './shared/pipe/emojis.pipe';
 import { Ng2EmojiService } from './shared/service/emojis.service';
 import { IonicImageViewerModule } from 'ionic-img-viewer';
+import { Media } from '@ionic-native/media';
 
 @NgModule({
   imports: [CommonModule, IonicModule, SharedModule, PipesModule, IonicImageViewerModule],
   declarations: [MessageComponent, DialogueComponent, NoticeComponent, TimeDescPipe, AlertComponent, ChangeSpace, KeyboardAttachDirective, MyBMapDirective, ChartComponent, DrawChartDirective, TableComponent, Ng2EmojiPipe, EmojiComponent, MapComponent],
   entryComponents: [MessageComponent, DialogueComponent, NoticeComponent, AlertComponent, ChartComponent, MapComponent],
   exports: [MessageComponent, DialogueComponent, NoticeComponent, AlertComponent, ChartComponent, MapComponent],
-  providers: [MessageService, Keyboard, Camera, DatabaseService, Geolocation, Ng2EmojiService]
+  providers: [MessageService, Keyboard, Camera, DatabaseService, Geolocation, Ng2EmojiService, Media]
 })
 export class MessageModule { }

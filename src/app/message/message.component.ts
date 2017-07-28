@@ -79,6 +79,7 @@ export class MessageComponent implements OnInit {
 
       // 读取离线消息
       this.jmessageService.jmessageOffline = this.jmessageService.onSyncOfflineMessage().subscribe(async (res) => {
+        console.log(res, 444)
         for (let i = 0; i < res.messageList.length; i++) {
           if (this.plf === 'ios') {
             await this.handleReceiveMessageIos(res.messageList[i]);
@@ -97,7 +98,7 @@ export class MessageComponent implements OnInit {
 
       // 监听是否有消息推送过来
       this.jmessageService.jmessageHandler = this.jmessageService.onReceiveMessage().subscribe(async (res) => {
-        console.log(res);
+        console.log(555);
         let msg: any;
         if (this.plf === 'ios') {
           msg = await this.handleReceiveMessageIos(res);
@@ -121,6 +122,8 @@ export class MessageComponent implements OnInit {
       _content = res.content.text;
     } else if (res.contentType === 'image') {
       _content = res.content.localThumbnailPath;
+    } else if (res.contentType === 'voice') {
+      _content = res.content.local_path;
     }
 
     if (res.fromName === 'signlist' || res.fromName === 'news' || res.fromName === 'alert' || res.fromName === 'report') {

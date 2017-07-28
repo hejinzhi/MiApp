@@ -5,6 +5,7 @@ import { Camera, CameraOptions } from '@ionic-native/camera';
 import { Keyboard } from '@ionic-native/keyboard';
 import { Geolocation } from '@ionic-native/geolocation';
 import { Http } from '@angular/http';
+import { Media, MediaObject } from '@ionic-native/media';
 
 import { MapComponent } from '../map/map.component';
 
@@ -52,6 +53,8 @@ export class DialogueComponent implements OnInit {
     // pos: number[] = [113.200585, 22.889573];
     addCtrl: string = 'N';
 
+    audioRecorderAPI = (<any>window).plugins ? (<any>window).plugins.audioRecorderAPI || null : null;
+    isrec: boolean = false;
 
     constructor(private messageservice: MessageService,
         public params: NavParams,
@@ -64,7 +67,8 @@ export class DialogueComponent implements OnInit {
         private databaseService: DatabaseService,
         private geolocation: Geolocation,
         public navCtrl: NavController,
-        private http: Http
+        private http: Http,
+        private media: Media
     ) {
 
         this.userName = params.get('fromUserName');
@@ -99,7 +103,7 @@ export class DialogueComponent implements OnInit {
 
 
     async ionViewDidEnter() {
-      this.newInput.nativeElement.innerHTML = '';
+        this.newInput.nativeElement.innerHTML = '';
         this.events.subscribe('msg.onReceiveMessage', async (msg: any) => {
             if (msg) {
                 // 当推送过来的消息发送者跟正在聊天的是同一个人时，在显示在画面
@@ -171,7 +175,7 @@ export class DialogueComponent implements OnInit {
         this.onPlus = false;
         if (/Android [4-7]/.test(navigator.appVersion)) {
             window.addEventListener("resize", function () {
-              let tagName = document.activeElement.tagName;
+                let tagName = document.activeElement.tagName;
                 if (tagName == "INPUT" || tagName == "TEXTAREA" || tagName == "DIV") {
                     window.setTimeout(function () {
                         document.activeElement.scrollIntoView();
@@ -275,8 +279,8 @@ export class DialogueComponent implements OnInit {
         // 插入新的光标对象
         selection.addRange(range)
         // 无论如何都要记录最后光标对象
-        if(selection.type !=='None') {
-          this.lastEditRange = selection.getRangeAt(0)
+        if (selection.type !== 'None') {
+            this.lastEditRange = selection.getRangeAt(0)
         }
     }
     getPosition() {
@@ -332,7 +336,7 @@ export class DialogueComponent implements OnInit {
 
     }
 
-    //type: 1是文字，2是圖片
+    //type: 1是文字，2是圖片,3是語音
     async sendMessage(type: number, content: string, extra?: any, childType?: any, imageHeight?: number, imageWidth?: number) {
         let contentType: string;
         let that = this;
@@ -342,6 +346,8 @@ export class DialogueComponent implements OnInit {
             contentType = "text";
         } else if (type === 2) {
             contentType = "image";
+        } else if (type === 3) {
+            contentType = "voice";
         }
 
         // let history = this.messageservice.history;
@@ -358,6 +364,7 @@ export class DialogueComponent implements OnInit {
             imageHeight: imageHeight,
             imageWidth: imageWidth
         };
+
         this.getNickNameAndAvatar(msg);
         await this.databaseService.addMessage(msg.toUserName, msg.fromUserName, this.userinfo.username, msg.content, msg.contentType, msg.time, msg.type, msg.unread, extra ? JSON.stringify(msg.extra) : '', childType, imageHeight, imageWidth);
 
@@ -371,6 +378,9 @@ export class DialogueComponent implements OnInit {
         }
         else if (type === 2) {
             this.jmessageservice.sendSingleImageMessage(this.userName, content);
+        }
+        else if (type === 3) {
+            this.jmessageservice.sendSingleVoiceMessage(this.userName, content);
         }
         this.list.push(msg)
         this.newInput.nativeElement.innerHTML = '';
@@ -473,4 +483,46 @@ export class DialogueComponent implements OnInit {
     openMap(content: string) {
         this.navCtrl.push(MapComponent, content);
     }
+
+    rec_voice() {
+        this.isrec = true;
+        this.audioRecorderAPI.record(function (msg: any) {
+            this.isrec = false;
+            console.log('ok: 1' + msg);
+        }, function (msg: any) {
+            // failed 
+            this.isrec = false;
+            console.log('ko: 1' + msg);
+        }, 90); // record 30 seconds 
+    }
+
+    endrce_voice() {
+        let that = this;
+        if (this.isrec) {
+            this.audioRecorderAPI.stop(async function (file: any) {
+                console.log('ok: 2' + file);
+                await that.sendMessage(3, file);
+                that.isrec = false;
+            }, function (err: any) {
+                console.log('ko: 2' + err);
+            })
+        }
+    }
+
+    openvoice(content: any) {
+        const file: MediaObject = this.media.create(content);
+        console.log(file);
+
+        file.onStatusUpdate.subscribe(status => console.log(status)); // fires when file status changes
+
+        file.onSuccess.subscribe(() => console.log('Action is successful'));
+
+        file.onError.subscribe(error => console.log('Error!', error));
+
+        file.play();
+
+        let duration = file.getDuration();
+        console.log(duration, 333);
+    }
+
 }
