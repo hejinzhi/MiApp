@@ -16,35 +16,35 @@
       </ion-item>-->
       <button ion-item (click)="getOrderBooksInfo()">
         <ion-icon name="archive" item-left color="primary"></ion-icon>
-        {{languageContent.booked_books}}
+        {{'bookLibrary.booked_books' | translate}}
       </button>
       <button ion-item (click)="getBorrowedBooks()">
         <ion-icon name="book" item-left color="primary"></ion-icon>
-        {{languageContent.borrowed_books}}
+        {{'bookLibrary.borrowed_books' | translate}}
       </button>
       <button ion-item (click)="getPaybackBooks()">
         <ion-icon name="bookmark" item-left color="primary"></ion-icon>
-        {{languageContent.paybacked_books}}
+        {{'bookLibrary.paybacked_books' | translate}}
       </button>
       <button ion-item (click)="addBooks()" *ngIf="privilege === 'super'">
         <ion-icon name="briefcase" item-left color="primary"></ion-icon>
-        {{languageContent.add_books}}
+        {{'bookLibrary.add_books' | translate}}
       </button>
       <button ion-item (click)="borrowRequest()" *ngIf="privilege === 'super'">
         <ion-icon name="folder" item-left color="primary"></ion-icon>
-        {{languageContent.borrow_book_requests}}
+        {{'bookLibrary.borrow_book_requests' | translate}}
       </button>
       <button ion-item (click)="payBackRequest()" *ngIf="privilege === 'super'">
         <ion-icon name="document" item-left color="primary"></ion-icon>
-        {{languageContent.payback_requested}}
+        {{'bookLibrary.payback_requested' | translate}}
       </button>
       <button ion-item (click)="showSettingModal()" *ngIf="privilege === 'super'">
         <ion-icon name="settings" item-left color="primary"></ion-icon>
-        {{languageContent.setting}}
+        {{'bookLibrary.setting' | translate}}
       </button>
       <button ion-item (click)="exit()">
         <ion-icon name="exit" item-left color="primary"></ion-icon>
-        {{languageContent.exit}}
+        {{'bookLibrary.exit'| translate}}
       </button>
     </ion-list>
   </ion-content>
@@ -52,16 +52,16 @@
 <ion-header>
   <ion-navbar hideBackButton>
     <ion-title>
-      {{languageContent.title}}
+      {{'bookLibrary.title'|translate }}
     </ion-title>
     <ion-buttons start>
       <button ion-button (click)="openMenu()">
-          {{languageContent.menu}}
+          {{'bookLibrary.menu'|translate}}
       </button>
     </ion-buttons>
     <ion-buttons end>
       <button ion-button (click)="exit()">
-          {{languageContent.exit}}
+          {{'bookLibrary.exit'|translate}}
       </button>
     </ion-buttons>
   </ion-navbar>

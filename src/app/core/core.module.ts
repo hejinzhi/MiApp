@@ -14,6 +14,7 @@ import { JPushService } from './services/jpush.service.ts';
 import { ArrayUtilService } from './services/arrayUtil.service';
 import { PluginService } from './services/plugin.service';
 import { ValidateService } from './services/validate.service';
+import { NgValidatorExtendService } from './services/ng-validator-extend.service';
 import { EncryptUtilService } from './services/encryptUtil.service';
 
 
@@ -27,6 +28,7 @@ import { EncryptUtilService } from './services/encryptUtil.service';
         JPushService,
         PluginService,
         ValidateService,
+        NgValidatorExtendService,
         BarcodeScanner,
         Camera,
         ArrayUtilService,

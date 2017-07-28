@@ -20,32 +20,32 @@ export class StorageFlowComponent {
   startTime = '2017-01'
   tempData = {
     caption: '',
-    data: [['公司', '年月', '库存成本', '销售成本', '存货周转天数(实际)', '存货周转天数(目标)'],
-    ['MSL', '201701', '566024223', '246089266', '69', '37'],
-    ['MSL', '201702', '608237809', '153204351', '119', '37'],
-    ['MSL', '201703', '627361543', '286760306', '66', 37],
-    ['MSL', '201704', '598960302', '257939391', '70', '37'],
-    ['MSL', '201705', '566319526', '209821539', '81', '37']
+    data: [['年月', '库存成本', '销售成本', '天数(实际)', '天数(目标)'],
+    ['201701', '566024223', '246089266', '69', '37'],
+    ['201702', '608237809', '153204351', '119', '37'],
+    ['201703', '627361543', '286760306', '66', 37],
+    ['201704', '598960302', '257939391', '70', '37'],
+    ['201705', '566319526', '209821539', '81', '37']
     ]
   }
   mi_bu: string;
-  offsetTop:number;
+  offsetTop: number;
   content: any;
-  f:any;
+  f: any;
   ionViewDidLoad() {
     this.chartService.makeChart('main1', this.chartService.optionConv(OptionsConfig.storageFlow.option1))
   }
   getOffsetTop() {
-    let el:any=document.querySelector('#mySegment');
+    let el: any = document.querySelector('#mySegment');
     this.offsetTop = el.offsetTop;
   }
   ionViewDidEnter() {
     this.getOffsetTop()
     this.content = document.querySelector('sg-storage-flow .scroll-content');
-    window.addEventListener('resize',this.f = this.getOffsetTop.bind(this));
+    window.addEventListener('resize', this.f = this.getOffsetTop.bind(this));
   }
   ionViewWillLeave() {
-    window.removeEventListener('resize',this.f);
+    window.removeEventListener('resize', this.f);
   }
   changeShow() {
     switch (this.mi_bu) {

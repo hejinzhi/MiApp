@@ -6,6 +6,7 @@ import { EnvConfig } from '../../../../../shared/config/env.config';
 import { BookLibraryConfig } from '../config/book-library.config';
 import { MyHttpService } from '../../../../../core/services/myHttp.service';
 import { LanguageConfig } from '../config/language.config';
+import { Http } from '@angular/http';
 
 
 @Injectable()
@@ -15,6 +16,7 @@ export class BookLibraryService {
         private myHttp: MyHttpService,
         private barcodeScanner: BarcodeScanner,
         private alertCtrl: AlertController,
+        private http: Http
     ) { }
 
     languageType: string = localStorage.getItem('languageType')
@@ -30,7 +32,8 @@ export class BookLibraryService {
     // 从豆瓣获取图书信息
     getBookInfoFromDouban(isbn13: string) {
         // return this.myHttp.originGet('https://api.douban.com/v2/book/isbn/' + isbn13);
-        return this.myHttp.get(BookLibraryConfig.doubanUrl + isbn13);
+        // return this.myHttp.get(BookLibraryConfig.doubanUrl + isbn13);
+        return this.http.get(BookLibraryConfig.doubanUrl + isbn13).toPromise();
     }
 
     // 从豆瓣模糊查询图书信息
@@ -164,6 +167,11 @@ export class BookLibraryService {
     // 管理员还书
     payback(ids: number[]) {
         return this.myHttp.post(BookLibraryConfig.paybackUrl, { borrowID: ids });
+    }
+
+    // 续借
+    renewBooks(ids: number[]) {
+        return this.myHttp.post(BookLibraryConfig.renewBooksUrl, { borrowID: ids });
     }
 
     // 取消预约

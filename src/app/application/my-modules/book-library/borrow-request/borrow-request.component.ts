@@ -4,6 +4,7 @@ import { CheckList } from '../../../../shared/models/check-list.model';
 import { ArrayUtilService } from '../../../../core/services/arrayUtil.service';
 import { BookLibraryService } from '../shared/service/book-library.service';
 import { LanguageConfig } from '../shared/config/language.config';
+import { TranslateService } from '@ngx-translate/core';
 
 @IonicPage()
 @Component({
@@ -23,37 +24,69 @@ export class BorrowRequestComponent implements OnInit {
     showBorrow: boolean = false; // 是否借书申请转跳过来的
     showPayback: boolean = false; // 是否还书转跳过来的
     showCancelBook: boolean = false; // 是否取消预约转跳过来的
+    showXuejie: boolean = false; // 是否續借
     enableBtn: boolean = false; // 控制右上角的按钮是否可以被点击
+    showPayBackDate: boolean = false;
+
+    translateText: any;  // 翻译文本
     constructor(
         public navParams: NavParams,
         private arrayService: ArrayUtilService,
         private bookService: BookLibraryService,
         private alertCtrl: AlertController,
         private ref: ChangeDetectorRef,
+        private translate: TranslateService
     ) { }
 
     ngOnInit() {
         this.books = this.navParams.get('books');
         this.type = this.navParams.get('type');
         if (this.type === 'borrow') {
-            this.title = this.languageContent.borrowRequest;
+            // this.title = this.languageContent.borrowRequest;
+            this.translate.get('bookLibrary.borrowRequest').subscribe((title) => {
+                this.title = title;
+            });
             this.showBorrow = true;
             this.showPayback = false;
             this.showCancelBook = false;
         } else if (this.type === 'payback') {
-            this.title = this.languageContent.paybackRequest;
+            // this.title = this.languageContent.paybackRequest;
+            this.translate.get('bookLibrary.paybackRequest').subscribe((title) => {
+                this.title = title;
+            });
             this.showBorrow = false;
             this.showPayback = true;
             this.showCancelBook = false;
         } else if (this.type === 'cancelbook') {
-            this.title = this.languageContent.cancelBook;
+            // this.title = this.languageContent.cancelBook;
+            this.translate.get('bookLibrary.booked').subscribe((title) => {
+                this.title = title;
+            });
             this.showBorrow = false;
             this.showPayback = false;
             this.showCancelBook = true;
         }
+        else if (this.type === 'xujie') {
+            // this.title = this.languageContent.cancelBook;
+            this.translate.get('bookLibrary.borrowed_books').subscribe((title) => {
+                this.title = title;
+            });
+            this.showBorrow = false;
+            this.showPayback = false;
+            this.showCancelBook = false;
+            this.showXuejie = true;
+            this.showPayBackDate = true;
+
+        }
         if (this.books) {
             this.userListAfterTransform = this.transformUserList(this.books);
         }
+
+        this.translate.get(['bookLibrary.borrowSuc', 'bookLibrary.borrowFail', 'bookLibrary.cancelBookSuc', 'bookLibrary.cancelBookFail',
+            'bookLibrary.paybackSuc', 'bookLibrary.paybackFail', 'bookLibrary.renewSuc', 'bookLibrary.renewFail']).subscribe((res) => {
+                this.translateText = res;
+                console.log(this.translateText);
+            });
     }
 
     transformUserList(books: any[]) {
@@ -80,27 +113,28 @@ export class BorrowRequestComponent implements OnInit {
     async borrowConfirm() {
         try {
             await this.bookService.approveBorrowBooks(this.selectIDs);
-            this.showInfo('借阅成功!');
+            this.showInfo(this.translateText['bookLibrary.borrowSuc']);
             this.removeItemFromLocalList(this.selectIDs);
             this.userListAfterTransform = this.transformUserList(this.books);
             this.selectIDs = [];
         }
         catch (err) {
-            this.showError('借阅失败! ' + err);
+            this.showError(this.translateText['bookLibrary.borrowFail'] + err);
         }
+        // console.log(this.translateText['bookLibrary.borrowFail']);
     }
 
     // 取消预约
     async cancelBook() {
         try {
             await this.bookService.cancelBook(this.selectIDs);
-            this.showInfo('取消预约成功!');
+            this.showInfo(this.translateText['bookLibrary.cancelBookSuc']);
             this.removeItemFromLocalList(this.selectIDs);
             this.userListAfterTransform = this.transformUserList(this.books);
             this.selectIDs = [];
         }
         catch (err) {
-            this.showError('取消预约失败! ' + err);
+            this.showError(this.translateText['bookLibrary.cancelBookFail'] + err);
         }
     }
 
@@ -108,13 +142,26 @@ export class BorrowRequestComponent implements OnInit {
     async paybackConfirm() {
         try {
             await this.bookService.payback(this.selectIDs);
-            this.showInfo('还书成功!');
+            this.showInfo(this.translateText['bookLibrary.paybackSuc']);
             this.removeItemFromLocalList(this.selectIDs);
             this.userListAfterTransform = this.transformUserList(this.books);
             this.selectIDs = [];
         }
         catch (err) {
-            this.showError('还书失败! ' + err);
+            this.showError(this.translateText['bookLibrary.paybackFail'] + err);
+        }
+    }
+
+    //续借
+    async xujie() {
+        try {
+            await this.bookService.renewBooks(this.selectIDs);
+            this.showInfo(this.translateText['bookLibrary.renewSuc']);
+            // this.removeItemFromLocalList(this.selectIDs);
+            // this.userListAfterTransform = this.transformUserList(this.books);
+            this.selectIDs = [];
+        } catch (err) {
+            this.showError(this.translateText['bookLibrary.renewFail'] + err);
         }
     }
 

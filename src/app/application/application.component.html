@@ -1,10 +1,10 @@
 <ion-header>
   <ion-navbar>
     <ion-buttons end>
-      <button ion-button (click)="showEditBtn()" *ngIf="!showBtn">{{languageContent.edit}}</button>
-      <button ion-button (click)="hideEditBtn()" *ngIf="showBtn">{{languageContent.done}}</button>
+      <button ion-button (click)="showEditBtn()" *ngIf="!showBtn">{{'edit' | translate }}</button>
+      <button ion-button (click)="hideEditBtn()" *ngIf="showBtn">{{'done' | translate }}</button>
     </ion-buttons>
-    <ion-title>{{languageContent.title}}</ion-title>
+    <ion-title>{{'applicationTitle' | translate }}</ion-title>
   </ion-navbar>
 </ion-header>
 <ion-content no-bounce>
@@ -15,7 +15,7 @@
   </div>
   <ion-list no-lines>
     <button ion-item (click)="goToMorePage()">
-    {{languageContent.more}}
+    {{'more' | translate }}
   </button>
   </ion-list>
 </ion-content>

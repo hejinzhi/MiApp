@@ -22,12 +22,9 @@ export class BookListComponent {
         this.addBookQty = 1;
     }
 
-    ionViewDidLoad() {
-        console.log('book list did load')
-    }
+
 
     ionViewWillEnter() {
-        console.log('book list will enter')
         this.addBookQty = 1;
     }
 

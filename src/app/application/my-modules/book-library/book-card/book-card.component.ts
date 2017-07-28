@@ -7,8 +7,10 @@ import { Observable } from 'rxjs/Rx';
 })
 export class BookCardComponent implements OnInit {
     @Input() bookList: any;
+    @Input() renewFlag: boolean; // 是否续借调用
     @Output() onSelect = new EventEmitter();  // 选中时把id emit出去
     @Output() onUnselect = new EventEmitter(); // 不选中时把id emit出去
+    @Input() showPayBackDate: boolean = false;  // 是否显示“应归还时间”
     selectedBorrowId: number[] = []; // 用来记录哪些记录被选中
     selectedAllFlag: boolean; // 是否全选
 
@@ -16,7 +18,7 @@ export class BookCardComponent implements OnInit {
     constructor() { }
 
     ngOnInit() {
-        // this.bookList.BOOKS.forEach((item: any) => {
+        // this.bookList.BOOKS.forEach((item: any) => { 
         //     item.selectItem = false;
         // })   
     }
@@ -58,7 +60,15 @@ export class BookCardComponent implements OnInit {
         } else {
             this.selectedAllFlag = true;
             this.bookList.BOOKS.forEach((item: any) => {
-                item.selectItem = true;
+                if (this.renewFlag) {
+                    if (item.RENEW_FLAG === 'Y') { }
+                    else {
+                        item.selectItem = true;
+                    }
+                }
+                else {
+                    item.selectItem = true;
+                }
             });
         }
     }
