@@ -169,6 +169,11 @@ export class BookLibraryService {
         return this.myHttp.post(BookLibraryConfig.paybackUrl, { borrowID: ids });
     }
 
+    // 续借
+    renewBooks(ids: number[]) {
+        return this.myHttp.post(BookLibraryConfig.renewBooksUrl, { borrowID: ids });
+    }
+
     // 取消预约
     cancelBook(ids: number[]) {
         return this.myHttp.post(BookLibraryConfig.cancelBookUrl, { borrowID: ids });
