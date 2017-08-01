@@ -1,10 +1,11 @@
 import { Component, OnInit, ChangeDetectorRef, ViewChild } from '@angular/core';
 import { Subscription } from 'rxjs/Rx';
-import { NavParams, NavController, Events, Content, Platform } from 'ionic-angular';
+import { NavParams, NavController, Events, Content, Platform, ToastController } from 'ionic-angular';
 import { Camera, CameraOptions } from '@ionic-native/camera';
 import { Keyboard } from '@ionic-native/keyboard';
 import { Geolocation } from '@ionic-native/geolocation';
 import { Http } from '@angular/http';
+import { Media, MediaObject } from '@ionic-native/media';
 
 import { MapComponent } from '../map/map.component';
 
@@ -51,6 +52,13 @@ export class DialogueComponent implements OnInit {
     // pos: number[] = [113.200585, 22.889573];
     addCtrl: string = 'N';
 
+    audioRecorderAPI = (<any>window).plugins ? (<any>window).plugins.audioRecorderAPI || null : null;
+    isrec: boolean = false;
+    isvoice: boolean = false;
+    recvoicetime: number;
+    endrcevoicetime: number;
+    openvoiceflag: boolean = false;
+    voiceflagdesc: string='按住 說話';
 
     constructor(private messageservice: MessageService,
         public params: NavParams,
@@ -63,7 +71,9 @@ export class DialogueComponent implements OnInit {
         private databaseService: DatabaseService,
         private geolocation: Geolocation,
         public navCtrl: NavController,
-        private http: Http
+        private http: Http,
+        private media: Media,
+        public toastCtrl: ToastController
     ) {
 
         this.userName = params.get('fromUserName');
@@ -168,14 +178,15 @@ export class DialogueComponent implements OnInit {
         this.onPlus = false;
         if (/Android [4-7]/.test(navigator.appVersion)) {
             window.addEventListener("resize", function () {
-              let tagName = document.activeElement.tagName;
-                if (tagName == "INPUT" || tagName == "TEXTAREA" || tagName == "DIV") {
+                let tagName = document.activeElement.tagName;
+                if (tagName == "INPUT" || tagName == "TEXTAREA") {
                     window.setTimeout(function () {
                         document.activeElement.scrollIntoView();
                     }, 0);
                 }
             })
-            this.scroll_down();
+
+            // this.scroll_down();
 
             this.onShowSubscription = this.keyboard.onKeyboardShow().subscribe(() => {
                 setTimeout(() => {
@@ -242,19 +253,23 @@ export class DialogueComponent implements OnInit {
 
     }
 
-    //type: 1是文字，2是圖片
-    async sendMessage(type: number, content: string, extra?: any, childType?: any, imageHeight?: number, imageWidth?: number) {
+    //type: 1是文字，2是圖片,3是語音
+    async sendMessage(type: number, content: string, extra?: any, childType?: any, imageHeight?: number, imageWidth?: number, duration?: number) {
         let contentType: string;
         let that = this;
         let _extra;
+        // let _duration;
 
         if (type === 1) {
             contentType = "text";
         } else if (type === 2) {
             contentType = "image";
+        } else if (type === 3) {
+            contentType = "voice";
+            // let res = await this.jmessageservice.sendSingleVoiceMessage(this.userName, content);
+            // _duration = JSON.parse(res).content.duration;
         }
 
-        // let history = this.messageservice.history;
         let msg = {
             toUserName: this.userName,
             fromUserName: this.userinfo.username,
@@ -266,10 +281,13 @@ export class DialogueComponent implements OnInit {
             extra: extra ? JSON.parse(extra) : '',
             childType: childType,
             imageHeight: imageHeight,
-            imageWidth: imageWidth
+            imageWidth: imageWidth,
+            duration: Math.ceil(duration / 1000),
+            vounread: 'N'
         };
+
         this.getNickNameAndAvatar(msg);
-        await this.databaseService.addMessage(msg.toUserName, msg.fromUserName, this.userinfo.username, msg.content, msg.contentType, msg.time, msg.type, msg.unread, extra ? JSON.stringify(msg.extra) : '', childType, imageHeight, imageWidth);
+        await this.databaseService.addMessage(msg.toUserName, msg.fromUserName, this.userinfo.username, msg.content, msg.contentType, msg.time, msg.type, msg.unread, extra ? JSON.stringify(msg.extra) : '', childType, imageHeight, imageWidth, duration, msg.vounread);
 
         if (type === 1) {
             if (extra) {
@@ -282,6 +300,10 @@ export class DialogueComponent implements OnInit {
         else if (type === 2) {
             this.jmessageservice.sendSingleImageMessage(this.userName, content);
         }
+        else if (type === 3) {
+            this.jmessageservice.sendSingleVoiceMessage(this.userName, content);
+        }
+
         this.list.push(msg)
         this.input_text = '';
         setTimeout(function () {
@@ -333,7 +355,8 @@ export class DialogueComponent implements OnInit {
                     let addressresult: any = await this.httpGet('http://api.map.baidu.com/geocoder/v2/?callback=renderReverse&location=' + changelatitude + ',' + changelongitude + '&output=json&pois=1&ak=GTN4sZg5bVt9b7Aa9p37nSoDT4FOFUFv&mcode=F0:17:9A:F1:53:94:B3:28:CB:57:BA:47:EC:1F:C5:A3:7A:92:F6:94;io.ionic.starter')
                     let result = JSON.parse(addressresult._body.substring(29).slice(0, -1)).result;
                     let address = result.formatted_address + result.sematic_description;
-                    this.sendMessage(1, '[' + address + ']', JSON.stringify(extra), 'location');
+                    await this.sendMessage(1, '[' + address + ']', JSON.stringify(extra), 'location');
+                    this.ref.detectChanges();
                 }
                 catch (err) {
                     console.log(err);
@@ -382,5 +405,117 @@ export class DialogueComponent implements OnInit {
 
     openMap(content: string) {
         this.navCtrl.push(MapComponent, content);
+    }
+
+    onvoice() {
+        this.isvoice = !this.isvoice;
+    }
+
+    rec_voice() {
+        this.isrec = true;
+        this.voiceflagdesc='鬆開 結束';
+        // console.log(this.isrec, 'isrec');
+        this.recvoicetime = +new Date();
+        this.audioRecorderAPI.record((msg: any) => {
+            this.isrec = false;
+            this.voiceflagdesc='按住 說話';
+            // console.log('ok: 1' + msg);
+        }, (msg: any) => {
+            // failed 
+            this.isrec = false;
+            this.voiceflagdesc='按住 說話';
+            // console.log('ko: 1' + msg);
+        }, 90); // record 30 seconds 
+    }
+
+    endrce_voice() {
+        // console.log('touchend');
+        if (this.isrec) {
+            this.isrec = false;
+            this.voiceflagdesc='按住 說話';
+            this.audioRecorderAPI.stop(async (file: any) => {
+                this.endrcevoicetime = +new Date();
+                let duration = this.endrcevoicetime - this.recvoicetime;
+                console.log('ok: 2' + file);
+                await this.sendMessage(3, file, '', '', null, null, duration);
+                this.ref.detectChanges();
+            }, (err: any) => {
+                // console.log('ko: 2' + err);
+            })
+        } else {
+            let toast = this.toastCtrl.create({
+                message: '說話時間太短',
+                duration: 2000,
+                position: 'middle'
+            });
+
+            toast.present(toast);
+        }
+    }
+
+    async  openvoice(item: any) {
+        const file: MediaObject = this.media.create(item.content);
+        file.onStatusUpdate.subscribe((status) => {
+            if (status === 4) {
+                this.openvoiceflag = false;
+                this.selectable = null;
+                let voice = document.getElementsByClassName('voice_play');
+                if (voice[0]) {
+                    voice[0].setAttribute('class', 'voice');
+                }
+                this.ref.detectChanges();
+            }
+        }); // fires when file status changes
+        // file.onSuccess.subscribe(() => { console.log(file.getDuration(), 456); console.log('Action is successful') });
+        file.onError.subscribe(error => console.log('Error!', error));
+
+        if (!this.openvoiceflag) {
+            file.play();
+            this.openvoiceflag = true;
+            await this.databaseService.setvounreadByID(item.id);
+            if (item.vounread = 'Y') {
+                for (let i = 0; i < this.list.length; i++) {
+                    if (this.list[i].id === item.id) {
+                        this.list[i].vounread = 'N';
+                    }
+                }
+            }
+        }
+    }
+    getBlank(duration: number) {
+        if (duration) {
+            if (duration <= 1) {
+                return null;
+            } else if (duration > 1 && duration <= 2) {
+                return 'voiceblank1';
+            } else if (duration > 2 && duration <= 3) {
+                return 'voiceblank2';
+            } else if (duration > 3 && duration <= 4) {
+                return 'voiceblank3';
+            } else if (duration > 4 && duration <= 5) {
+                return 'voiceblank4';
+            } else if (duration > 5 && duration <= 6) {
+                return 'voiceblank5';
+            } else if (duration > 6 && duration <= 7) {
+                return 'voiceblank6';
+            } else if (duration > 7 && duration <= 8) {
+                return 'voiceblank7';
+            } else if (duration > 8 && duration <= 9) {
+                return 'voiceblank8';
+            } else if (duration > 9 && duration <= 10) {
+                return 'voiceblank9';
+            } else if (duration > 10 && duration <= 11) {
+                return 'voiceblank10';
+            } else if (duration > 11 && duration <= 12) {
+                return 'voiceblank11';
+            } else if (duration > 12 && duration <= 13) {
+                return 'voiceblank12';
+            } else if (duration > 13 && duration <= 14) {
+                return 'voiceblank13';
+            } else if (duration > 14) {
+                return 'voiceblank14';
+            }
+        }
+        return '';
     }
 }

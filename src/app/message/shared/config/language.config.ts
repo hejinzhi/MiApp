@@ -2,7 +2,8 @@ export class LanguageConfig {
   static MessageComponent = {
     traditional_Chinese: {
       title: '消息',
-      messagetype: '圖片',
+      messagetype_image: '圖片',
+      messagetype_voice: '語音',
       delete: '删除',
       deleteMessageAlertTitle: '你確認刪除與該用戶交互的記錄嗎?',
       cancel: '取消',
@@ -11,7 +12,8 @@ export class LanguageConfig {
 
     simple_Chinese: {
       title: '消息',
-      messagetype: '图片',
+      messagetype_image: '图片',
+      messagetype_voice: '语音',
       delete: '刪除',
       deleteMessageAlertTitle: '你确认删除与该用户交互的记录吗?',
       cancel: '取消',
