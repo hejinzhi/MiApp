@@ -29,19 +29,27 @@
               imageViewer>
           </ng-template>
           <ng-template [ngSwitchCase]="'voice'">
-             <button ion-button (click)="openvoice(item.content)">播放語音</button> 
+            <div class="msg" (tap)="openvoiceflag===false?selectable=i:'';openvoice(item);">
+              <span [ngClass]="item.toUserName === userinfo.username ? ' arrow_l_int' : ' arrow_r_int'"></span>
+              <span [ngClass]="item.toUserName === userinfo.username ? ' arrow_l_out' : ' arrow_r_out'"></span>
+              <div class="voice" [class.voice_play]="selectable === i" ></div>   
+              <div [ngClass]="getBlank(item.duration)"></div>       
+            </div>
+            <div class="voicemark"><div class="voiceunread" *ngIf="item.vounread==='Y'"></div><span class="voicetime">{{item.duration+'"'}}</span></div>
           </ng-template>
-          <div class="clearfix"></div>
+         <div class="clearfix"></div>
         </div>
       </div>
     </div>
   </div>
   <div class="input" id="input" [ngClass]="onPlus?'up':'down'" *ngIf="plf === 'android' ">
     <div class="input_layout">
-      <span class="iconfontyyy input_icon voice" (press)="rec_voice()" (touchend)="endrce_voice()">&#xe68b;</span>
+      <span *ngIf="!isvoice" class="iconfontyyy input_icon voice" (tap)="onvoice()">&#xe68b;</span>
+      <span *ngIf="isvoice" class="iconfontyyy input_icon voice" (tap)="onvoice()">&#xe611;</span>
       <span class="iconfontyyy input_icon face">&#xe61e;</span>
       <span class="iconfontyyy input_icon plus" *ngIf="!input_text" (tap)="clickPlus()">&#xe649;</span>
-      <input class="input_text" [(ngModel)]="input_text" name="input_text" (focus)="isPlus()">
+      <input *ngIf="!isvoice" class="input_text" [(ngModel)]="input_text" name="input_text" (focus)="isPlus()">
+      <button *ngIf="isvoice" class="input_voice" (press)="rec_voice()" (touchend)="endrce_voice()" [class.isrec]="isrec==true">{{voiceflagdesc}}</button>
       <div *ngIf="input_text" class="send" (tap)="sendMessage(1,input_text)" tappable>發送</div>
     </div>
     <div class="button-bar" *ngIf="onPlus">

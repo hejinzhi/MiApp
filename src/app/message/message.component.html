@@ -45,7 +45,10 @@
           <p class="msg" [innerHTML]="item.content | sgChineseConv"></p>
         </ng-template>
         <ng-template [ngSwitchCase]="'image'">
-          <p>[{{languageContent.messagetype}}]</p>
+          <p>[{{languageContent.messagetype_image}}]</p>
+        </ng-template>
+        <ng-template [ngSwitchCase]="'voice'">
+          <p>[{{languageContent.messagetype_voice}}]</p>
         </ng-template>
         <ion-note item-right>{{item.timedesc | sgChineseConv}}</ion-note>
       </ion-item>
@@ -58,7 +61,7 @@
       </ion-item-options>
     </ion-item-sliding>
   </ion-list>
-  <button ion-button (click)="sendSingleMsg()">发送</button> 
+  <!--<button ion-button (click)="sendSingleMsg()">发送</button> -->
   <!--<button ion-button (click)="deleteAllMsgs()">删除</button>-->
   <!--<button ion-button (click)="showMap()">顯示地圖</button>
   <div myBMap id="allmap" [pos]="pos" ></div>-->
