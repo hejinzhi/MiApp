@@ -40,6 +40,7 @@ $colors: ( primary: #387ef5, secondary: #32db64, danger: #f53d3d, light: #f4f4f4
 .emoji {
   display: inline-block;
 }
+
 .icon-ng2_em_\+1 {
   background-image: url("../assets/img/ng2-emoji.png");
   background-position: -844px -384px;
@@ -5465,7 +5466,10 @@ $colors: ( primary: #387ef5, secondary: #32db64, danger: #f53d3d, light: #f4f4f4
 .icon-ng2_em_zzz {
   background-position: -448px -934px;
 }
+
+
 /* 定義阿里圖庫 */
+
 @font-face {
   font-family: 'iconfontyyy';
   /* project id 234366 */
@@ -5484,21 +5488,21 @@ $colors: ( primary: #387ef5, secondary: #32db64, danger: #f53d3d, light: #f4f4f4
   -webkit-text-stroke-width: 0.2px;
   -moz-osx-font-smoothing: grayscale;
 }
+
 // 定义头像大小的变量
 $headImgSize: 125px;
 $headImgSize1: 88px;
 $headImgSize3: 150px; // 定义字体
-
 ion-alert,
 ion-content,
 ion-header,
 ion-list,
 ion-nav,
 ion-picker-cmp {
-  font-family: Arial,"Microsoft Yahei";
+  font-family: Arial, "Microsoft Yahei";
 }
-// 定义表单颜色
 
+// 定义表单颜色
 .alert ion-label {
   font-size: 50%;
   color: red!important;
@@ -5511,8 +5515,8 @@ ion-picker-cmp {
 .has-success ion-label {
   color: #000!important;
 }
-//重设select宽度样式
 
+//重设select宽度样式
 ion-select {
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -5523,16 +5527,13 @@ ion-select {
 
 ion-alert div.alert-wrapper {
   min-width: 300px;
-
   .alert-radio-group {
     max-height: 380px;
   }
-
   .alert-button-group button {
     border-top: 1px solid #dbdbdf;
     border-right: 1px solid #dbdbdf;
   }
-
   .button-inner {
     color: #000;
   }
@@ -5540,16 +5541,13 @@ ion-alert div.alert-wrapper {
 
 ion-picker-cmp .picker-wrapper {
   flex-direction: column-reverse;
-
   .picker-toolbar-button {
     text-align: center;
     border-top: 1px solid #dbdbdf;
     border-left: 1px solid #dbdbdf;
-
     .button-inner {
       color: #000;
     }
-
     &.picker-toolbar-cancel {
       border-left: none;
     }
@@ -5559,14 +5557,14 @@ ion-picker-cmp .picker-wrapper {
 ion-app .alert-ios .alert-wrapper {
   background-color: #fff;
 }
-// 考勤模块的
 
+// 考勤模块的
 .myForm.auto {
   background-color: lighten(#CFCFD1, 17%);
   color: #8B8B8B;
 }
 
-.list-ios > .item-block:first-child {
+.list-ios>.item-block:first-child {
   border-top: 1px solid #c8c7cc!important;
 }
 
@@ -5574,13 +5572,13 @@ ion-app .alert-ios .alert-wrapper {
   border-bottom: 1px solid #c8c7cc!important;
 }
 
-.list-ios > .item-block:last-child,
-.list-ios > .item-wrapper:last-child .item-block {
+.list-ios>.item-block:last-child,
+.list-ios>.item-wrapper:last-child .item-block {
   border-bottom: 1px solid #c8c7cc!important;
 }
 
-.list-ios > .item-block:last-child .item-inner,
-.list-ios > .item-wrapper:last-child .item-block .item-inner {
+.list-ios>.item-block:last-child .item-inner,
+.list-ios>.item-wrapper:last-child .item-block .item-inner {
   border-bottom: 0!important;
 }
 
@@ -5602,9 +5600,12 @@ ion-app .alert-ios .alert-wrapper {
 .alert-ios .alert-input {
   border: 1px solid #ccc!important;
 }
+
+
 /*
 定义表格样式
  */
+
 .table {
   width: 94%;
   max-width: 150%;
@@ -5618,22 +5619,22 @@ ion-app .alert-ios .alert-wrapper {
   border: 1px solid #ddd;
 }
 
-.table-bordered > tbody > tr > td,
-.table-bordered > tbody > tr > th,
-.table-bordered > tfoot > tr > td,
-.table-bordered > tfoot > tr > th,
-.table-bordered > thead > tr > td,
-.table-bordered > thead > tr > th {
+.table-bordered>tbody>tr>td,
+.table-bordered>tbody>tr>th,
+.table-bordered>tfoot>tr>td,
+.table-bordered>tfoot>tr>th,
+.table-bordered>thead>tr>td,
+.table-bordered>thead>tr>th {
   border: 1px solid #ddd;
   text-align: center;
 }
 
-.table > tbody > tr > td,
-.table > tbody > tr > th,
-.table > tfoot > tr > td,
-.table > tfoot > tr > th,
-.table > thead > tr > td,
-.table > thead > tr > th {
+.table>tbody>tr>td,
+.table>tbody>tr>th,
+.table>tfoot>tr>td,
+.table>tfoot>tr>th,
+.table>thead>tr>td,
+.table>thead>tr>th {
   padding: 8px;
   line-height: 1.42857143;
   vertical-align: top;
@@ -5645,12 +5646,12 @@ ion-app .alert-ios .alert-wrapper {
   overflow-x: scroll;
 }
 
-.table > caption+thead > tr:first-child > td,
-.table > caption+thead > tr:first-child > th,
-.table > colgroup+thead > tr:first-child > td,
-.table > colgroup+thead > tr:first-child > th,
-.table > thead:first-child > tr:first-child > td,
-.table > thead:first-child > tr:first-child > th {
+.table>caption+thead>tr:first-child>td,
+.table>caption+thead>tr:first-child>th,
+.table>colgroup+thead>tr:first-child>td,
+.table>colgroup+thead>tr:first-child>th,
+.table>thead:first-child>tr:first-child>td,
+.table>thead:first-child>tr:first-child>th {
   border-top: 0;
 }
 
@@ -5662,7 +5663,7 @@ ion-app .alert-ios .alert-wrapper {
   font-weight: bold;
 }
 
-.table-striped > tbody > tr:nth-of-type(odd) {
+.table-striped>tbody>tr:nth-of-type(odd) {
   background-color: #f9f9f9;
 }
 
@@ -5673,7 +5674,7 @@ caption {
   text-align: center;
 }
 
-.table > thead > tr > th {
+.table>thead>tr>th {
   vertical-align: bottom;
   border-bottom: 2px solid #ddd;
 }
@@ -5686,9 +5687,10 @@ td,
 th {
   padding: 0;
 }
-.chart{
+
+.chart {
   width: 100%;
-  height:47%;
+  height: 47%;
   min-height: 250px;
   margin-bottom: 5%;
 }
