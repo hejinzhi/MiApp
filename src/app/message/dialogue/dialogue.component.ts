@@ -23,9 +23,14 @@ import { KeyboardAttachDirective } from '../shared/directive/KeyboardAttachDirec
 
 export class DialogueComponent implements OnInit {
     @ViewChild(Content) content: Content;
+    @ViewChild('paramss') stickparams: any;
+    paramss: string;
     languageType: string = localStorage.getItem('languageType');
     languageContent = LanguageConfig.DialogueComponent[this.languageType];
     list: any;
+    listlength: number;
+    listpage: number = 1;
+    listtotal: any;
     input_text: string;
     userinfo: any;
     onPlus: boolean = false;
@@ -36,9 +41,10 @@ export class DialogueComponent implements OnInit {
     fromUserAvatarSrc: string;
     unreadCount: number; //未读消息数，如果大于0，退出dialogue页面时把未读消息更新为已读。否则不更新
 
-    toUserName: string;
-    toUserNickName: string;
-    toUserAvatarSrc: string;
+    // toUserName: string;
+    // toUserNickName: string;
+    // toUserAvatarSrc: string;
+    userSrc: string;
 
     showExtra: number;
     lastEditRange: any;
@@ -58,7 +64,9 @@ export class DialogueComponent implements OnInit {
     recvoicetime: number;
     endrcevoicetime: number;
     openvoiceflag: boolean = false;
-    voiceflagdesc: string='按住 說話';
+    voiceflagdesc: string = '按住 說話';
+
+    istop: boolean = false;
 
     constructor(private messageservice: MessageService,
         public params: NavParams,
@@ -83,7 +91,7 @@ export class DialogueComponent implements OnInit {
         this.unreadCount = params.get('unreadCount');
 
         // 这里的toUserName一般是指当前登陆人
-        this.toUserName = params.get('toUserName');
+        // this.toUserName = params.get('toUserName');
     }
 
     async ngOnInit() {
@@ -99,10 +107,9 @@ export class DialogueComponent implements OnInit {
         // document.onselectionchange = () => this.getPosition();
 
         // 获取当前登录人的昵称和头像
-        let res = await this.messageservice.getUserAvatar(this.toUserName)
-        let toUserObj = res.json();
-        this.toUserNickName = toUserObj.NICK_NAME;
-        this.toUserAvatarSrc = toUserObj.AVATAR_URL;
+        let res = await this.messageservice.getUserAvatar(this.userinfo.username)
+        let UserObj = res.json();
+        this.userSrc = UserObj.AVATAR_URL;
         await this.loadMessage();
     }
 
@@ -121,7 +128,9 @@ export class DialogueComponent implements OnInit {
                 data.forEach((value, index) => {
                     this.getNickNameAndAvatar(value);
                 });
-                this.list = data;
+                this.listtotal = data;
+                this.listlength = data.length;
+                this.list = this.listtotal.slice(-20);
             }
             this.ref.detectChanges();
             this.scroll_down();
@@ -130,10 +139,10 @@ export class DialogueComponent implements OnInit {
         await this.messageservice.setUnreadToZeroByUserName(this.userinfo.username, this.userName);
         this.jmessageservice.enterSingleConversation(this.userName);
 
-        // this.scroll_down();
-        if (this.plf === 'ios') {
-            this.scroll_down();
-        }
+        this.scroll_down();
+        // if (this.plf === 'ios') {
+        //     this.scroll_down();
+        // }
 
     }
 
@@ -209,10 +218,12 @@ export class DialogueComponent implements OnInit {
 
     async loadMessage() {
         let data: any[] = await this.messageservice.getMessagesByUsername(this.userinfo.username, this.userName, this.userinfo.username);
-        data.forEach((value, index) => {
-            this.getNickNameAndAvatar(value);
-        });
-        this.list = data;
+        /*  data.forEach((value, index) => {
+              this.getNickNameAndAvatar(value);
+          });*/
+        this.listtotal = data;
+        this.listlength = data.length;
+        this.list = this.listtotal.slice(-20);
     };
 
     async getNickNameAndAvatar(targetUser: any) {
@@ -310,6 +321,22 @@ export class DialogueComponent implements OnInit {
             that.scroll_down();
         }, 0);
 
+    }
+
+    doRefresh(event: any) {
+        this.listpage++;
+        this.list = this.listtotal.slice(-20 * this.listpage);
+        event.complete();
+    }
+
+    doscroll(event: any) {
+        if (event.srcElement.scrollTop <= 50) {
+            if (this.listpage * 20 < this.listlength) {
+                this.istop = true;
+            }
+        } else {
+            this.istop = false;
+        }
     }
 
     getPhoto(type: number) {
@@ -413,17 +440,17 @@ export class DialogueComponent implements OnInit {
 
     rec_voice() {
         this.isrec = true;
-        this.voiceflagdesc='鬆開 結束';
+        this.voiceflagdesc = '鬆開 結束';
         // console.log(this.isrec, 'isrec');
         this.recvoicetime = +new Date();
         this.audioRecorderAPI.record((msg: any) => {
             this.isrec = false;
-            this.voiceflagdesc='按住 說話';
+            this.voiceflagdesc = '按住 說話';
             // console.log('ok: 1' + msg);
         }, (msg: any) => {
             // failed 
             this.isrec = false;
-            this.voiceflagdesc='按住 說話';
+            this.voiceflagdesc = '按住 說話';
             // console.log('ko: 1' + msg);
         }, 90); // record 30 seconds 
     }
@@ -432,7 +459,7 @@ export class DialogueComponent implements OnInit {
         // console.log('touchend');
         if (this.isrec) {
             this.isrec = false;
-            this.voiceflagdesc='按住 說話';
+            this.voiceflagdesc = '按住 說話';
             this.audioRecorderAPI.stop(async (file: any) => {
                 this.endrcevoicetime = +new Date();
                 let duration = this.endrcevoicetime - this.recvoicetime;
