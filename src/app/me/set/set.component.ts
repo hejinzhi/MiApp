@@ -3,8 +3,9 @@ import { NavController, NavParams, AlertController, App, Platform, IonicPage } f
 
 import { LoginComponent } from '../../login/login.component';
 import { PatternLockComponent } from '../../login/pattern-lock/pattern-lock.component';
-import { JMessageService } from '../../core/services/jmessage.service'
-import { PluginService } from '../../core/services/plugin.service'
+import { JMessageService } from '../../core/services/jmessage.service';
+import { PluginService } from '../../core/services/plugin.service';
+import { TranslateService } from '@ngx-translate/core';
 
 import { LanguageConfig } from '../shared/config/language.config';
 
@@ -26,7 +27,8 @@ export class SetComponent {
     private jmessage: JMessageService,
     private plugin: PluginService,
     private app: App,
-    private platform: Platform
+    private platform: Platform,
+    private translate: TranslateService
   ) {
     if (this.platform.is('ios')) {
       this.plf = 'ios';
@@ -41,7 +43,7 @@ export class SetComponent {
   }
 
   changeFont() {
-    // localStorage.set('fontType','simple_Chinese');
+    let that = this;
     let alert = this.alertCtrl.create();
     alert.setTitle(this.languageContent.languageChangeAlertTitle);
     alert.addInput({
@@ -62,6 +64,11 @@ export class SetComponent {
       text: this.languageContent.confirm,
       handler: (data: string) => {
         localStorage.setItem('languageType', data);
+        if (data === 'simple_Chinese') {
+          this.translate.use('zh-CN');
+        } else {
+          this.translate.use('zh-TW');
+        }
         this.reStartApp();
       }
     });
@@ -125,7 +132,7 @@ export class SetComponent {
   removeAutoLogin() {
     let user = JSON.parse(localStorage.getItem('currentUser'));
     user.autoLogin = false;
-    localStorage.setItem('currentUser',JSON.stringify(user));
+    localStorage.setItem('currentUser', JSON.stringify(user));
   }
   exit() {
     let that = this;
