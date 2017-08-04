@@ -8,7 +8,7 @@
     <ion-refresher-content pullingIcon="arrow-dropdown" pullingText="Pull to refresh" refreshingSpinner="circles" refreshingText="Refreshing...">
     </ion-refresher-content>
   </ion-refresher>
-  <div #paramss class='msg-content' [ngClass]="{'up':onPlus && plf==='android','android-height': plf==='android'}" (tap)="isPlus()" (scroll)="doscroll($event)">
+  <div class='msg-content' [ngClass]="{'up':onPlus && plf==='android','android-height': plf==='android'}" (tap)="isPlus()" (scroll)="doscroll($event)">
     <div *ngFor="let item of list;let i=index ">
       <div class="msgarea">
         <div [ngClass]="item.toUserName === userinfo.username ? 'other' : 'me'" [ngSwitch]="item.contentType">
