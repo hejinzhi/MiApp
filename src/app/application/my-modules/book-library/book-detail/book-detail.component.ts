@@ -58,7 +58,7 @@ export class BookDetailComponent implements OnInit {
 
     showError(msg: string) {
         let confirm = this.alertCtrl.create({
-            title: this.translateTexts.bookLibrary.error,
+            title: this.translateTexts['bookLibrary.error'],
             subTitle: msg,
             buttons: ['OK']
         });
@@ -90,19 +90,19 @@ export class BookDetailComponent implements OnInit {
                 if (!scanRes.cancelled && scanRes.text.length === 13) {
                     let doubanRes = await this.bookService.getBookInfoFromDouban(scanRes.text);
                     if (doubanRes.json().code === 6000) {
-                        this.showError(this.translateTexts.bookLibrary.errorMsg1);
+                        this.showError(this.translateTexts['bookLibrary.errorMsg1']);
                     } else {
                         let book = this.bookService.transformBookInfo(doubanRes.json());
                         this.book = book;
                     }
                 } else {
-                    this.showError(this.translateTexts.bookLibrary.errorMsg2);
+                    this.showError(this.translateTexts['bookLibrary.errorMsg2']);
                 }
             } else {
-                this.showInfo(this.translateTexts.bookLibrary.successMsg1);
+                this.showInfo(this.translateTexts['bookLibrary.successMsg1']);
             }
         } catch (err) {
-            this.showError(this.translateTexts.bookLibrary.errorMsg3);
+            this.showError(this.translateTexts['bookLibrary.errorMsg3']);
         }
 
     }
@@ -110,10 +110,10 @@ export class BookDetailComponent implements OnInit {
     async borrowBook(isbn13: string) {
         try {
             await this.bookService.borrowBook(isbn13);
-            this.showInfo(this.translateTexts.bookLibrary.successMsg2);
+            this.showInfo(this.translateTexts['bookLibrary.successMsg2']);
         }
         catch (err) {
-            this.showError(this.translateTexts.bookLibrary.errorMsg4);
+            this.showError(this.translateTexts['bookLibrary.errorMsg4']);
         }
     }
 

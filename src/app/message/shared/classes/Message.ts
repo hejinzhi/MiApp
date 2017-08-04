@@ -8,6 +8,8 @@ export class Message {
     unread: boolean;
     imageHeight: string;
     imageWidth: string;
+    duration: string;
+    vounread: string;
 }
 
 export class NoticeContent {

@@ -45,7 +45,10 @@
           <p class="msg" [innerHTML]="item.content | sgChineseConv"></p>
         </ng-template>
         <ng-template [ngSwitchCase]="'image'">
-          <p>[{{languageContent.messagetype}}]</p>
+          <p>[{{languageContent.messagetype_image}}]</p>
+        </ng-template>
+        <ng-template [ngSwitchCase]="'voice'">
+          <p>[{{languageContent.messagetype_voice}}]</p>
         </ng-template>
         <ion-note item-right>{{item.timedesc | sgChineseConv}}</ion-note>
       </ion-item>

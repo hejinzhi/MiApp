@@ -12,6 +12,7 @@
 </ion-header>
 <ion-content>
   <div *ngFor="let books of userListAfterTransform">
-    <sg-book-card [bookList]="books" (onSelect)="onSelectItem($event)" (onUnselect)="onUnselectItem($event)" [showPayBackDate]="showPayBackDate"></sg-book-card>
+    <sg-book-card [bookList]="books" (onSelect)="onSelectItem($event)" (onUnselect)="onUnselectItem($event)" [showPayBackDate]="showPayBackDate"
+      [renewFlag]="showXuejie"></sg-book-card>
   </div>
 </ion-content>

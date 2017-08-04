@@ -144,6 +144,18 @@ export class JMessageService {
         });
     };
 
+   // 发送单聊语音
+    sendSingleVoiceMessage(username: string, fileUrl: string, appKey?: string): Promise<any> {
+        return new Promise((resolve, reject) => {
+            console.log(fileUrl+'  JMVOICE URL');
+            this.jmessagePlugin.sendSingleVoiceMessage(username, 'file://'+fileUrl, appKey, (suc: any) => {
+                resolve(suc);
+            }, (err: any) => {
+                reject(err);
+            })
+        });
+    };
+
     // 发送自定义消息
     sendSingleCusCustomMessage(username: string, jsonStr: any, appKey?: string): Promise<any> {
         return new Promise((resolve, reject) => {

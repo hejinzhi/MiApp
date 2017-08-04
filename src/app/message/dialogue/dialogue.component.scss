@@ -44,6 +44,28 @@ sg-dialogue {
       max-width: 65%;
       border-radius: 7px;
     }
+    .voicemark{
+      display: flex;
+      flex-direction:column;
+      position: relative;
+      height: 30px;
+      .voiceunread{
+       position: relative;
+      // align-self: flex-start;
+      width: 10px;
+      height: 10px;
+      background: red;
+      border-radius: 5px;
+      margin:0px 5px 0px 5px;
+      }
+      .voicetime{
+        // align-self:flex-end;
+      position: relative;
+      font-size: 12px;
+      margin:5px 5px 0px 5px;
+      bottom: 0px;
+    }
+   }
     .icon {
       width: 35px;
       height: 35px;
@@ -67,7 +89,19 @@ sg-dialogue {
           position: absolute;
           left: 100%;
         }
+        .voice{
+          transform: rotateY(180deg);
+          height: 16px;
+          width: 16px;
+          background-image: url('../assets/icon/voice.png');
+          background-size: 100% 100%;
+          background-repeat: no-repeat;
+          float: right;
+       }
       }
+     .voicemark{
+        float: right;
+     }
       .img_heng {
         background-color: #9fe757;
         float: right;
@@ -123,11 +157,22 @@ sg-dialogue {
           position: absolute;
           right: 98%;
         }
+        .voice{
+          height: 16px;
+          width: 16px;
+          background-image: url('../assets/icon/voice.png');
+          background-size: 100% 100%;
+          background-repeat: no-repeat;
+       }
+
+      }
+      .voicemark{
+        float: left;
       }
       .img_heng {
         background-color: #9fe757;
-        float: right;
-        margin-right: 10px;
+        float: left;
+        margin-left: 10px;
         //横屏
         height: 113px;
         max-width: 145px;
@@ -135,8 +180,8 @@ sg-dialogue {
       }
       .img_shu {
         background-color: #9fe757;
-        float: right;
-        margin-right: 10px;
+        float: left;
+        margin-left: 10px;
         // 竖屏
         height: auto;
         max-height: 150px;
@@ -144,8 +189,8 @@ sg-dialogue {
       }
       .img_fang {
         background-color: #9fe757;
-        float: right;
-        margin-right: 10px;
+        float: left;
+        margin-left: 10px;
         // 正方形
         height: 145px;
         width: 145px;
@@ -200,6 +245,23 @@ sg-dialogue {
         color: #000;
         border-radius: 6px;
       }
+      .input_voice{
+        border: 1px solid #c0c0c0;
+        text-indent: 5px;
+        margin-left: 50px;
+        margin-right: 120px;
+        vertical-align: middle;
+        line-height: 30px;
+        height: 30px;
+        width: 63%;
+        font-size: 18px;
+        color: #000;
+        background-color: #ededed;
+        border-radius: 6px;
+      }
+      .isrec{        
+        background-color: #c0c0c0;
+      }
       .send {
         background-color: #14b012;
         display: inline-block;
@@ -237,4 +299,90 @@ sg-dialogue {
       }
     }
   }
+ 
+  .voice_play{
+    -webkit-animation-name: voice-play; 
+    /*规定动画完成一个周期所花费的秒或毫秒。默认是 0*/
+    -webkit-animation-duration: 1000ms;
+    /*规定动画被播放的次数。默认是 1。 infinite(循环播放)*/
+    -webkit-animation-iteration-count: infinite;
+    /*动画切换的方式是一帧一帧的改变*/
+    -webkit-animation-timing-function: steps(1, start);
+    -moz-animation-name: voice-play;
+    -moz-animation-duration: 1000ms;
+    -moz-animation-iteration-count: infinite;
+    -moz-animation-timing-function: steps(1, start)
+  }
+
+   @-webkit-keyframes voice-play {
+        0% {
+            background-image: url('../assets/icon/voice.png');
+        }
+        33% {
+            background-image: url('../assets/icon/voice_1.png');
+        }
+        66% {
+            background-image: url('../assets/icon/voice_2.png');
+        }
+        100% {
+            background-image: url('../assets/icon/voice.png');
+        }
+    }
+    
+    @-moz-keyframes voice-play {
+        0% {
+            background-image: url('../assets/icon/voice.png');
+        }
+        33% {
+            background-image: url('../assets/icon/voice_1.png');
+        }
+        66% {
+            background-image: url('../assets/icon/voice_2.png');
+        }
+        100% {
+            background-image: url('../assets/icon/voice.png');
+        }
+    }
+  .voiceblank1{
+           width: 20px;
+   }
+  .voiceblank2{
+           width: 30px;
+   }
+  .voiceblank3{
+           width: 40px;
+   }
+  .voiceblank4{
+           width: 50px;
+   }
+  .voiceblank5{
+           width: 60px;
+   }
+  .voiceblank6{
+           width: 70px;
+   }
+  .voiceblank7{
+           width: 80px;
+   }
+  .voiceblank8{
+           width: 90px;
+   }
+  .voiceblank9{
+           width: 100px;
+   }
+  .voiceblank10{
+           width: 110px;
+   }
+  .voiceblank11{
+           width: 120px;
+   }
+  .voiceblank12{
+           width: 130px;
+   }
+  .voiceblank13{
+           width: 140px;
+   }
+  .voiceblank14{
+           width: 150px;
+   }
 }

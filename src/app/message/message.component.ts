@@ -79,6 +79,7 @@ export class MessageComponent implements OnInit {
 
       // 读取离线消息
       this.jmessageService.jmessageOffline = this.jmessageService.onSyncOfflineMessage().subscribe(async (res) => {
+        console.log(res, 444)
         for (let i = 0; i < res.messageList.length; i++) {
           if (this.plf === 'ios') {
             await this.handleReceiveMessageIos(res.messageList[i]);
@@ -97,7 +98,7 @@ export class MessageComponent implements OnInit {
 
       // 监听是否有消息推送过来
       this.jmessageService.jmessageHandler = this.jmessageService.onReceiveMessage().subscribe(async (res) => {
-        console.log(res);
+        console.log(555);
         let msg: any;
         if (this.plf === 'ios') {
           msg = await this.handleReceiveMessageIos(res);
@@ -116,11 +117,15 @@ export class MessageComponent implements OnInit {
   async handleReceiveMessageAndroid(res: any) {
     let _content: string;
     let child_type: string;
+    let vounread: string = 'N';
 
     if (res.contentType === 'text') {
       _content = res.content.text;
     } else if (res.contentType === 'image') {
       _content = res.content.localThumbnailPath;
+    } else if (res.contentType === 'voice') {
+      _content = res.content.local_path;
+      vounread = 'Y';
     }
 
     if (res.fromName === 'signlist' || res.fromName === 'news' || res.fromName === 'alert' || res.fromName === 'report') {
@@ -147,11 +152,13 @@ export class MessageComponent implements OnInit {
       type: this._type,
       unread: true,
       imageHeight: res.content.height,
-      imageWidth: res.content.width
+      imageWidth: res.content.width,
+      duration: res.content.duration,
+      vounread: vounread
     };
 
     await this.databaseService.addMessage(res.targetInfo.userName, res.fromName, this.userinfo.username, _content, res.contentType, res.createTimeInMillis, this._type, 'Y',
-      JSON.stringify(res.content.extras), child_type, res.content.height, res.content.width);
+      JSON.stringify(res.content.extras), child_type, res.content.height, res.content.width, res.content.duration, vounread);
 
     return msg;
   }
@@ -159,12 +166,17 @@ export class MessageComponent implements OnInit {
   async handleReceiveMessageIos(res: any) {
     let _content: string;
     let child_type: string;
+    let vounread: string = 'N';
     if (res.content.msg_type === 'text') {
       _content = res.content.msg_body.text;
     } else if (res.content.msg_type === 'image') {
       let tempStr: string = res.resourcePath;
       tempStr = tempStr.replace('large', 'thumb');
       _content = tempStr;
+    } else if (res.content.msg_type === 'voice') {
+      //要添加IOS聲音地址
+      // _content = res.content.msg_body.local_path;
+      vounread = 'Y';
     }
 
     if (res.content.from_id === 'signlist' || res.content.from_id === 'news' || res.content.from_id === 'alert' || res.content.from_id === 'report') {
@@ -190,16 +202,17 @@ export class MessageComponent implements OnInit {
       type: this._type,
       unread: true,
       imageHeight: res.content.msg_body.height,
-      imageWidth: res.content.msg_body.width
+      imageWidth: res.content.msg_body.width,
+      duration: res.content.msg_body.duration,
+      vounread: vounread
     };
 
     await this.databaseService.addMessage(res.content.target_id, res.content.from_id, this.userinfo.username, _content, res.content.msg_type, res.content.create_time, this._type, 'Y',
-      JSON.stringify(res.content.msg_body.extras), child_type, res.content.msg_body.height, res.content.msg_body.width);
+      JSON.stringify(res.content.msg_body.extras), child_type, res.content.msg_body.height, res.content.msg_body.width, res.content.msg_body.duration, vounread);
 
     return msg;
 
   }
-
 
 
   async refreshData() {
