@@ -16,6 +16,8 @@ import { LanguageConfig } from './shared/config/language.config';
 import { DatabaseService } from './shared/service/database.service';
 import { PluginService } from '../core/services/plugin.service';
 
+declare var window: any;
+
 @Component({
   selector: 'sg-message',
   templateUrl: 'message.component.html'
@@ -63,9 +65,9 @@ export class MessageComponent implements OnInit {
   }
 
   ionViewDidLeave() {
-    if (this.pluginService.isCordova()) {
-      this.jmessageService.jmessageOffline.unsubscribe();
-    }
+    // if (this.pluginService.isCordova()) {
+    //   this.jmessageService.jmessageOffline.unsubscribe();
+    // }
   }
 
   ngOnInit() {
@@ -78,32 +80,43 @@ export class MessageComponent implements OnInit {
       }
 
       // 读取离线消息
-      this.jmessageService.jmessageOffline = this.jmessageService.onSyncOfflineMessage().subscribe(async (res) => {
-        console.log(res, 444)
-        for (let i = 0; i < res.messageList.length; i++) {
-          if (this.plf === 'ios') {
-            await this.handleReceiveMessageIos(res.messageList[i]);
-          } else if (this.plf === 'android') {
-            await this.handleReceiveMessageAndroid(res.messageList[i]);
-          }
+      // this.jmessageService.jmessageOffline = this.jmessageService.onSyncOfflineMessage().subscribe(async (res) => {
+      //   console.log(res, 444)
+      //   for (let i = 0; i < res.messageList.length; i++) {
+      //     if (this.plf === 'ios') {
+      //       await this.handleReceiveMessageIos(res.messageList[i]);
+      //     } else if (this.plf === 'android') {
+      //       await this.handleReceiveMessageAndroid(res.messageList[i]);
+      //     }
 
-        }
-        // this.messageListItem = await this.messageService.getMessageHistory(this.userinfo.username, 'dialogue');
-        // this.noticeListItem = await this.messageService.getMessageHistory(this.userinfo.username, 'notice');
-        await this.refreshData();
-        this.ref.detectChanges();
-        this.events.publish('msg.onReceiveMessage');
-        this.events.publish('msg.onChangeTabBadge');
-      });
+      //   }
+      //   // this.messageListItem = await this.messageService.getMessageHistory(this.userinfo.username, 'dialogue');
+      //   // this.noticeListItem = await this.messageService.getMessageHistory(this.userinfo.username, 'notice');
+      //   await this.refreshData();
+      //   this.ref.detectChanges();
+      //   this.events.publish('msg.onReceiveMessage');
+      //   this.events.publish('msg.onChangeTabBadge');
+      // });
 
       // 监听是否有消息推送过来
-      this.jmessageService.jmessageHandler = this.jmessageService.onReceiveMessage().subscribe(async (res) => {
-        console.log(555);
+      // this.jmessageService.jmessageHandler = this.jmessageService.onReceiveMessage().subscribe(async (res) => {
+      //   console.log(555);
+      //   let msg: any;
+      //   if (this.plf === 'ios') {
+      //     msg = await this.handleReceiveMessageIos(res);
+      //   } else if (this.plf === 'android') {
+      //     msg = await this.handleReceiveMessageAndroid(res);
+      //   }
+      //   await this.refreshData();
+      //   this.ref.detectChanges();
+      //   this.events.publish('msg.onReceiveMessage', msg);
+      //   this.events.publish('msg.onChangeTabBadge');
+      // });
+      this.jmessageService.addReceiveMessageListener(async (res: any) => {
+        console.log(res);
         let msg: any;
-        if (this.plf === 'ios') {
-          msg = await this.handleReceiveMessageIos(res);
-        } else if (this.plf === 'android') {
-          msg = await this.handleReceiveMessageAndroid(res);
+        if (res.type === 'text') {
+          msg = await this.handleTextMessage(res);
         }
         await this.refreshData();
         this.ref.detectChanges();
@@ -112,6 +125,44 @@ export class MessageComponent implements OnInit {
       });
 
     }
+  }
+
+  async handleTextMessage(res: TextMessage) {
+    let _content: string = res.text;
+    let child_type: string;
+    let vounread: string = 'N';
+
+    if (res.target.username === 'signlist' || res.target.username === 'news' || res.target.username === 'alert' || res.target.username === 'report') {
+      this._type = 'notice';
+      // _content = res.text;
+
+    } else {
+      this._type = 'dialogue';
+    }
+
+    // if (typeof res.extras.members.type === "object" && !(res.content.extras.members.type instanceof Array)) {
+    //   child_type = res.content.extras.members.type.value;
+    // }
+
+    let msg: Message = {
+      toUserName: res.target.username,
+      fromUserName: res.from.username,
+      content: _content,
+      contentType: res.type,
+      time: res.createTime,
+      type: this._type,
+      unread: true,
+      imageHeight: '0',
+      imageWidth: '0',
+      duration: '0',
+      vounread: vounread
+    };
+    console.log(msg);
+
+    await this.databaseService.addMessage(msg.toUserName, msg.fromUserName, this.userinfo.username, _content, 'text', msg.time, this._type, 'Y',
+      JSON.stringify(res.extras), child_type, 0, 0, 0, vounread);
+
+    return msg;
   }
 
   async handleReceiveMessageAndroid(res: any) {
@@ -315,12 +366,14 @@ export class MessageComponent implements OnInit {
     // this.databaseService.getMessageList(this.userinfo.username, 'notice').then((data) => {
     //   console.log(data);
     //   console.log(JSON.parse(data[0].extra));
-    // });~
+    // });
 
     this.databaseService.getAllMessages().then(data => {
       console.log(data);
     });
 
+
+    // window.JMessage.logout();
     // this.messageListItem[0].unreadCount = 10;
 
   }
@@ -356,4 +409,33 @@ export class MessageComponent implements OnInit {
       console.log('Error getting location', error);
     });
   }
+}
+
+export class TextMessage {
+  createTime: number;
+  extras: object;
+  from: MessageTarget;
+  id: number;
+  target: MessageTarget;
+  text: string;
+  type: string;
+}
+
+export class MessageTarget {
+  address: string;
+  appKey: string;
+  avatarThumbPath: string;
+  birthday: number;
+  gender: string;
+  isFriend: boolean;
+  isInBlackList: boolean;
+  isNoDisturb: boolean;
+  nickname: string;
+  noteName: string;
+  noteText: string;
+  region: string;
+  signature: string;
+  type: string;
+  username: string;
+
 }

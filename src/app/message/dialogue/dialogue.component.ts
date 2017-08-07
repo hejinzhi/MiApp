@@ -58,7 +58,7 @@ export class DialogueComponent implements OnInit {
     recvoicetime: number;
     endrcevoicetime: number;
     openvoiceflag: boolean = false;
-    voiceflagdesc: string='按住 說話';
+    voiceflagdesc: string = '按住 說話';
 
     constructor(private messageservice: MessageService,
         public params: NavParams,
@@ -130,10 +130,9 @@ export class DialogueComponent implements OnInit {
         await this.messageservice.setUnreadToZeroByUserName(this.userinfo.username, this.userName);
         this.jmessageservice.enterSingleConversation(this.userName);
 
-        // this.scroll_down();
-        if (this.plf === 'ios') {
-            this.scroll_down();
-        }
+        // if (this.plf === 'ios') {
+        this.scroll_down();
+        // }
 
     }
 
@@ -413,17 +412,17 @@ export class DialogueComponent implements OnInit {
 
     rec_voice() {
         this.isrec = true;
-        this.voiceflagdesc='鬆開 結束';
+        this.voiceflagdesc = '鬆開 結束';
         // console.log(this.isrec, 'isrec');
         this.recvoicetime = +new Date();
         this.audioRecorderAPI.record((msg: any) => {
             this.isrec = false;
-            this.voiceflagdesc='按住 說話';
+            this.voiceflagdesc = '按住 說話';
             // console.log('ok: 1' + msg);
         }, (msg: any) => {
             // failed 
             this.isrec = false;
-            this.voiceflagdesc='按住 說話';
+            this.voiceflagdesc = '按住 說話';
             // console.log('ko: 1' + msg);
         }, 90); // record 30 seconds 
     }
@@ -432,7 +431,7 @@ export class DialogueComponent implements OnInit {
         // console.log('touchend');
         if (this.isrec) {
             this.isrec = false;
-            this.voiceflagdesc='按住 說話';
+            this.voiceflagdesc = '按住 說話';
             this.audioRecorderAPI.stop(async (file: any) => {
                 this.endrcevoicetime = +new Date();
                 let duration = this.endrcevoicetime - this.recvoicetime;

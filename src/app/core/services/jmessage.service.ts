@@ -1,19 +1,22 @@
 import { Injectable } from '@angular/core';
 import { Observable, Subscription } from 'rxjs/Rx';
 
-declare let JMessage: any;
 declare var window: any;
-declare var document: any;
 
 @Injectable()
 export class JMessageService {
 
-    // private JMessage = (<any>window).JMessage;
+    // private JMessage2 = window.JMessage;
     // private JIM = new JMessage();
-    public jmessagePlugin = (<any>window).plugins ? (<any>window).plugins.jmessagePlugin || null : null;
+    // public jmessagePlugin = (<any>window).plugins ? (<any>window).plugins.jmessagePlugin || null : null;
+    public jmessagePlugin: any;
     jmessageHandler: Subscription; //接收句柄，再view被关闭的时候取消订阅，否则对已关闭的view进行数据脏检查会报错
     jmessageOffline: Subscription;
-    constructor() { }
+    constructor() {
+        // console.log(this.JMessage2, 'sdasdasdasda');
+        // console.log(window.JMessage, '111');
+        // this.jmessagePlugin = window.JMessage;
+    }
 
     wrapEventObservable(event: string): Observable<any> {
         return new Observable(observer => {
@@ -28,14 +31,15 @@ export class JMessageService {
     //         this.jmessagePlugin.init();
     //     });
     // };
-    init() {
-        this.jmessagePlugin.init();
+    init(isOpenMessageRoaming: boolean = true) {
+        window.JMessage.init({ 'isOpenMessageRoaming': isOpenMessageRoaming });
+        // console.log(window.JMessage);
     };
 
     // 注册
     register(username: string, password: string): Promise<any> {
         return new Promise((resolve, reject) => {
-            this.jmessagePlugin.register(username, password, (suc: any) => {
+            window.JMessage.register({ 'username': username, 'password': password }, (suc: any) => {
                 console.log(suc);
                 resolve(true);
             }, (err: any) => {
@@ -48,7 +52,7 @@ export class JMessageService {
     // 获取当前用户信息
     getMyInfo(): Promise<any> {
         return new Promise((resolve, reject) => {
-            this.jmessagePlugin.getMyInfo((suc: any) => {
+            window.JMessage.getMyInfo((suc: any) => {
                 resolve(suc);
             }, (err: any) => {
                 reject(err);
@@ -57,10 +61,11 @@ export class JMessageService {
     };
 
     // 检查是否已经登录
-    async ifAlreadyLogin(username: string) {
+    async ifAlreadyLogin() {
         try {
-            let userInfo = await this.getUserInfo(username);
-            if (userInfo) {
+            // let userInfo = await this.getUserInfo(username);
+            let userInfo = await this.getMyInfo();
+            if (userInfo.username != undefined) {
                 return true;
             } else {
                 return false;
@@ -76,7 +81,7 @@ export class JMessageService {
     async autoLogin(username: string, password: string, is_md5?: boolean) {
         let getInfoSuccess: boolean;
         try {
-            getInfoSuccess = await this.ifAlreadyLogin(username);
+            getInfoSuccess = await this.ifAlreadyLogin();
             if (getInfoSuccess) {
                 return getInfoSuccess;
             }
@@ -96,8 +101,10 @@ export class JMessageService {
 
     // 登录
     login(username: string, password: string, is_md5?: boolean): Promise<any> {
+        // this.init();
         return new Promise((resolve, reject) => {
-            this.jmessagePlugin.login(username, password, (suc: any) => {
+            window.JMessage.login({ 'username': username, 'password': password }, (suc: any) => {
+                console.log('login success');
                 resolve(true);
             }, (err: any) => {
                 console.log(err);
@@ -108,13 +115,13 @@ export class JMessageService {
 
     // 登出
     loginOut(): void {
-        this.jmessagePlugin.logout();
+        window.JMessage.logout();
     };
 
     // 获取用户信息
-    getUserInfo(username: string, appkey?: string): Promise<any> {
+    getUserInfo(username: string): Promise<any> {
         return new Promise((resolve, reject) => {
-            this.jmessagePlugin.getUserInfo(username, appkey, (suc: any) => {
+            window.JMessage.getUserInfo({ 'username': username }, (suc: any) => {
                 resolve(suc);
             }, (err: any) => {
                 resolve(null);
@@ -123,9 +130,13 @@ export class JMessageService {
     };
 
     // 发送单聊文本
-    sendSingleTextMessage(username: string, text: string, appKey?: string): Promise<any> {
+    sendSingleTextMessage(username: string, text: string): Promise<any> {
+        let textParams: TextMessage;
+        textParams.type = 'single';
+        textParams.username = username;
+        textParams.text = text;
         return new Promise((resolve, reject) => {
-            this.jmessagePlugin.sendSingleTextMessage(username, text, appKey, (suc: any) => {
+            window.JMessage.sendTextMessage(textParams, (suc: any) => {
                 resolve(suc);
             }, (err: any) => {
                 reject(err);
@@ -134,9 +145,14 @@ export class JMessageService {
     };
 
     // 发送单聊文本并附带额外的信息
-    sendSingleTextMessageWithExtras(username: string, text: string, json: any, appKey?: string): Promise<any> {
+    sendSingleTextMessageWithExtras(username: string, text: string, extras: any): Promise<any> {
+        let textParams: TextMessage;
+        textParams.type = 'single';
+        textParams.username = username;
+        textParams.text = text;
+        textParams.extras = extras;
         return new Promise((resolve, reject) => {
-            this.jmessagePlugin.sendSingleTextMessageWithExtras(username, text, json, appKey, (suc: any) => {
+            window.JMessage.sendTextMessage(textParams, (suc: any) => {
                 resolve(suc);
             }, (err: any) => {
                 reject(err);
@@ -144,11 +160,16 @@ export class JMessageService {
         });
     };
 
-   // 发送单聊语音
+    // 发送单聊语音
     sendSingleVoiceMessage(username: string, fileUrl: string, appKey?: string): Promise<any> {
+        let voiceParams: VoiceMessage;
+        voiceParams.type = 'single';
+        voiceParams.username = username;
+        voiceParams.path = fileUrl;
         return new Promise((resolve, reject) => {
-            console.log(fileUrl+'  JMVOICE URL');
-            this.jmessagePlugin.sendSingleVoiceMessage(username, 'file://'+fileUrl, appKey, (suc: any) => {
+            console.log(fileUrl + '  JMVOICE URL');
+            // this.jmessagePlugin.sendVoiceMessage(username, 'file://' + fileUrl, appKey, (suc: any) => {
+            window.JMessage.sendVoiceMessage(voiceParams, (suc: any) => {
                 resolve(suc);
             }, (err: any) => {
                 reject(err);
@@ -159,7 +180,7 @@ export class JMessageService {
     // 发送自定义消息
     sendSingleCusCustomMessage(username: string, jsonStr: any, appKey?: string): Promise<any> {
         return new Promise((resolve, reject) => {
-            this.jmessagePlugin.sendSingleCustomMessage(username, jsonStr, appKey, (suc: any) => {
+            window.JMessage.sendSingleCustomMessage(username, jsonStr, appKey, (suc: any) => {
                 resolve(suc);
             }, (err: any) => {
                 reject(err);
@@ -179,6 +200,11 @@ export class JMessageService {
     }
 
     // 监听receive事件
+
+    addReceiveMessageListener(cb: any) {
+        window.JMessage.addReceiveMessageListener(cb);
+    }
+
     onReceiveMessage(): Observable<any> {
         return this.wrapEventObservable('jmessage.onReceiveMessage');
     }
@@ -195,8 +221,14 @@ export class JMessageService {
 
     // 进入单聊会话
     enterSingleConversation(username: string, appKey?: string): Promise<any> {
+        let params = {
+            type: 'single',            // 'single' / 'group'
+            //  groupId: string,         // 目标群组 id。
+            username: username,        // 目标用户名。
+            //  appKey: string,          // 目标用户所属 AppKey。
+        }
         return new Promise((resolve, reject) => {
-            this.jmessagePlugin.enterSingleConversation(username, appKey, (suc: any) => {
+            window.JMessage.enterConversation(params, (suc: any) => {
                 resolve(suc);
             }, (err: any) => {
                 reject(err);
@@ -218,7 +250,7 @@ export class JMessageService {
     // 关闭当前会话
     exitConversation(): Promise<any> {
         return new Promise((resolve, reject) => {
-            this.jmessagePlugin.exitConversation((suc: any) => {
+            window.JMessage.exitConversation((suc: any) => {
                 resolve(suc);
             }, (err: any) => {
                 reject(err);
@@ -228,8 +260,14 @@ export class JMessageService {
 
     // 设置指定单聊会话的未读消息数
     setSingleConversationUnreadMessageCount(username: string, appKey: string, unreadCount: number): Promise<any> {
+        let params = {
+            type: 'single',            // 'single' / 'group'
+            //  groupId: string,         // 目标群组 id。
+            username: username,        // 目标用户名。
+            // appKey: string,          // 目标用户所属 AppKey。
+        };
         return new Promise((resolve, reject) => {
-            this.jmessagePlugin.setSingleConversationUnreadMessageCount(username, appKey, unreadCount, (suc: any) => {
+            window.JMessage.resetUnreadMessageCount(params, (suc: any) => {
                 resolve(suc);
             }, (err: any) => {
                 reject(err);
@@ -306,4 +344,54 @@ export class JMessageService {
         });
     }
 
+}
+
+class MessageSendingOptions {
+    /**
+     * 接收方是否针对此次消息发送展示通知栏通知。
+     * @type {boolean}
+     * @defaultvalue
+     */
+    isShowNotification: boolean;
+    /**
+     * 是否让后台在对方不在线时保存这条离线消息，等到对方上线后再推送给对方。
+     * @type {boolean}
+     * @defaultvalue
+     */
+    isRetainOffline: boolean;
+    /**
+     * 是否开启了自定义接收方通知栏功能。
+     * @type {?boolean}
+     */
+    isCustomNotificationEnabled: boolean;
+    /**
+     * 设置此条消息在接收方通知栏所展示通知的标题。
+     * @type {?string}
+     */
+    notificationTitle: string;
+    /**
+     * 设置此条消息在接收方通知栏所展示通知的内容。
+     * @type {?string}
+     */
+    notificationText: string;
+}
+
+class TextMessage {
+    type: string;                               // 'single' / 'group'
+    groupId?: string;                             // 当 type = group 时，groupId 不能为空
+    username: string;                            // 当 type = single 时，username 不能为空
+    appKey?: string;                            // 当 type = single 时，用于指定对象所属应用的 appKey。如果为空，默认为当前应用
+    text: string;                                // 消息内容
+    extras?: object;                              // Optional. 自定义键值对 = {'key1': 'value1'}
+    messageSendingOptions?: MessageSendingOptions; // Optional. MessageSendingOptions 对象
+}
+
+class VoiceMessage {
+    type: string;                              // 'single' / 'group'
+    groupId?: string;                             // 当 type = group 时，groupId 不能为空
+    username: string;                            // 当 type = single 时，username 不能为空
+    appKey?: string;                            // 当 type = single 时，用于指定对象所属应用的 appKey。如果为空，默认为当前应用。
+    path: string;                              // 本地图片路径
+    extras?: object;                              // Optional. 自定义键值对 = {'key1': 'value1'}
+    messageSendingOptions?: MessageSendingOptions // Optional. MessageSendingOptions 对象
 }
