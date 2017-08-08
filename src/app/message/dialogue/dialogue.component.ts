@@ -23,14 +23,14 @@ import { KeyboardAttachDirective } from '../shared/directive/KeyboardAttachDirec
 
 export class DialogueComponent implements OnInit {
     @ViewChild(Content) content: Content;
-    @ViewChild('paramss') stickparams: any;
-    paramss: string;
     languageType: string = localStorage.getItem('languageType');
     languageContent = LanguageConfig.DialogueComponent[this.languageType];
     list: any;
     listlength: number;
     listpage: number = 1;
+    listpagenum: number = 20;
     listtotal: any;
+    listpageheight: number;
     input_text: string;
     userinfo: any;
     onPlus: boolean = false;
@@ -130,7 +130,7 @@ export class DialogueComponent implements OnInit {
                 });
                 this.listtotal = data;
                 this.listlength = data.length;
-                this.list = this.listtotal.slice(-20);
+                this.list = this.listtotal.slice(-this.listpagenum);
             }
             this.ref.detectChanges();
             this.scroll_down();
@@ -223,7 +223,7 @@ export class DialogueComponent implements OnInit {
           });*/
         this.listtotal = data;
         this.listlength = data.length;
-        this.list = this.listtotal.slice(-20);
+        this.list = this.listtotal.slice(-this.listpagenum);
     };
 
     async getNickNameAndAvatar(targetUser: any) {
@@ -325,13 +325,20 @@ export class DialogueComponent implements OnInit {
 
     doRefresh(event: any) {
         this.listpage++;
-        this.list = this.listtotal.slice(-20 * this.listpage);
+        this.list = this.listtotal.slice(-this.listpagenum * this.listpage);
+        this.istop = false;
+        setTimeout(() => {
+            var div = document.getElementsByClassName('msg-content');
+            let dis = div[0].scrollHeight - this.listpageheight;
+            div[0].scrollTop = dis;
+        }, 100);
         event.complete();
     }
 
     doscroll(event: any) {
         if (event.srcElement.scrollTop <= 50) {
-            if (this.listpage * 20 < this.listlength) {
+            if (this.listpage * this.listpagenum < this.listlength) {
+                this.listpageheight = event.srcElement.scrollHeight;
                 this.istop = true;
             }
         } else {
