@@ -4,6 +4,8 @@ import { PluginService }   from '../../../../../core/services/plugin.service';
 
 import * as echarts from 'echarts';
 
+import { ChartConfig } from '../config/chart.config';
+
 @Injectable()
 export class ChartService {
 
@@ -39,14 +41,43 @@ export class ChartService {
     myChart.setOption(option);
     return myChart;
   }
-  afterInit(option: any) {
-    option = this.addFontFamily(option);
-    return option
-  }
+
   optionConv(option:string) {
     let temp = JSON.parse(option);
     return JSON.parse(this.plugin.chineseConv(temp));
   }
+  //获得年资分析的信息
+  getSalaryChartInfo() {
+    return this.myHttp.get(ChartConfig.getSalaryChartInfo);
+  }
+
+  // 获得离职率分析的信息
+  getDimissionChartInfo(type:string) {
+    return this.myHttp.get(ChartConfig.getDimissionChartInfo.replace('{type}',type));
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  afterInit(option: any) {
+    option = this.addFontFamily(option);
+    return option
+  }
+
   addFontFamily(option: any, fontFamily: string[] = this.fontFamily) {
     let add = { fontFamily: fontFamily };
     Object.assign(option.textStyle, add);

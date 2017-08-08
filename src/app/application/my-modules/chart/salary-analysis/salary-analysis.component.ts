@@ -4,6 +4,8 @@ import { NavController, NavParams, IonicPage } from 'ionic-angular';
 import { PluginService }   from '../../../../core/services/plugin.service';
 import { ChartService } from '../shared/service/chart.service';
 
+import { OptionsConfig } from '../shared/config/options.config';
+
 @IonicPage()
 @Component({
   selector: 'sg-salary-analysis',
@@ -11,82 +13,88 @@ import { ChartService } from '../shared/service/chart.service';
 })
 export class SalaryAnalysisComponent {
 
-  fontFamily:string[] = ['Helvetica', 'Tahoma', 'Arial', 'STXihei', '华文细黑', 'Microsoft YaHei', '微软雅黑', 'sans-serif'];
+  tableInfo:any;
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
     private plugin: PluginService,
     private chartService: ChartService
   ) { }
-test:any;
-  ionViewDidLoad() {
-    let option1 = this.chartService.initSingleYChart('IDL年资分析',{
-      legend_data:['工程','管理','研发','专业'],
-      xAxis_data:['0-1年','1-2年','2-3年','3-4年','4-5年','5-7年','7-9年','9年以上'],
-      series:[{
-        name:'工程',
-        type:'bar',
-        data: [{value: 79},{value: 39},{value: 41},{value: 39},
-          {value: 6},{value: 29},{value: 28},{value: 237}]
-      },{
-        name:'管理',
-        type:'bar',
-        data: [{value: 0},{value: 0},{value: 0},{value: 0},
-          {value: 0},{value: 0},{value: 0},{value: 36}]
-      },{
-        name:'研发',
-        type:'bar',
-        data: [{value: 6},{value: 4},{value: 0},{value: 4},
-          {value: 0},{value: 1},{value: 6},{value: 13}]
-      },{
-        name:'专业',
-        type:'bar',
-        data: [{value: 43},{value: 32},{value: 29},{value: 26},
-          {value: 17},{value: 21},{value: 27},{value: 191}]
-      }]
-    });
 
-    this.test = this.chartService.makeChart('main1',option1);
-
-
-    let option2 = this.chartService.initPieChart('IDL年资比例',{
-      legend_data:['0-1年','1-2年','2-3年','3-4年','4-5年','5-7年','7-9年','9年以上'],
-      series:[
-        {
-          name:'工资',
-          data:[{value:128,name:'0-1年'},{value:75,name:'1-2年'},
-        {value:70,name:'2-3年'},{value:69,name:'3-4年'},
-        {value:23,name:'4-5年'},{value:51,name:'5-7年'},
-        {value:61,name:'7-9年'},{value:477,name:'9年以上'}]
-        }
-       ]
+  changeObjectToArray(obj:Object) {
+    let arr = [];
+    for(let item in obj){
+        arr.push(obj[item]);
+    }
+    return arr;
+  }
+  async ionViewDidLoad() {
+    let loading = this.plugin.createLoading();
+    loading.present();
+    await this.initInfo();
+    loading.dismiss();
+    let wholeData = this.tableInfo.data;
+    this.chartService.makeChart('main1', this.chartService.optionConv(this.initOption1(wholeData)))
+    this.chartService.makeChart('main2', this.chartService.optionConv(this.initOption2(wholeData)))
+    this.chartService.makeChart('main3', this.chartService.optionConv(this.initOption3(wholeData)))
+    this.chartService.makeChart('main4', this.chartService.optionConv(this.initOption4(wholeData)))
+  }
+  initOption1(wholeData:string[][]) {
+    let option1 = JSON.parse(OptionsConfig.salaryAnalysis.option1);
+    option1.series = option1.series.map((list:any,index:number) => {
+      let target = wholeData[index+1];
+      list.data =  list.data.map((subList:any,idx:number) => {
+        subList.value = target[idx+1];
+        return subList;
+      })
+      return list;
     })
-    this.chartService.makeChart('main2',option2);
-
-    let option3 = this.chartService.initSingleYChart('DL年资分析',{
-      legend_data:['DL'],
-      xAxis_data: ['0-1年','1-2年','2-3年','3-4年','4-5年','5-7年','7-9年','9年以上'],
-      series:[{name:'DL',type:'bar',
-      data:[{value:736},{value:200},{value:164},{value:92},
-        {value:34},{value:44},{value:35},{value:55}
-      ]
-    }]
+    return JSON.stringify(option1);
+  }
+  initOption2(wholeData:string[][]) {
+    let option2 = JSON.parse(OptionsConfig.salaryAnalysis.option3);
+    let target = wholeData[6];
+    option2.series[0].data = option2.series[0].data.map((list:any,index:number) => {
+      list.value = target[index+1];
+      return list;
     })
-    this.chartService.makeChart('main3',option3);
+    option2.title.text = 'IDL 年资比例';
+    return JSON.stringify(option2);
+  }
 
-    let option4 = this.chartService.initPieChart('DL年资比例',{
-      legend_data:['0-1年','1-2年','2-3年','3-4年','4-5年','5-7年','7-9年','9年以上'],
-      series:[
-        {
-          name:'工资',
-          data:[{value:200,name:'1-2年'},
-        {value:164,name:'2-3年'},{value:92,name:'3-4年'},
-        {value:34,name:'4-5年'},{value:44,name:'5-7年'},
-        {value:35,name:'7-9年'},{value:55,name:'9年以上'},{value:736,name:'0-1年'}]
-        }
-       ]
+  initOption3(wholeData:string[][]) {
+    let option3 = JSON.parse(OptionsConfig.salaryAnalysis.option2);
+    let target = wholeData[5];
+    option3.series[0].data = option3.series[0].data.map((list:any,index:number) => {
+      list.value = target[index+1];
+      return list;
     })
-    this.chartService.makeChart('main4',option4);
+    return JSON.stringify(option3);
+  }
+
+  initOption4(wholeData:string[][]) {
+    let option4 = JSON.parse(OptionsConfig.salaryAnalysis.option3);
+    let target = wholeData[5];
+    option4.series[0].data = option4.series[0].data.map((list:any,index:number) => {
+      list.value = target[index+1];
+      return list;
+    })
+    option4.title.text = 'DL 年资比例';
+    return JSON.stringify(option4);
+  }
+
+  async initInfo() {
+    await this.chartService.getSalaryChartInfo().then((res) => {
+      let data = res.json().map((list:any) => {
+        return this.changeObjectToArray(list);
+      })
+      this.tableInfo = {
+        caption:'',
+        data: data
+      }
+    }).catch((e) => {
+      this.plugin.errorDeal(e);
+    })
   }
   reFresh() {
     this.ionViewDidLoad();
