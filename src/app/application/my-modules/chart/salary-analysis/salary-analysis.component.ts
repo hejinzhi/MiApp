@@ -5,6 +5,7 @@ import { PluginService }   from '../../../../core/services/plugin.service';
 import { ChartService } from '../shared/service/chart.service';
 
 import { OptionsConfig } from '../shared/config/options.config';
+import { TableModel } from '../shared/model/table.model';
 
 @IonicPage()
 @Component({
@@ -13,7 +14,8 @@ import { OptionsConfig } from '../shared/config/options.config';
 })
 export class SalaryAnalysisComponent {
 
-  tableInfo:any;
+  tableInfo:TableModel;
+  
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
@@ -21,13 +23,6 @@ export class SalaryAnalysisComponent {
     private chartService: ChartService
   ) { }
 
-  changeObjectToArray(obj:Object) {
-    let arr = [];
-    for(let item in obj){
-        arr.push(obj[item]);
-    }
-    return arr;
-  }
   async ionViewDidLoad() {
     let loading = this.plugin.createLoading();
     loading.present();
@@ -39,6 +34,12 @@ export class SalaryAnalysisComponent {
     this.chartService.makeChart('main3', this.chartService.optionConv(this.initOption3(wholeData)))
     this.chartService.makeChart('main4', this.chartService.optionConv(this.initOption4(wholeData)))
   }
+
+  /**
+   * 初始化间接员工的年薪柱状图配置
+   * @param  {string[][]} wholeData 总数据
+   * @return {option}            echars配置
+   */
   initOption1(wholeData:string[][]) {
     let option1 = JSON.parse(OptionsConfig.salaryAnalysis.option1);
     option1.series = option1.series.map((list:any,index:number) => {
@@ -51,6 +52,12 @@ export class SalaryAnalysisComponent {
     })
     return JSON.stringify(option1);
   }
+
+  /**
+   * 初始化间接员工的年薪饼图配置
+   * @param  {string[][]} wholeData 总数据
+   * @return {option}            echars配置
+   */
   initOption2(wholeData:string[][]) {
     let option2 = JSON.parse(OptionsConfig.salaryAnalysis.option3);
     let target = wholeData[6];
@@ -62,6 +69,11 @@ export class SalaryAnalysisComponent {
     return JSON.stringify(option2);
   }
 
+  /**
+   * 初始化直接员工的年薪柱状图配置
+   * @param  {string[][]} wholeData 总数据
+   * @return {option}            echars配置
+   */
   initOption3(wholeData:string[][]) {
     let option3 = JSON.parse(OptionsConfig.salaryAnalysis.option2);
     let target = wholeData[5];
@@ -72,6 +84,11 @@ export class SalaryAnalysisComponent {
     return JSON.stringify(option3);
   }
 
+  /**
+   * 初始化直接员工的年薪饼图配置
+   * @param  {string[][]} wholeData 总数据
+   * @return {option}            echars配置
+   */
   initOption4(wholeData:string[][]) {
     let option4 = JSON.parse(OptionsConfig.salaryAnalysis.option3);
     let target = wholeData[5];
@@ -83,10 +100,14 @@ export class SalaryAnalysisComponent {
     return JSON.stringify(option4);
   }
 
+  /**
+   * 获得年薪的表格信息
+   * @return {TableModel} 自定义表格格式
+   */
   async initInfo() {
     await this.chartService.getSalaryChartInfo().then((res) => {
       let data = res.json().map((list:any) => {
-        return this.changeObjectToArray(list);
+        return this.chartService.changeObjectToArray(list);
       })
       this.tableInfo = {
         caption:'',
@@ -95,8 +116,5 @@ export class SalaryAnalysisComponent {
     }).catch((e) => {
       this.plugin.errorDeal(e);
     })
-  }
-  reFresh() {
-    this.ionViewDidLoad();
   }
 }

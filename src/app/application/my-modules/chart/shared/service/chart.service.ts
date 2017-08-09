@@ -11,10 +11,74 @@ export class ChartService {
 
   fontFamily: string[] = ['Helvetica', 'Tahoma', 'Arial', 'STXihei', '华文细黑', 'Microsoft YaHei', '微软雅黑', 'sans-serif'];
   private myChart: any;
+  offsetTop: number;//需要滚动的位置离窗口最上面的高度
+  content: any;//滚动的容器
+  f:any;// 注册在resize的方法
+
   constructor(private myHttp: MyHttpService,private plugin:PluginService) {
     this.autoResizeChart();
   }
 
+  /**
+   * 初始化滚动的到目标所需的数据
+   * @param  {string} comp     组件的名称
+   * @param  {string} selector dom的选择器
+   */
+  initScroll(comp:string,selector:string) {
+    this.getOffsetTop(selector);
+    this.content = document.querySelector(comp + ' .scroll-content');
+    this.observeOffsetTop(selector);
+  }
+
+  /**
+   * 获得需要滚动的位置离窗口最上面的高度
+   * @param  {string} selector dom的选择器
+   */
+  getOffsetTop(selector:string) {
+    let el: any = document.querySelector(selector);
+    this.offsetTop = el.offsetTop;
+  }
+
+  /**
+   * 执行滚动的目标位置
+   */
+  scroll_down() {
+    setTimeout(() => {
+      this.content.scrollTop = this.offsetTop;
+    }, 200);
+  }
+
+  /**
+   * 注册resize事情，获得最新的滚动的位置离窗口最上面的高度
+   * @param  {string} selector dom的选择器
+   */
+  observeOffsetTop(selector:string) {
+    window.addEventListener('resize', this.f = this.getOffsetTop.bind(this,selector));
+  }
+
+  /**
+   * 取消在resize上注册的观察OffsetTop的事件
+   */
+  unObserveOffsetTop() {
+    window.removeEventListener('resize', this.f);
+  }
+
+  /**
+   * 将对象转换为数组
+   * @param  {Object} obj 对象
+   * @return {Array}     数组
+   */
+  changeObjectToArray(obj:Object):any[] {
+    let arr = [];
+    for(let item in obj){
+        arr.push(obj[item]);
+    }
+    return arr;
+  }
+
+  /**
+   * 定义在窗口大小改变时能调整大小的echarts
+   */
   autoResizeChart() {
     let mychart = Object.assign({}, Object.create(echarts).__proto__);
     mychart.init = function() {
@@ -25,33 +89,74 @@ export class ChartService {
     mychart.init.prototype = Object.create(echarts.init.prototype);
     this.myChart = mychart;
   }
+
+  /**
+   * 获得在窗口大小改变时能调整大小的echarts
+   * @return {mycharts} 自适应echarts
+   */
   getAutoResizeChart() {
     return this.myChart;
   }
+
+  /**
+   * 返回echarts
+   * @return {echarts} echarts
+   */
   getECharts() {
     return echarts;
   }
-  makeChartWithDom(dom: any, option: any) {
+
+  /**
+   * 渲染图表
+   * @param  {Element} dom    dom元素
+   * @param  {any}     option echarts的配置
+   * @return {echarts的init对象}         新图表对象
+   */
+  makeChartWithDom(dom: Element, option: any) {
     let myChart = this.myChart.init(dom);
     myChart.setOption(option);
     return myChart;
   }
-  makeChart(id: string, option: any) {
-    let myChart = this.myChart.init(document.getElementById(id));
+
+  /**
+   * 查找并设置元素，渲染图表
+   * @param  {string}     id     dom的id
+   * @param  {any}        option echarts的配置
+   * @param  {boolean}    setHeight 是否再次设置高度（dom被div等包住时无法使用自适应高度），默认为false
+   * @return {echarts的init对象}         新图表对象
+   */
+  makeChart(id: string, option: any, setHeight:boolean = false) {
+    let dom = document.getElementById(id);
+    if(setHeight) {
+      dom.style.height = window.outerHeight * 0.47 + 'px';
+    }
+    let myChart = this.myChart.init(dom);
     myChart.setOption(option);
     return myChart;
   }
 
+  /**
+   * 将echarts的配置进行简繁体转换
+   * @param  {string} option echarts的配置，经过了JSON.stringify的加工
+   * @return {option}        echarts的配置
+   */
   optionConv(option:string) {
     let temp = JSON.parse(option);
     return JSON.parse(this.plugin.chineseConv(temp));
   }
-  //获得年资分析的信息
+  /**
+   * 获得年资分析的信息
+   * @return {Promise<response>} http的结果
+   */
   getSalaryChartInfo() {
     return this.myHttp.get(ChartConfig.getSalaryChartInfo);
   }
 
-  // 获得离职率分析的信息
+  /**
+   * 获得离职率分析的信息
+   * @param  {string} type 传入类别，T是总公司，DL是直接员工，IDL是间接员工，SA是绩效高的员工
+   * @return {Promise<response>} http的结果
+   */
   getDimissionChartInfo(type:string) {
     return this.myHttp.get(ChartConfig.getDimissionChartInfo.replace('{type}',type));
   }
