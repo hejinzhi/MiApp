@@ -6,10 +6,11 @@ export class Message {
     time: number;
     type: string;
     unread: boolean;
-    imageHeight: string;
-    imageWidth: string;
+    imageHeight: number;
+    imageWidth: number;
     duration: string;
     vounread: string;
+    msgID: number;
 }
 
 export class NoticeContent {

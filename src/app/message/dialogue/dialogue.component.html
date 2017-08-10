@@ -1,6 +1,6 @@
 <ion-header (touchstart)="closeKeyboard()">
   <ion-navbar>
-    <ion-title>{{userNickName | sgChineseConv}}</ion-title>
+    <ion-title>{{fromuserNickName | sgChineseConv}}</ion-title>
   </ion-navbar>
 </ion-header>
 <ion-content class='page-content' #content (touchstart)="closeKeyboard()">
@@ -30,7 +30,7 @@
             <!-- <img src={{item.content}} class='img_content' (tap)="openPhoto(item.content)"> -->
             <!-- <img src={{item.content}} [ngClass]='getImageClass(item.imageHeight,item.imageWidth)' (tap)="openPhoto(item.content)"> -->
             <img src={{item.content}} [ngClass]="{'img_fang':item.imageHeight === item.imageWidth,'img_heng':item.imageHeight < item.imageWidth,'img_shu':item.imageHeight > item.imageWidth}"
-              imageViewer>
+              #myImage (tap)="presentImage(myImage,item.msgID,item.fromUserName)">
           </ng-template>
           <ng-template [ngSwitchCase]="'voice'">
             <div class="msg" (tap)="openvoiceflag===false?selectable=i:'';openvoice(item);">
