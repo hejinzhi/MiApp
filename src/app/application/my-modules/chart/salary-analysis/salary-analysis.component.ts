@@ -3,6 +3,7 @@ import { NavController, NavParams, IonicPage } from 'ionic-angular';
 
 import { PluginService }   from '../../../../core/services/plugin.service';
 import { ChartService } from '../shared/service/chart.service';
+import { CacheService } from '../../../../core/services/cache.service';
 
 import { OptionsConfig } from '../shared/config/options.config';
 import { TableModel } from '../shared/model/table.model';
@@ -15,24 +16,41 @@ import { TableModel } from '../shared/model/table.model';
 export class SalaryAnalysisComponent {
 
   tableInfo:TableModel;
-  
+  className:string = this.constructor.name;
+
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
     private plugin: PluginService,
-    private chartService: ChartService
+    private chartService: ChartService,
+    private cacheService: CacheService
   ) { }
 
   async ionViewDidLoad() {
-    let loading = this.plugin.createLoading();
-    loading.present();
-    await this.initInfo();
-    loading.dismiss();
+    this.tableInfo = await this.getInfo();
     let wholeData = this.tableInfo.data;
     this.chartService.makeChart('main1', this.chartService.optionConv(this.initOption1(wholeData)))
     this.chartService.makeChart('main2', this.chartService.optionConv(this.initOption2(wholeData)))
     this.chartService.makeChart('main3', this.chartService.optionConv(this.initOption3(wholeData)))
     this.chartService.makeChart('main4', this.chartService.optionConv(this.initOption4(wholeData)))
+  }
+
+  /**
+   * 获得数据
+   * @param  {string} type          自定义类别名字
+   * @return {TableModel}           自定义表格格式
+   */
+  async getInfo(type:string ='T') {
+    let cache = this.cacheService.get(this.className,type);
+    // 如果缓存里没有，则到服务器查找
+    if(!cache) {
+      let loading = this.plugin.createLoading();
+      loading.present();
+      cache = await this.initInfo();
+      loading.dismiss();
+      this.cacheService.update(this.className,type,cache);
+    }
+    return cache;
   }
 
   /**
@@ -101,15 +119,15 @@ export class SalaryAnalysisComponent {
   }
 
   /**
-   * 获得年薪的表格信息
+   * 通过http请求获得年薪的表格信息
    * @return {TableModel} 自定义表格格式
    */
   async initInfo() {
-    await this.chartService.getSalaryChartInfo().then((res) => {
+    return await this.chartService.getSalaryChartInfo().then((res) => {
       let data = res.json().map((list:any) => {
         return this.chartService.changeObjectToArray(list);
       })
-      this.tableInfo = {
+      return {
         caption:'',
         data: data
       }

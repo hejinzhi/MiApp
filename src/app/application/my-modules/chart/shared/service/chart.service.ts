@@ -127,6 +127,10 @@ export class ChartService {
    */
   makeChart(id: string, option: any, setHeight:boolean = false) {
     let dom = document.getElementById(id);
+    if(!dom) {
+      setTimeout(() => this.makeChart(id,option,setHeight),100)
+      return;
+    };
     if(setHeight) {
       dom.style.height = window.outerHeight * 0.47 + 'px';
     }

@@ -3,6 +3,7 @@ import { NavController, NavParams, IonicPage } from 'ionic-angular';
 
 import { PluginService }   from '../../../../core/services/plugin.service';
 import { ChartService } from '../shared/service/chart.service';
+import { CacheService } from '../../../../core/services/cache.service';
 
 import { OptionsConfig } from '../shared/config/options.config';
 import { TableModel } from '../shared/model/table.model';
@@ -18,23 +19,39 @@ export class DimissionAnalysisComponent {
   wholeInfo:TableModel;//总数据
   subInfo:TableModel;//下一级的数据
   mi_type:string;//选择的下一级类型
-
+  className:string = this.constructor.name;
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
     private plugin: PluginService,
-    private chartService: ChartService
+    private chartService: ChartService,
+    private cacheService: CacheService
   ) { }
 
   async ionViewDidLoad() {
-    let loading = this.plugin.createLoading();
-    loading.present();
-    this.wholeInfo = await this.initInfo('T');
-    loading.dismiss();
+    this.wholeInfo = await this.getInfo('T');
     this.makeChart('main1', this.wholeInfo,1);
     setTimeout(()=>{
       this.chartService.initScroll('sg-dimission-analysis','#mySegment')
     },100);
+  }
+
+  /**
+   * 获得对应数据
+   * @param  {string} type T是总公司，DL是直接员工，IDL是间接员工，SA是绩效高的员工
+   * @return {TableModel}  表格数据
+   */
+  async getInfo(type:string) {
+    let cache = this.cacheService.get(this.className,type);
+    // 如果缓存里没有，则到服务器查找
+    if(!cache) {
+      let loading = this.plugin.createLoading();
+      loading.present();
+      cache = await this.initInfo(type);
+      loading.dismiss();
+      this.cacheService.update(this.className,type,cache);
+    }
+    return cache;
   }
 
   ionViewWillLeave() {
@@ -45,7 +62,7 @@ export class DimissionAnalysisComponent {
    */
   async changeShow() {
     this.subInfo = {caption:'',data:[]}
-    this.subInfo = await this.initInfo(this.mi_type);
+    this.subInfo = await this.getInfo(this.mi_type);
     if(this.mi_type === 'S+A') {
       let lastOrder;//倒数第几的位置
       let data = this.subInfo.data
@@ -90,7 +107,7 @@ export class DimissionAnalysisComponent {
   }
 
   /**
-   * 根据类别获得各table的离职率信息
+   * 根据类别到服务器获得各table的离职率信息
    * @param  {string} type T是总公司，DL是直接员工，IDL是间接员工，SA是绩效高的员工
    * @return {Promise<TableModel>}      自定义的table格式
    */
