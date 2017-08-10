@@ -112,12 +112,12 @@ export class SetComponent {
           text: this.languageContent.confirm,
           handler: () => {
             if (this.plugin.isCordova()) {
-              if (that.jmessage.jmessageHandler) {
-                that.jmessage.jmessageHandler.unsubscribe();
-              }
-              if (that.jmessage.jmessageOffline) {
-                that.jmessage.jmessageOffline.unsubscribe();
-              }
+              // if (that.jmessage.jmessageHandler) {
+              //   that.jmessage.jmessageHandler.unsubscribe();
+              // }
+              // if (that.jmessage.jmessageOffline) {
+              //   that.jmessage.jmessageOffline.unsubscribe();
+              // }
               that.jmessage.loginOut();
             }
             this.removeAutoLogin();
@@ -149,12 +149,12 @@ export class SetComponent {
         {
           text: this.languageContent.Y,
           handler: () => {
-            if (that.jmessage.jmessageHandler) {
-              that.jmessage.jmessageHandler.unsubscribe();
-            }
-            if (that.jmessage.jmessageOffline) {
-              that.jmessage.jmessageOffline.unsubscribe();
-            }
+            // if (that.jmessage.jmessageHandler) {
+            //   that.jmessage.jmessageHandler.unsubscribe();
+            // }
+            // if (that.jmessage.jmessageOffline) {
+            //   that.jmessage.jmessageOffline.unsubscribe();
+            // }
             that.jmessage.loginOut();
             if (that.platform.is('android')) {
               that.platform.exitApp();

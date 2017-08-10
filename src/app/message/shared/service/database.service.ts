@@ -51,7 +51,7 @@ export class DatabaseService {
   createMessageTable() {
     return this.database.executeSql(`CREATE TABLE IF NOT EXISTS MOA_LOCAL_MESSAGE
         (ID INTEGER PRIMARY KEY AUTOINCREMENT,TO_USER_NAME VARCHAR2(100),FROM_USER_NAME VARCHAR2(100),OWNER VARCHAR2(100),CONTENT VARCHAR2(100),CONTENT_TYPE VARCHAR2(100),
-        TIME INTEGER, TYPE VARCHAR2(100),UNREAD VARCHAR2(100),EXTRA VARCHAR2(1000),CHILD_TYPE VARCHAR2(20),IMAGE_HEIGHT NUMBER,IMAGE_WIDTH NUMBER,DURATION NUMBER,VOUNREAD VARCHAR2(10));`, {});
+        TIME INTEGER, TYPE VARCHAR2(100),UNREAD VARCHAR2(100),EXTRA VARCHAR2(1000),CHILD_TYPE VARCHAR2(20),IMAGE_HEIGHT NUMBER,IMAGE_WIDTH NUMBER,DURATION NUMBER,VOUNREAD VARCHAR2(10),MSG_ID NUMBER);`, {});
   }
 
   getAllUnreadCount(owner: string, toUsername: string) {
@@ -82,8 +82,9 @@ export class DatabaseService {
               extra: extra,
               imageHeight: data.rows.item(i).IMAGE_HEIGHT,
               imageWidth: data.rows.item(i).IMAGE_WIDTH,
-              duration: Math.ceil(data.rows.item(i).DURATION /1000),
+              duration: Math.ceil(data.rows.item(i).DURATION / 1000),
               vounread: data.rows.item(i).VOUNREAD,
+              msgID: data.rows.item(i).MSG_ID
             });
           }
         }
@@ -236,11 +237,11 @@ export class DatabaseService {
 
   addMessage(toUsername: string, fromUserName: string, owner: string, content: string, contentType: string,
     time: number, type: string, unread: string, extra: string, child_type: string,
-    image_height: number, image_width: number, duration: number, vounread: string) {
+    image_height: number, image_width: number, duration: number, vounread: string, msgID: number) {
     if (toUsername != fromUserName) {
-      let data = [toUsername, fromUserName, owner, content, contentType, time, type, unread, extra, child_type, image_height, image_width, duration,vounread];
-      return this.database.executeSql(`INSERT INTO MOA_LOCAL_MESSAGE (TO_USER_NAME, FROM_USER_NAME,OWNER, CONTENT,CONTENT_TYPE,TIME,TYPE,UNREAD,EXTRA,CHILD_TYPE,IMAGE_HEIGHT,IMAGE_WIDTH,DURATION,VOUNREAD)
-        VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)`, data).then(data => {
+      let data = [toUsername, fromUserName, owner, content, contentType, time, type, unread, extra, child_type, image_height, image_width, duration, vounread, msgID];
+      return this.database.executeSql(`INSERT INTO MOA_LOCAL_MESSAGE (TO_USER_NAME, FROM_USER_NAME,OWNER, CONTENT,CONTENT_TYPE,TIME,TYPE,UNREAD,EXTRA,CHILD_TYPE,IMAGE_HEIGHT,IMAGE_WIDTH,DURATION,VOUNREAD,MSG_ID)
+        VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)`, data).then(data => {
           return data;
         }, err => {
           console.log('Error: ', err);
@@ -271,6 +272,7 @@ export class DatabaseService {
             imageWidth: data.rows.item(i).IMAGE_WIDTH,
             duration: data.rows.item(i).DURATION,
             vounread: data.rows.item(i).VOUNREAD,
+            msgID: data.rows.item(i).MSG_ID,
           });
         }
       }
@@ -329,7 +331,7 @@ export class DatabaseService {
     return this.database.executeSql(`UPDATE MOA_LOCAL_AVATAR SET AVATAR='${avatar}' WHERE USER_NAME='${username}'`, {});
   }
 
-  setvounreadByID(id:number){
+  setvounreadByID(id: number) {
     return this.database.executeSql(`UPDATE MOA_LOCAL_MESSAGE SET VOUNREAD='N' WHERE ID='${id}'`, {});
   }
 

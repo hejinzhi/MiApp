@@ -32,6 +32,7 @@ export class JMessageService {
     //     });
     // };
     init(isOpenMessageRoaming: boolean = true) {
+        window.JMessage.setDebugMode({ 'enable': true });
         window.JMessage.init({ 'isOpenMessageRoaming': isOpenMessageRoaming });
         // console.log(window.JMessage);
     };
@@ -131,7 +132,7 @@ export class JMessageService {
 
     // 发送单聊文本
     sendSingleTextMessage(username: string, text: string): Promise<any> {
-        let textParams: TextMessage;
+        let textParams: TextMessage = new TextMessage();
         textParams.type = 'single';
         textParams.username = username;
         textParams.text = text;
@@ -146,7 +147,7 @@ export class JMessageService {
 
     // 发送单聊文本并附带额外的信息
     sendSingleTextMessageWithExtras(username: string, text: string, extras: any): Promise<any> {
-        let textParams: TextMessage;
+        let textParams: TextMessage = new TextMessage();
         textParams.type = 'single';
         textParams.username = username;
         textParams.text = text;
@@ -162,7 +163,7 @@ export class JMessageService {
 
     // 发送单聊语音
     sendSingleVoiceMessage(username: string, fileUrl: string, appKey?: string): Promise<any> {
-        let voiceParams: VoiceMessage;
+        let voiceParams: VoiceMessage = new VoiceMessage();
         voiceParams.type = 'single';
         voiceParams.username = username;
         voiceParams.path = fileUrl;
@@ -189,13 +190,56 @@ export class JMessageService {
     };
 
     //  發送單聊圖片
-    sendSingleImageMessage(username: string, imageUrl: string, appKey?: string): Promise<any> {
+    sendSingleImageMessage(username: string, imageUrl: string, extra: object): Promise<any> {
+        let params = {
+            type: 'single',                                // 'single' / 'group'
+            //  groupId: string,                             // 当 type = group 时，groupId 不能为空
+            username: username,                            // 当 type = single 时，username 不能为空
+            //  appKey: string,                              // 当 type = single 时，用于指定对象所属应用的 appKey。如果为空，默认为当前应用。
+            path: imageUrl,                                // 本地图片路径
+            extras: extra                              // Optional. 自定义键值对 = {'key1': 'value1'}
+            //  messageSendingOptions: MessageSendingOptions // Optional. MessageSendingOptions 对象
+        };
+        console.log(params);
         return new Promise((resolve, reject) => {
-            this.jmessagePlugin.sendSingleImageMessage(username, imageUrl, appKey, (suc: any) => {
-                resolve(suc);
-            }, (err: any) => {
-                reject(err);
-            })
+            try {
+                window.JMessage.sendImageMessage(params, (suc: any) => {
+                    console.log('sendImageSuc');
+                    resolve(suc);
+                }, (err: any) => {
+                    console.log('failimage');
+                    reject(err);
+                })
+            }
+            catch (e) {
+                console.log(e);
+            }
+
+        });
+    }
+
+    // 下载原图
+    downloadOriginalImage(username: string, messageId: string): Promise<OriginImage> {
+        let params = {
+            type: 'single',
+            username: username,
+            messageId: messageId
+        };
+        return new Promise((resolve, reject) => {
+            try {
+                window.JMessage.downloadOriginalImage(params, (suc: any) => {
+                    console.log('suc');
+                    resolve(suc);
+                }, (err: any) => {
+                    console.log(err);
+                    console.log('fail');
+                    reject(err);
+                })
+            }
+            catch (e) {
+                console.log(e);
+            }
+
         });
     }
 
@@ -346,7 +390,7 @@ export class JMessageService {
 
 }
 
-class MessageSendingOptions {
+export class MessageSendingOptions {
     /**
      * 接收方是否针对此次消息发送展示通知栏通知。
      * @type {boolean}
@@ -376,7 +420,7 @@ class MessageSendingOptions {
     notificationText: string;
 }
 
-class TextMessage {
+export class TextMessage {
     type: string;                               // 'single' / 'group'
     groupId?: string;                             // 当 type = group 时，groupId 不能为空
     username: string;                            // 当 type = single 时，username 不能为空
@@ -386,7 +430,7 @@ class TextMessage {
     messageSendingOptions?: MessageSendingOptions; // Optional. MessageSendingOptions 对象
 }
 
-class VoiceMessage {
+export class VoiceMessage {
     type: string;                              // 'single' / 'group'
     groupId?: string;                             // 当 type = group 时，groupId 不能为空
     username: string;                            // 当 type = single 时，username 不能为空
@@ -394,4 +438,9 @@ class VoiceMessage {
     path: string;                              // 本地图片路径
     extras?: object;                              // Optional. 自定义键值对 = {'key1': 'value1'}
     messageSendingOptions?: MessageSendingOptions // Optional. MessageSendingOptions 对象
+}
+
+export class OriginImage {
+    filePath: string;
+    messageId: string;
 }

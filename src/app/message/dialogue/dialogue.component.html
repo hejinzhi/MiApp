@@ -1,6 +1,6 @@
 <ion-header (touchstart)="closeKeyboard()">
   <ion-navbar>
-    <ion-title>{{userNickName | sgChineseConv}}</ion-title>
+    <ion-title>{{fromuserNickName | sgChineseConv}}</ion-title>
   </ion-navbar>
 </ion-header>
 <ion-content class='page-content' #content (touchstart)="closeKeyboard()">
@@ -26,18 +26,19 @@
             <!-- <img src={{item.content}} class='img_content' (tap)="openPhoto(item.content)"> -->
             <!-- <img src={{item.content}} [ngClass]='getImageClass(item.imageHeight,item.imageWidth)' (tap)="openPhoto(item.content)"> -->
             <img src={{item.content}} [ngClass]="{'img_fang':item.imageHeight === item.imageWidth,'img_heng':item.imageHeight < item.imageWidth,'img_shu':item.imageHeight > item.imageWidth}"
-              imageViewer>
+              #myImage (tap)="presentImage(myImage,item.msgID,item.fromUserName)">
           </ng-template>
           <ng-template [ngSwitchCase]="'voice'">
             <div class="msg" (tap)="openvoiceflag===false?selectable=i:'';openvoice(item);">
               <span [ngClass]="item.toUserName === userinfo.username ? ' arrow_l_int' : ' arrow_r_int'"></span>
               <span [ngClass]="item.toUserName === userinfo.username ? ' arrow_l_out' : ' arrow_r_out'"></span>
-              <div class="voice" [class.voice_play]="selectable === i" ></div>   
-              <div [ngClass]="getBlank(item.duration)"></div>       
+              <div class="voice" [class.voice_play]="selectable === i"></div>
+              <div [ngClass]="getBlank(item.duration)"></div>
             </div>
-            <div class="voicemark"><div class="voiceunread" *ngIf="item.vounread==='Y'"></div><span class="voicetime">{{item.duration+'"'}}</span></div>
+            <div class="voicemark">
+              <div class="voiceunread" *ngIf="item.vounread==='Y'"></div><span class="voicetime">{{item.duration+'"'}}</span></div>
           </ng-template>
-         <div class="clearfix"></div>
+          <div class="clearfix"></div>
         </div>
       </div>
     </div>

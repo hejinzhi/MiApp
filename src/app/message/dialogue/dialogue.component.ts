@@ -1,3 +1,4 @@
+import { OriginImage } from './../../core/services/jmessage.service';
 import { Component, OnInit, ChangeDetectorRef, ViewChild } from '@angular/core';
 import { Subscription } from 'rxjs/Rx';
 import { NavParams, NavController, Events, Content, Platform, ToastController } from 'ionic-angular';
@@ -14,6 +15,9 @@ import { JMessageService } from '../../core/services/jmessage.service';
 import { LanguageConfig } from '../shared/config/language.config';
 import { DatabaseService } from '../shared/service/database.service';
 import { KeyboardAttachDirective } from '../shared/directive/KeyboardAttachDirective';
+import { UserModel } from '../../shared/models/user.model';
+import { ImageViewerController } from 'ionic-img-viewer';
+
 
 @Component({
     selector: 'sg-dialogue',
@@ -25,20 +29,21 @@ export class DialogueComponent implements OnInit {
     @ViewChild(Content) content: Content;
     languageType: string = localStorage.getItem('languageType');
     languageContent = LanguageConfig.DialogueComponent[this.languageType];
+    _imageViewerCtrl: ImageViewerController;
     list: any;
     input_text: string;
-    userinfo: any;
+    userinfo: UserModel;
     onPlus: boolean = false;
     selectable: number;
 
     userName: string;
-    userNickName: string;
-    fromUserAvatarSrc: string;
+    fromuserNickName: string;  // 聊天对象的nickname
+    fromUserAvatarSrc: string; // 聊天对象的头像
     unreadCount: number; //未读消息数，如果大于0，退出dialogue页面时把未读消息更新为已读。否则不更新
 
     toUserName: string;
-    toUserNickName: string;
-    toUserAvatarSrc: string;
+    myNickName: string; // 当前登录人的nickname
+    myAvatarSrc: string; // 当前登录人的头像
 
     showExtra: number;
     lastEditRange: any;
@@ -73,17 +78,35 @@ export class DialogueComponent implements OnInit {
         public navCtrl: NavController,
         private http: Http,
         private media: Media,
-        public toastCtrl: ToastController
+        public toastCtrl: ToastController,
+        private imageViewerCtrl: ImageViewerController
     ) {
-
+        this._imageViewerCtrl = imageViewerCtrl;
         this.userName = params.get('fromUserName');
         // this.userName = params.get('owner');
-        this.userNickName = params.get('fromUserNickName');
+        this.fromuserNickName = params.get('fromUserNickName');
         this.fromUserAvatarSrc = params.get('fromUserAvatarSrc');
         this.unreadCount = params.get('unreadCount');
 
         // 这里的toUserName一般是指当前登陆人
         this.toUserName = params.get('toUserName');
+    }
+
+    async presentImage(myImage: any, msgID: number, fromUserName: string) {
+        let originImg: OriginImage;
+        let imageViewer;
+        console.log(msgID, fromUserName);
+
+        if (msgID && msgID != 0) {
+            console.log('downloadOriginalImage');
+            originImg = await this.jmessageservice.downloadOriginalImage(fromUserName, msgID.toString());
+            imageViewer = this._imageViewerCtrl.create(myImage, { fullResImage: originImg.filePath });
+        } else {
+            console.log('not downloadOriginalImage');
+            imageViewer = this._imageViewerCtrl.create(myImage);
+        }
+        imageViewer.present();
+
     }
 
     async ngOnInit() {
@@ -95,14 +118,8 @@ export class DialogueComponent implements OnInit {
         this.keyboard.hideKeyboardAccessoryBar(true);
         this.keyboard.disableScroll(true);
         this.userinfo = JSON.parse(localStorage.getItem('currentUser'));
-
-        // document.onselectionchange = () => this.getPosition();
-
-        // 获取当前登录人的昵称和头像
-        let res = await this.messageservice.getUserAvatar(this.toUserName)
-        let toUserObj = res.json();
-        this.toUserNickName = toUserObj.NICK_NAME;
-        this.toUserAvatarSrc = toUserObj.AVATAR_URL;
+        this.myNickName = this.userinfo.nickname;
+        this.myAvatarSrc = this.userinfo.avatarUrl;
         await this.loadMessage();
     }
 
@@ -112,14 +129,23 @@ export class DialogueComponent implements OnInit {
             if (msg) {
                 // 当推送过来的消息发送者跟正在聊天的是同一个人时，在显示在画面
                 if (this.userName === msg.fromUserName) {
-                    this.getNickNameAndAvatar(msg);
+                    // await this.getNickNameAndAvatar(msg);
+                    msg.fromUserNickName = this.fromuserNickName;
+                    msg.fromUserAvatarSrc = this.fromUserAvatarSrc;
                     this.list.push(msg);
                 }
 
             } else {
                 let data: any[] = await this.messageservice.getMessagesByUsername(this.userinfo.username, this.userName, this.userinfo.username);
-                data.forEach((value, index) => {
-                    this.getNickNameAndAvatar(value);
+                data.forEach(async (value, index) => {
+                    // await this.getNickNameAndAvatar(value);
+                    if (value.fromUserName === this.userinfo.username) {
+                        value.fromUserNickName = this.userinfo.nickname;
+                        value.fromUserAvatarSrc = this.userinfo.avatarUrl;
+                    } else {
+                        value.fromUserNickName = this.fromuserNickName;
+                        value.fromUserAvatarSrc = this.fromUserAvatarSrc;
+                    }
                 });
                 this.list = data;
             }
@@ -208,8 +234,15 @@ export class DialogueComponent implements OnInit {
 
     async loadMessage() {
         let data: any[] = await this.messageservice.getMessagesByUsername(this.userinfo.username, this.userName, this.userinfo.username);
-        data.forEach((value, index) => {
-            this.getNickNameAndAvatar(value);
+        data.forEach(async (value, index) => {
+            if (value.fromUserName === this.userinfo.username) {
+                value.fromUserNickName = this.userinfo.nickname;
+                value.fromUserAvatarSrc = this.userinfo.avatarUrl;
+            } else {
+                value.fromUserNickName = this.fromuserNickName;
+                value.fromUserAvatarSrc = this.fromUserAvatarSrc;
+            }
+
         });
         this.list = data;
     };
@@ -225,17 +258,28 @@ export class DialogueComponent implements OnInit {
         //     targetUser.fromUserAvatarSrc = this.toUserAvatarSrc;
         // }
         //  await this.databaseService.getAvatarByUsername(targetUser.fromUserName);
-
-        let fromUserAvatarObj = await this.databaseService.getAvatarByUsername(targetUser.fromUserName);
-
-        // 2.如果找到了,新增昵称和头像属性
+        let fromUserAvatarObj = await this.databaseService.getAvatarByUsername(targetUser);
         if (fromUserAvatarObj.rows.length > 0) {
-            targetUser.fromUserNickName = fromUserAvatarObj.rows.item(0).NICK_NAME;
-            targetUser.fromUserAvatarSrc = fromUserAvatarObj.rows.item(0).AVATAR;
-            // history[i].timedesc = this.getDateDiff(history[i].time);
+            return {
+                nickName: fromUserAvatarObj.rows.item(0).NICK_NAME,
+                avatar: fromUserAvatarObj.rows.item(0).AVATAR
+            };
+        } else {
+            return {
+                nickName: null,
+                avatar: null
+            };
         }
 
+
+        // 2.如果找到了,新增昵称和头像属性
+        // if (fromUserAvatarObj.rows.length > 0) {
+        //     targetUser.fromUserNickName = fromUserAvatarObj.rows.item(0).NICK_NAME;
+        //     targetUser.fromUserAvatarSrc = fromUserAvatarObj.rows.item(0).AVATAR;
+        //     // history[i].timedesc = this.getDateDiff(history[i].time);
+        // }
     }
+
 
     scroll_down() {
         let that = this;
@@ -282,11 +326,16 @@ export class DialogueComponent implements OnInit {
             imageHeight: imageHeight,
             imageWidth: imageWidth,
             duration: Math.ceil(duration / 1000),
-            vounread: 'N'
+            vounread: 'N',
+            fromUserNickName: '',
+            fromUserAvatarSrc: '',
+            msgID: 0
         };
 
-        this.getNickNameAndAvatar(msg);
-        await this.databaseService.addMessage(msg.toUserName, msg.fromUserName, this.userinfo.username, msg.content, msg.contentType, msg.time, msg.type, msg.unread, extra ? JSON.stringify(msg.extra) : '', childType, imageHeight, imageWidth, duration, msg.vounread);
+        // let myAvatar = await this.getNickNameAndAvatar(msg.fromUserName);
+        msg.fromUserNickName = this.userinfo.nickname;
+        msg.fromUserAvatarSrc = this.userinfo.avatarUrl;
+        await this.databaseService.addMessage(msg.toUserName, msg.fromUserName, this.userinfo.username, msg.content, msg.contentType, msg.time, msg.type, msg.unread, extra ? JSON.stringify(msg.extra) : '', childType, imageHeight, imageWidth, duration, msg.vounread, 0);
 
         if (type === 1) {
             if (extra) {
@@ -297,7 +346,7 @@ export class DialogueComponent implements OnInit {
             }
         }
         else if (type === 2) {
-            this.jmessageservice.sendSingleImageMessage(this.userName, content);
+            this.jmessageservice.sendSingleImageMessage(this.userName, content, { height: imageHeight, width: imageWidth });
         }
         else if (type === 3) {
             this.jmessageservice.sendSingleVoiceMessage(this.userName, content);
@@ -316,7 +365,7 @@ export class DialogueComponent implements OnInit {
         let that = this;
         let options: CameraOptions = {
             //这些参数可能要配合着使用，比如选择了sourcetype是0，destinationtype要相应的设置
-            quality: 80,                                            //相片质量0-100
+            quality: 75,                                            //相片质量0-100
             allowEdit: false,                                        //在选择之前允许修改截图
             destinationType: this.camera.DestinationType.FILE_URI,
             sourceType: type,                                         //从哪里选择图片：PHOTOLIBRARY=0，相机拍照=1，SAVEDPHOTOALBUM=2。0和1其实都是本地图库
@@ -327,12 +376,17 @@ export class DialogueComponent implements OnInit {
             cameraDirection: 0,                                       //枪后摄像头类型：Back= 0,Front-facing = 1
             saveToPhotoAlbum: false                                   //保存进手机相册
         };
-        this.camera.getPicture(options).then((imageData) => {
+        this.camera.getPicture(options).then((imageData: string) => {
             // imageData is a base64 encoded string
             var image = new Image();
             image.src = imageData;
+            console.log(image);
             image.onload = async function () {
-                await that.sendMessage(2, imageData, '', '', image.height, image.width);
+                let temp: string = imageData.replace('file://', '');
+                let imageUrl: string = temp.substr(0, temp.indexOf('?'));
+                console.log(imageUrl);
+                await that.sendMessage(2, imageUrl, '', '', image.height, image.width);
+                // await that.sendMessage(2, temp, '', '', image.height, image.width);
                 that.ref.detectChanges();
             }
             // this.sendMessage(2, imageData);
