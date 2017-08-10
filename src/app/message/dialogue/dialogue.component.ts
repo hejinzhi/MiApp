@@ -31,6 +31,11 @@ export class DialogueComponent implements OnInit {
     languageContent = LanguageConfig.DialogueComponent[this.languageType];
     _imageViewerCtrl: ImageViewerController;
     list: any;
+    listlength: number;
+    listpage: number = 1;
+    listpagenum: number = 20;
+    listtotal: any;
+    listpageheight: number;
     input_text: string;
     userinfo: UserModel;
     onPlus: boolean = false;
@@ -40,6 +45,7 @@ export class DialogueComponent implements OnInit {
     fromuserNickName: string;  // 聊天对象的nickname
     fromUserAvatarSrc: string; // 聊天对象的头像
     unreadCount: number; //未读消息数，如果大于0，退出dialogue页面时把未读消息更新为已读。否则不更新
+
 
     toUserName: string;
     myNickName: string; // 当前登录人的nickname
@@ -65,6 +71,10 @@ export class DialogueComponent implements OnInit {
     openvoiceflag: boolean = false;
     voiceflagdesc: string = '按住 說話';
 
+
+    istop: boolean = false;
+
+
     constructor(private messageservice: MessageService,
         public params: NavParams,
         private jmessageservice: JMessageService,
@@ -89,7 +99,7 @@ export class DialogueComponent implements OnInit {
         this.unreadCount = params.get('unreadCount');
 
         // 这里的toUserName一般是指当前登陆人
-        this.toUserName = params.get('toUserName');
+        // this.toUserName = params.get('toUserName');
     }
 
     async presentImage(myImage: any, msgID: number, fromUserName: string) {
@@ -118,6 +128,7 @@ export class DialogueComponent implements OnInit {
         this.keyboard.hideKeyboardAccessoryBar(true);
         this.keyboard.disableScroll(true);
         this.userinfo = JSON.parse(localStorage.getItem('currentUser'));
+
         this.myNickName = this.userinfo.nickname;
         this.myAvatarSrc = this.userinfo.avatarUrl;
         await this.loadMessage();
@@ -147,7 +158,9 @@ export class DialogueComponent implements OnInit {
                         value.fromUserAvatarSrc = this.fromUserAvatarSrc;
                     }
                 });
-                this.list = data;
+                this.listtotal = data;
+                this.listlength = data.length;
+                this.list = this.listtotal.slice(-this.listpagenum);
             }
             this.ref.detectChanges();
             this.scroll_down();
@@ -156,10 +169,7 @@ export class DialogueComponent implements OnInit {
         await this.messageservice.setUnreadToZeroByUserName(this.userinfo.username, this.userName);
         this.jmessageservice.enterSingleConversation(this.userName);
 
-        // if (this.plf === 'ios') {
         this.scroll_down();
-        // }
-
     }
 
     async ionViewWillLeave() {
@@ -244,7 +254,9 @@ export class DialogueComponent implements OnInit {
             }
 
         });
-        this.list = data;
+        this.listtotal = data;
+        this.listlength = data.length;
+        this.list = this.listtotal.slice(-this.listpagenum);
     };
 
     async getNickNameAndAvatar(targetUser: any) {
@@ -358,6 +370,29 @@ export class DialogueComponent implements OnInit {
             that.scroll_down();
         }, 0);
 
+    }
+
+    doRefresh(event: any) {
+        this.listpage++;
+        this.list = this.listtotal.slice(-this.listpagenum * this.listpage);
+        this.istop = false;
+        setTimeout(() => {
+            var div = document.getElementsByClassName('msg-content');
+            let dis = div[0].scrollHeight - this.listpageheight;
+            div[0].scrollTop = dis;
+        }, 100);
+        event.complete();
+    }
+
+    doscroll(event: any) {
+        if (event.srcElement.scrollTop <= 50) {
+            if (this.listpage * this.listpagenum < this.listlength) {
+                this.listpageheight = event.srcElement.scrollHeight;
+                this.istop = true;
+            }
+        } else {
+            this.istop = false;
+        }
     }
 
     getPhoto(type: number) {
