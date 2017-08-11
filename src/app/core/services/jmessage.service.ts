@@ -12,11 +12,11 @@ export class JMessageService {
     // private JIM = new JMessage();
     // public jmessagePlugin = (<any>window).plugins ? (<any>window).plugins.jmessagePlugin || null : null;
     public jmessagePlugin: any;
-    public a: any;
-    public b: any;
+    public receiveMessageHandler: any;
+    public syncOfflineMessageHandler: any;
     jmessageHandler: Subscription; //接收句柄，再view被关闭的时候取消订阅，否则对已关闭的view进行数据脏检查会报错
     jmessageOffline: Subscription;
-    constructor(private platform:Platform) {
+    constructor(private platform: Platform) {
         // console.log(this.JMessage2, 'sdasdasdasda');
         // console.log(window.JMessage, '111');
         // this.jmessagePlugin = window.JMessage;
@@ -38,7 +38,7 @@ export class JMessageService {
     //     });
     // };
     init(isOpenMessageRoaming: boolean = true) {
-        if(!this.platform.is('cordova')) return;
+        if (!this.platform.is('cordova')) return;
         window.JMessage.setDebugMode({ 'enable': true });
         window.JMessage.init({ 'isOpenMessageRoaming': isOpenMessageRoaming });
         // console.log(window.JMessage);
@@ -249,7 +249,7 @@ export class JMessageService {
 
         });
     }
-  
+
     // 下載語音文件
     downloadVoiceFile(username: string, messageId: string): Promise<OriginImage> {
         let params = {
@@ -278,22 +278,22 @@ export class JMessageService {
     // 监听receive事件
 
     addReceiveMessageListener(cb: any) {
-        this.a = cb;
+        this.receiveMessageHandler = cb;
         window.JMessage.addReceiveMessageListener(cb);
     }
 
     // 监听离线消息事件
     addSyncOfflineMessageListener(cb: any) {
-        this.b = cb;
+        this.syncOfflineMessageHandler = cb;
         window.JMessage.addSyncOfflineMessageListener(cb);
     }
 
     removeReceiveMessageListener() {
-        window.JMessage.removeReceiveMessageListener(this.a);
+        window.JMessage.removeReceiveMessageListener(this.receiveMessageHandler);
     }
 
     removeSyncOfflineMessageListener() {
-        window.JMessage.removeSyncOfflineMessageListener(this.b);
+        window.JMessage.removeSyncOfflineMessageListener(this.syncOfflineMessageHandler);
     }
 
     onReceiveMessage(): Observable<any> {
