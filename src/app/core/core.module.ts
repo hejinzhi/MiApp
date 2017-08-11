@@ -16,7 +16,7 @@ import { PluginService } from './services/plugin.service';
 import { ValidateService } from './services/validate.service';
 import { NgValidatorExtendService } from './services/ng-validator-extend.service';
 import { EncryptUtilService } from './services/encryptUtil.service';
-
+import { CacheService } from './services/cache.service';
 
 
 @NgModule({
@@ -36,7 +36,8 @@ import { EncryptUtilService } from './services/encryptUtil.service';
         CodePush,
         Network,
         SQLite,
-        EncryptUtilService
+        EncryptUtilService,
+        CacheService
     ],
     exports: []
 })
