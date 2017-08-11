@@ -34,7 +34,7 @@ export class DialogueComponent implements OnInit {
     listlength: number;
     listpage: number = 1;
     listpagenum: number = 20;
-    listtotal: any;
+    listtotal: Array<object>;
     listpageheight: number;
     input_text: string;
     userinfo: UserModel;
@@ -374,7 +374,11 @@ export class DialogueComponent implements OnInit {
 
     doRefresh(event: any) {
         this.listpage++;
-        this.list = this.listtotal.slice(-this.listpagenum * this.listpage);
+        // this.list = this.listtotal.slice(-this.listpagenum * this.listpage);
+        let temp: Array<object> = this.listtotal.slice(-this.listpagenum * this.listpage, -this.listpagenum * (this.listpage - 1));
+          temp.forEach((v) => {
+              this.list.unshift(v);
+        });
         this.istop = false;
         setTimeout(() => {
             var div = document.getElementsByClassName('msg-content');
