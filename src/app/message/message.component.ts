@@ -16,6 +16,8 @@ import { LanguageConfig } from './shared/config/language.config';
 import { DatabaseService } from './shared/service/database.service';
 import { PluginService } from '../core/services/plugin.service';
 
+declare var window: any;
+
 @Component({
   selector: 'sg-message',
   templateUrl: 'message.component.html'
@@ -63,9 +65,9 @@ export class MessageComponent implements OnInit {
   }
 
   ionViewDidLeave() {
-    if (this.pluginService.isCordova()) {
-      this.jmessageService.jmessageOffline.unsubscribe();
-    }
+    // if (this.pluginService.isCordova()) {
+    //   this.jmessageService.jmessageOffline.unsubscribe();
+    // }
   }
 
   ngOnInit() {
@@ -78,32 +80,49 @@ export class MessageComponent implements OnInit {
       }
 
       // 读取离线消息
-      this.jmessageService.jmessageOffline = this.jmessageService.onSyncOfflineMessage().subscribe(async (res) => {
-        console.log(res, 444)
-        for (let i = 0; i < res.messageList.length; i++) {
-          if (this.plf === 'ios') {
-            await this.handleReceiveMessageIos(res.messageList[i]);
-          } else if (this.plf === 'android') {
-            await this.handleReceiveMessageAndroid(res.messageList[i]);
-          }
+      // this.jmessageService.jmessageOffline = this.jmessageService.onSyncOfflineMessage().subscribe(async (res) => {
+      //   console.log(res, 444)
+      //   for (let i = 0; i < res.messageList.length; i++) {
+      //     if (this.plf === 'ios') {
+      //       await this.handleReceiveMessageIos(res.messageList[i]);
+      //     } else if (this.plf === 'android') {
+      //       await this.handleReceiveMessageAndroid(res.messageList[i]);
+      //     }
 
-        }
-        // this.messageListItem = await this.messageService.getMessageHistory(this.userinfo.username, 'dialogue');
-        // this.noticeListItem = await this.messageService.getMessageHistory(this.userinfo.username, 'notice');
-        await this.refreshData();
-        this.ref.detectChanges();
-        this.events.publish('msg.onReceiveMessage');
-        this.events.publish('msg.onChangeTabBadge');
-      });
+      //   }
+      //   // this.messageListItem = await this.messageService.getMessageHistory(this.userinfo.username, 'dialogue');
+      //   // this.noticeListItem = await this.messageService.getMessageHistory(this.userinfo.username, 'notice');
+      //   await this.refreshData();
+      //   this.ref.detectChanges();
+      //   this.events.publish('msg.onReceiveMessage');
+      //   this.events.publish('msg.onChangeTabBadge');
+      // });
 
       // 监听是否有消息推送过来
-      this.jmessageService.jmessageHandler = this.jmessageService.onReceiveMessage().subscribe(async (res) => {
-        console.log(555);
+      // this.jmessageService.jmessageHandler = this.jmessageService.onReceiveMessage().subscribe(async (res) => {
+      //   console.log(555);
+      //   let msg: any;
+      //   if (this.plf === 'ios') {
+      //     msg = await this.handleReceiveMessageIos(res);
+      //   } else if (this.plf === 'android') {
+      //     msg = await this.handleReceiveMessageAndroid(res);
+      //   }
+      //   await this.refreshData();
+      //   this.ref.detectChanges();
+      //   this.events.publish('msg.onReceiveMessage', msg);
+      //   this.events.publish('msg.onChangeTabBadge');
+      // });
+      this.jmessageService.addReceiveMessageListener(async (res: any) => {
+        console.log(res);
         let msg: any;
-        if (this.plf === 'ios') {
-          msg = await this.handleReceiveMessageIos(res);
-        } else if (this.plf === 'android') {
-          msg = await this.handleReceiveMessageAndroid(res);
+        if (res.type === 'text') {
+          msg = await this.handleTextMessage(res);
+        }
+        else if (res.type === 'image') {
+          msg = await this.handleImageMessage(res);
+        }
+        else if (res.type === 'voice') {
+          msg = await this.handleVoiceMessage(res);
         }
         await this.refreshData();
         this.ref.detectChanges();
@@ -112,6 +131,95 @@ export class MessageComponent implements OnInit {
       });
 
     }
+  }
+
+  async handleTextMessage(res: TextMessage) {
+    let _content: string = res.text;
+    let child_type: string;
+    let vounread: string = 'N';
+
+    if (res.target.username === 'signlist' || res.target.username === 'news' || res.target.username === 'alert' || res.target.username === 'report') {
+      this._type = 'notice';
+    } else {
+      this._type = 'dialogue';
+    }
+
+    let msg: Message = {
+      toUserName: res.target.username,
+      fromUserName: res.from.username,
+      content: _content,
+      contentType: res.type,
+      time: res.createTime,
+      type: this._type,
+      unread: true,
+      imageHeight: 0,
+      imageWidth: 0,
+      duration: '0',
+      vounread: vounread,
+      msgID: res.id
+    };
+    console.log(msg);
+
+    await this.databaseService.addMessage(msg.toUserName, msg.fromUserName, this.userinfo.username, _content, 'text', msg.time, this._type, 'Y',
+      JSON.stringify(res.extras), child_type, 0, 0, 0, vounread, res.id);
+
+    return msg;
+  }
+
+  async handleImageMessage(res: ImageMessage) {
+    let _content: string = res.thumbPath;
+    let child_type: string;
+    let vounread: string = 'N';
+    this._type = 'dialogue';
+
+    let msg: Message = {
+      toUserName: res.target.username,
+      fromUserName: res.from.username,
+      content: _content,
+      contentType: res.type,
+      time: res.createTime,
+      type: this._type,
+      unread: true,
+      imageHeight: res.extras.height,
+      imageWidth: res.extras.width,
+      duration: '0',
+      vounread: vounread,
+      msgID: res.id
+    };
+    console.log(msg);
+
+    await this.databaseService.addMessage(msg.toUserName, msg.fromUserName, this.userinfo.username, _content, 'image', msg.time, this._type, 'Y',
+      JSON.stringify(res.extras), child_type, 0, 0, 0, vounread, res.id);
+
+    return msg;
+  }
+
+  async handleVoiceMessage(res: VoiceMessage) {
+    let _content: string = res.path;
+    let child_type: string;
+    let vounread: string = 'N';
+    this._type = 'dialogue';
+
+    let msg: Message = {
+      toUserName: res.target.username,
+      fromUserName: res.from.username,
+      content: _content,
+      contentType: res.type,
+      time: res.createTime,
+      type: this._type,
+      unread: true,
+      imageHeight: 0,
+      imageWidth: 0,
+      duration: '0',
+      vounread: vounread,
+      msgID: res.id
+    };
+    console.log(msg);
+
+    await this.databaseService.addMessage(msg.toUserName, msg.fromUserName, this.userinfo.username, _content, 'voice', msg.time, this._type, 'Y',
+      JSON.stringify(res.extras), child_type, 0, 0, 0, vounread, res.id);
+
+    return msg;
   }
 
   async handleReceiveMessageAndroid(res: any) {
@@ -154,11 +262,12 @@ export class MessageComponent implements OnInit {
       imageHeight: res.content.height,
       imageWidth: res.content.width,
       duration: res.content.duration,
-      vounread: vounread
+      vounread: vounread,
+      msgID: 0
     };
 
     await this.databaseService.addMessage(res.targetInfo.userName, res.fromName, this.userinfo.username, _content, res.contentType, res.createTimeInMillis, this._type, 'Y',
-      JSON.stringify(res.content.extras), child_type, res.content.height, res.content.width, res.content.duration, vounread);
+      JSON.stringify(res.content.extras), child_type, res.content.height, res.content.width, res.content.duration, vounread, 0);
 
     return msg;
   }
@@ -204,11 +313,12 @@ export class MessageComponent implements OnInit {
       imageHeight: res.content.msg_body.height,
       imageWidth: res.content.msg_body.width,
       duration: res.content.msg_body.duration,
-      vounread: vounread
+      vounread: vounread,
+      msgID: 0
     };
 
     await this.databaseService.addMessage(res.content.target_id, res.content.from_id, this.userinfo.username, _content, res.content.msg_type, res.content.create_time, this._type, 'Y',
-      JSON.stringify(res.content.msg_body.extras), child_type, res.content.msg_body.height, res.content.msg_body.width, res.content.msg_body.duration, vounread);
+      JSON.stringify(res.content.msg_body.extras), child_type, res.content.msg_body.height, res.content.msg_body.width, res.content.msg_body.duration, vounread, 0);
 
     return msg;
 
@@ -315,12 +425,13 @@ export class MessageComponent implements OnInit {
     // this.databaseService.getMessageList(this.userinfo.username, 'notice').then((data) => {
     //   console.log(data);
     //   console.log(JSON.parse(data[0].extra));
-    // });~
-
+    // });
     this.databaseService.getAllMessages().then(data => {
       console.log(data);
     });
 
+
+    // window.JMessage.logout();
     // this.messageListItem[0].unreadCount = 10;
 
   }
@@ -356,4 +467,86 @@ export class MessageComponent implements OnInit {
       console.log('Error getting location', error);
     });
   }
+}
+
+export class TextMessage {
+  createTime: number;
+  extras: object;
+  from: UserInfo;
+  id: number;
+  target: UserInfo;
+  text: string;
+  type: string;
+}
+
+export class ImageMessage {
+  createTime: number;
+  extras: {
+    height: number,
+    width: number
+  };
+  from: UserInfo;
+  id: number;
+  target: UserInfo;
+  thumbPath: string;
+  type: string;
+}
+
+export class VoiceMessage {
+  createTime: number;
+  extras: object;
+  from: UserInfo;
+  id: number;
+  target: UserInfo;
+  path: string;
+  type: string;
+}
+
+export class UserInfo {
+  address: string;
+  appKey: string;
+  avatarThumbPath: string;
+  birthday: number;
+  gender: string;
+  isFriend: boolean;
+  isInBlackList: boolean;
+  isNoDisturb: boolean;
+  nickname: string;
+  noteName: string;
+  noteText: string;
+  region: string;
+  signature: string;
+  type: string;
+  username: string;
+
+}
+
+export class LocationMessage {
+  id: string;
+  type: string;
+  from: UserInfo;
+  target: UserInfo;
+  extras: object;
+  address: string;              // 详细地址。
+  longitude: number;             // 经度。
+  latitude: number;              // 纬度。
+  scale: number;                // 地图缩放比例。
+}
+
+export class FileMessage {
+  id: string;
+  type: string; // file
+  from: UserInfo;
+  target: UserInfo;
+  extras: object;
+  fileName: string;            // 文件名。要下载完整文件需要调用 `downloadFile` 方法。
+}
+
+export class CustomMessage {
+  id: string;
+  type: string;
+  from: UserInfo;
+  target: UserInfo;
+  extras: object;
+  customObject: object;        // 自定义键值对对象。
 }

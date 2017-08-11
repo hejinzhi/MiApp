@@ -4,6 +4,9 @@ import { NavController } from 'ionic-angular';
 
 import { TabsComponent } from '../tabs/tabs.component';
 import { LoginService } from './shared/service/login.service';
+import { JMessageService } from '../core/services/jmessage.service';
+
+declare var window: any;
 
 @Component({
   selector: 'sg-login',
@@ -13,7 +16,8 @@ export class LoginComponent {
 
   constructor(
     public navCtrl: NavController,
-    private loginService: LoginService
+    private loginService: LoginService,
+    private jmessageService: JMessageService
   ) {
   }
   appVersion: string;
@@ -33,6 +37,9 @@ export class LoginComponent {
     } else {
       return;
     }
+    // console.log(window.JMessage);
+    // console.log(this.jmessageService.jmessagePlugin);
+    // this.jmessageService.init();
 
   }
 

@@ -16,6 +16,7 @@ import { EnvConfig } from './shared/config/env.config';
 import { LoginService } from './login/shared/service/login.service';
 
 declare var cordova: any;
+declare var window: any;
 
 
 @Component({
@@ -48,14 +49,15 @@ export class MyAppComponent {
         platform.ready().then(async () => {
             statusBar.styleDefault();
             splashScreen.hide();
-            this.jMessage.jmessagePlugin = (<any>window).plugins ? (<any>window).plugins.jmessagePlugin || null : null;
-            this.jPushService.jPushPlugin = (<any>window).plugins ? (<any>window).plugins.jPushPlugin || null : null;
+            this.jMessage.init();
+            // this.jMessage.jmessagePlugin = (<any>window).plugins ? (<any>window).plugins.jmessagePlugin || null : null;
+            // this.jPushService.jPushPlugin = (<any>window).plugins ? (<any>window).plugins.jPushPlugin || null : null;
             await this.appInit();
             this.plugin.checkAppForUpdate();
             if (platform.is('cordova') && platform.is('android')) {
                 let original = platform.runBackButtonAction;
                 let __this = this;
-                platform.runBackButtonAction = function(): void {
+                platform.runBackButtonAction = function (): void {
                     if (__this.keyboard.isOpen()) {//如果键盘开启则隐藏键盘
                         __this.keyboard.close();
                         return;
@@ -113,6 +115,9 @@ export class MyAppComponent {
         } else {
             this.rootPage = LoginComponent;
         }
+
+
+
         this.setDefaultLanguage();
         if (!localStorage.getItem('appVersion')) {
             localStorage.setItem('appVersion', EnvConfig.appVersion);
