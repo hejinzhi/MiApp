@@ -118,6 +118,8 @@ export class SetComponent {
               // if (that.jmessage.jmessageOffline) {
               //   that.jmessage.jmessageOffline.unsubscribe();
               // }
+              that.jmessage.removeReceiveMessageListener();
+              that.jmessage.removeSyncOfflineMessageListener();
               that.jmessage.loginOut();
             }
             this.removeAutoLogin();

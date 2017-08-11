@@ -331,8 +331,8 @@ export class DatabaseService {
     return this.database.executeSql(`UPDATE MOA_LOCAL_AVATAR SET AVATAR='${avatar}' WHERE USER_NAME='${username}'`, {});
   }
 
-  setvounreadByID(id: number) {
-    return this.database.executeSql(`UPDATE MOA_LOCAL_MESSAGE SET VOUNREAD='N' WHERE ID='${id}'`, {});
+  setvounreadByID(fromUsername: string, id: number) {
+    return this.database.executeSql(`UPDATE MOA_LOCAL_MESSAGE SET VOUNREAD='N' WHERE FROM_USER_NAME='${fromUsername}' AND ID='${id}' `, {});
   }
 
 }

@@ -8,7 +8,7 @@ export class Message {
     unread: boolean;
     imageHeight: number;
     imageWidth: number;
-    duration: string;
+    duration: number;
     vounread: string;
     msgID: number;
 }
