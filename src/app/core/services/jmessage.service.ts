@@ -1,4 +1,6 @@
 import { Injectable } from '@angular/core';
+import { Platform } from 'ionic-angular';
+import { BarcodeScanner } from '@ionic-native/barcode-scanner';
 import { Observable, Subscription } from 'rxjs/Rx';
 
 declare var window: any;
@@ -14,7 +16,7 @@ export class JMessageService {
     public b: any;
     jmessageHandler: Subscription; //接收句柄，再view被关闭的时候取消订阅，否则对已关闭的view进行数据脏检查会报错
     jmessageOffline: Subscription;
-    constructor() {
+    constructor(private platform:Platform) {
         // console.log(this.JMessage2, 'sdasdasdasda');
         // console.log(window.JMessage, '111');
         // this.jmessagePlugin = window.JMessage;
@@ -36,6 +38,7 @@ export class JMessageService {
     //     });
     // };
     init(isOpenMessageRoaming: boolean = true) {
+        if(!this.platform.is('cordova')) return;
         window.JMessage.setDebugMode({ 'enable': true });
         window.JMessage.init({ 'isOpenMessageRoaming': isOpenMessageRoaming });
         // console.log(window.JMessage);

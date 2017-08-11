@@ -23,7 +23,7 @@ export class HumanResourcesComponent {
   salary() {
     this.navCtrl.push('SalaryAnalysisComponent')
   }
-  quit() {
-    console.log(456)
+  dismission() {
+    this.navCtrl.push('DimissionAnalysisComponent')
   }
 }

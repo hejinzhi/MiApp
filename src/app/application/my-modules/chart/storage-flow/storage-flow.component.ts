@@ -51,21 +51,17 @@ export class StorageFlowComponent {
     switch (this.mi_bu) {
       case 'CBU':
         setTimeout(() => {
-          let dom = document.getElementById('main2');
-          dom.style.height = window.outerHeight * 0.47 + 'px';
           let option = this.chartService.optionConv(OptionsConfig.storageFlow.option1);
           option.title.text = this.mi_bu + this.plugin.chineseConv(' 存货周转天数');
-          this.chartService.makeChartWithDom(dom, option);
+          this.chartService.makeChart('main2', option, true);
         }, 20)
         this.scroll_down()
         break;
       default:
         setTimeout(() => {
-          let dom = document.getElementById('main2');
-          dom.style.height = window.outerHeight * 0.47 + 'px';
           let option = this.chartService.optionConv(OptionsConfig.storageFlow.option1);
           option.title.text = this.mi_bu + this.plugin.chineseConv(' 存货周转天数');
-          this.chartService.makeChartWithDom(dom, option);
+          this.chartService.makeChart('main2', option, true);
           this.scroll_down()
         }, 20)
         break;

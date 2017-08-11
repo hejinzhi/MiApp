@@ -1,0 +1,42 @@
+<ion-header>
+
+  <ion-navbar>
+    <ion-title>離職率分析(月報)</ion-title>
+    <!-- <ion-buttons end >
+      <button ion-button  (tap)="reFresh()">刷新</button>
+    </ion-buttons> -->
+  </ion-navbar>
+
+</ion-header>
+
+
+<ion-content>
+  <sg-table [tableData]="wholeInfo" *ngIf="wholeInfo"></sg-table>
+
+  <div id="main1" class="chart">
+
+  </div>
+  <div padding id="mySegment" *ngIf="wholeInfo">
+    <ion-segment [(ngModel)]="mi_type" (ionChange)="changeShow()">
+      <ion-segment-button value="DL">
+        DL
+      </ion-segment-button>
+      <ion-segment-button value="IDL">
+        IDL
+      </ion-segment-button>
+      <ion-segment-button value="S+A">
+        S+A
+      </ion-segment-button>
+    </ion-segment>
+  </div>
+
+  <div [ngSwitch]="mi_type" class = "segment" *ngIf="mi_type">
+
+    <div *ngSwitchDefault>
+      <sg-table [tableData]="subInfo"></sg-table>
+      <div id="main2" class="chart">
+
+      </div>
+    </div>
+  </div>
+</ion-content>

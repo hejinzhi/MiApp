@@ -2,48 +2,16 @@
 
   <ion-navbar>
     <ion-title>年資分析(月報)</ion-title>
-    <ion-buttons end >
+    <!-- <ion-buttons end >
       <button ion-button  (tap)="reFresh()">刷新</button>
-    </ion-buttons>
+    </ion-buttons> -->
   </ion-navbar>
 
 </ion-header>
 
 
 <ion-content>
-  <div class="myTable">
-    <table class="table table-striped">
-        <caption>Optional table caption.</caption>
-        <thead>
-            <tr>
-                <th>职类</th>
-                <th>0-1年</th>
-                <th>1-2年</th>
-                <th>2-3年</th>
-                <th>3-4年</th>
-                <th>4-5年</th>
-                <th>5-7年</th>
-                <th>7-9年</th>
-                <th>9年以上</th>
-                <th>总计</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <th scope="row" class="row1">管理</th>
-                <th>0000</th>
-                <th>00000</th>
-                <th>00000</th>
-                <th>0</th>
-                <th>0</th>
-                <th>0</th>
-                <th>0</th>
-                <th>36</th>
-                <th>36</th>
-            </tr>
-        </tbody>
-    </table>
-  </div>
+  <sg-table [tableData]="tableInfo" *ngIf="tableInfo"></sg-table>
 
   <div id="main1" class="chart">
 
@@ -55,9 +23,6 @@
 
   </div>
   <div id="main4" class="chart">
-
-  </div>
-  <div class="chart" myBMap [pos]="[113,23]">
 
   </div>
 </ion-content>
