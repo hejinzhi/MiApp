@@ -15,6 +15,7 @@ import { MyHttpService } from '../core/services/myHttp.service';
 import { LanguageConfig } from './shared/config/language.config';
 import { DatabaseService } from './shared/service/database.service';
 import { PluginService } from '../core/services/plugin.service';
+import { OriginImage } from './../core/services/jmessage.service';
 
 declare var window: any;
 
@@ -113,7 +114,6 @@ export class MessageComponent implements OnInit {
       //   this.events.publish('msg.onChangeTabBadge');
       // });
       this.jmessageService.addReceiveMessageListener(async (res: any) => {
-        console.log(res);
         let msg: any;
         if (res.type === 'text') {
           msg = await this.handleTextMessage(res);
@@ -130,6 +130,25 @@ export class MessageComponent implements OnInit {
         this.events.publish('msg.onChangeTabBadge');
       });
 
+      this.jmessageService.addSyncOfflineMessageListener(async (res: any) => {
+        let msg: any;
+        res.messageArray.forEach(async (element: any) => {
+          if (element.type === 'text') {
+            msg = await this.handleTextMessage(element);
+          }
+          else if (element.type === 'image') {
+            msg = await this.handleImageMessage(element);
+          }
+          else if (element.type === 'voice') {
+            msg = await this.handleVoiceMessage(element);
+          }
+          await this.refreshData();
+          this.ref.detectChanges();
+          this.events.publish('msg.onReceiveMessage', msg);
+          this.events.publish('msg.onChangeTabBadge');
+        });
+      })
+
     }
   }
 
@@ -137,12 +156,12 @@ export class MessageComponent implements OnInit {
     let _content: string = res.text;
     let child_type: string;
     let vounread: string = 'N';
-
-    if (res.target.username === 'signlist' || res.target.username === 'news' || res.target.username === 'alert' || res.target.username === 'report') {
+    if (res.from.username === 'signlist' || res.from.username === 'news' || res.from.username === 'alert' || res.from.username === 'report') {
       this._type = 'notice';
     } else {
       this._type = 'dialogue';
     }
+    console.log(res, 99);
 
     let msg: Message = {
       toUserName: res.target.username,
@@ -154,11 +173,15 @@ export class MessageComponent implements OnInit {
       unread: true,
       imageHeight: 0,
       imageWidth: 0,
-      duration: '0',
+      duration: 0,
       vounread: vounread,
       msgID: res.id
     };
-    console.log(msg);
+
+    if (res.extras && typeof (res.extras.type) != "undefined") {
+      console.log(555);
+      child_type = res.extras.type;
+    }
 
     await this.databaseService.addMessage(msg.toUserName, msg.fromUserName, this.userinfo.username, _content, 'text', msg.time, this._type, 'Y',
       JSON.stringify(res.extras), child_type, 0, 0, 0, vounread, res.id);
@@ -182,11 +205,11 @@ export class MessageComponent implements OnInit {
       unread: true,
       imageHeight: res.extras.height,
       imageWidth: res.extras.width,
-      duration: '0',
+      duration: 0,
       vounread: vounread,
       msgID: res.id
     };
-    console.log(msg);
+    // console.log(msg);
 
     await this.databaseService.addMessage(msg.toUserName, msg.fromUserName, this.userinfo.username, _content, 'image', msg.time, this._type, 'Y',
       JSON.stringify(res.extras), child_type, 0, 0, 0, vounread, res.id);
@@ -196,9 +219,15 @@ export class MessageComponent implements OnInit {
 
   async handleVoiceMessage(res: VoiceMessage) {
     let _content: string = res.path;
+    let voicefile: OriginImage;
     let child_type: string;
-    let vounread: string = 'N';
+    let vounread: string = 'Y';
     this._type = 'dialogue';
+
+    if (!res.path) {
+      let voicefile = await this.jmessageService.downloadVoiceFile(res.from.username, res.id.toString());
+      _content = voicefile.filePath;
+    }
 
     let msg: Message = {
       toUserName: res.target.username,
@@ -210,14 +239,14 @@ export class MessageComponent implements OnInit {
       unread: true,
       imageHeight: 0,
       imageWidth: 0,
-      duration: '0',
+      duration: Math.ceil(res.duration / 1000),
       vounread: vounread,
       msgID: res.id
     };
-    console.log(msg);
+    // console.log(msg);
 
     await this.databaseService.addMessage(msg.toUserName, msg.fromUserName, this.userinfo.username, _content, 'voice', msg.time, this._type, 'Y',
-      JSON.stringify(res.extras), child_type, 0, 0, 0, vounread, res.id);
+      JSON.stringify(res.extras), child_type, 0, 0, res.duration, vounread, res.id);
 
     return msg;
   }
@@ -471,7 +500,7 @@ export class MessageComponent implements OnInit {
 
 export class TextMessage {
   createTime: number;
-  extras: object;
+  extras: any;
   from: UserInfo;
   id: number;
   target: UserInfo;
@@ -500,6 +529,8 @@ export class VoiceMessage {
   target: UserInfo;
   path: string;
   type: string;
+  duration: number;
+
 }
 
 export class UserInfo {

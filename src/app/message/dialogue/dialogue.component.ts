@@ -560,7 +560,8 @@ export class DialogueComponent implements OnInit {
         if (!this.openvoiceflag) {
             file.play();
             this.openvoiceflag = true;
-            await this.databaseService.setvounreadByID(item.id);
+            console.log(item,456);
+            await this.databaseService.setvounreadByID(item.fromUserName,item.id);
             if (item.vounread = 'Y') {
                 for (let i = 0; i < this.list.length; i++) {
                     if (this.list[i].id === item.id) {
