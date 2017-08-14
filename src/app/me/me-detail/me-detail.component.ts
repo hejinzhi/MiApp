@@ -48,7 +48,8 @@ export class MeDetailComponent {
 
   async getNewPhoto(type: number, size: number) {
     if (!this.plugin.isCordova()) return;
-    let temp = await this.plugin.getNewPhoto(type, size);
+    let temp = await this.plugin.getNewPhoto(type, size).catch((e) => console.log(e));
+    if(!temp) return;
     temp = 'data:image/jpeg;base64,' + temp;
     this.user.avatarUrl = temp;
     this.showLoading();
