@@ -114,6 +114,7 @@ export class MessageComponent implements OnInit {
       //   this.events.publish('msg.onChangeTabBadge');
       // });
       this.jmessageService.addReceiveMessageListener(async (res: any) => {
+        console.log(res);
         let msg: any;
         if (res.type === 'text') {
           msg = await this.handleTextMessage(res);
@@ -212,7 +213,7 @@ export class MessageComponent implements OnInit {
     // console.log(msg);
 
     await this.databaseService.addMessage(msg.toUserName, msg.fromUserName, this.userinfo.username, _content, 'image', msg.time, this._type, 'Y',
-      JSON.stringify(res.extras), child_type, 0, 0, 0, vounread, res.id);
+      JSON.stringify(res.extras), child_type, msg.imageHeight, msg.imageWidth, 0, vounread, res.id);
 
     return msg;
   }
