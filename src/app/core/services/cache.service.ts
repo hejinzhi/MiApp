@@ -6,12 +6,17 @@ export class CacheService {
   constructor() {  }
 
   get(comName:string, key:string) {
-    return this.cache[comName]? this.cache[comName][key]: null;
+    if(this.cache[comName] && this.cache[comName][key]) {
+      let data = JSON.parse(JSON.stringify(this.cache[comName][key]));
+      return data;
+    } else {
+      return null
+    }
   }
 
   update(comName:string, key:string,newVal:any) {
     this.cache[comName] = this.cache[comName] || {};
-    this.cache[comName][key]= newVal;
+    this.cache[comName][key]= JSON.parse(JSON.stringify(newVal));
   }
 
   clear(comName:string) {

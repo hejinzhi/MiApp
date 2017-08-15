@@ -88,6 +88,7 @@ export class DimissionAnalysisComponent {
    * @param  {boolean}    setHeight 是否再次设置高度（dom被div等包住时无法使用自适应高度），默认为false
    */
   makeChart(id:string, tableInfo:TableModel ,lastOrder:number, setHeight:boolean = false) {
+    if(!tableInfo) return;
     let option = JSON.parse(OptionsConfig.DimissionAnalysis.option1);
     let infoLength = tableInfo.data.length;
     let legend:string[]= [];
@@ -128,8 +129,10 @@ export class DimissionAnalysisComponent {
       break;
     }
     let res:any = await this.chartService.getDimissionChartInfo(type).catch((e) => {
-      this.plugin.errorDeal(e);
+      this.plugin.errorDeal(e)
+      return '';
     });
+    if(!res) return;
     let data = res.json().map((list:any) => {
       return this.chartService.changeObjectToArray(list);
     })

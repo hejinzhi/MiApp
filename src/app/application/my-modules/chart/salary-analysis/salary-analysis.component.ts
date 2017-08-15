@@ -28,6 +28,7 @@ export class SalaryAnalysisComponent {
 
   async ionViewDidLoad() {
     this.tableInfo = await this.getInfo();
+    if(!this.tableInfo) return;
     let wholeData = this.tableInfo.data;
     this.chartService.makeChart('main1', this.chartService.optionConv(this.initOption1(wholeData)))
     this.chartService.makeChart('main2', this.chartService.optionConv(this.initOption2(wholeData)))
@@ -133,6 +134,7 @@ export class SalaryAnalysisComponent {
       }
     }).catch((e) => {
       this.plugin.errorDeal(e);
+      return '';
     })
   }
 }
