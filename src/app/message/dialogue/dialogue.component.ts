@@ -34,7 +34,7 @@ export class DialogueComponent implements OnInit {
     listlength: number;
     listpage: number = 1;
     listpagenum: number = 20;
-    listtotal: any;
+    listtotal: Array<object>;
     listpageheight: number;
     input_text: string;
     userinfo: UserModel;
@@ -374,7 +374,11 @@ export class DialogueComponent implements OnInit {
 
     doRefresh(event: any) {
         this.listpage++;
-        this.list = this.listtotal.slice(-this.listpagenum * this.listpage);
+        // this.list = this.listtotal.slice(-this.listpagenum * this.listpage);
+        let temp: Array<object> = this.listtotal.slice(-this.listpagenum * this.listpage, -this.listpagenum * (this.listpage - 1));
+        temp.forEach((v) => {
+            this.list.unshift(v);
+        });
         this.istop = false;
         setTimeout(() => {
             var div = document.getElementsByClassName('msg-content');
@@ -385,10 +389,22 @@ export class DialogueComponent implements OnInit {
     }
 
     doscroll(event: any) {
-        if (event.srcElement.scrollTop <= 50) {
+        if (event.srcElement.scrollTop <= 0) {
             if (this.listpage * this.listpagenum < this.listlength) {
                 this.listpageheight = event.srcElement.scrollHeight;
                 this.istop = true;
+                this.listpage++;
+                // this.list = this.listtotal.slice(-this.listpagenum * this.listpage);
+                let temp: Array<object> = this.listtotal.slice(-this.listpagenum * this.listpage, -this.listpagenum * (this.listpage - 1));
+                temp.forEach((v) => {
+                    this.list.unshift(v);
+                });
+                this.istop = false;
+                setTimeout(() => {
+                    var div = document.getElementsByClassName('msg-content');
+                    let dis = div[0].scrollHeight - this.listpageheight;
+                    div[0].scrollTop = dis;
+                }, 0);
             }
         } else {
             this.istop = false;
@@ -560,7 +576,8 @@ export class DialogueComponent implements OnInit {
         if (!this.openvoiceflag) {
             file.play();
             this.openvoiceflag = true;
-            await this.databaseService.setvounreadByID(item.id);
+            console.log(item, 456);
+            await this.databaseService.setvounreadByID(item.fromUserName, item.id);
             if (item.vounread = 'Y') {
                 for (let i = 0; i < this.list.length; i++) {
                     if (this.list[i].id === item.id) {
