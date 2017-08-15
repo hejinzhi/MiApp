@@ -85,8 +85,10 @@ export class MyAppComponent {
                 // 当应用每次从后台变成前台时，检查jmessage是否已登录，检查app是否有新版本
                 this.platform.resume.subscribe(async () => {
                     let currentUser = JSON.parse(localStorage.getItem('currentUser'));
-                    await this.jMessage.autoLogin(currentUser.username, 'pass');
-                    this.plugin.checkAppForUpdate();
+                    if (currentUser && currentUser.username) {
+                        await this.jMessage.autoLogin(currentUser.username, 'pass');
+                        this.plugin.checkAppForUpdate();
+                    }
                 });
             }
         });
