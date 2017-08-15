@@ -192,7 +192,7 @@ export class PluginService {
     });
     alert.present();
   }
-  getNewPhoto(type: number, size: number): Promise<any> {
+  getNewPhoto(type: number, size: number,opts:any={}): Promise<any> {
     let options: CameraOptions = {
       //这些参数可能要配合着使用，比如选择了sourcetype是0，destinationtype要相应的设置
       quality: 50,                                            //相片质量0-100
@@ -206,6 +206,7 @@ export class PluginService {
       cameraDirection: 0,                                       //枪后摄像头类型：Back= 0,Front-facing = 1
       saveToPhotoAlbum: false                                   //保存进手机相册
     };
+    options = Object.assign(options,opts);
     // return this.camera.getPicture(options).then((imageData) => {
     //   return Promise.resolve(imageData);
     // }, (err) => {

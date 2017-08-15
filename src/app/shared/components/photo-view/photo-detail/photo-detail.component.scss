@@ -1,0 +1,15 @@
+sg-photo-detail {
+  ion-content {
+    background-color: #000!important;
+  }
+  .container {
+    display: flex;
+    height: 100%;
+    align-items: center;
+    .img {
+      width: 100%;
+      flex-shrink:0;
+      margin-right: 6px;
+    }
+  }
+}
