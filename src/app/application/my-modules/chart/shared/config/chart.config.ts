@@ -17,5 +17,33 @@ export class ChartConfig {
    */
   static getDimissionChartInfo = EnvConfig.baseUrl + 'ReportErp/GetLeaveRateDetail?type={type}';
 
+  /**
+   * 获得MPS達成率(日报)的信息
+   * url
+   * get
+   */
+  static getMpsDayChartInfo = EnvConfig.baseUrl + 'ReportErp/GetMpsRateInfo';
 
+  /**
+   * 获得MPS達成率(月报)的信息
+   * url
+   * get
+   * type: [MSL, MD1, MD2, MD3]
+   */
+  static getMpsMonthChartInfo = EnvConfig.baseUrl + 'ReportErp/GetMpsRateDetail?type={type}';
+
+  /**
+   * 获得出货達成率(日报)的信息
+   * url
+   * get
+   */
+  static getSaleDayChartInfo = EnvConfig.baseUrl + 'ReportErp/GetShipRateDaily';
+
+  /**
+   * 获得出货達成率(月报)的信息
+   * url
+   * get
+   * type: [TBU CBU EBU MBU MSL_CM MSL]
+   */
+  static getSaleMonthChartInfo = EnvConfig.baseUrl + 'ReportErp/GetShipRateMonth?type={type}'
 }

@@ -11,8 +11,8 @@ import { LanguageConfig } from './shared/config/language.config';
 export class ChartComponent {
 
   tab1Root = 'StorageComponent';
-  tab2Root = 'HumanResourcesComponent';
-  tab3Root = 'HumanResourcesComponent';
+  tab2Root = 'SaleComponent';
+  tab3Root = 'ManufactureComponent';
   tab4Root = 'HumanResourcesComponent';
 
   languageType: string = localStorage.getItem('languageType');

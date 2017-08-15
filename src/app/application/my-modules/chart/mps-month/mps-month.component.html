@@ -1,0 +1,45 @@
+<ion-header>
+
+  <ion-navbar>
+    <ion-title>MPS達成率(月報)</ion-title>
+  </ion-navbar>
+
+</ion-header>
+
+
+<ion-content>
+  <ion-item>
+  <ion-label>查询结束时间</ion-label><ion-datetime displayFormat="YYYY/MM"
+  [cancelText]="'取消'" [doneText]="'确认'" [(ngModel)]="endTime"
+  [yearValues]="yearValues" [max]="max" (ionChange)="search()"
+  ></ion-datetime>
+  </ion-item>
+  <div id="main1" class="chart">
+
+  </div>
+  <sg-table [tableData]="tableInfo" *ngIf="tableInfo"></sg-table>
+
+  <div padding id="mySegment" *ngIf="tableInfo">
+    <ion-segment [(ngModel)]="mi_type" (ionChange)="changeShow()">
+      <ion-segment-button value="MD1">
+        MD1
+      </ion-segment-button>
+      <ion-segment-button value="MD2">
+        MD2
+      </ion-segment-button>
+      <ion-segment-button value="MD3">
+        MD3
+      </ion-segment-button>
+    </ion-segment>
+  </div>
+
+  <div [ngSwitch]="mi_type" class = "segment" *ngIf="mi_type">
+
+    <div *ngSwitchDefault>
+      <sg-table [tableData]="subInfo" *ngIf="subInfo"></sg-table>
+      <div id="main2" class="chart">
+
+      </div>
+    </div>
+  </div>
+</ion-content>

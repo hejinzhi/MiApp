@@ -26,6 +26,7 @@ export class ChartService {
    */
   initScroll(comp:string,selector:string) {
     this.getOffsetTop(selector);
+    if(!this.offsetTop) return;
     this.content = document.querySelector(comp + ' .scroll-content');
     this.observeOffsetTop(selector);
   }
@@ -36,6 +37,7 @@ export class ChartService {
    */
   getOffsetTop(selector:string) {
     let el: any = document.querySelector(selector);
+    if(!el) return;
     this.offsetTop = el.offsetTop;
   }
 
@@ -165,9 +167,39 @@ export class ChartService {
     return this.myHttp.get(ChartConfig.getDimissionChartInfo.replace('{type}',type));
   }
 
+  /**
+   * 获得MPS達成率(日报)的信息
+   * @return {Promise<response>} http的结果
+   */
+  getMpsDayChartInfo() {
+    return this.myHttp.get(ChartConfig.getMpsDayChartInfo);
+  }
 
+  /**
+   * 获得MPS達成率(月报)的信息
+   * @param  {string} type [MSL, MD1, MD2, MD3]之一
+   * @return {Promise<response>} http的结果
+   */
+  getMpsMonthChartInfo(type:string) {
+    return this.myHttp.get(ChartConfig.getMpsMonthChartInfo.replace('{type}',type));
+  }
 
+  /**
+   * 获得出货達成率(日报)的信息
+   * @return {Promise<response>} http的结果
+   */
+  getSaleDayChartInfo() {
+    return this.myHttp.get(ChartConfig.getSaleDayChartInfo);
+  }
 
+  /**
+   * 获得MPS達成率(月报)的信息
+   * @param  {string} type [TBU CBU EBU MBU MSL_CM MSL]之一
+   * @return {Promise<response>} http的结果
+   */
+  getSaleMonthChartInfo(type:string) {
+    return this.myHttp.get(ChartConfig.getSaleMonthChartInfo.replace('{type}',type));
+  }
 
 
 
