@@ -8,7 +8,7 @@
     </thead>
     <tbody>
       <tr *ngFor="let item1 of tableData.data.slice(1)">
-        <th scope="row" [class.row1]="i == 0" *ngFor="let subitem of item1;let i = index">{{subitem}}</th>
+        <th scope="row" [class.row1]="i == 0" *ngFor="let subitem of item1;let i = index">{{i === 0?subitem:subitem | sgNum}}</th>
       </tr>
     </tbody>
   </table>
