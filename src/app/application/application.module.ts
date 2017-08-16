@@ -1,3 +1,4 @@
+import { InspectionModule } from './my-modules/inspection/inspection.module';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { IonicModule } from 'ionic-angular';
@@ -15,8 +16,9 @@ import { ApplicationGridComponent } from './application-grid/application-grid.co
 import { PipesModule } from '../shared/pipe/pipes.module';
 
 
+
 @NgModule({
-  imports: [CommonModule, IonicModule, SharedModule, BookLibraryModule, AttendanceModule, PipesModule, ChartModule, TranslateModule.forChild()],
+  imports: [CommonModule, IonicModule, SharedModule, BookLibraryModule, AttendanceModule, PipesModule, ChartModule, TranslateModule.forChild(), InspectionModule],
   declarations: [ApplicationComponent, MoreApplicationComponent, ApplicationGridComponent],
   exports: [ApplicationComponent, MoreApplicationComponent, ApplicationGridComponent],
   entryComponents: [ApplicationComponent, MoreApplicationComponent, ApplicationGridComponent],

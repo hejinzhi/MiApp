@@ -337,7 +337,7 @@ export class DialogueComponent implements OnInit {
             childType: childType,
             imageHeight: imageHeight,
             imageWidth: imageWidth,
-            duration: Math.ceil(duration / 1000),
+            duration: duration,
             vounread: 'N',
             fromUserNickName: '',
             fromUserAvatarSrc: '',
@@ -542,7 +542,8 @@ export class DialogueComponent implements OnInit {
             this.voiceflagdesc = '按住 說話';
             this.audioRecorderAPI.stop(async (file: any) => {
                 this.endrcevoicetime = +new Date();
-                let duration = this.endrcevoicetime - this.recvoicetime;
+                // let duration = this.endrcevoicetime - this.recvoicetime;
+                let duration = Math.ceil((this.endrcevoicetime - this.recvoicetime) / 1000);
                 console.log('ok: 2' + file);
                 await this.sendMessage(3, file, '', '', null, null, duration);
                 this.ref.detectChanges();

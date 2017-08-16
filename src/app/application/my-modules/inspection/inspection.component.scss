@@ -1,0 +1,25 @@
+sg-inspection {
+  .grid-col {
+    position: relative;
+    text-align: center;
+    height: 90px;
+    // border: 1px solid #ccc;
+    // border-radius: 5px;
+    .grid-content {
+      .grid-img {
+        height: 45px;
+        width: 45px;
+      }
+      .grid-name {
+        font-size: 14px;
+        line-height: 14px;
+        display: block;
+        width: 100%;
+        height: 14px;
+        margin-top: 8px;
+        text-overflow: ellipsis;
+        color: #828282;
+      }
+    }
+  }
+}

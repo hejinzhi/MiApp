@@ -82,7 +82,7 @@ export class DatabaseService {
               extra: extra,
               imageHeight: data.rows.item(i).IMAGE_HEIGHT,
               imageWidth: data.rows.item(i).IMAGE_WIDTH,
-              duration: Math.ceil(data.rows.item(i).DURATION / 1000),
+              duration: data.rows.item(i).DURATION,
               vounread: data.rows.item(i).VOUNREAD,
               msgID: data.rows.item(i).MSG_ID
             });

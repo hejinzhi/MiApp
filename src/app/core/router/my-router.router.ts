@@ -25,6 +25,9 @@ export class MyRouter {
       case 41:
         navCtrl.push('ChartComponent');
         break;
+      case 61:
+        navCtrl.push('InspectionComponent');
+        break;
       default:
         break;
     }

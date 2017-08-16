@@ -162,7 +162,6 @@ export class MessageComponent implements OnInit {
     } else {
       this._type = 'dialogue';
     }
-    console.log(res, 99);
 
     let msg: Message = {
       toUserName: res.target.username,
@@ -180,7 +179,6 @@ export class MessageComponent implements OnInit {
     };
 
     if (res.extras && typeof (res.extras.type) != "undefined") {
-      console.log(555);
       child_type = res.extras.type;
     }
 
@@ -240,7 +238,7 @@ export class MessageComponent implements OnInit {
       unread: true,
       imageHeight: 0,
       imageWidth: 0,
-      duration: Math.ceil(res.duration / 1000),
+      duration: res.duration,
       vounread: vounread,
       msgID: res.id
     };
