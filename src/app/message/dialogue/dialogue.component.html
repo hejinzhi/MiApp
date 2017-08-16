@@ -41,7 +41,9 @@
               <div [ngClass]="getBlank(item.duration)"></div>
             </div>
             <div class="voicemark">
-              <div class="voiceunread" *ngIf="item.vounread==='Y'"></div><span class="voicetime">{{item.duration+'"'}}</span></div>
+              <div class="voiceunread" *ngIf="item.vounread==='Y'"></div>
+              <span class="voicetime">{{item.duration+'"'}}</span>
+            </div>
           </ng-template>
           <div class="clearfix"></div>
         </div>

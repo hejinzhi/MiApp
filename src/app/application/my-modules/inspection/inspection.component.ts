@@ -1,4 +1,5 @@
-import { IonicPage } from 'ionic-angular';
+import { IpqaComponent } from './ipqa/ipqa.component';
+import { IonicPage, NavController } from 'ionic-angular';
 import { Component, OnInit } from '@angular/core';
 
 
@@ -8,7 +9,13 @@ import { Component, OnInit } from '@angular/core';
     templateUrl: 'inspection.component.html'
 })
 export class InspectionComponent implements OnInit {
-    constructor() { }
+    constructor(
+        private navCtrl: NavController
+    ) { }
 
     ngOnInit() { }
+
+    goToIPQA() {
+        this.navCtrl.push(IpqaComponent);
+    }
 }

@@ -1,0 +1,18 @@
+<ion-header>
+  <ion-navbar>
+    <ion-title>IPQA</ion-title>
+  </ion-navbar>
+</ion-header>
+<ion-content>
+  <ion-list>
+    <ion-item>
+      <ion-label>请选择线别:</ion-label>
+      <ion-select [(ngModel)]="line" (ionChange)="onSelectChange($event)">
+        <ion-option [value]="l" *ngFor="let l of lines">{{l}}</ion-option>
+      </ion-select>
+    </ion-item>
+  </ion-list>
+  <sg-grid title="模块" [data]="modules" (dataChange)="changeModule($event)"></sg-grid>
+  <div class="line"></div>
+  <sg-grid title="站点" [data]="stations" (dataChange)="changeStation($event)"></sg-grid>
+</ion-content>
