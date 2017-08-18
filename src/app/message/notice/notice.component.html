@@ -4,7 +4,7 @@
   </ion-navbar>
 </ion-header>
 <ion-content class="page-content">
-  <div class='msg-content'>
+  <div class='msg-content' (scroll)="doscroll($event)">
     <ion-list *ngFor="let item of list;let i=index " class="page-list">
       <div class="list-time">
         <div class="list-time-content">{{item.time | sgTimeDesc | sgChineseConv}}</div>
@@ -14,7 +14,10 @@
           {{item.extra.title | sgChineseConv}}
         </ion-card-header>
         <ng-template [ngSwitchCase]="'text'">
-          <ion-card-content class="card-content" [innerHTML]="item.extra.content | sgChangeSpace | sgChineseConv ">
+          <ion-card-content class="card-content" >
+            <div [innerHTML]="item.extra.content | sgChangeSpace | sgChineseConv "></div>
+            <div *ngIf="item.extra.table_content==='reward'" class="under-line" (tap)="goToDetail2(item.extra.params)">{{languageContent.allrecord}}</div>  
+            <div *ngIf="item.extra.table_content==='dutydaily' && show(item.extra.params)===true" class="under-line" (tap)="goToDetail2(item.extra.params)">{{languageContent.showDetail}}</div>          
           </ion-card-content>
         </ng-template>
         <ng-template [ngSwitchCase]="'image'">

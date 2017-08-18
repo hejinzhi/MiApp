@@ -18,6 +18,11 @@ export class NoticeComponent implements OnInit {
   fromUserNickName: string;
   fromUserName: string;
   list: any;
+  listlength: number;
+  listpage: number = 1;
+  listpagenum: number = 15;
+  listtotal: Array<object>;
+  listpageheight: number;
   userInfo: any; // 登录人信息
   alertType: string;
   showChartFlag: boolean = false;
@@ -73,17 +78,51 @@ export class NoticeComponent implements OnInit {
   }
 
   goToDetail(page: string) {
-    console.log(page);
     this.navCtrl.push(page);
+  }
+
+  goToDetail2(params: string) {
+    this.navCtrl.push(JSON.parse(params)[0].page, JSON.parse(params)[0]);
+  }
+
+  show(params: string) {
+    if (JSON.parse(params)[0].page, JSON.parse(params)[0].show === 'Y') {
+      return true;
+    } else {
+      return false;
+    }
   }
 
   async loadMessage() {
 
-    this.list = await this.messageService.getMessagesByUsername(this.userInfo.username, this.fromUserName, this.userInfo.username);
+    this.listtotal = await this.messageService.getMessagesByUsername(this.userInfo.username, this.fromUserName, this.userInfo.username);
     if (this.fromUserName === 'alert') {
-      this.list = this.list.filter((v: any) => (v.childType === this.alertType));
+      this.listtotal = this.listtotal.filter((v: any) => (v.childType === this.alertType));
     }
+
+    this.listlength = this.listtotal.length;
+    this.list = this.listtotal.slice(-this.listpagenum);
   };
+
+  doscroll(event: any) {
+    if (event.srcElement.scrollTop <= 0) {
+      if (this.listpage * this.listpagenum < this.listlength) {
+        this.listpageheight = event.srcElement.scrollHeight;
+        this.listpage++;
+        let temp: Array<object> = this.listtotal.slice(-this.listpagenum * this.listpage, -this.listpagenum * (this.listpage - 1));
+        temp.forEach((v) => {
+          this.list.unshift(v);
+        });
+        setTimeout(() => {
+          var div = document.getElementsByClassName('msg-content');
+          console.log(div, 444);
+          div[0].setAttribute
+          let dis = div[0].scrollHeight - this.listpageheight;
+          div[0].scrollTop = dis;
+        }, 0);
+      }
+    }
+  }
 
   scroll_down() {
     setTimeout(() => {
