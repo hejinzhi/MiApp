@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, ViewChild, OnInit } from '@angular/core';
 import { Tabs } from 'ionic-angular'
 import { NavController, NavParams, App, Platform, IonicPage } from 'ionic-angular';
 import { LanguageConfig } from '../shared/config/language.config';
@@ -10,7 +10,7 @@ import { DutyDailyService } from './dutydaily.service'
   selector: 'sg-dutydaily',
   templateUrl: 'dutydaily.component.html'
 })
-export class DutyDailyComponent {
+export class DutyDailyComponent implements OnInit {
 
   languageType: string = localStorage.getItem('languageType');
   languageContent = LanguageConfig.DutyDailyComponent[this.languageType];
@@ -30,12 +30,12 @@ export class DutyDailyComponent {
     this.reportdate = navParams.data.reportdate;
   }
 
-  ngOnInit(){
+  ngOnInit() {
     this.dutydailyService.getWorkOffdutyList(this.centerflag, this.deptno, this.type, this.reportdate).then((res => {
       this.itemlist = res.json();
     }));
   }
-  
+
   ionViewDidLoad() {
   }
 
