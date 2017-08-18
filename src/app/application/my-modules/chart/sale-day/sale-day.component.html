@@ -1,0 +1,15 @@
+<ion-header>
+
+  <ion-navbar>
+    <ion-title>出貨達成率(日報)</ion-title>
+  </ion-navbar>
+
+</ion-header>
+
+
+<ion-content>
+  <div id="main1" class="chart">
+
+  </div>
+  <sg-table [tableData]="tableInfo" *ngIf="tableInfo"></sg-table>
+</ion-content>

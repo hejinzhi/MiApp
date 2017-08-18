@@ -1,3 +1,4 @@
+import { InspectionModule } from './my-modules/inspection/inspection.module';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { IonicModule } from 'ionic-angular';
@@ -17,8 +18,10 @@ import { RewardModule } from './my-modules/others/reward/reward.module';
 import { DutyDailyModule } from './my-modules/others/dutydaily/dutydaily.module';
 
 
+
 @NgModule({
-  imports: [CommonModule, IonicModule, SharedModule, BookLibraryModule, AttendanceModule, PipesModule, ChartModule, RewardModule, DutyDailyModule, TranslateModule.forChild()],
+
+  imports: [CommonModule, IonicModule, SharedModule, BookLibraryModule, AttendanceModule, PipesModule, ChartModule, TranslateModule.forChild(), InspectionModule, RewardModule, DutyDailyModule],
   declarations: [ApplicationComponent, MoreApplicationComponent, ApplicationGridComponent],
   exports: [ApplicationComponent, MoreApplicationComponent, ApplicationGridComponent],
   entryComponents: [ApplicationComponent, MoreApplicationComponent, ApplicationGridComponent],

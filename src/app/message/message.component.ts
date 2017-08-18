@@ -115,6 +115,7 @@ export class MessageComponent implements OnInit {
       //   this.events.publish('msg.onChangeTabBadge');
       // });
       this.jmessageService.addReceiveMessageListener(async (res: any) => {
+        console.log(res);
         let msg: any;
         if (res.type === 'text') {
           msg = await this.handleTextMessage(res);
@@ -162,7 +163,6 @@ export class MessageComponent implements OnInit {
     } else {
       this._type = 'dialogue';
     }
-    console.log(res, 99);
 
     let msg: Message = {
       toUserName: res.target.username,
@@ -180,7 +180,6 @@ export class MessageComponent implements OnInit {
     };
 
     if (res.extras && typeof (res.extras.type) != "undefined") {
-      console.log(555);
       child_type = res.extras.type;
     }
 
@@ -213,7 +212,7 @@ export class MessageComponent implements OnInit {
     // console.log(msg);
 
     await this.databaseService.addMessage(msg.toUserName, msg.fromUserName, this.userinfo.username, _content, 'image', msg.time, this._type, 'Y',
-      JSON.stringify(res.extras), child_type, 0, 0, 0, vounread, res.id);
+      JSON.stringify(res.extras), child_type, msg.imageHeight, msg.imageWidth, 0, vounread, res.id);
 
     return msg;
   }
@@ -240,7 +239,7 @@ export class MessageComponent implements OnInit {
       unread: true,
       imageHeight: 0,
       imageWidth: 0,
-      duration: Math.ceil(res.duration / 1000),
+      duration: res.duration,
       vounread: vounread,
       msgID: res.id
     };

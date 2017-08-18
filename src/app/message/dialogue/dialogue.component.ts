@@ -337,7 +337,7 @@ export class DialogueComponent implements OnInit {
             childType: childType,
             imageHeight: imageHeight,
             imageWidth: imageWidth,
-            duration: Math.ceil(duration / 1000),
+            duration: duration,
             vounread: 'N',
             fromUserNickName: '',
             fromUserAvatarSrc: '',
@@ -429,19 +429,22 @@ export class DialogueComponent implements OnInit {
             saveToPhotoAlbum: false                                   //保存进手机相册
         };
         this.camera.getPicture(options).then((imageData: string) => {
-            // imageData is a base64 encoded string
             var image = new Image();
-            image.src = imageData;
-            console.log(image);
+            let temp: string;
+            if (this.platform.is('ios')) {
+                temp = imageData.replace('file://', '');
+                image.src = temp;
+            } else {
+                image.src = imageData;
+                temp = imageData.replace('file://', '');
+                if (temp.indexOf('?') > -1) {
+                    temp = temp.substr(0, temp.indexOf('?'));
+                }
+            }
             image.onload = async function () {
-                let temp: string = imageData.replace('file://', '');
-                let imageUrl: string = temp.substr(0, temp.indexOf('?'));
-                console.log(imageUrl);
-                await that.sendMessage(2, imageUrl, '', '', image.height, image.width);
-                // await that.sendMessage(2, temp, '', '', image.height, image.width);
+                await that.sendMessage(2, temp, '', '', image.height, image.width);
                 that.ref.detectChanges();
             }
-            // this.sendMessage(2, imageData);
         }, (err) => {
             console.log(err);
         });
@@ -540,7 +543,8 @@ export class DialogueComponent implements OnInit {
             this.voiceflagdesc = '按住 說話';
             this.audioRecorderAPI.stop(async (file: any) => {
                 this.endrcevoicetime = +new Date();
-                let duration = this.endrcevoicetime - this.recvoicetime;
+                // let duration = this.endrcevoicetime - this.recvoicetime;
+                let duration = Math.ceil((this.endrcevoicetime - this.recvoicetime) / 1000);
                 console.log('ok: 2' + file);
                 await this.sendMessage(3, file, '', '', null, null, duration);
                 this.ref.detectChanges();

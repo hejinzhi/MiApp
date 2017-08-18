@@ -1,0 +1,8 @@
+<ion-header>
+  <ion-navbar>
+    <ion-title>站点</ion-title>
+  </ion-navbar>
+</ion-header>
+<ion-content>
+  <sg-grid title="站点" [data]="stations" (dataChange)="chooseStation($event)" [mode]="mode"></sg-grid>
+</ion-content>
