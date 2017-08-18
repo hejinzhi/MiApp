@@ -1,13 +1,11 @@
 <div>
-  <span class="my-header" *ngIf="showData.length >0">{{title}}</span>
+  <span class="my-header" *ngIf="showData.length >0 && mode ===0">{{title}}</span>
   <ion-grid>
     <ion-row center wrap>
       <ion-col col-4 class="grid-col" *ngFor="let m of showData" (tap)="onTap(m)">
         <div class="grid-content">
-          <a>
-            <div class="grid-name">{{m.title}}</div>
-            <div class="gou" *ngIf="m.showCheckbox"></div>
-          </a>
+          <div class="grid-name">{{m.title}}</div>
+          <div class="gou" *ngIf="m.showCheckbox"></div>
         </div>
       </ion-col>
     </ion-row>

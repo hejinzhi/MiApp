@@ -1,3 +1,5 @@
+import { StationsComponent } from './../stations/stations.component';
+import { NavController } from 'ionic-angular';
 import { GridModel } from './../grid/grid.component';
 import { Observable, Observer } from 'rxjs/Rx';
 import { InspectionService } from './../shared/service/inspection.service';
@@ -15,10 +17,14 @@ export class IpqaComponent implements OnInit {
     line: string;
     // 某线别下的模块
     modules: string[] = [];
-    // 站点
+    // 站点,不带状态的。就是没有记录用户是否勾选了这个站点
     stations: string[] = [];
 
+    // 被选择了的站点
+    selectedStations: string[] = [];
+
     constructor(
+        private navCtrl: NavController,
         private inspectionService: InspectionService
     ) {
 
@@ -27,7 +33,6 @@ export class IpqaComponent implements OnInit {
 
     async ngOnInit() {
         this.lines = await this.inspectionService.getLines();
-        console.log(this.lines)
     }
 
     /**
@@ -38,6 +43,7 @@ export class IpqaComponent implements OnInit {
         this.modules = await this.inspectionService.getModules(line);
         // 获取该线别下的所有站点
         this.stations = await this.inspectionService.getAllStations(line);
+        this.selectedStations = this.stations;
     }
 
 
@@ -52,14 +58,37 @@ export class IpqaComponent implements OnInit {
             }
         });
         this.stations = await this.inspectionService.getStationsByModules(result);
+        this.selectedStations = this.stations;
     }
 
     /**
      * @param  {GridModel} 记录从子组件返回的站点数组
      */
-    changeStation(stations: GridModel) {
-        console.log(stations);
+    changeStation(stations: GridModel[]) {
+        let temp: string[] = [];
+        stations.filter((s) => {
+            return s.showCheckbox === true;
+        }).forEach((v) => {
+            temp.push(v.title);
+        });
+        // this.stations = temp;
+        this.selectedStations = temp;
     }
+
+    goToChooseStationPage() {
+        this.navCtrl.push(StationsComponent, { stations: this.selectedStations });
+    }
+
+    // addShowCheckboxAttribute(stations: string[]): GridModel[] {
+    //     let temp: GridModel[] = [];
+    //     stations.forEach((station) => {
+    //         temp.push({
+    //             title: station,
+    //             showCheckbox: true
+    //         });
+    //     });
+    //     return temp;
+    // }
 
 
 }

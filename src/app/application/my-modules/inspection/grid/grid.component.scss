@@ -6,6 +6,7 @@ sg-grid {
     margin-top: 8px;
     .grid-content {
       //   background-color: #3eaaf4;
+      border: 1px solid #3eaaf4;
       background-color: #bdecfe;
       height: 90px;
       //   margin-top: 8px;
@@ -14,7 +15,7 @@ sg-grid {
       justify-content: center;
       align-items: center;
       .grid-name {
-        font-size: 20px;
+        font-size: 15px;
         // line-height: 90px;
         word-break: break-all;
         display: block;

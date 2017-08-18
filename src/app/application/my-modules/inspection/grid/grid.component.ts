@@ -23,6 +23,10 @@ export class GridComponent implements OnInit, OnChanges {
     // 设置右上角的勾是否显示
     toggleCheckbox: boolean = true;
 
+    // 该组件有两种状态，MODULE_STATION是选择模块和站点 STATION是从站点进入到check list
+    @Input()
+    mode: number = Mode.MODULE_STATION;
+
     constructor() {
         this.showData = new Array();
     }
@@ -32,16 +36,27 @@ export class GridComponent implements OnInit, OnChanges {
     }
 
     onTap(item: GridModel) {
-        item.showCheckbox = !item.showCheckbox;
-        this.dataChange.emit(this.showData);
+        if (this.mode == Mode.MODULE_STATION) {
+            item.showCheckbox = !item.showCheckbox;
+            this.dataChange.emit(this.showData);
+        } else {
+            console.log(item);
+        }
+
     }
 
     ngOnChanges() {
         let temp: GridModel[] = [];
         this.data.forEach((data) => {
+            let showFlag: boolean;
+            if (this.mode === Mode.MODULE_STATION) {
+                showFlag = true;
+            } else {
+                showFlag = false;
+            }
             temp.push({
                 title: data,
-                showCheckbox: true
+                showCheckbox: showFlag
             });
         });
         this.showData = temp;
@@ -53,4 +68,9 @@ export class GridComponent implements OnInit, OnChanges {
 export class GridModel {
     title: string;
     showCheckbox: boolean;
+}
+
+export enum Mode {
+    MODULE_STATION,
+    STATION
 }
