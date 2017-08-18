@@ -1,3 +1,4 @@
+import { IpqaComponent } from './application/my-modules/inspection/ipqa/ipqa.component';
 import { Component, ViewChild, enableProdMode } from '@angular/core';
 import { Platform, Nav, Keyboard, IonicApp, MenuController, App } from 'ionic-angular';
 import { StatusBar } from '@ionic-native/status-bar';
@@ -45,13 +46,12 @@ export class MyAppComponent {
         //   enableProdMode();
         // }
 
-        // this.appInit();
+
         platform.ready().then(async () => {
+            // this.rootPage = IpqaComponent;
             statusBar.styleDefault();
             splashScreen.hide();
             this.jMessage.init();
-            // this.jMessage.jmessagePlugin = (<any>window).plugins ? (<any>window).plugins.jmessagePlugin || null : null;
-            // this.jPushService.jPushPlugin = (<any>window).plugins ? (<any>window).plugins.jPushPlugin || null : null;
             await this.appInit();
             this.plugin.checkAppForUpdate();
             if (platform.is('cordova') && platform.is('android')) {
@@ -85,8 +85,10 @@ export class MyAppComponent {
                 // 当应用每次从后台变成前台时，检查jmessage是否已登录，检查app是否有新版本
                 this.platform.resume.subscribe(async () => {
                     let currentUser = JSON.parse(localStorage.getItem('currentUser'));
-                    await this.jMessage.autoLogin(currentUser.username, 'pass');
-                    this.plugin.checkAppForUpdate();
+                    if (currentUser && currentUser.username) {
+                        await this.jMessage.autoLogin(currentUser.username, 'pass');
+                        this.plugin.checkAppForUpdate();
+                    }
                 });
             }
         });
