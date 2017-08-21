@@ -40,7 +40,7 @@ export class GridComponent implements OnInit, OnChanges {
             item.showCheckbox = !item.showCheckbox;
             this.dataChange.emit(this.showData);
         } else {
-            console.log(item);
+            this.dataChange.emit([item]);
         }
 
     }

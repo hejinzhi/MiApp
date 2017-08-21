@@ -48,51 +48,51 @@ export class MyAppComponent {
 
 
         platform.ready().then(async () => {
-            // this.rootPage = IpqaComponent;
-            statusBar.styleDefault();
-            splashScreen.hide();
-            this.jMessage.init();
-            await this.appInit();
-            this.plugin.checkAppForUpdate();
-            if (platform.is('cordova') && platform.is('android')) {
-                let original = platform.runBackButtonAction;
-                let __this = this;
-                platform.runBackButtonAction = function (): void {
-                    if (__this.keyboard.isOpen()) {//如果键盘开启则隐藏键盘
-                        __this.keyboard.close();
-                        return;
-                    }
-                    let activePortal = __this.ionicApp._toastPortal.getActive()
-                        || __this.ionicApp._loadingPortal.getActive()
-                        || __this.ionicApp._overlayPortal.getActive()
-                        || __this.ionicApp._modalPortal.getActive();
-                    if (activePortal) {
-                        activePortal.dismiss();
-                        return;
-                    }
-                    let activeVC = __this.nav.getActive();
-                    if (activeVC.instance instanceof LoginComponent) {
-                        platform.exitApp();
-                    } else if (activeVC.instance instanceof PatternLockComponent) {
-                        platform.exitApp();
-                    } else {
-                        let tabs = activeVC.instance.tabRef;
-                        let activeNav = tabs.getSelected();
-                        return activeNav.canGoBack() ? original.apply(platform) : cordova.plugins.backgroundMode.moveToBackground();
-                    }
-                }
-            } else if (platform.is('cordova') && platform.is('ios')) {
-                // 当应用每次从后台变成前台时，检查jmessage是否已登录，检查app是否有新版本
-                this.platform.resume.subscribe(async () => {
-                    let currentUser = JSON.parse(localStorage.getItem('currentUser'));
-                    if (currentUser && currentUser.username) {
-                        await this.jMessage.autoLogin(currentUser.username, 'pass');
-                        this.plugin.checkAppForUpdate();
-                    }
-                });
-            }
+            this.rootPage = IpqaComponent;
+            // statusBar.styleDefault();
+            // splashScreen.hide();
+            // this.jMessage.init();
+            // await this.appInit();
+            // this.plugin.checkAppForUpdate();
+            // if (platform.is('cordova') && platform.is('android')) {
+            //     let original = platform.runBackButtonAction;
+            //     let __this = this;
+            //     platform.runBackButtonAction = function (): void {
+            //         if (__this.keyboard.isOpen()) {//如果键盘开启则隐藏键盘
+            //             __this.keyboard.close();
+            //             return;
+            //         }
+            //         let activePortal = __this.ionicApp._toastPortal.getActive()
+            //             || __this.ionicApp._loadingPortal.getActive()
+            //             || __this.ionicApp._overlayPortal.getActive()
+            //             || __this.ionicApp._modalPortal.getActive();
+            //         if (activePortal) {
+            //             activePortal.dismiss();
+            //             return;
+            //         }
+            //         let activeVC = __this.nav.getActive();
+            //         if (activeVC.instance instanceof LoginComponent) {
+            //             platform.exitApp();
+            //         } else if (activeVC.instance instanceof PatternLockComponent) {
+            //             platform.exitApp();
+            //         } else {
+            //             let tabs = activeVC.instance.tabRef;
+            //             let activeNav = tabs.getSelected();
+            //             return activeNav.canGoBack() ? original.apply(platform) : cordova.plugins.backgroundMode.moveToBackground();
+            //         }
+            //     }
+            // } else if (platform.is('cordova') && platform.is('ios')) {
+            //     // 当应用每次从后台变成前台时，检查jmessage是否已登录，检查app是否有新版本
+            //     this.platform.resume.subscribe(async () => {
+            //         let currentUser = JSON.parse(localStorage.getItem('currentUser'));
+            //         if (currentUser && currentUser.username) {
+            //             await this.jMessage.autoLogin(currentUser.username, 'pass');
+            //             this.plugin.checkAppForUpdate();
+            //         }
+            //     });
+            // }
         });
-        translate.setDefaultLang('zh-CN');
+        // translate.setDefaultLang('zh-CN');
     }
 
     async appInit() {
