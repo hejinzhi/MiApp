@@ -1,1 +1,20 @@
-sg-checklist {}
+sg-checklist {
+  .item-ios {
+    font-size: 14px;
+  }
+  .my-content {
+    padding: 13px 16px 0 16px;
+    .priority {
+      margin-top: 10px;
+    }
+  }
+  .my-div {
+    padding-left: 14px;
+    height: 40px;
+    color: #666666;
+    line-height: 40px;
+    input {
+      height: 30px;
+    }
+  }
+}

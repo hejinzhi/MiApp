@@ -1,6 +1,6 @@
 import { GridModel } from './../grid/grid.component';
 import { ChecklistComponent } from './../checklist/checklist.component';
-import { NavController, NavParams, Events } from 'ionic-angular';
+import { NavController, NavParams, DomController } from 'ionic-angular';
 import { Component, OnInit } from '@angular/core';
 import { Mode } from "../grid/grid.component";
 
@@ -11,31 +11,38 @@ import { Mode } from "../grid/grid.component";
 export class StationsComponent implements OnInit {
     constructor(
         private navCtrl: NavController,
-        private navParams: NavParams,
-        private events: Events
+        private navParams: NavParams
     ) { }
 
     mode: number = Mode.STATION;
-    stations: string[] = [];
+    stations: GridModel[] = [];
 
     ngOnInit() {
-        this.stations = this.navParams.get('stations');
-        this.events.subscribe('station.finish', (station: GridModel) => {
-            console.log(station);
-            let result = this.stations.find((value: string, index: number) => {
-                if (value === station.title) {
-                    return true;
-                }
-                return false;
-            });
-            if (result) {
-
-            }
+        this.stations = [];
+        let params: GridModel[] = this.navParams.get('stations');
+        let temp: GridModel[] = params.filter((v) => {
+            return v.showCheckbox === true;
         });
+        temp.forEach((v) => {
+            this.stations.push({
+                title: v.title,
+                showCheckbox: false
+            })
+        });
+
+        // to do
+        // 遍历站点，检查是否已经有当天的check list数据，如果有，则默认勾上，否则不勾。防止user点后退后，这个勾就不见了
+        // ...
     }
 
-    chooseStation(event: any) {
-        this.navCtrl.push(ChecklistComponent, { data: event[0] })
+    chooseStation(event: GridModel) {
+        //     this.navCtrl.push(ChecklistComponent, {
+        //         data: {
+        //             title: event.title,
+        //             showCheckbox: event.showCheckbox
+        //         }
+        //     });
+        this.navCtrl.push(ChecklistComponent, { data: event });
     }
 }
 

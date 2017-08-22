@@ -1,3 +1,4 @@
+import { CheckboxComponent } from './checkbox/checkbox.component';
 import { ChecklistComponent } from './checklist/checklist.component';
 import { StationsComponent } from './stations/stations.component';
 import { GridComponent } from './grid/grid.component';
@@ -12,9 +13,9 @@ import { SharedModule } from '../../../shared/shared.module';
 
 @NgModule({
     imports: [CommonModule, IonicModule, SharedModule],
-    declarations: [IpqaComponent, GridComponent, StationsComponent, ChecklistComponent],
-    exports: [IpqaComponent, GridComponent, StationsComponent, ChecklistComponent],
-    entryComponents: [IpqaComponent, GridComponent, StationsComponent, ChecklistComponent],
+    declarations: [IpqaComponent, GridComponent, StationsComponent, ChecklistComponent, CheckboxComponent],
+    exports: [IpqaComponent, GridComponent, StationsComponent, ChecklistComponent, CheckboxComponent],
+    entryComponents: [IpqaComponent, GridComponent, StationsComponent, ChecklistComponent, CheckboxComponent],
     providers: [InspectionService]
 })
 export class InspectionModule { }

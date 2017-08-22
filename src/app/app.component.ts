@@ -1,3 +1,4 @@
+import { ChecklistComponent } from './application/my-modules/inspection/checklist/checklist.component';
 import { IpqaComponent } from './application/my-modules/inspection/ipqa/ipqa.component';
 import { Component, ViewChild, enableProdMode } from '@angular/core';
 import { Platform, Nav, Keyboard, IonicApp, MenuController, App } from 'ionic-angular';
@@ -48,7 +49,8 @@ export class MyAppComponent {
 
 
         platform.ready().then(async () => {
-            this.rootPage = IpqaComponent;
+            // this.rootPage = IpqaComponent;
+            this.rootPage = ChecklistComponent;
             // statusBar.styleDefault();
             // splashScreen.hide();
             // this.jMessage.init();
