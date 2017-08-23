@@ -1,5 +1,7 @@
 import { Component } from '@angular/core';
 import { NavController, NavParams, IonicPage } from 'ionic-angular';
+import { TranslateService } from '@ngx-translate/core';
+
 import * as echarts from 'echarts';
 
 import { PluginService }   from '../../../../core/services/plugin.service';
@@ -22,26 +24,32 @@ export class StatisticsComponent {
   fontType:string = localStorage.getItem('languageType')
   fontContent = LanguageTypeConfig.statisticsComponent[this.fontType];
 
-  totalOT = [
-    { name: this.fontContent.totalOT_month, value: 0 },
-    { name: this.fontContent.totalOT_year, value: 0 }
-  ]
-  totalLeave = [
-    { name: this.fontContent.totalLeave_month, value: 0 },
-    { name: this.fontContent.totalLeave_year, value: 0 }
-  ]
+  totalOT:any[];
+  totalLeave:any[];
   myOT:{name:string,value:number}[]
   myLeave:{name:string,value:number}[]
   caches:any;
   isHere:boolean;
+  translateTexts: any = {};
+
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
     private plugin: PluginService,
-    private attendanceService: AttendanceService
+    private attendanceService: AttendanceService,
+    private translate: TranslateService
   ) { }
 
   ionViewDidLoad() {
+    this.subscribeTranslateText();
+    this.totalOT = [
+      { name: this.translateTexts['attendance.totalOT_month'], value: 0 },
+      { name: this.translateTexts['attendance.totalOT_year'], value: 0 }
+    ];
+    this.totalLeave = [
+      { name: this.translateTexts['attendance.totalLeave_month'], value: 0 },
+      { name: this.translateTexts['attendance.totalLeave_year'], value: 0 }
+    ]
     this.caches = this.initCache();
     this.reFresh(false);
   }
@@ -49,9 +57,18 @@ export class StatisticsComponent {
     this.isHere = true;
     window.addEventListener('resize',() =>this.resize())
   }
+
+  subscribeTranslateText() {
+    this.translate.get(['attendance.totalOT_year', 'attendance.totalOT_month', 'attendance.totalLeave_year', 'attendance.totalLeave_month',
+      'attendance.total', 'attendance.OT', 'attendance.leave1', 'attendance.month', 'attendance.day','attendance.my',
+    'attendance.days', 'attendance.hour', 'attendance.this_year', 'attendance.this_month', 'attendance.back']).subscribe((res) => {
+        this.translateTexts = res;
+      })
+  }
+
   resize() {
     if(!this.isHere) return;
-    this.initChart2('main', this.fontContent.total);
+    this.initChart2('main', this.translateTexts['attendance.total']);
     this.initOTMonthChart();
     this.initLeaveMonthChart();
   }
@@ -170,7 +187,7 @@ export class StatisticsComponent {
     await this.editMonthLeave();
     await this.editMonthOT();
     loading.dismiss()
-    this.initChart2('main', this.fontContent.total);
+    this.initChart2('main', this.translateTexts['attendance.total']);
     this.initOTMonthChart();
     this.initLeaveMonthChart();
   }
@@ -181,7 +198,7 @@ export class StatisticsComponent {
       this.myLeave = this.zeroNotShow(this.myLeave);
       let nowMonthLeave = this.myLeave[this.myLeave.length-1]
       this.totalLeave.map((item) => {
-        if(item.name == this.fontContent.totalLeave_month) {
+        if(item.name == this.translateTexts['attendance.totalLeave_month']) {
           item.value = nowMonthLeave.value;
         } else {
           let totalCount = 0;
@@ -214,7 +231,7 @@ export class StatisticsComponent {
       this.myOT = this.zeroNotShow(this.myOT);
       let nowMonthOT = this.myOT[this.myOT.length-1];
       this.totalOT.map((item) => {
-        if(item.name == this.fontContent.totalOT_month) {
+        if(item.name == this.translateTexts['attendance.totalOT_month']) {
           item.value = nowMonthOT.value;
         } else {
           let totalCount = 0;
@@ -228,22 +245,22 @@ export class StatisticsComponent {
     }
   }
   initOTMonthChart() {
-    let monthChart = this.initChart1('main2', this.fontContent.my+this.fontContent.OT, this.myOT, true, this.fontContent.hour);
+    let monthChart = this.initChart1('main2', this.translateTexts['attendance.my']+this.translateTexts['attendance.OT'], this.myOT, true, this.translateTexts['attendance.hour']);
     monthChart.on('click', (params: any) => {
       let month = params.dataIndex+1;
       let load = new Date().getMonth() === (month-1)? true : false;
       this.caches.get(1,month,load).then((res:any) => {
-        this.initLineChat('main2', month + this.fontContent.month+this.fontContent.OT, res, true, this.initOTMonthChart, this.fontContent.hour);
+        this.initLineChat('main2', month + this.translateTexts['attendance.month']+this.translateTexts['attendance.OT'], res, true, this.initOTMonthChart, this.translateTexts['attendance.hour']);
       });
     })
   }
   initLeaveMonthChart() {
-    let monthChart = this.initChart1('main3', this.fontContent.my+this.fontContent.leave, this.myLeave, true,'天');
+    let monthChart = this.initChart1('main3', this.translateTexts['attendance.my']+this.translateTexts['attendance.leave1'], this.myLeave, true,'天');
     monthChart.on('click', (params: any) => {
       let month = params.dataIndex+1;
       let load = new Date().getMonth() === (month-1)? true : false;
       this.caches.get(2,month,load).then((res:any) => {
-        this.initLineChat('main3', month + this.fontContent.month + this.fontContent.leave, res, true, this.initLeaveMonthChart,'天');
+        this.initLineChat('main3', month + this.translateTexts['attendance.month'] + this.translateTexts['attendance.leave1'], res, true, this.initLeaveMonthChart,'天');
       });
     })
   }
@@ -335,7 +352,7 @@ export class StatisticsComponent {
         trigger: 'axis'
       },
       legend: {
-        data: [this.fontContent.OT, this.fontContent.leave],
+        data: [this.translateTexts['attendance.OT'], this.translateTexts['attendance.leave']],
         textStyle: {
           fontFamily: fontFamily,
           fontSize: 16
@@ -351,14 +368,14 @@ export class StatisticsComponent {
         {
             type: 'category',
             boundaryGap: true,
-            data:[this.fontContent.this_month, this.fontContent.this_year],
+            data:[this.translateTexts['attendance.this_month'], this.translateTexts['attendance.this_year']],
         }
     ],
     yAxis: [
         {
             type: 'value',
             scale: true,
-            name: this.fontContent.OT,
+            name: this.translateTexts['attendance.OT'],
             min: 0,
             interval:Math.ceil(this.totalOT[1].value/4),
             max: Math.ceil(this.totalOT[1].value/4)*5,
@@ -371,7 +388,7 @@ export class StatisticsComponent {
         {
             type: 'value',
             scale: true,
-            name: this.fontContent.leave,
+            name: this.translateTexts['attendance.leave'],
             nameTextStyle: {
               fontFamily: fontFamily,
               fontSize: 14
@@ -385,7 +402,7 @@ export class StatisticsComponent {
       color: color,
       series: [
         {
-          name: this.fontContent.OT,
+          name: this.translateTexts['attendance.OT'],
           type: 'bar',
           data: this.totalOT,
           label: {
@@ -393,12 +410,12 @@ export class StatisticsComponent {
             {
               show: true,
               position: 'top',
-              formatter: '{c}'+this.fontContent.hour
+              formatter: '{c}'+this.translateTexts['attendance.hour']
             }
           },
         },
         {
-          name: this.fontContent.leave,
+          name: this.translateTexts['attendance.leave1'],
           type: 'bar',
           yAxisIndex: 1,
           data: this.totalLeave,
@@ -407,7 +424,7 @@ export class StatisticsComponent {
             {
               show: true,
               position: 'top',
-              formatter: '{c}'+this.fontContent.day
+              formatter: '{c}'+this.translateTexts['attendance.day']
             }
           },
         }
@@ -463,7 +480,7 @@ export class StatisticsComponent {
           },
           myTool: {
             show: true,
-            title: this.fontContent.back,
+            title: this.translateTexts['attendance.back'],
             icon: 'image://assets/img/back.png',
             onclick() {
               fn.apply(that);

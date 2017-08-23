@@ -236,12 +236,14 @@ export class PluginService {
         this.showToast(this.chineseConv('未找到结果'));
         break;
       case 400:
-        // if (showAlert) {
-        //   this.plugin.createBasicAlert(this.chineseConv(err.json().ExceptionMessage));
-        // } else {
-        //   this.plugin.showToast(this.chineseConv(err.json().ExceptionMessage));
-        // }
-        errTip = this.chineseConv(err.json().ExceptionMessage);
+        let errMes:string = ''
+        try{
+          errMes = err.json().ExceptionMessage;
+        }catch(e){
+          console.log(e)
+          errMes = err._body;
+        }
+        errTip = this.chineseConv(errMes);
         break;
       case 0:
         this.showToast(this.chineseConv('连接服务器失败'));

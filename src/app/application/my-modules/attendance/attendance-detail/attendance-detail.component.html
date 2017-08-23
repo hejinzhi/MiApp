@@ -1,6 +1,6 @@
 <ion-header>
   <ion-navbar>
-    <ion-title>{{type | sgFormType | sgChineseConv}}</ion-title>
+    <ion-title>{{type | sgFormType | translate}}</ion-title>
   </ion-navbar>
 
 </ion-header>
@@ -16,7 +16,7 @@
         </ion-row>
         <ion-row>
           <p>{{item.IDATE.replace("T",'0').substr(0,10) | sgMydate:"MM/DD/YY"}}</p>
-          <p>{{fontContent.week}}{{item.IWEEK}}</p>
+          <p>{{'attendance.week' | translate}}{{item.IWEEK}}</p>
         </ion-row>
         <ion-row>
           <p>{{item.ACT_ITIME1?item.ACT_ITIME1:'没有记录'| sgChineseConv}}</p>
@@ -27,8 +27,8 @@
           <p>{{item.ACT_ITIME2?item.ACT_ITIME2:'没有记录'| sgChineseConv}}</p>
         </ion-row>
         <ion-row>
-          <p>{{fontContent.off_hour}}:{{item.OFF_HOURS.toFixed(2)}}</p>
-          <p>{{fontContent.work_hour}}:{{item.WORK_HOURS.toFixed(2)}}</p>
+          <p>{{'attendance.off_hour' | translate}}:{{item.OFF_HOURS.toFixed(2)}}</p>
+          <p>{{'attendance.work_hour' | translate}}:{{item.WORK_HOURS.toFixed(2)}}</p>
         </ion-row>
       </h2>
     </button>
