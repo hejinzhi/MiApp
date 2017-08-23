@@ -6,7 +6,8 @@
 <ion-content>
   <ion-list class="myList">
     <button ion-item class="function-message" disabled>
-      <ion-icon name="swap" color="mac"></ion-icon>
+      <!-- <ion-icon name="swap" color="mac"></ion-icon> -->
+      <span class="iconfontyyy" style="color: #3773F7">&#xe621;</span>
         &nbsp;{{languageContent.flowMes}}
     </button>
     <button ion-item class="function-message" (tap)="toNineCode()">
@@ -27,11 +28,13 @@
     </button>
     <ion-item-divider color="light"></ion-item-divider>
     <button ion-item class="function-message" (tap)="checkUpdate()">
-      <ion-icon name="planet" color="mac"></ion-icon>
+      <!-- <ion-icon name="planet" color="mac"></ion-icon> -->
+      <span class="iconfontyyy" style="color: #3773F7">&#xe639;</span>
         &nbsp;{{languageContent.checkUpdate}}
     </button>
     <button ion-item class="function-message" disabled>
-      <ion-icon name="trash" color="mac"></ion-icon>
+      <!-- <ion-icon name="trash" color="mac"></ion-icon> -->
+      <span class="iconfontyyy" style="color: #3773F7">&#xe61f;</span>
         &nbsp;{{languageContent.dropChatNote}}
     </button>
     <button ion-item class="function-message" disabled>
@@ -39,20 +42,24 @@
         &nbsp;{{languageContent.dropSave}}
     </button>
     <button ion-item class="function-message" (tap)="changeFont()">
-      <ion-icon name="git-compare" color="mac"></ion-icon>
+      <!-- <ion-icon name="git-compare" color="mac"></ion-icon> -->
+      <span class="iconfontyyy" style="color: #3773F7">&#xe6fd;</span>
         &nbsp;{{languageContent.languageChange}}
     </button>
     <button ion-item class="function-message" disabled>
-      <ion-icon name="search" color="mac"></ion-icon>
+      <!-- <ion-icon name="search" color="mac"></ion-icon> -->
+      <span class="iconfontyyy" style="color: #3773F7">&#xe606;</span>
         &nbsp;{{languageContent.about}}
     </button>
     <ion-item-divider color="light"></ion-item-divider>
     <button ion-item class="function-message" (tap)="logout()">
-      <ion-icon name="disc" color="mac"></ion-icon>
+      <!-- <ion-icon name="disc" color="mac"></ion-icon> -->
+      <span class="iconfontyyy" style="color: #3773F7">&#xe636;</span>
         &nbsp;{{languageContent.logout}}
     </button>
     <button ion-item class="function-message" (tap)="exit()" *ngIf="plf ==='android'">
-      <ion-icon name="disc" color="mac"></ion-icon>
+      <!-- <ion-icon name="disc" color="mac"></ion-icon> -->
+      <span class="iconfontyyy" style="color: #3773F7">&#xe628;</span>
         &nbsp;{{languageContent.exitApp}}
     </button>
   </ion-list>
