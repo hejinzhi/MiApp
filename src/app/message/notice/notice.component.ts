@@ -26,6 +26,7 @@ export class NoticeComponent implements OnInit {
   userInfo: any; // 登录人信息
   alertType: string;
   showChartFlag: boolean = false;
+  first: boolean = true;
 
   constructor(
     public navCtrl: NavController,
@@ -44,7 +45,10 @@ export class NoticeComponent implements OnInit {
   }
 
   ionViewWillEnter() {
-    this.scroll_down();
+    if (this.first) {
+      this.scroll_down();
+      this.first = false;
+    }
   }
 
   ionViewDidEnter() {
@@ -53,7 +57,7 @@ export class NoticeComponent implements OnInit {
       this.ref.detectChanges();
       this.scroll_down();
     });
-    this.jmessageService.enterSingleConversation(this.fromUserName);
+    // this.jmessageService.enterSingleConversation(this.fromUserName);
   }
 
   async ionViewWillLeave() {
@@ -115,7 +119,6 @@ export class NoticeComponent implements OnInit {
         });
         setTimeout(() => {
           var div = document.getElementsByClassName('msg-content');
-          console.log(div, 444);
           div[0].setAttribute
           let dis = div[0].scrollHeight - this.listpageheight;
           div[0].scrollTop = dis;
