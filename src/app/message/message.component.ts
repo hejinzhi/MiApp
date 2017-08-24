@@ -79,6 +79,7 @@ export class MessageComponent implements OnInit {
       } else if (this.platform.is('android')) {
         this.plf = 'android';
       }
+      
 
       // 读取离线消息
       // this.jmessageService.jmessageOffline = this.jmessageService.onSyncOfflineMessage().subscribe(async (res) => {

@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { Subject }    from 'rxjs/Subject';
+import { Subject } from 'rxjs/Subject';
+import { TranslateService } from '@ngx-translate/core';
+
 import { MyHttpService } from '../../../../../core/services/myHttp.service';
 import { tify, sify } from 'chinese-conv';
 
@@ -9,16 +11,29 @@ import { MyFormModel } from '../models/my-form.model'
 import { AttendanceConfig } from '../config/attendance.config'
 import { HolidayType } from '../config/holiday-type'
 
-import { PluginService }   from '../../../../../core/services/plugin.service';
+import { PluginService } from '../../../../../core/services/plugin.service';
 
 @Injectable()
 export class AttendanceService {
 
   public updateFormList = new Subject<boolean>();
+  translateTexts: any = {};
   constructor(
     private myHttp: MyHttpService,
-    private plugin: PluginService
-  ) { }
+    private plugin: PluginService,
+    private translate: TranslateService
+  ) {
+    this.subscribeTranslateText();
+  }
+
+  subscribeTranslateText() {
+    this.translate.get(['attendance.month', 'not_found',
+      'http_error1', 'http_error2', 'http_error3'
+    ]).subscribe((res) => {
+      this.translateTexts = res;
+    })
+  }
+
   // 根据日期或单号（优先单号）获取请假单
   getForm(formData: any) {
     let dateFM = '';
@@ -53,11 +68,11 @@ export class AttendanceService {
         let list = [];
         formData = get_fn.call(this, formData, type);
         list.push(formData);
-        return Promise.resolve({content:list,status:true})
+        return Promise.resolve({ content: list, status: true })
       }).catch((err) => {
         console.log(err)
         this.errorDeal(err);
-        return Promise.resolve({content:[],status:false})
+        return Promise.resolve({ content: [], status: false })
       });
     } else {
       dateFM = formData.startTime || this.getMinStartTime(1);
@@ -67,11 +82,11 @@ export class AttendanceService {
         formData = formData.map((item: any) => {
           return get_fn.call(this, item, type)
         })
-        return Promise.resolve({content:formData,status:true})
+        return Promise.resolve({ content: formData, status: true })
       }).catch((err) => {
         console.log(err)
         this.errorDeal(err);
-        return Promise.resolve({content:[],status:false})
+        return Promise.resolve({ content: [], status: false })
       });
     }
   }
@@ -81,8 +96,8 @@ export class AttendanceService {
       let formData = res.json();
       formData = formData === null ? [] : formData.map((item: any) => {
         console.log(item)
-        if(item.OFFDUTY_TYPE == '2') {
-          return this.editLeaveData_get(item,'4');
+        if (item.OFFDUTY_TYPE == '2') {
+          return this.editLeaveData_get(item, '4');
         } else {
           return this.editLeaveData_get(item);
         }
@@ -115,11 +130,11 @@ export class AttendanceService {
     let sendData = this.editLeaveData_send(data);
     return this.myHttp.post(AttendanceConfig.getLeaveDuringUrl, sendData).then((res) => {
       let newData = this.editLeaveData_get(res.json(), data.type);
-      return Promise.resolve({content:newData,status:true});
+      return Promise.resolve({ content: newData, status: true });
     }).catch((err) => {
       console.log(err)
       let errTip = this.errorDeal(err, false);
-      return Promise.resolve({content:errTip,status:false});
+      return Promise.resolve({ content: errTip, status: false });
     });
   }
 
@@ -139,11 +154,11 @@ export class AttendanceService {
   saveLeaveForm(data: MyFormModel) {
     let sendData = this.editLeaveData_send(data);
     return this.myHttp.post(AttendanceConfig.saveLeaveUrl, sendData).then((res) => {
-      return Promise.resolve({content:res.json(),status:true})
+      return Promise.resolve({ content: res.json(), status: true })
     }).catch((err) => {
       console.log(err)
       let errTip = this.errorDeal(err);
-      return Promise.resolve({content:errTip,status:false})
+      return Promise.resolve({ content: errTip, status: false })
     });
   }
   // 删除表单
@@ -342,20 +357,20 @@ export class AttendanceService {
     return formateRes;
   }
   // 获得最大请假天数
-  getMaxDays(type:string) {
-    let url = AttendanceConfig.getMaxDaysUrl.replace('{type}',type);
-    return this.myHttp.get(url).then((res:any) => {
-      let days = res.json()?res.json().ABSENT_DAY:''
-      return Promise.resolve({content:days,status:true})
+  getMaxDays(type: string) {
+    let url = AttendanceConfig.getMaxDaysUrl.replace('{type}', type);
+    return this.myHttp.get(url).then((res: any) => {
+      let days = res.json() ? res.json().ABSENT_DAY : ''
+      return Promise.resolve({ content: days, status: true })
     }).catch((err) => {
       this.errorDeal(err);
-      return Promise.resolve({content:'',status:false})
+      return Promise.resolve({ content: '', status: false })
     });
   }
   // 获得代理人
   getAgent(name: string): Observable<any> {
     let emp_name = name.toUpperCase();
-    emp_name = tify(emp_name).replace(/^\"/g,'').replace(/\"$/g,'')
+    emp_name = tify(emp_name).replace(/^\"/g, '').replace(/\"$/g, '')
     return Observable.fromPromise(this.myHttp.get(AttendanceConfig.getAgentUrl + `emp_name=${emp_name}`)).map((r) => {
       return r.json();
     });
@@ -363,10 +378,10 @@ export class AttendanceService {
   // 获得签核名单
   getSignList(form_No: string) {
     return this.myHttp.get(AttendanceConfig.getSignListUrl + form_No).then((res) => {
-      return Promise.resolve({content:res.json(),status:true})
+      return Promise.resolve({ content: res.json(), status: true })
     }).catch((err) => {
       this.errorDeal(err);
-      return Promise.resolve({content:[],status:false})
+      return Promise.resolve({ content: [], status: false })
     });
   }
   // 送签
@@ -390,7 +405,7 @@ export class AttendanceService {
           break;
       }
       if (!saveRes.status) return Promise.resolve(saveRes);
-      formData.No = Number(formData.type) === 5?saveRes.content.DOCNO1:saveRes.content.DOCNO;
+      formData.No = Number(formData.type) === 5 ? saveRes.content.DOCNO1 : saveRes.content.DOCNO;
     }
     let sendData = {
       KIND: '',
@@ -483,11 +498,11 @@ export class AttendanceService {
   saveOverTimeForm(formData: MyFormModel) {
     let send = this.editOverTime_send(formData);
     return this.myHttp.post(AttendanceConfig.saveOverTimeUrl, send).then((res) => {
-      return Promise.resolve({content:res.json(),status:true})
+      return Promise.resolve({ content: res.json(), status: true })
     }).catch((err) => {
       console.log(err)
       let errTip = this.errorDeal(err);
-      return Promise.resolve({content:errTip,status:false})
+      return Promise.resolve({ content: errTip, status: false })
     });
   }
   // 对发送的加班单数据进行加工
@@ -563,11 +578,11 @@ export class AttendanceService {
     send.OFFDUTY_DOCNO = formData.data.leave_No;
     send.NEREAON = formData.data.reason
     return this.myHttp.post(AttendanceConfig.saveCallbackLeaveFromUrl, send).then((res) => {
-      return Promise.resolve({content:res.json(),status:true})
+      return Promise.resolve({ content: res.json(), status: true })
     }).catch((err) => {
       console.log(err)
       let errTip = this.errorDeal(err);
-      return Promise.resolve({content:errTip,status:false})
+      return Promise.resolve({ content: errTip, status: false })
     });
   }
 
@@ -752,7 +767,7 @@ export class AttendanceService {
     });
   }
   editOffDutyTotalDays_get(data: { YYMM: string, TOT_DAYS: string }) {
-    return { name: +data.YYMM.substr(4) + this.chineseConv('月'), value: data.TOT_DAYS }
+    return { name: +data.YYMM.substr(4) + this.translateTexts['attendance.month'], value: data.TOT_DAYS }
   }
 
   // 获得月或年加班时数
@@ -775,13 +790,13 @@ export class AttendanceService {
     });
   }
   editOverTimeTotalHours_get(data: { YYMM: string, TOT_HOURS: string }) {
-    return { name: +data.YYMM.substr(4) + this.chineseConv('月'), value: data.TOT_HOURS }
+    return { name: +data.YYMM.substr(4) + this.translateTexts['attendance.month'], value: data.TOT_HOURS }
   }
 
   // 获取某月内的请假明细
-  getOffDutyMonthHours(month:string) {
+  getOffDutyMonthHours(month: string) {
     let date = new Date().getFullYear();
-    month = Number(month)<10?'0'+month:month;
+    month = Number(month) < 10 ? '0' + month : month;
     return this.myHttp.get(AttendanceConfig.getOffDutyMonthHoursUrl + `date=${date}${month}`).then((res) => {
       let newData = res.json();
       if (newData && newData instanceof Array) {
@@ -799,12 +814,12 @@ export class AttendanceService {
     });
   }
   editOffDutyMonthHours_get(data: { IDATE: string, TOT_HOURS: string }) {
-    return { name: new Date(data.IDATE).getDate()+'', value: Number(data.TOT_HOURS)/8 }
+    return { name: new Date(data.IDATE).getDate() + '', value: Number(data.TOT_HOURS) / 8 }
   }
   // 获取某月内的加班明细
-  getOverTimeMonthHours(month:string) {
+  getOverTimeMonthHours(month: string) {
     let date = new Date().getFullYear();
-    month = Number(month)<10?'0'+month:month;
+    month = Number(month) < 10 ? '0' + month : month;
     return this.myHttp.get(AttendanceConfig.getOverTimeMonthHoursUrl + `date=${date}${month}`).then((res) => {
       let newData = res.json();
       if (newData && newData instanceof Array) {
@@ -822,24 +837,13 @@ export class AttendanceService {
     });
   }
   editOverTimeMonthHours_get(data: { IDATE: string, TOT_HOURS: string }) {
-    return { name: new Date(data.IDATE).getDate()+'', value: Number(data.TOT_HOURS) }
-  }
-  chineseConv(value:string) {
-    let fontType: string = localStorage.getItem('languageType');
-    switch (fontType) {
-      case 'simple_Chinese':
-        return sify(JSON.stringify(value)).replace(/^\"/g,'').replace(/\"$/g,'');
-      case 'traditional_Chinese':
-        return tify(JSON.stringify(value)).replace(/^\"/g,'').replace(/\"$/g,'');
-      default:
-        return value;
-    }
+    return { name: new Date(data.IDATE).getDate() + '', value: Number(data.TOT_HOURS) }
   }
 
   // 获取用户头像
-  getUserPhoto(id:string) {
+  getUserPhoto(id: string) {
     return this.myHttp.get(AttendanceConfig.getUserPhotoUrl + `userName=${id.toLowerCase()}`).then((res) => {
-      let newData = res.json()? res.json().AVATAR_URL:'';
+      let newData = res.json() ? res.json().AVATAR_URL : '';
       return Promise.resolve({ content: newData, status: true });
     }).catch((err) => {
       console.log(err)
@@ -851,7 +855,7 @@ export class AttendanceService {
     let errTip = '';
     switch (err.status) {
       case 404:
-        this.plugin.showToast(this.chineseConv('未找到结果'));
+        this.plugin.showToast(this.translateTexts['not_found']);
         break;
       case 400:
         // if (showAlert) {
@@ -859,16 +863,16 @@ export class AttendanceService {
         // } else {
         //   this.plugin.showToast(this.chineseConv(err.json().ExceptionMessage));
         // }
-        errTip = this.chineseConv(err.json().ExceptionMessage);
+        errTip = this.plugin.chineseConv(err.json().ExceptionMessage);
         break;
       case 0:
-        this.plugin.showToast(this.chineseConv('连接服务器失败'));
+        this.plugin.showToast(this.translateTexts['http_error1']);
         break;
       case 500:
-        this.plugin.showToast(this.chineseConv('服务器没响应'));
+        this.plugin.showToast(this.translateTexts['http_error2']);
         break;
       default:
-        this.plugin.showToast(this.chineseConv('出现未定义连接错误') + err.status);
+        this.plugin.showToast(this.translateTexts['http_error3'] + err.status);
         break;
     }
     return errTip

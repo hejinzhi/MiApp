@@ -1,0 +1,40 @@
+<ion-header>
+  <ion-navbar>
+    <ion-title>{{languageContent.title}}</ion-title>
+  </ion-navbar>
+</ion-header>
+<ion-content>
+  <!--<ion-list>
+    <ion-item>
+      <ion-label>{{languageContent.type}}</ion-label>
+      <ion-select [(ngModel)]="type">
+        <ion-option value="ALL" selected="true">{{languageContent.all}}</ion-option>
+        <ion-option value="Y">{{languageContent.hasduty}}</ion-option>
+        <ion-option value="N">{{languageContent.noduty}}</ion-option>
+      </ion-select>
+    </ion-item>
+    <ion-grid>
+        <ion-row>
+          <ion-col width-50>
+            <ion-buttons right>
+             <button ion-button class="submit" (tap)="getItem()" >{{languageContent.submit}}</button>
+            </ion-buttons>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+  </ion-list>-->
+  <ion-grid [class.double_row]="i%2===1" *ngFor="let item of itemlist;let i=index">
+    <ion-row class="myRow">
+      <ion-col col-7>
+        <p>{{ item.SHORT_NAME }}</p>
+      </ion-col>
+      <ion-col col-2>
+        <p>{{item.NAME}}</p>
+      </ion-col>
+      <ion-col col-3>
+        <p>{{item.REMARK }}</p>
+      </ion-col>
+    </ion-row>
+    <div class="grid-footer"></div>
+  </ion-grid>
+</ion-content>

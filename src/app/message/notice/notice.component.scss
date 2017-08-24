@@ -31,6 +31,9 @@ sg-notice {
         }
         .card-content {
           text-indent: 2em;
+          .under-line{
+            text-decoration:underline;
+          }
           .chart-text {
             text-indent: 0;
           }

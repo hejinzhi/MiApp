@@ -1,11 +1,11 @@
 import { Component } from '@angular/core';
 import { NavController, NavParams, IonicPage } from 'ionic-angular';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { TranslateService } from '@ngx-translate/core';
 
-import { ValidateService }   from '../../../../core/services/validate.service';
-import { PluginService }   from '../../../../core/services/plugin.service';
+import { ValidateService } from '../../../../core/services/validate.service';
+import { PluginService } from '../../../../core/services/plugin.service';
 import { AttendanceService } from '../shared/service/attendance.service';
-
 import { HolidayType } from '../shared/config/holiday-type';
 import { LanguageTypeConfig } from '../shared/config/language-type.config';
 
@@ -19,43 +19,46 @@ import { MyFormModel } from '../shared/models/my-form.model';
 })
 export class UndoneFormComponent {
 
-  fontType:string = localStorage.getItem('languageType')
+  fontType: string = localStorage.getItem('languageType')
   fontContent = LanguageTypeConfig.undoneFormComponent[this.fontType];
 
   leaveMes: {
-    absentType:string
+    absentType: string
     reasonType: string,
     startTime: string,
     endTime: string,
     reason: string
   }
-  formData:MyFormModel = {
-    type:'',
-    status:'New',
-    No:'HTL021703007172',
-    data:{}
+  formData: MyFormModel = {
+    type: '',
+    status: 'New',
+    No: 'HTL021703007172',
+    data: {}
   }
   errTip: string;
-  hourCount:string;
-  dayCount:string;
-  dutyType:string;
+  hourCount: string;
+  dayCount: string;
+  dutyType: string;
   todo: FormGroup;
-  myValidators:{};
+  myValidators: {};
   MyValidatorControl: MyValidatorModel;
-  holidayType:any;
+  holidayType: any;
   absentType: any;
   needReasonType: boolean = false;
+  translateTexts: any = {};
+
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
     private formBuilder: FormBuilder,
     private validateService: ValidateService,
     private plugin: PluginService,
-    private attendanceService: AttendanceService
+    private attendanceService: AttendanceService,
+    private translate: TranslateService
   ) { }
 
   ionViewDidLoad() {
-    this.holidayType = localStorage.getItem('leaveType')? JSON.parse(localStorage.getItem('leaveType')):new HolidayType().type;
+    this.holidayType = localStorage.getItem('leaveType') ? JSON.parse(localStorage.getItem('leaveType')) : new HolidayType().type;
     this.absentType = new HolidayType().absentType;
     this.leaveMes = {
       absentType: '',
@@ -70,13 +73,14 @@ export class UndoneFormComponent {
     this.hourCount = this.formData.data.hours;
     this.dutyType = this.formData.data.duty_type;
     this.todo = this.initWork(this.leaveMes);
+    this.subscribeTranslateText();
     this.MyValidatorControl = this.initValidator(this.leaveMes);
     this.myValidators = this.MyValidatorControl.validators;
     for (let prop in this.myValidators) {
       this.todo.controls[prop].valueChanges.subscribe((value: any) => this.check(value, prop));
     }
     this.todo.controls['absentType'].valueChanges.subscribe((value: any) => {
-      if(value === '2') {
+      if (value === '2') {
         this.needReasonType = false;
         this.todo.controls['reasonType'].clearValidators();
         this.todo.controls['reasonType'].setValue('');
@@ -87,20 +91,32 @@ export class UndoneFormComponent {
     })
     this.todo.controls['absentType'].setValue(this.formData.data.absentType);
   }
-  initValidator(bind:any) {
+  subscribeTranslateText() {
+    this.translate.get(['attendance.absentType_required_err', 'attendance.reason_required_err', 'attendance.reason_minlength_err', 'attendance.startTime_required_err',
+      'attendance.endTime_required_err']).subscribe((res) => {
+        this.translateTexts = res;
+      })
+  }
+  initValidator(bind: any) {
     let newValidator = new MyValidatorModel([
-      {name:'absentType',valiItems:[{valiName:'Required',errMessage:this.fontContent.absentType_required_err,valiValue:true}]},
-      {name:'reasonType',valiItems:[]},
-      {name:'reason',valiItems:[
-        {valiName:'Required',errMessage:this.fontContent.reason_required_err,valiValue:true},
-        {valiName:'Minlength',errMessage:this.fontContent.reason_minlength_err,valiValue:2}
-      ]},
-      {name:'startTime',valiItems:[
-        {valiName:'Required',errMessage:this.fontContent.startTime_required_err,valiValue:true},
-      ]},
-      {name:'endTime',valiItems:[
-        {valiName:'Required',errMessage:this.fontContent.endTime_required_err,valiValue:true},
-      ]}
+      { name: 'absentType', valiItems: [{ valiName: 'Required', errMessage: this.translateTexts['attendance.absentType_required_err'], valiValue: true }] },
+      { name: 'reasonType', valiItems: [] },
+      {
+        name: 'reason', valiItems: [
+          { valiName: 'Required', errMessage: this.translateTexts['attendance.reason_required_err'], valiValue: true },
+          { valiName: 'Minlength', errMessage: this.translateTexts['attendance.reason_minlength_err'], valiValue: 2 }
+        ]
+      },
+      {
+        name: 'startTime', valiItems: [
+          { valiName: 'Required', errMessage: this.translateTexts['attendance.startTime_required_err'], valiValue: true },
+        ]
+      },
+      {
+name: 'endTime', valiItems: [
+          { valiName: 'Required', errMessage: this.translateTexts['attendance.endTime_required_err'], valiValue: true },
+        ]
+      }
     ])
     return newValidator;
   }
@@ -131,7 +147,7 @@ export class UndoneFormComponent {
     loading.present()
     let res: any = await this.attendanceService.processOffDutyException(this.formData);
     loading.dismiss()
-    if(res.status) {
+    if (res.status) {
       this.errTip = '';
       this.plugin.showToast(this.fontContent.submit_succ);
       this.navCtrl.popToRoot();

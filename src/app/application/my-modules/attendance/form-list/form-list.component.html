@@ -1,11 +1,11 @@
 <ion-header>
   <ion-navbar id="navbar">
-    <ion-title>{{type | sgFormType | sgChineseConv}}</ion-title>
+    <ion-title>{{type | sgFormType | translate}}</ion-title>
     <ion-buttons *ngIf="type === '100'">
-      <button ion-button (tap)="exit()">{{fontContent.exit}}</button>
+      <button ion-button (tap)="exit()">{{'attendance.exit' | translate}}</button>
     </ion-buttons>
     <ion-buttons end *ngIf="+type>1 && +type<5 && !approved">
-      <button ion-button (tap)="newForm()">{{fontContent.new}}{{type | sgFormType}}</button>
+      <button ion-button (tap)="newForm()">{{'attendance.new' | translate}}{{type | sgFormType | translate}}</button>
     </ion-buttons>
   </ion-navbar>
 
