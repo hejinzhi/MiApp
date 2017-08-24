@@ -60,31 +60,27 @@ export class SetComponent implements OnInit {
   changeFont() {
     let that = this;
     let alert = this.alertCtrl.create();
+    let lang = this.translate.currentLang.toUpperCase();
     alert.setTitle(this.translateTexts['meComponent.languageChangeAlertTitle']);
     alert.addInput({
       type: 'radio',
       label: this.translateTexts['meComponent.simple_Chinese'],
-      value: 'simple_Chinese',
-      checked: localStorage.getItem('languageType') === 'simple_Chinese'
+      value: 'zh-CN',
+      checked: lang === 'ZH-CN'
     });
     alert.addInput({
       type: 'radio',
       label: this.translateTexts['meComponent.traditional_Chinese'],
-      value: 'traditional_Chinese',
-      checked: localStorage.getItem('languageType') === 'traditional_Chinese'
+      value: 'zh-TW',
+      checked: lang === 'ZH-TW'
     });
 
     alert.addButton(this.translateTexts['cancel']);
     alert.addButton({
       text: this.translateTexts['confirm'],
       handler: (data: string) => {
-        localStorage.setItem('languageType', data);
-        if (data === 'simple_Chinese') {
-          this.translate.use('zh-CN');
-        } else {
-          this.translate.use('zh-TW');
-        }
-        this.reStartApp();
+        this.translate.use(data);
+        this.plugin.showToast('已更改为'+data)
       }
     });
     alert.present();

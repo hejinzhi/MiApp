@@ -1,7 +1,7 @@
 <ion-header>
 
   <ion-navbar>
-    <ion-title>{{fontContent.title}}</ion-title>
+    <ion-title>{{'attendance.tab3' | translate}}</ion-title>
   </ion-navbar>
 
 </ion-header>
@@ -10,13 +10,13 @@
 <ion-content>
   <ion-list class="myList">
     <button ion-item (tap)='maintain_Leave()'>
-    {{fontContent.for_leave}}
+    {{'attendance.leave1' | translate}}
     </button>
     <button ion-item (tap)='cancel_leave()'>
-    {{fontContent.for_callback}}
+    {{'attendance.for_callback' | translate}}
     </button>
     <button ion-item (tap)='maintain_business()'>
-    {{fontContent.for_business}}
+    {{'attendance.business1' | translate}}
     </button>
   </ion-list>
 </ion-content>
