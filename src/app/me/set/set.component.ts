@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { NavController, NavParams, AlertController, App, Platform, IonicPage } from 'ionic-angular';
 
 import { LoginComponent } from '../../login/login.component';
@@ -14,11 +14,12 @@ import { LanguageConfig } from '../shared/config/language.config';
   selector: 'sg-set',
   templateUrl: 'set.component.html'
 })
-export class SetComponent {
+export class SetComponent implements OnInit {
 
   languageType: string = localStorage.getItem('languageType');
   languageContent = LanguageConfig.setComponent[this.languageType];
   plf: string; // 判断是什么平台
+  translateTexts: any;
 
   constructor(
     public navCtrl: NavController,
@@ -36,7 +37,21 @@ export class SetComponent {
       this.plf = 'android';
     }
   }
+  ngOnInit() {
+    this.translate.get(['meComponent.languageChangeAlertTitle', 'meComponent.simple_Chinese', 'meComponent.traditional_Chinese', 'cancel', 'confirm'
+      , 'meComponent.reStartAppAlertTitle', 'meComponent.reStartAppAlertMes', 'meComponent.logoutAlertTitle', 'meComponent.logoutAlertMes'
+      , 'meComponent.exitAlertTitle', 'meComponent.exitAlertMes', 'Y', 'N']).subscribe((res) => {
+        this.translateTexts = res;
+      })
 
+    this.translate.onLangChange.subscribe(() => {
+      this.translate.get(['meComponent.languageChangeAlertTitle', 'meComponent.simple_Chinese', 'meComponent.traditional_Chinese', 'cancel', 'confirm'
+        , 'meComponent.reStartAppAlertTitle', 'meComponent.reStartAppAlertMes', 'meComponent.logoutAlertTitle', 'meComponent.logoutAlertMes'
+        , 'meComponent.exitAlertTitle', 'meComponent.exitAlertMes', 'Y', 'N']).subscribe((res) => {
+          this.translateTexts = res;
+        })
+    });
+  }
 
   checkUpdate() {
     this.plugin.checkAppForUpdate(false);
@@ -45,23 +60,23 @@ export class SetComponent {
   changeFont() {
     let that = this;
     let alert = this.alertCtrl.create();
-    alert.setTitle(this.languageContent.languageChangeAlertTitle);
+    alert.setTitle(this.translateTexts['meComponent.languageChangeAlertTitle']);
     alert.addInput({
       type: 'radio',
-      label: this.languageContent.simple_Chinese,
+      label: this.translateTexts['meComponent.simple_Chinese'],
       value: 'simple_Chinese',
       checked: localStorage.getItem('languageType') === 'simple_Chinese'
     });
     alert.addInput({
       type: 'radio',
-      label: this.languageContent.traditional_Chinese,
+      label: this.translateTexts['meComponent.traditional_Chinese'],
       value: 'traditional_Chinese',
       checked: localStorage.getItem('languageType') === 'traditional_Chinese'
     });
 
-    alert.addButton(this.languageContent.cancel);
+    alert.addButton(this.translateTexts['cancel']);
     alert.addButton({
-      text: this.languageContent.confirm,
+      text: this.translateTexts['confirm'],
       handler: (data: string) => {
         localStorage.setItem('languageType', data);
         if (data === 'simple_Chinese') {
@@ -76,17 +91,17 @@ export class SetComponent {
   }
   reStartApp() {
     let confirm = this.alertCtrl.create({
-      title: this.languageContent.reStartAppAlertTitle,
-      message: this.languageContent.reStartAppAlertMes,
+      title: this.translateTexts['meComponent.reStartAppAlertTitle'],
+      message: this.translateTexts['meComponent.reStartAppAlertMes'],
       buttons: [
         {
-          text: this.languageContent.cancel,
+          text: this.translateTexts['cancel'],
           handler: () => {
 
           }
         },
         {
-          text: this.languageContent.confirm,
+          text: this.translateTexts['confirm'],
           handler: () => {
             this.plugin.getCodePush().restartApplication();
           }
@@ -99,17 +114,17 @@ export class SetComponent {
   logout(): void {
     let that = this;
     let confirm = this.alertCtrl.create({
-      title: this.languageContent.logoutAlertTitle,
-      message: this.languageContent.logoutAlertMes,
+      title: this.translateTexts['meComponent.logoutAlertTitle'],
+      message: this.translateTexts['meComponent.logoutAlertMes'],
       buttons: [
         {
-          text: this.languageContent.cancel,
+          text: this.translateTexts['cancel'],
           handler: () => {
 
           }
         },
         {
-          text: this.languageContent.confirm,
+          text: this.translateTexts['confirm'],
           handler: () => {
             if (this.plugin.isCordova()) {
               // if (that.jmessage.jmessageHandler) {
@@ -139,17 +154,17 @@ export class SetComponent {
   exit() {
     let that = this;
     let confirm = this.alertCtrl.create({
-      title: this.languageContent.exitAlertTitle,
-      message: this.languageContent.exitAlertMes,
+      title: this.translateTexts['meComponent.exitAlertTitle'],
+      message: this.translateTexts['meComponent.exitAlertMes'],
       buttons: [
         {
-          text: this.languageContent.N,
+          text: this.translateTexts['N'],
           handler: () => {
             console.log('Disagree clicked');
           }
         },
         {
-          text: this.languageContent.Y,
+          text: this.translateTexts['Y'],
           handler: () => {
             // if (that.jmessage.jmessageHandler) {
             //   that.jmessage.jmessageHandler.unsubscribe();

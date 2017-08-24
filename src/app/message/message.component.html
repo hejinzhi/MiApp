@@ -1,7 +1,7 @@
 <ion-header>
   <ion-navbar>
     <ion-title class="page-title">
-      <div>{{languageContent.title}}</div>
+      <div>{{'messagecomponent.title' | translate}}</div>
     </ion-title>
   </ion-navbar>
 </ion-header>
@@ -27,7 +27,7 @@
         <button ion-button color="danger" (tap)="deleteMessage(item)">
               <ion-icon name="delete" >
               </ion-icon>
-                {{languageContent.delete}}
+                {{'messagecomponent.delete' | translate}}
             </button>
       </ion-item-options>
     </ion-item-sliding>
@@ -45,10 +45,10 @@
           <p class="msg" [innerHTML]="item.content | sgChineseConv"></p>
         </ng-template>
         <ng-template [ngSwitchCase]="'image'">
-          <p>[{{languageContent.messagetype_image}}]</p>
+          <p>[{{'messagecomponent.messagetype_image' | translate}}]</p>
         </ng-template>
         <ng-template [ngSwitchCase]="'voice'">
-          <p>[{{languageContent.messagetype_voice}}]</p>
+          <p>[{{'messagecomponent.messagetype_voice' | translate}}]</p>
         </ng-template>
         <ion-note item-right>{{item.timedesc | sgChineseConv}}</ion-note>
       </ion-item>
@@ -56,7 +56,7 @@
         <button ion-button color="danger" (tap)="deleteMessage(item)">
               <ion-icon name="delete" >
               </ion-icon>
-                {{languageContent.delete}}
+                {{'messagecomponent.delete' | translate}}
             </button>
       </ion-item-options>
     </ion-item-sliding>

@@ -1,43 +1,43 @@
 <ion-header>
   <ion-navbar>
-    <ion-title>{{languageContent.title}}</ion-title>
+    <ion-title>{{'meComponent.metitle' | translate}}</ion-title>
   </ion-navbar>
 </ion-header>
 <ion-content *ngIf="user">
   <ion-list class="my-detail myList">
     <button ion-item>
-          {{languageContent.photo}}
+          {{'avatar' | translate}}
           <ion-note item-right class="person" (tap)="changePhoto()">
            <img [src]="user.avatarUrl" class="avatar">
           </ion-note>
       </button>
     <button ion-item>
-          {{languageContent.name}}
+          {{'name' | translate}}
           <ion-note item-right>
           {{user.nickname}}
           </ion-note>
       </button>
     <button ion-item (tap)="showQr()">
-         {{languageContent.Qr}}
+         {{'meComponent.Qr' | translate}}
           <ion-note item-right>
           <i class="iconfontyyy">&#xe614;</i>
           </ion-note>
       </button>
     <ion-item-divider color="light"></ion-item-divider>
     <button ion-item (tap)="changeDetailRequest(1)">
-        {{languageContent.mobile}}
+        {{'mobile' | translate}}
         <ion-note item-right>
         {{user.mobile}}
         </ion-note>
     </button>
     <button ion-item (tap)="changeDetailRequest(2)">
-        {{languageContent.telephone}}
+        {{'telephone' | translate}}
         <ion-note item-right>
         {{user.telephone}}
         </ion-note>
     </button>
     <button ion-item (tap)="changeDetailRequest(3)">
-        {{languageContent.mail}}
+        {{'email' | translate}}
         <ion-note item-right>
         {{user.email}}
         </ion-note>

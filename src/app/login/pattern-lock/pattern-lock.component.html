@@ -1,10 +1,10 @@
 <ion-header [class.head]='isVal' [class.secHead]='!isVal' id='headCode'>
   <ion-navbar [class.hide]="isVal">
-    <ion-title>手势密码</ion-title>
+    <ion-title>{{'PatternLock.title' | translate}}</ion-title>
   </ion-navbar>
   <ion-list *ngIf="!isVal">
     <ion-item>
-      <ion-label>启用手势密码</ion-label>
+      <ion-label>{{'PatternLock.enable' | translate}}</ion-label>
       <ion-toggle [(ngModel)]="needNineCode" (ionChange)="toggleBtn($event)"></ion-toggle>
     </ion-item>
   </ion-list>
@@ -26,12 +26,12 @@
     <ion-row>
       <ion-col width-50>
         <ion-buttons left>
-          <button ion-button (tap)="switchUser()">登录其它账号</button>
+          <button ion-button (tap)="switchUser()">{{'PatternLock.loginother' | translate}}</button>
         </ion-buttons>
       </ion-col>
       <ion-col width-50>
         <ion-buttons right>
-          <button ion-button (tap)="validateId()">忘记手势密码</button>
+          <button ion-button (tap)="validateId()">{{'PatternLock.forgot' | translate}}</button>
         </ion-buttons>
       </ion-col>
     </ion-row>
