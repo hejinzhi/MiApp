@@ -61,7 +61,6 @@ export class DimissionAnalysisComponent {
    * 根据选择的标签更改视图
    */
   async changeShow() {
-    this.subInfo = {caption:'',data:[]}
     this.subInfo = await this.getInfo(this.mi_type);
     if(this.mi_type === 'S+A') {
       let lastOrder;//倒数第几的位置
