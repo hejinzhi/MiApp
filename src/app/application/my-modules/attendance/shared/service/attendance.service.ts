@@ -839,17 +839,6 @@ export class AttendanceService {
   editOverTimeMonthHours_get(data: { IDATE: string, TOT_HOURS: string }) {
     return { name: new Date(data.IDATE).getDate() + '', value: Number(data.TOT_HOURS) }
   }
-  chineseConv(value: string) {
-    let fontType: string = localStorage.getItem('languageType');
-    switch (fontType) {
-      case 'simple_Chinese':
-        return sify(JSON.stringify(value)).replace(/^\"/g, '').replace(/\"$/g, '');
-      case 'traditional_Chinese':
-        return tify(JSON.stringify(value)).replace(/^\"/g, '').replace(/\"$/g, '');
-      default:
-        return value;
-    }
-  }
 
   // 获取用户头像
   getUserPhoto(id: string) {
@@ -874,7 +863,7 @@ export class AttendanceService {
         // } else {
         //   this.plugin.showToast(this.chineseConv(err.json().ExceptionMessage));
         // }
-        errTip = this.chineseConv(err.json().ExceptionMessage);
+        errTip = this.plugin.chineseConv(err.json().ExceptionMessage);
         break;
       case 0:
         this.plugin.showToast(this.translateTexts['http_error1']);
