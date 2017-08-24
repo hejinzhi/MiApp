@@ -1,7 +1,7 @@
 <ion-header>
 
   <ion-navbar>
-    <ion-title>{{fontContent.title}}</ion-title>
+    <ion-title>{{'attendance.title3' | translate}}</ion-title>
   </ion-navbar>
 
 </ion-header>
@@ -9,22 +9,22 @@
 
 <ion-content>
   <ion-item-group *ngFor="let item of items;let i = index;">
-    <ion-item-divider color="light" *ngIf="items.length > 1">{{fontContent.REVISION}}： {{item.REVISION}}</ion-item-divider>
+    <ion-item-divider color="light" *ngIf="items.length > 1">{{'attendance.REVISION' | translate}}： {{item.REVISION}}</ion-item-divider>
     <ion-card *ngFor="let itemSub of item.INFO">
       <ion-item>
         <ion-avatar item-left>
           <img src="assets/img/face.png" getPhoto [user_id] = "itemSub.APPROVER">
         </ion-avatar>
-        <h3>{{fontContent.SEQ}}: {{itemSub.SEQ}}</h3>
+        <h3>{{'attendance.SEQ' | translate}}: {{itemSub.SEQ}}</h3>
         <h3>{{itemSub.APPROVER}} <p *ngIf="itemSub.IN_TIME">{{itemSub.IN_TIME.replace('T',' ').substr(0,16)}}</p></h3>
-        <h3 *ngIf="itemSub.ARENT_FROM">{{fontContent.ARENT_FROM}}： {{itemSub.ARENT_FROM}}</h3>
+        <h3 *ngIf="itemSub.ARENT_FROM">{{'attendance.ARENT_FROM' | translate}}： {{itemSub.ARENT_FROM}}</h3>
         <h3 *ngIf="itemSub.STATUS"><p class="status" [class.waiting] ="itemSub.STATUS.toUpperCase() === 'WAITING'">{{itemSub.STATUS}}</p>
           <p *ngIf="itemSub.OUT_TIME && itemSub.STATUS.toUpperCase() !== 'WAITING'">
           {{itemSub.OUT_TIME.replace('T',' ').substr(0,16)}}
           </p>
-          <p class="waiting" *ngIf="itemSub.IN_TIME && itemSub.STATUS.toUpperCase() === 'WAITING'">{{fontContent.waiting}}{{itemSub.IN_TIME | sgDuring}}</p>
+          <p class="waiting" *ngIf="itemSub.IN_TIME && itemSub.STATUS.toUpperCase() === 'WAITING'">{{'attendance.waiting' | translate}}{{itemSub.IN_TIME | sgDuring}}</p>
         </h3>
-        <p *ngIf="itemSub.COMMENTS">{{fontContent.COMMENTS}}： {{itemSub.COMMENTS}}</p>
+        <p *ngIf="itemSub.COMMENTS">{{'attendance.COMMENTS' | translate}}： {{itemSub.COMMENTS}}</p>
       </ion-item>
     </ion-card>
   </ion-item-group>

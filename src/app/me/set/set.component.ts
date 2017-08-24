@@ -45,31 +45,27 @@ export class SetComponent {
   changeFont() {
     let that = this;
     let alert = this.alertCtrl.create();
+    let lang = this.translate.currentLang.toUpperCase();
     alert.setTitle(this.languageContent.languageChangeAlertTitle);
     alert.addInput({
       type: 'radio',
       label: this.languageContent.simple_Chinese,
-      value: 'simple_Chinese',
-      checked: localStorage.getItem('languageType') === 'simple_Chinese'
+      value: 'zh-CN',
+      checked: lang === 'ZH-CN'
     });
     alert.addInput({
       type: 'radio',
       label: this.languageContent.traditional_Chinese,
-      value: 'traditional_Chinese',
-      checked: localStorage.getItem('languageType') === 'traditional_Chinese'
+      value: 'zh-TW',
+      checked: lang === 'ZH-TW'
     });
 
     alert.addButton(this.languageContent.cancel);
     alert.addButton({
       text: this.languageContent.confirm,
       handler: (data: string) => {
-        localStorage.setItem('languageType', data);
-        if (data === 'simple_Chinese') {
-          this.translate.use('zh-CN');
-        } else {
-          this.translate.use('zh-TW');
-        }
-        this.reStartApp();
+        this.translate.use(data);
+        this.plugin.showToast('已更改为'+data)
       }
     });
     alert.present();

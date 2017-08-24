@@ -1,7 +1,7 @@
 <ion-header>
 
   <ion-navbar>
-    <ion-title>{{fontContent.title}}</ion-title>
+    <ion-title>{{'attendance.tab4' | translate}}</ion-title>
   </ion-navbar>
 
 </ion-header>
@@ -10,16 +10,16 @@
 <ion-content>
   <ion-list class="myList">
     <button ion-item (tap)='swipe_note()'>
-    {{fontContent.swipe_note}}
+    {{'attendance.swipe_note' | translate}}
     </button>
     <button ion-item (tap)='attendance_month()'>
-    {{fontContent.attendance_month}}
+    {{'attendance.attendance_month' | translate}}
     </button>
     <button ion-item (tap)='attendance_detail()'>
-    {{fontContent.attendance_detail}}
+    {{'attendance.attendance_detail' | translate}}
     </button>
     <button ion-item (tap)='to_detail()'>
-    {{fontContent.to_detail}}
+    {{'attendance.to_detail' | translate}}
     </button>
   </ion-list>
 </ion-content>
