@@ -49,11 +49,12 @@ export class MyAppComponent {
 
         platform.ready().then(async () => {
             // this.rootPage = IpqaComponent;
-            translate.setDefaultLang('zh-CN');
             statusBar.styleDefault();
             splashScreen.hide();
             this.jMessage.init();
             await this.appInit();
+            translate.setDefaultLang('zh-CN');
+            this.setDefaultLanguage();
             this.plugin.checkAppForUpdate();
             if (platform.is('cordova') && platform.is('android')) {
                 let original = platform.runBackButtonAction;
@@ -118,15 +119,18 @@ export class MyAppComponent {
             this.rootPage = LoginComponent;
         }
 
-
-
-        this.setDefaultLanguage();
         if (!localStorage.getItem('appVersion')) {
             localStorage.setItem('appVersion', EnvConfig.appVersion);
         }
     }
 
     setDefaultLanguage() {
+        let preferLang = localStorage.getItem('preferLang');
+        if(preferLang) {
+          this.translate.use(preferLang);
+          return;
+        }
+        // 若用户没有调整过语言版本，则选择与浏览器一致的版本
         let userLanguage = window.navigator.language.toLowerCase();
         let languageType = ['zh']
         let index = -1;
