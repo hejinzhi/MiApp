@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
 import { ViewController, NavController, NavParams, AlertController, IonicPage} from 'ionic-angular';
-import { TranslateService } from '@ngx-translate/core';
 
 import { PluginService }   from '../../../../core/services/plugin.service';
 import { AttendanceService } from '../shared/service/attendance.service';
@@ -25,37 +24,23 @@ export class FormMenuComponent {
     public alertCtrl: AlertController,
     public viewCtrl: ViewController,
     private plugin: PluginService,
-    private attendanceService: AttendanceService,
-    private translate: TranslateService
+    private attendanceService: AttendanceService
   ) {}
   formData:MyFormModel;
   haveSaved:boolean;
   lastNavCtr:any;
   that:any;
   showReset:boolean;
-  translateTexts: any = {};
-
   ionViewDidLoad(){
     this.that = this.navParams.data.this;
     this.showReset = this.that.showReset || false;
     this.formData = this.that.formData;
     this.haveSaved = this.that.haveSaved;
     this.lastNavCtr = this.that.navCtrl;
-    this.subscribeTranslateText();
   }
   ionViewWillEnter(){
 
   }
-
-  subscribeTranslateText() {
-    this.translate.get(['attendance.no_callback', 'attendance.delete_succ',
-    'attendance.callbackSign_succ', 'attendance.callbackSign_err','attendance.cancle', 'attendance.confirm',
-    'attendance.delete_alert'
-  ]).subscribe((res) => {
-        this.translateTexts = res;
-      })
-  }
-
   toSearch() {
     this.viewCtrl.dismiss()
     this.lastNavCtr.push('SearchFormComponent',{
@@ -81,21 +66,31 @@ export class FormMenuComponent {
         formData: res.content
       })
     } else {
-      this.plugin.showToast(this.translateTexts['attendance.no_callback'])
+      this.plugin.showToast(this.fontContent.no_callback)
     }
   }
-
+  // async toDetail() {
+  //   this.viewCtrl.dismiss();
+  //   let loading = this.plugin.createLoading();
+  //   loading.present();
+  //   let res = await this.attendanceService.getLeaveDays();
+  //   loading.dismiss();
+  //   if(!res) return;
+  //   this.lastNavCtr.push(HoildayDetailComponent,{
+  //     leaveDays:res
+  //   });
+  // }
   async deleteForm() {
     let confirm = this.alertCtrl.create({
-      title: this.translateTexts['attendance.delete_alert'],
+      title: '确定要删除此单据吗?',
       buttons: [
         {
-          text: this.translateTexts['attendance.cancle'],
+          text: '取消',
           handler: () => {
           }
         },
         {
-          text: this.translateTexts['attendance.confirm'],
+          text: '确定',
           handler: () => {
             this.toDelete();
           }
@@ -112,7 +107,7 @@ export class FormMenuComponent {
     let res = await this.attendanceService.deleteForm(this.formData);
     loading.dismiss();
     if(!res) return;
-    this.plugin.showToast(this.translateTexts['attendance.delete_succ']);
+    this.plugin.showToast(this.fontContent.delete_succ);
     if(this.lastNavCtr.canGoBack()) {
       this.lastNavCtr.popToRoot()
     } else {
@@ -129,10 +124,10 @@ export class FormMenuComponent {
     let res = await this.attendanceService.callBackSign(this.formData);
     loading.dismiss();
     if(!res) {
-      this.plugin.showToast(this.translateTexts['attendance.callbackSign_err'])
+      this.plugin.showToast(this.fontContent.callbackSign_err)
       return
     };
-    this.plugin.showToast(this.translateTexts['attendance.callbackSign_succ']);
+    this.plugin.showToast(this.fontContent.callbackSign_succ);
     this.formData.status = 'CANCELED'
     // this.lastNavCtr.popToRoot()
   }

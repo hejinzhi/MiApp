@@ -1,6 +1,6 @@
 <ion-header>
   <ion-navbar>
-    <ion-title>{{type | sgFormType | translate}}</ion-title>
+    <ion-title>{{type | sgFormType | sgChineseConv}}</ion-title>
   </ion-navbar>
 </ion-header>
 
@@ -9,9 +9,9 @@
   <form [formGroup]="todo" *ngIf="todo" (ngSubmit)="leaveForm()">
     <ion-list class="myList">
       <ion-item [class.has-error]="myValidators.date.error" [class.has-success]="myValidators.date.pass">
-        <ion-label>*{{'attendance.date' | translate}}</ion-label>
+        <ion-label>*{{fontContent.date}}</ion-label>
         <ion-datetime displayFormat="YYYYMM" formControlName="date"
-        [cancelText]="'attendance.cancle' | translate" [doneText]="'attendance.confirm' | translate"
+        [cancelText]="fontContent.cancle" [doneText]="fontContent.confirm"
         min="2000" [max]="selectMaxYear"
         ></ion-datetime>
       </ion-item>
@@ -20,7 +20,7 @@
         <ion-row>
           <ion-col width-50>
             <ion-buttons right>
-              <button ion-button class="submit" type="submit" [disabled]="!todo.valid || myValidators.date.error">{{'attendance.search' | translate}}</button>
+              <button ion-button class="submit" type="submit" [disabled]="!todo.valid || myValidators.date.error">{{fontContent.submit}}</button>
             </ion-buttons>
           </ion-col>
         </ion-row>

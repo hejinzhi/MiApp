@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
 import { NavController, NavParams, IonicPage } from 'ionic-angular';
-import { TranslateService } from '@ngx-translate/core';
 
 import { AttendanceService } from '../shared/service/attendance.service';
 import { PluginService }   from '../../../../core/services/plugin.service';
@@ -19,28 +18,17 @@ export class SignListComponent {
 
   type: string;
   items: any;
-  translateTexts: any = {};
-
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
     private attendanceService: AttendanceService,
-    private plugin: PluginService,
-    private translate: TranslateService
+    private plugin: PluginService
   ) { }
 
   ionViewDidLoad() {
     let form_No = this.navParams.data.formData.No;
-    this.getSignList(form_No);
-    this.subscribeTranslateText();
+    this.getSignList(form_No)
   }
-
-  subscribeTranslateText() {
-    this.translate.get(['attendance.no_list']).subscribe((res) => {
-        this.translateTexts = res;
-      })
-  }
-
   async getSignList(form_No:string){
     let loading = this.plugin.createLoading()
     loading.present();
@@ -48,8 +36,9 @@ export class SignListComponent {
     loading.dismiss();
     if(res.status) {
       this.items = res.content;
+      console.log(this.items)
       if(this.items.length === 0) {
-        this.plugin.showToast(this.translateTexts['attendance.no_list']);
+        this.plugin.showToast(this.fontContent.no_list);
         return;
       }
       this.items.sort((a: any, b: any) => {

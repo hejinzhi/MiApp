@@ -1,8 +1,7 @@
 import { Component } from '@angular/core';
 import { NavController, NavParams, PopoverController, AlertController, IonicPage} from 'ionic-angular';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { TranslateService } from '@ngx-translate/core';
-
+import { FormBuilder, FormGroup, Validators } from '@angular/forms'
+;
 import { ValidateService }   from '../../../../core/services/validate.service';
 import { PluginService }   from '../../../../core/services/plugin.service';
 import { AttendanceService } from '../shared/service/attendance.service';
@@ -48,7 +47,6 @@ export class OverTimeFormComponent {
   myValidators:{};
   MyValidatorControl: MyValidatorModel;
   jobType =new HolidayType().jobType;
-  translateTexts: any = {};
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
@@ -57,8 +55,7 @@ export class OverTimeFormComponent {
     private formBuilder: FormBuilder,
     private validateService: ValidateService,
     private attendanceService: AttendanceService,
-    private plugin: PluginService,
-    private translate: TranslateService
+    private plugin: PluginService
   ) { }
 
   ionViewDidLoad() {
@@ -95,7 +92,6 @@ export class OverTimeFormComponent {
       this.haveSaved = true;
     }
     this.todo = this.initWork(this.OtMes);
-    this.subscribeTranslateText();
     this.MyValidatorControl = this.initValidator(this.OtMes);
     this.myValidators = this.MyValidatorControl.validators;
     for (let prop in this.myValidators) {
@@ -104,30 +100,17 @@ export class OverTimeFormComponent {
     this.todo.controls['OTtime'].valueChanges.subscribe((value: any) => this.getDutyType());
     this.setDefaultDate();
   }
-
-  subscribeTranslateText() {
-    this.translate.get(['attendance.sign_success', 'attendance.save_success',
-    'attendance.OTreasonType_required_err', 'attendance.OTtime_required_err', 'attendance.startTime_timeSmaller_err',
-    'attendance.endTime_timeBigger_err', 'attendance.alert_title', 'attendance.cancle', 'attendance.confirm',
-     'attendance.reason_required_err','attendance.reason_minlength_err','attendance.startTime_required_err',
-     'attendance.endTime_required_err'
-  ]).subscribe((res) => {
-        this.translateTexts = res;
-      })
-  }
-
-
   reSet() {
     let confirm = this.alertCtrl.create({
-      title: this.translateTexts['attendance.alert_title'],
+      title: '确定要重置此单据吗?',
       buttons: [
         {
-          text: this.translateTexts['attendance.cancle'],
+          text: '取消',
           handler: () => {
           }
         },
         {
-          text: this.translateTexts['attendance.confirm'],
+          text: '确定',
           handler: () => {
             this.init();
           }
@@ -158,19 +141,19 @@ export class OverTimeFormComponent {
   }
   initValidator(bind:any) {
     let newValidator = new MyValidatorModel([
-      {name:'reasonType',valiItems:[{valiName:'Required',errMessage:this.translateTexts['reason_required_err'],valiValue:true}]},
-      {name:'OTtime',valiItems:[{valiName:'Required',errMessage:this.translateTexts['OTtime_required_err'],valiValue:true}]},
+      {name:'reasonType',valiItems:[{valiName:'Required',errMessage:this.fontContent.reason_required_err,valiValue:true}]},
+      {name:'OTtime',valiItems:[{valiName:'Required',errMessage:this.fontContent.OTtime_required_err,valiValue:true}]},
       {name:'reason',valiItems:[
-        {valiName:'Required',errMessage:this.translateTexts['reason_required_err'],valiValue:true},
-        {valiName:'Minlength',errMessage:this.translateTexts['reason_minlength_err'],valiValue:2}
+        {valiName:'Required',errMessage:this.fontContent.reason_required_err,valiValue:true},
+        {valiName:'Minlength',errMessage:this.fontContent.reason_minlength_err,valiValue:2}
       ]},
       {name:'startTime',valiItems:[
-        {valiName:'Required',errMessage:this.translateTexts['startTime_required_err'],valiValue:true},
-        {valiName:'TimeSmaller',errMessage:this.translateTexts['startTime_timeSmaller_err'],valiValue:'endTime'}
+        {valiName:'Required',errMessage:this.fontContent.startTime_required_err,valiValue:true},
+        {valiName:'TimeSmaller',errMessage:this.fontContent.startTime_timeSmaller_err,valiValue:'endTime'}
       ]},
       {name:'endTime',valiItems:[
-        {valiName:'Required',errMessage:this.translateTexts['endTime_required_err'],valiValue:true},
-        {valiName:'TimeBigger',errMessage:this.translateTexts['endTime_timeBigger_err'],valiValue:'startTime'}
+        {valiName:'Required',errMessage:this.fontContent.endTime_required_err,valiValue:true},
+        {valiName:'TimeBigger',errMessage:this.fontContent.endTime_timeBigger_err,valiValue:'startTime'}
       ]}
     ],bind)
     return newValidator;
@@ -213,7 +196,7 @@ export class OverTimeFormComponent {
     let res:any = await this.attendanceService.sendSign(this.formData);
     loading.dismiss()
     if(res.status) {
-      this.plugin.showToast(this.translateTexts['sign_success']);
+      this.plugin.showToast(this.fontContent.sign_success);
       this.formData.status = 'WAITING';
       // this.navCtrl.canGoBack()?this.navCtrl.popToRoot():'';
       let content = res.content;
@@ -245,7 +228,7 @@ export class OverTimeFormComponent {
       this.formData.No = data.DOCNO
       this.formData.status = data.STATUS;
       this.haveSaved = true;
-      this.plugin.showToast(this.translateTexts['save_success']);
+      this.plugin.showToast(this.fontContent.save_success);
     };
   }
 }

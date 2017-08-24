@@ -1,11 +1,11 @@
 <ion-list *ngIf="formData" class="myList">
-  <button ion-item (tap)="toSearch()" *ngIf="+formData.type < 5">{{formData.type | sgFormType | translate}}{{'attendance.search' | translate}}</button>
-  <button ion-item (tap)="reSet()" *ngIf="showReset && +formData.type == 3 && ['APPROVED','WAITING'].indexOf(formData.status.toUpperCase())>-1">{{'attendance.new' | translate }}{{formData.type | sgFormType | translate}}</button>
-  <button ion-item (tap)="sign_list()" *ngIf="['APPROVED','WAITING'].indexOf(formData.status.toUpperCase())>-1">{{'attendance.sign_list' | translate}}</button>
-  <button ion-item (tap)="getCallbackForm()" *ngIf="formData.type === '5'">{{'attendance.getCallbackForm' | translate}}</button>
+  <button ion-item (tap)="toSearch()" *ngIf="+formData.type < 5">{{formData.type | sgFormType | sgChineseConv}}{{fontContent.search}}</button>
+  <button ion-item (tap)="reSet()" *ngIf="showReset && +formData.type == 3 && ['APPROVED','WAITING'].indexOf(formData.status.toUpperCase())>-1">{{'新建' | sgChineseConv }}{{formData.type | sgFormType | sgChineseConv}}</button>
+  <button ion-item (tap)="sign_list()" *ngIf="['APPROVED','WAITING'].indexOf(formData.status.toUpperCase())>-1">{{fontContent.sign_list}}</button>
+  <button ion-item (tap)="getCallbackForm()" *ngIf="formData.type === '5'">{{fontContent.getCallbackForm}}</button>
   <ion-item-group *ngIf="haveSaved">
-  <button ion-item (tap)="deleteForm()"  *ngIf="['APPROVED','WAITING'].indexOf(formData.status.toUpperCase())<0">{{'attendance.deleteForm' | translate}}{{formData.type | sgFormType | translate}}</button>
-  <button ion-item (tap)="callbackSign()" *ngIf="formData.status.toUpperCase() === 'WAITING'">{{'attendance.callbackSign' | translate}}</button>
+  <button ion-item (tap)="deleteForm()"  *ngIf="['APPROVED','WAITING'].indexOf(formData.status.toUpperCase())<0">{{fontContent.deleteForm}}{{formData.type | sgFormType | sgChineseConv}}</button>
+  <button ion-item (tap)="callbackSign()" *ngIf="formData.status.toUpperCase() === 'WAITING'">{{fontContent.callbackSign}}</button>
   </ion-item-group>
-  <button ion-item (tap)="callBack()" *ngIf="formData.status.toUpperCase() === 'APPROVED'&& (formData.type === '2' || formData.type === '4')">{{'attendance.callBack' | translate}}</button>
+  <button ion-item (tap)="callBack()" *ngIf="formData.status.toUpperCase() === 'APPROVED'&& (formData.type === '2' || formData.type === '4')">{{fontContent.callBack}}</button>
 </ion-list>

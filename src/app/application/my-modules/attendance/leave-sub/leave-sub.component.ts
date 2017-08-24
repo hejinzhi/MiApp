@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
 import { NavController, NavParams, IonicPage } from 'ionic-angular';
-import { TranslateService } from '@ngx-translate/core';
 
 import { AttendanceService } from '../shared/service/attendance.service';
 import { PluginService }   from '../../../../core/services/plugin.service';
@@ -16,24 +15,15 @@ export class LeaveSubComponent {
 
   fontType:string = localStorage.getItem('languageType')
   fontContent = LanguageTypeConfig.leaveSubComponent[this.fontType];
-  translateTexts: any = {};
 
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
     private attendanceService: AttendanceService,
-    private plugin: PluginService,
-    private translate: TranslateService
+    private plugin: PluginService
    ) {}
 
   ionViewDidLoad() {
-    this.subscribeTranslateText();
-  }
-
-  subscribeTranslateText() {
-    this.translate.get(['attendance.for_callback_tip']).subscribe((res) => {
-        this.translateTexts = res;
-      })
   }
 
   maintain_Leave() {
@@ -45,7 +35,7 @@ export class LeaveSubComponent {
     loading.present();
     let res:any = await this.attendanceService.getCanCallbackLeaveFrom();
     loading.dismiss();
-    if(res.length === 0) return this.plugin.showToast(this.translateTexts['attendance.for_callback_tip']);
+    if(res.length === 0) return this.plugin.showToast(this.fontContent.for_callback_tip);
     this.navCtrl.push('FormListComponent',{
       formData:res,
       type:'2',

@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 
 @Injectable()
 export class CacheService {
-  private cache:Object ={};
+  cache:Object ={};
   constructor() {  }
 
   get(comName:string, key:string) {

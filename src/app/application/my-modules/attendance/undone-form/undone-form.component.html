@@ -1,6 +1,6 @@
 <ion-header>
   <ion-navbar >
-    <ion-title>{{'attendance.title1' | translate}}</ion-title>
+    <ion-title>{{fontContent.title}}</ion-title>
   </ion-navbar>
 </ion-header>
 
@@ -11,14 +11,14 @@
   <ion-item-divider class='alert error' *ngIf="errTip">{{errTip}}</ion-item-divider>
   <ion-list>
     <ion-item class="myForm auto first">
-      {{'attendance.form_status' | translate}}
+      {{fontContent.form_status}}
       <ion-note item-right>
         {{formData.status}}
       </ion-note>
     </ion-item>
 
     <ion-item class="myForm auto">
-      {{'attendance.form_No' | translate}}
+      {{fontContent.form_No}}
       <ion-note item-right>
         {{formData.No}}
       </ion-note>
@@ -27,36 +27,36 @@
   <form [formGroup]="todo" *ngIf="todo">
     <ion-list>
       <ion-item [class.has-error]="myValidators.reasonType.error" [class.has-success]="myValidators.reasonType.pass">
-        <ion-label>*{{'attendance.absentType' | translate}}</ion-label>
-        <ion-select class = "absentType" [cancelText]="'attendance.cancle' | translate" [okText]="'attendance.confirm' | translate" formControlName="absentType" #type style="width:80%">
+        <ion-label>*{{fontContent.absentType}}</ion-label>
+        <ion-select class = "absentType" [cancelText]="fontContent.cancle" [okText]="fontContent.confirm" formControlName="absentType" #type style="width:80%">
           <ion-option *ngFor="let item of absentType" [value]="item.type">{{item.name | sgChineseConv}}</ion-option>
         </ion-select>
       </ion-item>
       <ion-item class="myForm auto first" *ngIf="dutyType">
-        {{'attendance.dutyType' | translate}}
+        {{fontContent.dutyType}}
         <ion-note item-right>
           {{dutyType}}
         </ion-note>
       </ion-item>
       <ion-item *ngIf="needReasonType" [class.has-error]="myValidators.reasonType.error" [class.has-success]="myValidators.reasonType.pass">
-        <ion-label>*{{'attendance.reasonType' | translate}}</ion-label>
-        <ion-select [cancelText]="'attendance.cancle' | translate" [okText]="'attendance.confirm' | translate" formControlName="reasonType" #type style="width:80%">
+        <ion-label>*{{fontContent.reasonType}}</ion-label>
+        <ion-select [cancelText]="fontContent.cancle" [okText]="fontContent.confirm" formControlName="reasonType" #type style="width:80%">
           <ion-option *ngFor="let item of holidayType" [value]="item.type">{{item.name | sgChineseConv}}</ion-option>
         </ion-select>
       </ion-item>
 
       <ion-item class="myForm auto first" [class.has-error]="myValidators.startTime.error" [class.has-success]="myValidators.startTime.pass">
-        <ion-label>{{'attendance.startTime' | translate}}</ion-label>
+        <ion-label>{{fontContent.startTime}}</ion-label>
         <ion-input readonly formControlName="startTime"></ion-input>
       </ion-item>
       <ion-item class="myForm auto first" [class.has-error]="myValidators.endTime.error" [class.has-success]="myValidators.endTime.pass">
-        <ion-label>{{'attendance.endTime' | translate}}</ion-label>
+        <ion-label>{{fontContent.endTime}}</ion-label>
         <ion-input readonly formControlName="endTime"></ion-input>
       </ion-item>
       <ion-row>
         <ion-col width-50>
           <ion-item class="myForm auto" *ngIf="dayCount">
-            {{'attendance.dayCount' | translate}}
+            {{fontContent.dayCount}}
             <ion-note item-right>
               {{dayCount}}
             </ion-note>
@@ -64,7 +64,7 @@
         </ion-col>
         <ion-col width-50>
           <ion-item class="myForm auto" *ngIf="hourCount">
-            {{'attendance.hourCount' | translate}}
+            {{fontContent.hourCount}}
             <ion-note item-right>
               {{hourCount}}
             </ion-note>
@@ -72,13 +72,13 @@
         </ion-col>
       </ion-row>
       <ion-item [class.has-error]="myValidators.reason.error" [class.has-success]="myValidators.reason.pass">
-        <ion-label>*{{'attendance.reason' | translate}}</ion-label>
+        <ion-label>*{{fontContent.reason}}</ion-label>
         <ion-textarea rows="2" cols="20" formControlName="reason" class="reasonTest"
          #reason
         ></ion-textarea>
       </ion-item>
       <ion-item-divider *ngIf="myValidators.reason.error" class='alert'>{{myValidators.reason.error}}</ion-item-divider>
     </ion-list>
-    <button ion-button full type="button" [disabled]="!todo.valid || myValidators.reason.error" (tap)="saveForm()">{{'attendance.submit' | translate}}</button>
+    <button ion-button full type="button" [disabled]="!todo.valid || myValidators.reason.error" (tap)="saveForm()">{{fontContent.submit}}</button>
   </form>
 </ion-content>

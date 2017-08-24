@@ -1,7 +1,5 @@
 import { Injectable } from '@angular/core';
 import { Platform, ToastController, LoadingController, AlertController } from 'ionic-angular';
-import { TranslateService } from '@ngx-translate/core';
-
 import { BarcodeScanner } from '@ionic-native/barcode-scanner';
 import { Camera, CameraOptions } from '@ionic-native/camera';
 import { CodePush } from '@ionic-native/code-push';
@@ -19,33 +17,16 @@ export class PluginService {
     private camera: Camera,
     private codePush: CodePush,
     private network: Network,
-    private platform: Platform,
-    private translate: TranslateService
-  ) {
-    this.subscribeTranslateText();
-  }
+    private platform: Platform
+  ) { }
 
-  appNewVersion: string = '';
-  translateTexts: any = {};
-
-  /**
-   * 获得i18n的翻译内容
-   */
-  subscribeTranslateText() {
-    this.translate.get(['update_successed', 'update_success', 'app_size', 'alert', 'no_wifi_alert',
-      'restart_for_update', 'update_error', 'is_newest', 'have_new_version', 'attendance.cancle', 'attendance.confirm',
-      'update_content', 'error', 'not_found', 'http_error1', 'http_error2', 'http_error3'
-    ]).subscribe((res) => {
-      this.translateTexts = res;
-    })
-  }
+  appNewVersion:string = '';
   chineseConv(value: string) {
-    let chinese = ['ZH-CN', 'ZH-TW'];
-    let idx = chinese.indexOf(this.translate.currentLang.toUpperCase());
-    switch (idx) {
-      case 0:
+    let fontType: string = localStorage.getItem('languageType');
+    switch (fontType) {
+      case 'simple_Chinese':
         return sify(JSON.stringify(value)).replace(/^\"/g, '').replace(/\"$/g, '');
-      case 1:
+      case 'traditional_Chinese':
         return tify(JSON.stringify(value)).replace(/^\"/g, '').replace(/\"$/g, '');
       default:
         return value;
@@ -67,7 +48,7 @@ export class PluginService {
     this.codePush.notifyApplicationReady().then(() => {
       if (!localStorage.getItem('showConfirmUpdate') || localStorage.getItem('showConfirmUpdate') == '0') return;
       const alert = this.alertCtrl.create({
-        title: this.translateTexts['update_successed'],
+        title: this.chineseConv('已更新成功'),
         buttons: ['OK']
       });
       alert.present();
@@ -96,17 +77,17 @@ export class PluginService {
           this.showConfirmUpdate('1');
           this.updateAppVersion(this.appNewVersion);
           let confirm = this.alertCtrl.create({
-            title: this.translateTexts['update_success'],
-            message: this.translateTexts['restart_for_update'],
+            title: this.chineseConv(`更新成功`),
+            message: this.chineseConv(`马上重启应用体验最新版本?`),
             buttons: [
               {
-                text: this.translateTexts['attendance.cancle'],
+                text: this.chineseConv('取消'),
                 handler: () => {
 
                 }
               },
               {
-                text: this.translateTexts['attendance.confirm'],
+                text: this.chineseConv('确定'),
                 handler: () => {
                   this.codePush.restartApplication();
                 }
@@ -116,15 +97,15 @@ export class PluginService {
           confirm.present();
           break;
         case SyncStatus.ERROR:
-          this.showToast(this.translateTexts['update_error'])
+          this.showToast(this.chineseConv('更新失败,请稍后重试'))
           break;
         default:
           break;
       }
     });
   }
-  updateAppVersion(v: string) {
-    localStorage.setItem('appVersion', v);
+  updateAppVersion(v:string) {
+    localStorage.setItem('appVersion',v);
   }
   checkAppForUpdate(auto: boolean = true) {
     if (!this.isCordova()) return;
@@ -132,27 +113,27 @@ export class PluginService {
       if (!apk) {
         this.confirmUpdate();
         if (!auto) {
-          this.showToast(this.translateTexts['is_newest'])
+          this.showToast(this.chineseConv('已经是最新版本'))
         }
         return;
       };
       let des = apk.description.split('&&');
-      if (des.length > 1) {
+      if(des.length>1){
         this.appNewVersion = des[0];
       }
       let confirm = this.alertCtrl.create({
-        title: this.translateTexts['have_new_version'],
-        subTitle: this.chineseConv(`${this.translateTexts['update_content']}: ${des[des.length - 1]}`),
-        message: this.chineseConv(`${this.translateTexts['app_size']}: ${(apk.packageSize / Math.pow(1024, 2)).toFixed(2)}M`),
+        title: this.chineseConv(`检测到应用有更新,是否升级`),
+        subTitle: this.chineseConv(`更新内容: ${des[des.length-1]}`),
+        message: this.chineseConv(`应用大小: ${(apk.packageSize / Math.pow(1024, 2)).toFixed(2)}M`),
         buttons: [
           {
-            text: this.translateTexts['attendance.cancle'],
+            text: this.chineseConv('取消'),
             handler: () => {
 
             }
           },
           {
-            text: this.translateTexts['attendance.confirm'],
+            text: this.chineseConv('确定'),
             handler: () => {
               this.confirmWifiTodo(this.codePushSync)
             }
@@ -167,17 +148,17 @@ export class PluginService {
   confirmWifiTodo(todo: any) {
     if (!this.isWifi()) {
       let confirm = this.alertCtrl.create({
-        title: this.chineseConv(this.translateTexts['alert']),
-        message: this.chineseConv(`this.translateTexts['no_wifi_alert']`),
+        title: this.chineseConv(`警告`),
+        message: this.chineseConv(`目前不是在WIFI网络,是否继续下载操作`),
         buttons: [
           {
-            text: this.translateTexts['attendance.cancle'],
+            text: this.chineseConv('取消'),
             handler: () => {
 
             }
           },
           {
-            text: this.translateTexts['attendance.confirm'],
+            text: this.chineseConv('确定'),
             handler: () => {
               todo.call(this);
             }
@@ -205,13 +186,13 @@ export class PluginService {
 
   createBasicAlert(subText: string) {
     let alert = this.alertCtrl.create({
-      title: this.chineseConv(this.translateTexts['error']),
+      title: this.chineseConv('错误'),
       subTitle: subText,
-      buttons: [this.translateTexts['attendance.confirm']]
+      buttons: [this.chineseConv('确定')]
     });
     alert.present();
   }
-  getNewPhoto(type: number, size: number, opts: any = {}): Promise<any> {
+  getNewPhoto(type: number, size: number,opts:any={}): Promise<any> {
     let options: CameraOptions = {
       //这些参数可能要配合着使用，比如选择了sourcetype是0，destinationtype要相应的设置
       quality: 50,                                            //相片质量0-100
@@ -225,7 +206,7 @@ export class PluginService {
       cameraDirection: 0,                                       //枪后摄像头类型：Back= 0,Front-facing = 1
       saveToPhotoAlbum: false                                   //保存进手机相册
     };
-    options = Object.assign(options, opts);
+    options = Object.assign(options,opts);
     // return this.camera.getPicture(options).then((imageData) => {
     //   return Promise.resolve(imageData);
     // }, (err) => {
@@ -252,26 +233,24 @@ export class PluginService {
     let errTip = '';
     switch (err.status) {
       case 404:
-        this.showToast(this.translateTexts['not_found']);
+        this.showToast(this.chineseConv('未找到结果'));
         break;
       case 400:
-        let errMes: string = ''
-        try {
-          errMes = err.json().ExceptionMessage;
-        } catch (e) {
-          console.log(e)
-          errMes = err._body;
-        }
-        errTip = this.chineseConv(errMes);
+        // if (showAlert) {
+        //   this.plugin.createBasicAlert(this.chineseConv(err.json().ExceptionMessage));
+        // } else {
+        //   this.plugin.showToast(this.chineseConv(err.json().ExceptionMessage));
+        // }
+        errTip = this.chineseConv(err.json().ExceptionMessage);
         break;
       case 0:
-        this.showToast(this.translateTexts['http_error1']);
+        this.showToast(this.chineseConv('连接服务器失败'));
         break;
       case 500:
-        this.showToast(this.translateTexts['http_error2']);
+        this.showToast(this.chineseConv('服务器没响应'));
         break;
       default:
-        this.showToast(this.translateTexts['http_error3']);
+        this.showToast(this.chineseConv('出现未定义连接错误') + err.status);
         break;
     }
     return errTip

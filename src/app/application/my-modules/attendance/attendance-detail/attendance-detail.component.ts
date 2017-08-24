@@ -11,6 +11,9 @@ import { LanguageTypeConfig } from '../shared/config/language-type.config';
 })
 export class AttendanceDetailComponent {
 
+  fontType:string = localStorage.getItem('languageType')
+  fontContent = LanguageTypeConfig.attendanceDetailComponent[this.fontType];
+
   items:any;
   type: string = '';
   user:any;
@@ -22,6 +25,7 @@ export class AttendanceDetailComponent {
     this.type = new FormType().attendance_detail.type;
     let attendance_detail = this.navParams.data.attendance_detail;
     this.items = attendance_detail;
+    console.log(this.items)
   }
 
 }

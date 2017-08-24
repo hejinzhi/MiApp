@@ -1,8 +1,8 @@
 <ion-header>
 
   <ion-navbar>
-    <ion-title *ngIf="!formData.status">{{'attendance.new' | translate}}{{formData.type | sgFormType | translate}}</ion-title>
-    <ion-title *ngIf="formData.status">{{formData.type | sgFormType | translate}}{{'attendance.detail' | translate}}</ion-title>
+    <ion-title *ngIf="!formData.status">{{fontContent.unSave_title}}</ion-title>
+    <ion-title *ngIf="formData.status">{{fontContent.saved_title}}</ion-title>
     <ion-buttons end >
       <button ion-button icon-only (tap)="presentPopover($event)">
       <ion-icon name="add"></ion-icon>
@@ -18,14 +18,14 @@
   <ion-item-divider class='alert error' *ngIf="errTip">{{errTip}}</ion-item-divider>
   <ion-list *ngIf="formData.status && formData.No">
     <ion-item class="myForm auto first">
-      {{'attendance.form_status' | translate}}
+      {{fontContent.form_status}}
       <ion-note item-right>
         {{formData.status}}
       </ion-note>
     </ion-item>
 
     <ion-item class="myForm auto">
-      {{'attendance.form_No' | translate}}
+      {{fontContent.form_No}}
       <ion-note item-right>
         {{formData.No}}
       </ion-note>
@@ -34,11 +34,11 @@
   <form [formGroup]="todo" *ngIf="todo" (ngSubmit)="leaveForm()">
     <ion-list class="myList">
       <ion-item>
-        <ion-label>*{{'attendance.leave_No' | translate}}</ion-label>
+        <ion-label>*{{fontContent.leave_No}}</ion-label>
         <ion-input readonly formControlName="leave_No"></ion-input>
       </ion-item>
       <ion-item [class.has-error]="myValidators.reason.error" [class.has-success]="myValidators.reason.pass">
-        <ion-label>*{{'attendance.callBackReason' | translate}}</ion-label>
+        <ion-label>*{{fontContent.reason}}</ion-label>
         <ion-textarea rows="2" cols="20" formControlName="reason" class="reasonTest"></ion-textarea>
       </ion-item>
       <ion-item-divider *ngIf="myValidators.reason.error" class='alert'>{{myValidators.reason.error}}</ion-item-divider>
@@ -46,12 +46,12 @@
         <ion-row>
           <ion-col width-50>
             <ion-buttons left>
-              <button ion-button class="submit" type="submit" [disabled]="!todo.valid || myValidators.reason.error ">{{'attendance.sign' | translate}}</button>
+              <button ion-button class="submit" type="submit" [disabled]="!todo.valid || myValidators.reason.error ">{{fontContent.sign}}</button>
             </ion-buttons>
           </ion-col>
           <ion-col width-50>
             <ion-buttons right>
-              <button ion-button type="button" [disabled]="!todo.valid || myValidators.reason.error " (tap)="saveForm()">{{'attendance.save' | translate}}</button>
+              <button ion-button type="button" [disabled]="!todo.valid || myValidators.reason.error " (tap)="saveForm()">{{fontContent.save}}</button>
             </ion-buttons>
           </ion-col>
         </ion-row>

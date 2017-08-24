@@ -1,13 +1,8 @@
 import { EnvConfig } from '../../../../../shared/config/env.config';
-import * as moment from 'moment';
 
 export class AttendanceConfig {
   // 默认时间选择框的最大年份
-  static SelectedMaxYear = +moment(new Date()).format('YYYY')+1;
-
-  // 默认时间选择框的最大时间
-  static SelectedMaxTime = moment(new Date()).format('YYYY-MM-DD');
-
+  static SelectedMaxYear = +new Date().getFullYear()+1+'';
 
   // 获得签核名单
   static getSignListUrl = EnvConfig.baseUrl + 'Attendance/GetApproveList?docNum=';

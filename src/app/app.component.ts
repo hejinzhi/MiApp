@@ -127,6 +127,16 @@ export class MyAppComponent {
     }
 
     setDefaultLanguage() {
+        // if (localStorage.getItem('languageType')) return;
+        let lg = localStorage.getItem('languageType');
+        if (lg) {
+            if (lg === 'simple_Chinese') {
+                this.translate.use('zh-CN');
+            } else {
+                this.translate.use('zh-TW');
+            }
+            return;
+        }
         let userLanguage = window.navigator.language.toLowerCase();
         let languageType = ['zh']
         let index = -1;
@@ -138,12 +148,15 @@ export class MyAppComponent {
         })
         if (index === 0) {
             if (userLanguage === 'zh-cn') {
+                localStorage.setItem('languageType', 'simple_Chinese');
                 this.translate.use('zh-CN');
             } else {
+                localStorage.setItem('languageType', 'traditional_Chinese');
                 this.translate.use('zh-TW');
             }
         }
         if (index === -1) {
+            localStorage.setItem('languageType', 'simple_Chinese');
             this.translate.use('zh-CN');
         }
     }

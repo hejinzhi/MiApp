@@ -1,4 +1,4 @@
-<ion-searchbar (ionInput)="getItems($event)" [placeholder]="'attendance.search_placeholder' | translate" class="searchBar"></ion-searchbar>
+<ion-searchbar (ionInput)="getItems($event)" [placeholder]="fontContent.search_placeholder" class="searchBar"></ion-searchbar>
 <ion-list class="myList" >
   <button ion-item *ngFor="let item of items;trackBy:trackByItems" (touchstart)="touchstart()" (touchend)="toDetail(item)" (touchmove)="touchmove()">
     <ion-row *ngIf="item.type === '3'" no-padding class="myRow">
@@ -14,8 +14,8 @@
       </ion-col>
       <ion-col col-4 class="margin">
         <p [class.waiting]="item.status.toUpperCase() === 'WAITING'">{{item.status}}</p>
-        <p>{{'attendance.ask_for_overTime' | translate}}:{{item.data.count.toFixed(2)}}H</p>
-        <p *ngIf="+item.data.trueCount>0">{{'attendance.trueCount' | translate}}:{{item.data.trueCount.toFixed(2)}}H</p>
+        <p>{{fontContent.ask_for_overTime}}:{{item.data.count.toFixed(2)}}H</p>
+        <p *ngIf="+item.data.trueCount>0">{{fontContent.trueCount}}:{{item.data.trueCount.toFixed(2)}}H</p>
       </ion-col>
     </ion-row>
     <ion-row *ngIf="item.type === '2'" no-padding class="myRow">
@@ -43,7 +43,7 @@
       </ion-col>
       <ion-col col-3>
         <p [class.waiting]="item.status.toUpperCase() === 'WAITING'">{{item.status}}</p>
-        <p>{{'attendance.business1' | translate}}{{item.data.days.toFixed(2)}}{{'attendance.day' | translate}}</p>
+        <p>{{fontContent.business}}{{item.data.days.toFixed(2)}}{{fontContent.day}}</p>
       </ion-col>
     </ion-row>
     <h2 *ngIf="item.type === '5'" no-padding class="myRow">

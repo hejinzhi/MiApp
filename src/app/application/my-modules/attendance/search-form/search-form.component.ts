@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 import { NavController, NavParams, IonicPage } from 'ionic-angular';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { TranslateService } from '@ngx-translate/core';
 
 import { ValidateService }   from '../../../../core/services/validate.service';
 import { AttendanceService } from '../shared/service/attendance.service';
@@ -36,8 +35,6 @@ export class SearchFormComponent {
   myValidators: {};
   MyValidatorControl: MyValidatorModel;
   formType: { type: string, name: string }[] = [];
-  translateTexts: any = {};
-
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
@@ -45,7 +42,6 @@ export class SearchFormComponent {
     private validateService: ValidateService,
     private attendanceService: AttendanceService,
     private plugin: PluginService,
-    private translate: TranslateService
   ) { }
 
   ionViewDidLoad() {
@@ -68,7 +64,6 @@ export class SearchFormComponent {
       endTime: today,
       form_No: ''
     }
-    this.subscribeTranslateText();
     this.searchMes.type = this.navParams.data.type || '';
     this.todo = this.initWork(this.searchMes);
     this.MyValidatorControl = this.initValidator();
@@ -77,46 +72,37 @@ export class SearchFormComponent {
       this.todo.controls[prop].valueChanges.subscribe((value: any) => this.check(value, prop));
     }
   }
-
-  subscribeTranslateText() {
-    this.translate.get(['attendance.form_No_reg_mes', 'attendance.form_No_reg_mes2', 'attendance.form_No_reg_mes3',
-    'attendance.type_required_err', 'attendance.form_No_length_err', 'attendance.startTime_dateNotBigger_err',
-    'attendance.endTime_DateNotSmaller_err', 'attendance.no_result']).subscribe((res) => {
-        this.translateTexts = res;
-      })
-  }
-
   initValidator() {
     let form_No_reg = '^[Hh]{1}[Tt]{1}';
-    let form_No_reg_mes = this.translateTexts['attendance.form_No_reg_mes'];
+    let form_No_reg_mes = this.fontContent.form_No_reg_mes;
     switch (Number(this.searchMes.type)) {
       case 2:
         form_No_reg = '^[Hh]{1}[Tt]{1}[Ll]{1}';
-        form_No_reg_mes = this.translateTexts['attendance.form_No_reg_mes2'];
+        form_No_reg_mes = this.fontContent.form_No_reg_mes2;
         break;
       case 3:
         form_No_reg = '^[Hh]{1}[Tt]{1}[Oo]{1}';
-        form_No_reg_mes = this.translateTexts['attendance.form_No_reg_mes3'];
+        form_No_reg_mes = this.fontContent.form_No_reg_mes3;
         break;
       default:
         break;
     }
     let newValidator = new MyValidatorModel([
-      { name: 'type', valiItems: [{ valiName: 'Required', errMessage: this.translateTexts['attendance.type_required_err'], valiValue: true }] },
+      { name: 'type', valiItems: [{ valiName: 'Required', errMessage: this.fontContent.type_required_err, valiValue: true }] },
       {
         name: 'form_No', valiItems: [
-          { valiName: 'Length', errMessage: this.translateTexts['attendance.form_No_length_err'], valiValue: 15 },
+          { valiName: 'Length', errMessage: this.fontContent.form_No_length_err, valiValue: 15 },
           { valiName: 'Regex', errMessage: form_No_reg_mes, valiValue: form_No_reg }
         ]
       },
       {
         name: 'startTime', valiItems: [
-          { valiName: 'DateNotBigger', errMessage: this.translateTexts['attendance.startTime_dateNotBigger_err'], valiValue: 'endTime' }
+          { valiName: 'DateNotBigger', errMessage: this.fontContent.startTime_dateNotBigger_err, valiValue: 'endTime' }
         ]
       },
       {
         name: 'endTime', valiItems: [
-          { valiName: 'DateNotSmaller', errMessage: this.translateTexts['attendance.endTime_DateNotSmaller_err'], valiValue: 'startTime' }
+          { valiName: 'DateNotSmaller', errMessage: this.fontContent.endTime_DateNotSmaller_err, valiValue: 'startTime' }
         ]
       }
     ],this.searchMes)
@@ -145,14 +131,16 @@ export class SearchFormComponent {
     });
   }
   async leaveForm() {
+    console.log(this.todo.value);
     let res: any = [];
     let loading = this.plugin.createLoading();
     loading.present();
     res = await this.attendanceService.getForm(this.todo.value);
     loading.dismiss();
     if(!res.status) return;
+    console.log(res);
     if (res.content.length === 0) {
-      this.plugin.showToast(this.translateTexts['attendance.no_result']);
+      this.plugin.showToast(this.fontContent.no_result);
       return false;
     }
     this.navCtrl.push('FormListComponent', {

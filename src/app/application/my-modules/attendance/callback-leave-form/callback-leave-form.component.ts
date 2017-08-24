@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 import { NavController, NavParams, PopoverController, IonicPage } from 'ionic-angular';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { TranslateService } from '@ngx-translate/core';
 
 import { ValidateService }   from '../../../../core/services/validate.service';
 import { PluginService }   from '../../../../core/services/plugin.service';
@@ -36,7 +35,6 @@ export class CallbackLeaveFormComponent {
   todo: FormGroup;
   myValidators:{};
   MyValidatorControl: MyValidatorModel;
-  translateTexts: any = {};
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
@@ -44,8 +42,7 @@ export class CallbackLeaveFormComponent {
     private formBuilder: FormBuilder,
     private validateService: ValidateService,
     private attendanceService: AttendanceService,
-    private plugin: PluginService,
-    private translate: TranslateService
+    private plugin: PluginService
   ) { }
 
   ionViewDidLoad() {
@@ -62,7 +59,6 @@ export class CallbackLeaveFormComponent {
     if(this.navParams.data.form_No) {
       this.callbackMes.leave_No = this.navParams.data.form_No;
     }
-    this.subscribeTranslateText();
     this.todo = this.initWork(this.callbackMes);
     this.MyValidatorControl = this.initValidator(this.callbackMes);
     this.myValidators = this.MyValidatorControl.validators;
@@ -70,22 +66,12 @@ export class CallbackLeaveFormComponent {
       this.todo.controls[prop].valueChanges.subscribe((value: any) => this.check(value, prop));
     }
   }
-
-  subscribeTranslateText() {
-    this.translate.get(['attendance.sign_success', 'attendance.save_success',
-    'attendance.leave_No_required_err',
-     'attendance.reason_required_err','attendance.reason_minlength_err',
-  ]).subscribe((res) => {
-        this.translateTexts = res;
-      })
-  }
-
   initValidator(bind:any) {
     let newValidator = new MyValidatorModel([
-      {name:'leave_No',valiItems:[{valiName:'Required',errMessage:this.translateTexts['attendance.leave_No_required_err'],valiValue:true}]},
+      {name:'leave_No',valiItems:[{valiName:'Required',errMessage:this.fontContent.leave_No_required_err,valiValue:true}]},
       {name:'reason',valiItems:[
-        {valiName:'Required',errMessage:this.translateTexts['attendance.reason_required_err'],valiValue:true},
-        {valiName:'Minlength',errMessage:this.translateTexts['attendance.reason_minlength_err'],valiValue:2}
+        {valiName:'Required',errMessage:this.fontContent.reason_required_err,valiValue:true},
+        {valiName:'Minlength',errMessage:this.fontContent.reason_minlength_err,valiValue:2}
       ]}
     ],bind)
     return newValidator;
@@ -122,7 +108,7 @@ export class CallbackLeaveFormComponent {
     let res: any = await this.attendanceService.sendSign(this.formData);
     loading.dismiss()
     if (res.status) {
-      this.plugin.showToast(this.translateTexts['attendance.sign_success']);
+      this.plugin.showToast(this.fontContent.sign_success);
       this.haveSaved = true;
       this.formData.status = 'WAITING';
       if(res.content) {
@@ -148,7 +134,7 @@ export class CallbackLeaveFormComponent {
       this.formData.status = data.STATUS;
       this.formData.No = data.DOCNO1
       this.haveSaved = true;
-      this.plugin.showToast(this.translateTexts['attendance.save_success']);
+      this.plugin.showToast(this.fontContent.save_success);
     };
   }
   sign_list() {

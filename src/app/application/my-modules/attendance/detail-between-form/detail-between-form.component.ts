@@ -27,7 +27,7 @@ export class DetailBetweenFormComponent {
     startTime: string,
     endTime: string,
   }
-  selectMaxYear = AttendanceConfig.SelectedMaxTime;
+  selectMaxYear = AttendanceConfig.SelectedMaxYear;
   type: string;
   todo: FormGroup;
   timeError:string ='';
@@ -100,6 +100,7 @@ export class DetailBetweenFormComponent {
   }
   async leaveForm() {
     let formType = new FormType()
+    console.log(this.todo.value);
     if(this.type === formType.swipe_note.type) {
       let loading = this.plugin.createLoading();
       loading.present()

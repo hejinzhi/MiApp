@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 import { NavController, NavParams, PopoverController, IonicPage } from 'ionic-angular';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { TranslateService } from '@ngx-translate/core';
 
 import { Observable }        from 'rxjs/Observable';
 import { Subject }           from 'rxjs/Subject';
@@ -60,8 +59,6 @@ export class LeaveFormComponent {
   myValidators: {};
   MyValidatorControl: MyValidatorModel;
   holidayType: any;
-  translateTexts: any = {};
-
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
@@ -69,9 +66,8 @@ export class LeaveFormComponent {
     private validateService: ValidateService,
     private plugin: PluginService,
     private attendanceService: AttendanceService,
-    public popoverCtrl: PopoverController,
-    private translate: TranslateService
-  ) {  }
+    public popoverCtrl: PopoverController
+  ) { new Date().toUTCString() }
 
   async ionViewDidLoad() {
     this.startHourRange = this.attendanceService.getTimeRange(0, 37);
@@ -98,7 +94,6 @@ export class LeaveFormComponent {
       this.tempcolleague = this.leaveMes.colleague;
       this.haveSaved = true;
     }
-    this.subscribeTranslateText();
     this.todo = this.initWork(this.leaveMes);
     this.MyValidatorControl = this.initValidator(this.leaveMes);
     this.myValidators = this.MyValidatorControl.validators;
@@ -107,7 +102,7 @@ export class LeaveFormComponent {
       .debounceTime(300)        // wait for 300ms pause in events
       .distinctUntilChanged()   // ignore if next search term is same as previous
       .switchMap(term => {
-        if (term.trim().length > 0) {
+        if (term.length > 0) {
           return this.attendanceService.getAgent(term);
         } else {
           return Observable.of<any>([])
@@ -115,8 +110,7 @@ export class LeaveFormComponent {
       })
       .catch(error => {
         // TODO: real error handling
-        console.log(error)
-        return Observable.of<any>([]);
+        return Observable.of<string>(error);
       });
     if (!this.haveSaved && !this.todo.controls['startDate'].value && !this.todo.controls['endDate'].value) {
       this.leaveMes.startDate = this.leaveMes.endDate = await this.getWorkDay();
@@ -125,16 +119,6 @@ export class LeaveFormComponent {
     }
     this.addSubcribe();
   }
-
-  subscribeTranslateText() {
-    this.translate.get(['attendance.sign_success', 'attendance.save_success',
-    'attendance.leave_reasonType_required_err', 'attendance.colleague_required_err', 'attendance.time_err',
-     'attendance.reason_required_err','attendance.reason_minlength_err',
-  ]).subscribe((res) => {
-        this.translateTexts = res;
-      })
-  }
-
   addSubcribe() {
     for (let prop in this.myValidators) {
       this.todo.controls[prop].valueChanges.subscribe((value: any) => this.check(value, prop));
@@ -163,7 +147,7 @@ export class LeaveFormComponent {
     if (values.startDate.value && values.endDate.value && values.startTime.value && values.endTime.value) {
       let startTime = values.startDate.value + ' ' + values.startTime.value;
       let endTime = values.endDate.value + ' ' + values.endTime.value;
-      this.timeError = (Date.parse(endTime) - Date.parse(startTime) <= 0) ? this.translateTexts['attendance.time_err'] : '';
+      this.timeError = (Date.parse(endTime) - Date.parse(startTime) <= 0) ? this.fontContent.time_err : '';
     }
     if (!this.timeError) {
       this.askForDuring();
@@ -181,8 +165,8 @@ export class LeaveFormComponent {
   }
   initValidator(bind: any) {
     let newValidator = new MyValidatorModel([
-      { name: 'reasonType', valiItems: [{ valiName: 'Required', errMessage: this.translateTexts['attendance.leave_reasonType_required_err'], valiValue: true }] },
-      { name: 'colleague', valiItems: [{ valiName: 'Required', errMessage: this.translateTexts['attendance.colleague_required_err'], valiValue: true }] },
+      { name: 'reasonType', valiItems: [{ valiName: 'Required', errMessage: this.fontContent.reason_required_err, valiValue: true }] },
+      { name: 'colleague', valiItems: [{ valiName: 'Required', errMessage: this.fontContent.colleague_required_err, valiValue: true }] },
       { name: 'startDate', valiItems: [] },
       { name: 'endDate', valiItems: [] },
       { name: 'startDate', valiItems: [] },
@@ -190,8 +174,8 @@ export class LeaveFormComponent {
       { name: 'autoSet', valiItems: [] },
       {
         name: 'reason', valiItems: [
-          { valiName: 'Required', errMessage: this.translateTexts['attendance.reason_required_err'], valiValue: true },
-          { valiName: 'Minlength', errMessage: this.translateTexts['attendance.reason_minlength_err'], valiValue: 2 }
+          { valiName: 'Required', errMessage: this.fontContent.reason_required_err, valiValue: true },
+          { valiName: 'Minlength', errMessage: this.fontContent.reason_minlength_err, valiValue: 2 }
         ]
       }
     ], bind)
@@ -228,6 +212,7 @@ export class LeaveFormComponent {
   // 获得最近工作日，范围包括今天
   async getWorkDay() {
     let day: string = await this.attendanceService.getWorkDay();
+    console.log(day)
     return day
   }
   //單獨輸入塊驗證
@@ -292,7 +277,7 @@ export class LeaveFormComponent {
     let res: any = await this.attendanceService.sendSign(this.formData);
     loading.dismiss()
     if (res.status) {
-      this.plugin.showToast(this.translateTexts['attendance.sign_success']);
+      this.plugin.showToast(this.fontContent.sign_success);
       // this.navCtrl.popToRoot();
       let content = res.content;
       this.formData.status = 'WAITING';
@@ -325,7 +310,7 @@ export class LeaveFormComponent {
       this.formData.No = data.DOCNO
       this.formData.status = data.STATUS;
       this.haveSaved = true;
-      this.plugin.showToast(this.translateTexts['attendance.save_success']);
+      this.plugin.showToast(this.fontContent.save_success);
     };
 
   }

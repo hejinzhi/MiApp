@@ -1,6 +1,6 @@
 <ion-header>
   <ion-navbar>
-    <ion-title *ngIf="searchMes && searchMes.type">{{searchMes.type | sgFormType | translate}}{{'attendance.search' | translate}}</ion-title>
+    <ion-title *ngIf="searchMes && searchMes.type">{{searchMes.type | sgFormType | sgChineseConv}}{{fontContent.title}}</ion-title>
   </ion-navbar>
 </ion-header>
 
@@ -9,28 +9,28 @@
   <form [formGroup]="todo" *ngIf="todo" (ngSubmit)="leaveForm()">
     <ion-list class="myList">
       <ion-item [class.has-error]="myValidators.type.error" [class.has-success]="myValidators.type.pass" style="display:none">
-        <ion-label>*{{'attendance.form_type' | translate}}</ion-label>
-        <ion-select [cancelText]="'attendance.cancle' | translate" [okText]="'attendance.confirm' | translate" formControlName="type">
+        <ion-label>*{{fontContent.form_type}}</ion-label>
+        <ion-select [cancelText]="fontContent.cancle" [okText]="fontContent.confirm" formControlName="type">
           <ion-option *ngFor="let item of formType" [value]="item.type">{{item.name}}</ion-option>
         </ion-select>
       </ion-item>
       <ion-item [class.has-error]="myValidators.startTime.error" [class.has-success]="myValidators.startTime.pass">
-        <ion-label>{{'attendance.startTime' | translate}}</ion-label>
+        <ion-label>{{fontContent.startTime}}</ion-label>
         <ion-datetime displayFormat="YYYY/MM/DD"  #start name="start" formControlName="startTime"
-        [cancelText]="'attendance.cancle' | translate" [doneText]="'attendance.confirm' | translate"
+        [cancelText]="fontContent.cancle" [doneText]="fontContent.confirm"
         min="2000" [max]="selectMaxYear"
         ></ion-datetime>
       </ion-item>
       <ion-item [class.has-error]="myValidators.endTime.error" [class.has-success]="myValidators.endTime.pass">
-        <ion-label>{{'attendance.endTime' | translate}}</ion-label>
+        <ion-label>{{fontContent.endTime}}</ion-label>
         <ion-datetime displayFormat="YYYY/MM/DD"  #end name="end" formControlName="endTime"
-        [cancelText]="'attendance.cancle' | translate" [doneText]="'attendance.confirm' | translate"
+        [cancelText]="fontContent.cancle" [doneText]="fontContent.confirm"
         min="2000" [max]="selectMaxYear"
         ></ion-datetime>
       </ion-item>
       <ion-item-divider *ngIf="timeError " class='alert'>{{timeError}}</ion-item-divider>
       <ion-item [class.has-error]="myValidators.form_No.error" [class.has-success]="myValidators.form_No.pass">
-        <ion-label>{{'attendance.form_No' | translate}}</ion-label>
+        <ion-label>{{fontContent.form_No}}</ion-label>
         <ion-input formControlName="form_No"></ion-input>
       </ion-item>
       <ion-item-divider *ngIf="myValidators.form_No.error" class='alert'>{{myValidators.form_No.error}}</ion-item-divider>
@@ -38,7 +38,7 @@
         <ion-row>
           <ion-col width-50>
             <ion-buttons right>
-              <button ion-button class="submit" type="submit" [disabled]="!todo.valid || timeError || myValidators.form_No.error ">{{'attendance.submit' | translate}}</button>
+              <button ion-button class="submit" type="submit" [disabled]="!todo.valid || timeError || myValidators.form_No.error ">提交</button>
             </ion-buttons>
           </ion-col>
         </ion-row>

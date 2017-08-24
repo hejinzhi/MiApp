@@ -366,7 +366,7 @@ export class LanguageTypeConfig {
       for_callback_tip:'無可銷假的假單'
     },
     simple_Chinese:{
-      title:'假单管理',
+      title:'假單管理',
       for_leave:'请假',
       for_callback:'销假',
       for_business:'公出',

@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 import { NavController, NavParams, IonicPage } from 'ionic-angular';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { TranslateService } from '@ngx-translate/core';
 
 import { ValidateService }   from '../../../../core/services/validate.service';
 import { PluginService }   from '../../../../core/services/plugin.service';
@@ -27,22 +26,19 @@ export class DetailOnFormComponent {
   betweenMes: {
     date: string
   }
-  selectMaxYear = AttendanceConfig.SelectedMaxTime;
+  selectMaxYear = AttendanceConfig.SelectedMaxYear;
   type: string;
   todo: FormGroup;
   timeError:string ='';
   myValidators:{};
   MyValidatorControl: MyValidatorModel;
-  translateTexts: any = {};
-
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
     private formBuilder: FormBuilder,
     private validateService: ValidateService,
     private attendanceService: AttendanceService,
-    private plugin: PluginService,
-    private translate: TranslateService
+    private plugin: PluginService
   ) { }
 
   ionViewDidLoad() {
@@ -54,7 +50,6 @@ export class DetailOnFormComponent {
     let month = today.getMonth();
     let monthString = month<10?'0'+month:month;
     this.betweenMes.date = today.getFullYear()+'-'+ monthString;
-    this.subscribeTranslateText();
     this.todo = this.initWork(this.betweenMes);
     this.MyValidatorControl = this.initValidator();
     this.myValidators = this.MyValidatorControl.validators;
@@ -62,19 +57,11 @@ export class DetailOnFormComponent {
       this.todo.controls[prop].valueChanges.subscribe((value: any) => this.check(value, prop));
     }
   }
-
-  subscribeTranslateText() {
-    this.translate.get(['attendance.date_required_err', 'attendance.date_BeforeMonth_err',
-    'attendance.no_result']).subscribe((res) => {
-        this.translateTexts = res;
-      })
-  }
-
   initValidator() {
     let newValidator = new MyValidatorModel([
       {name:'date',valiItems:[
-        {valiName:'Required',errMessage:this.translateTexts['attendance.date_required_err'],valiValue:true},
-        {valiName:'BeforeMonth',errMessage:this.translateTexts['attendance.date_BeforeMonth_err'],valiValue:new Date().getMonth()},
+        {valiName:'Required',errMessage:this.fontContent.date_required_err,valiValue:true},
+        {valiName:'BeforeMonth',errMessage:this.fontContent.date_BeforeMonth_err,valiValue:new Date().getMonth()},
       ]}
     ])
     return newValidator;
@@ -105,7 +92,7 @@ export class DetailOnFormComponent {
     loading.dismiss()
     if(!res.status) return false;
     if(!res.content) {
-      this.plugin.showToast(this.translateTexts['attendance.no_result'])
+      this.plugin.showToast(this.fontContent.no_result)
     } else {
       this.navCtrl.push('AttendanceMonthComponent',{
         attendance_month:res.content
