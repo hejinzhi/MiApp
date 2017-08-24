@@ -45,5 +45,14 @@ export class ChartConfig {
    * get
    * type: [TBU CBU EBU MBU MSL_CM MSL]
    */
-  static getSaleMonthChartInfo = EnvConfig.baseUrl + 'ReportErp/GetShipRateMonth?type={type}'
+  static getSaleMonthChartInfo = EnvConfig.baseUrl + 'ReportErp/GetShipRateMonth?type={type}';
+
+  /**
+   *  获得PL庫周轉天數(日報)的信息
+   *  url
+   *  get
+   *  dateStr:YYYYMMDD
+   *  deptID: [82,81,101,121,141,161,162,1,181,102]
+   */
+  static getPlFlowChartInfo = EnvConfig.baseUrl + 'ReportErp/GetPLRate?dateStr={dateStr}&deptID={deptID}';
 }

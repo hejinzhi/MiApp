@@ -1,0 +1,23 @@
+<ion-header>
+
+  <ion-navbar>
+    <ion-title>PL庫周轉天數(日報)</ion-title>
+  </ion-navbar>
+
+</ion-header>
+
+
+<ion-content>
+  <ion-item>
+  <ion-label>查询结束时间</ion-label><ion-datetime displayFormat="YYYY/MM/DD"
+  [cancelText]="'取消'" [doneText]="'确认'" [(ngModel)]="endTime"
+  [yearValues]="yearValues" [max]="max" (ionChange)="search()"
+  ></ion-datetime>
+  </ion-item>
+
+  <sg-table [tableData]="tableInfo" *ngIf="tableInfo"></sg-table>
+
+  <div id="main1" class="chart">
+
+  </div>
+</ion-content>

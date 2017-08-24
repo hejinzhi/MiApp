@@ -49,6 +49,7 @@ export class MyAppComponent {
 
         platform.ready().then(async () => {
             // this.rootPage = IpqaComponent;
+            translate.setDefaultLang('zh-CN');
             statusBar.styleDefault();
             splashScreen.hide();
             this.jMessage.init();
@@ -92,7 +93,6 @@ export class MyAppComponent {
                 });
             }
         });
-        translate.setDefaultLang('zh-CN');
     }
 
     async appInit() {
