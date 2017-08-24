@@ -1,0 +1,78 @@
+import { NavParams, ViewController } from 'ionic-angular';
+import { FormBuilder, FormGroup, FormArray, FormControl, Validators } from '@angular/forms';
+import { Component, OnInit } from '@angular/core';
+
+@Component({
+    selector: 'sg-exception-detail',
+    templateUrl: 'exception-detail.component.html'
+})
+export class ExceptionDetailComponent implements OnInit {
+
+    private fb: FormBuilder = new FormBuilder();
+    formModel: FormGroup;
+    line: string;
+    checklist: string;
+    constructor(
+        private navParams: NavParams,
+        private viewCtrl: ViewController
+    ) {
+        this.formModel = this.fb.group({
+            checkDate: [this.getToday(), Validators.required],
+            checkPersons: this.fb.array([
+                'FE717 JINZHI.HE 何锦枝',
+                'FE716 HUGH.LIANG 梁铭辉'
+            ], Validators.required),
+            banbie: ['白班', Validators.required],
+            address: ['', Validators.required],
+            checklist: ['', Validators.required],
+            exceptionDesc: ['', Validators.required],
+            pictures: this.fb.array([]),
+            handler: ['', Validators.required],
+            PQE: ['', Validators.required],
+            closer: ['', Validators.required]
+        });
+    }
+
+    ngOnInit() {
+        // 获取线别
+        this.line = this.navParams.get('line');
+        let address = this.formModel.get('address') as FormControl;
+        address.setValue(this.line);
+
+        // 获取违反的规定描述
+        this.checklist = this.navParams.get('checklist');
+        let checklist = this.formModel.get('checklist') as FormControl;
+        checklist.setValue(this.checklist);
+    }
+
+    submitException() {
+        console.log(this.formModel);
+        console.log(this.formModel.value);
+        this.viewCtrl.dismiss();
+    }
+
+    addPictures() {
+        let pictures = this.formModel.get('pictures') as FormArray;
+        pictures.push(new FormControl(''));
+    }
+
+    addCheckPerson() {
+        let checkPersons = this.formModel.get('checkPersons') as FormArray;
+        checkPersons.push(new FormControl(''));
+    }
+
+    getToday() {
+        let newDate = new Date();
+        let month = (newDate.getMonth() + 1) > 9 ? (newDate.getMonth() + 1) : '0' + (newDate.getMonth() + 1);
+        let day = newDate.getDate() > 9 ? newDate.getDate() : '0' + newDate.getDate();
+        return newDate.getFullYear() + '-' + month + '-' + day;
+    }
+
+    dismiss() {
+        this.viewCtrl.dismiss();
+    }
+
+    goBack() {
+        this.viewCtrl.dismiss({ selected: false });
+    }
+}

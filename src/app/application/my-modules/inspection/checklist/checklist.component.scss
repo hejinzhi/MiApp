@@ -9,12 +9,11 @@ sg-checklist {
     }
   }
   .my-div {
+    display: flex;
+    align-items: center;
     padding-left: 14px;
     height: 40px;
     color: #666666;
-    line-height: 40px;
-    input {
-      height: 30px;
-    }
+    width: 100%;
   }
 }

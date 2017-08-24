@@ -17,9 +17,13 @@ export class StationsComponent implements OnInit {
     mode: number = Mode.STATION;
     stations: GridModel[] = [];
 
+    // 用户选择的线别
+    line: string;
+
     ngOnInit() {
         this.stations = [];
         let params: GridModel[] = this.navParams.get('stations');
+        this.line = this.navParams.get('line');
         let temp: GridModel[] = params.filter((v) => {
             return v.showCheckbox === true;
         });
@@ -42,7 +46,7 @@ export class StationsComponent implements OnInit {
         //             showCheckbox: event.showCheckbox
         //         }
         //     });
-        this.navCtrl.push(ChecklistComponent, { data: event });
+        this.navCtrl.push(ChecklistComponent, { data: event, line: this.line });
     }
 }
 

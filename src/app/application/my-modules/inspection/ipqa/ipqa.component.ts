@@ -111,7 +111,7 @@ export class IpqaComponent implements OnInit {
     }
 
     goToChooseStationPage() {
-        this.navCtrl.push(StationsComponent, { stations: this.stations });
+        this.navCtrl.push(StationsComponent, { stations: this.stations, line: this.line });
     }
 
 

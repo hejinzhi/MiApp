@@ -2,7 +2,8 @@
   <ion-col class="my-col" *ngFor="let option of showOptions">
     <ion-item>
       <ion-label>{{option.title}}</ion-label>
-      <ion-checkbox [(ngModel)]="option.checked" (ionChange)="change(option.title,option.checked)"></ion-checkbox>
+      <!-- <ion-checkbox [(ngModel)]="option.checked" (ionChange)="change(option.title,option.checked)"></ion-checkbox> -->
+      <ion-checkbox [(ngModel)]="option.checked" (ionChange)="change(option)"></ion-checkbox>
     </ion-item>
     <!-- <span class="left-option">{{option.title}}</span> -->
   </ion-col>
