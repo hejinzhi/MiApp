@@ -22,7 +22,9 @@ export class PluginService {
     private platform: Platform,
     private translate: TranslateService
   ) {
-    this.subscribeTranslateText();
+    this.translate.onLangChange.subscribe(() => {
+      this.subscribeTranslateText()
+    })
   }
 
   appNewVersion: string = '';
