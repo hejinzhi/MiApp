@@ -1,6 +1,6 @@
 <ion-header>
   <ion-navbar>
-    <ion-title>{{languageContent.title}}</ion-title>
+    <ion-title>{{'meComponent.set' | translate}}</ion-title>
   </ion-navbar>
 </ion-header>
 <ion-content>
@@ -8,59 +8,59 @@
     <button ion-item class="function-message" disabled>
       <!-- <ion-icon name="swap" color="mac"></ion-icon> -->
       <span class="iconfontyyy" style="color: #3773F7">&#xe621;</span>
-        &nbsp;{{languageContent.flowMes}}
+        &nbsp;{{'meComponent.flowMes' | translate}}
     </button>
     <button ion-item class="function-message" (tap)="toNineCode()">
       <ion-icon name="lock" color="mac"></ion-icon>
-        &nbsp;{{languageContent.lock}}
+        &nbsp;{{'meComponent.lock' | translate}}
     </button>
     <button ion-item class="function-message" disabled>
       <ion-icon name="unlock" color="mac"></ion-icon>
-        &nbsp;{{languageContent.changePWD}}
+        &nbsp;{{'meComponent.changePWD' | translate}}
     </button>
     <button ion-item class="function-message" disabled>
       <ion-icon name="people" color="mac"></ion-icon>
-        &nbsp;{{languageContent.peopleResource}}
+        &nbsp;{{'meComponent.peopleResource' | translate}}
     </button>
     <button ion-item class="function-message" disabled>
       <ion-icon name="calendar" color="mac"></ion-icon>
-        &nbsp;{{languageContent.canlendarSync}}
+        &nbsp;{{'meComponent.canlendarSync' | translate}}
     </button>
     <ion-item-divider color="light"></ion-item-divider>
     <button ion-item class="function-message" (tap)="checkUpdate()">
       <!-- <ion-icon name="planet" color="mac"></ion-icon> -->
       <span class="iconfontyyy" style="color: #3773F7">&#xe639;</span>
-        &nbsp;{{languageContent.checkUpdate}}
+        &nbsp;{{'meComponent.checkUpdate' | translate}}
     </button>
     <button ion-item class="function-message" disabled>
       <!-- <ion-icon name="trash" color="mac"></ion-icon> -->
       <span class="iconfontyyy" style="color: #3773F7">&#xe61f;</span>
-        &nbsp;{{languageContent.dropChatNote}}
+        &nbsp;{{'meComponent.dropChatNote' | translate}}
     </button>
     <button ion-item class="function-message" disabled>
       <ion-icon name="trash" color="mac"></ion-icon>
-        &nbsp;{{languageContent.dropSave}}
+        &nbsp;{{'meComponent.dropSave' | translate}}
     </button>
     <button ion-item class="function-message" (tap)="changeFont()">
       <!-- <ion-icon name="git-compare" color="mac"></ion-icon> -->
       <span class="iconfontyyy" style="color: #3773F7">&#xe6fd;</span>
-        &nbsp;{{languageContent.languageChange}}
+        &nbsp;{{'meComponent.languageChange' | translate}}
     </button>
     <button ion-item class="function-message" disabled>
       <!-- <ion-icon name="search" color="mac"></ion-icon> -->
       <span class="iconfontyyy" style="color: #3773F7">&#xe606;</span>
-        &nbsp;{{languageContent.about}}
+        &nbsp;{{'meComponent.about' | translate}}
     </button>
     <ion-item-divider color="light"></ion-item-divider>
     <button ion-item class="function-message" (tap)="logout()">
       <!-- <ion-icon name="disc" color="mac"></ion-icon> -->
       <span class="iconfontyyy" style="color: #3773F7">&#xe636;</span>
-        &nbsp;{{languageContent.logout}}
+        &nbsp;{{'meComponent.logout' | translate}}
     </button>
     <button ion-item class="function-message" (tap)="exit()" *ngIf="plf ==='android'">
       <!-- <ion-icon name="disc" color="mac"></ion-icon> -->
       <span class="iconfontyyy" style="color: #3773F7">&#xe628;</span>
-        &nbsp;{{languageContent.exitApp}}
+        &nbsp;{{'meComponent.exitApp' | translate}}
     </button>
   </ion-list>
 </ion-content>

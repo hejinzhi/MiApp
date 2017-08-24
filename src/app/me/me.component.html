@@ -17,21 +17,21 @@
     <button ion-item class="function-message" disabled>
       <!-- <ion-icon name="disc" color="keep"></ion-icon> -->
       <span class="iconfontyyy" style="color: #3773F7">&#xe6a8;</span>
-        &nbsp;{{languageContent.keep}}
+        &nbsp;{{'meComponent.keep' | translate}}
     </button>
     <ion-item-divider color="light"></ion-item-divider>
     <button ion-item class="function-message" (tap)="getQrMessage()">
       <!-- <ion-icon name="expand" color="sao"></ion-icon> -->
       <span class="iconfontyyy" style="color: #1296DB">&#xe6a0;</span>
-        &nbsp;{{languageContent.scan}}
+        &nbsp;{{'meComponent.scan' | translate}}
     </button>
     <button ion-item class="function-message" disabled>
       <ion-icon name="create" color="advice"></ion-icon>
-        &nbsp;{{languageContent.advice}}
+        &nbsp;{{'meComponent.advice' | translate}}
     </button>
     <button ion-item class="function-message" (tap)="goSetting()">
       <ion-icon name="cog" color="mac"></ion-icon>
-        &nbsp;{{languageContent.set}}
+        &nbsp;{{'meComponent.set' | translate}}
     </button>
   </ion-list>
 </ion-content>

@@ -1,10 +1,11 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { NavController, NavParams, ActionSheetController, LoadingController, Loading, IonicPage } from 'ionic-angular';
 import { BarcodeScanner } from '@ionic-native/barcode-scanner';
 import { Camera, CameraOptions } from '@ionic-native/camera';
 import { JMessageService } from '../../core/services/jmessage.service'
 import { PluginService } from '../../core/services/plugin.service';
 import { MeService } from '../shared/service/me.service';
+import { TranslateService } from '@ngx-translate/core';
 
 import { LanguageConfig } from '../shared/config/language.config';
 
@@ -13,7 +14,7 @@ import { LanguageConfig } from '../shared/config/language.config';
   selector: 'sg-detail',
   templateUrl: 'me-detail.component.html'
 })
-export class MeDetailComponent {
+export class MeDetailComponent implements OnInit {
 
   languageType: string = localStorage.getItem('languageType');
   languageContent = LanguageConfig.MeDetailComponent[this.languageType];
@@ -27,12 +28,22 @@ export class MeDetailComponent {
     private loadingCtrl: LoadingController,
     private meService: MeService,
     private barcodeScanner: BarcodeScanner,
-    private camera: Camera
+    private camera: Camera,
+    private translate: TranslateService
   ) { }
 
   user: any;
   base64Image: string;
   loading: Loading;
+  translateTexts: any;
+
+  ngOnInit() {
+    this.translate.get(['meComponent.changeavatar', 'meComponent.selectPhoto', 'meComponent.confirm', 'takePhoto', 'meComponent.changemobile', 'meComponent.changetelephone'
+      , 'meComponent.changeemail', "cancel", "correct", 'meComponent.correctsuccess', 'meComponent.correctsame', 'meComponent.incorrectemobile'
+      , 'meComponent.incorrecttelephone', 'meComponent.incorrectmail']).subscribe((res) => {
+        this.translateTexts = res;
+      })
+  }
 
   ionViewDidLoad() {
     this.errMes = '';
@@ -49,7 +60,7 @@ export class MeDetailComponent {
   async getNewPhoto(type: number, size: number) {
     if (!this.plugin.isCordova()) return;
     let temp = await this.plugin.getNewPhoto(type, size).catch((e) => console.log(e));
-    if(!temp) return;
+    if (!temp) return;
     temp = 'data:image/jpeg;base64,' + temp;
     this.user.avatarUrl = temp;
     this.showLoading();
@@ -69,15 +80,15 @@ export class MeDetailComponent {
   }
   changePhoto() {
     let actionSheet = this.actionSheetCtrl.create({
-      title: this.languageContent.changePhotoActionTitle,
+      title: this.translateTexts['meComponent.changeavatar'],
       buttons: [
         {
-          text: this.languageContent.takePhoto,
+          text: this.translateTexts['takePhoto'],
           handler: () => {
             this.getNewPhoto(1, 400);
           }
         }, {
-          text: this.languageContent.selectPhoto,
+          text: this.translateTexts['meComponent.selectPhoto'],
           handler: () => {
             this.getNewPhoto(0, 400);
           }
@@ -103,13 +114,13 @@ export class MeDetailComponent {
     type = Number(type);
     switch (type) {
       case 1:
-        title = '修改手机号码';
+        title = this.translateTexts['meComponent.changemobile'];
         break;
       case 2:
-        title = '修改固话号码';
+        title = this.translateTexts['meComponent.changetelephone'];
         break;
       case 3:
-        title = '修改邮箱地址';
+        title = this.translateTexts['meComponent.changeemail'];
         break;
       default:
         break;
@@ -125,12 +136,12 @@ export class MeDetailComponent {
       ],
       buttons: [
         {
-          text: '取消',
+          text: this.translateTexts['cancel'],
           handler: data => {
           }
         },
         {
-          text: '修改',
+          text: this.translateTexts['correct'],
           handler: data => {
             if (!this.validate(type, data.del)) return;
             this.toChangeDetail(type, data.del);
@@ -181,13 +192,13 @@ export class MeDetailComponent {
   }
   updataSucc() {
     this.updateUser();
-    this.plugin.showToast('修改成功')
+    this.plugin.showToast(this.translateTexts['meComponent.correctsuccess'])
   }
   updateUser() {
     localStorage.setItem('currentUser', JSON.stringify(this.user))
   }
   isSame() {
-    this.plugin.showToast('与原资料一致,不需要修改');
+    this.plugin.showToast(this.translateTexts['meComponent.correctsame']);
   }
   validate(type: number, newData: string) {
     let res = false;
@@ -198,7 +209,7 @@ export class MeDetailComponent {
           return;
         }
         res = /^1\d{10}$/.test(newData);
-        this.errMes = res ? '' : newData + ': ' + '不是正确的手机号码';
+        this.errMes = res ? '' : newData + ': ' + this.translateTexts['meComponent.incorrectemobile'];
         break;
       case 2:
         if (newData === this.user.telephone) {
@@ -206,7 +217,7 @@ export class MeDetailComponent {
           return;
         }
         res = /^\d{4}\-\d{8}$/.test(newData) || /^\d{4}$/.test(newData);
-        this.errMes = res ? '' : newData + ': ' + '不是正确的固话号码或短号';
+        this.errMes = res ? '' : newData + ': ' + this.translateTexts['meComponent.incorrecttelephone'];
         break;
       case 3:
         if (newData === this.user.email) {
@@ -214,7 +225,7 @@ export class MeDetailComponent {
           return;
         }
         res = /^([a-zA-Z0-9_-])+(.[a-zA-Z0-9_-]*)*\@([a-zA-Z0-9_-])+(.[a-zA-Z0-9_-])+(.[a-zA-Z0-9_-])*/.test(newData);
-        this.errMes = res ? '' : newData + ': ' + '不是正确的邮箱地址';
+        this.errMes = res ? '' : newData + ': ' + this.translateTexts['meComponent.incorrectemail'];
         break;
       default:
         break;
