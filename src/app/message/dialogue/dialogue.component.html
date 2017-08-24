@@ -58,32 +58,32 @@
       <span class="iconfontyyy input_icon plus" *ngIf="!input_text" (tap)="clickPlus()">&#xe649;</span>
       <input *ngIf="!isvoice" class="input_text" [(ngModel)]="input_text" name="input_text" (focus)="isPlus()">
       <button *ngIf="isvoice" class="input_voice" (press)="rec_voice()" (touchend)="endrce_voice()" [class.isrec]="isrec==true">{{voiceflagdesc}}</button>
-      <div *ngIf="input_text" class="send" (tap)="sendMessage(1,input_text)" tappable>發送</div>
+      <div *ngIf="input_text" class="send" (tap)="sendMessage(1,input_text)" tappable>{{'dialogue.send' | translate}}</div>
     </div>
     <div class="button-bar" *ngIf="onPlus">
       <div class="btt">
         <button ion-button color="light" class="button-ion" large icon-only (tap)=getPhoto(0)>
                    <ion-icon name='image' class="icon-img" ></ion-icon>
                 </button>
-        <div class="icon-content">{{languageContent.picture}}</div>
+        <div class="icon-content">{{'dialogue.picture' | translate}}</div>
       </div>
       <div class="btt">
         <button ion-button color="light" class="button-ion" large icon-only (tap)=getPhoto(1)>
                     <ion-icon name='camera' class="icon-img" ></ion-icon>
                 </button>
-        <div class="icon-content">{{languageContent.camera}}</div>
+        <div class="icon-content">{{'dialogue.camera' | translate}}</div>
       </div>
       <div class="btt">
         <button ion-button color="light" class="button-ion" large icon-only>
                    <ion-icon name='person' class="icon-img" ></ion-icon>
                 </button>
-        <div class="icon-content">{{languageContent.personcard}}</div>
+        <div class="icon-content">{{'dialogue.personcard' | translate}}</div>
       </div>
       <div class="btt">
         <button ion-button color="light" class="button-ion" large icon-only (tap)=sendLocation()>
                    <ion-icon name='pin' class="icon-img" ></ion-icon>
                 </button>
-        <div class="icon-content">{{languageContent.location}}</div>
+        <div class="icon-content">{{'dialogue.location' | translate}}</div>
       </div>
     </div>
   </div>
@@ -97,7 +97,7 @@
       <span class="iconfontyyy input_icon plus" *ngIf="!input_text" (tap)="clickPlus()">&#xe649;</span>
       <input *ngIf="!isvoice" class="input_text" [(ngModel)]="input_text" name="input_text" (focus)="isPlus()">
       <button *ngIf="isvoice" class="input_voice" (press)="rec_voice()" (touchend)="endrce_voice()" [class.isrec]="isrec==true">{{voiceflagdesc}}</button>
-      <div *ngIf="input_text" class="send" (tap)="sendMessage(1,input_text)" tappable>發送</div>
+      <div *ngIf="input_text" class="send" (tap)="sendMessage(1,input_text)" tappable>{{'dialogue.send' | translate}}</div>
     </div>
     <div class="button-bar" *ngIf="onPlus">
       <div class="btt">

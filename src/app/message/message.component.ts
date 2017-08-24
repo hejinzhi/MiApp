@@ -15,6 +15,7 @@ import { MyHttpService } from '../core/services/myHttp.service';
 import { LanguageConfig } from './shared/config/language.config';
 import { DatabaseService } from './shared/service/database.service';
 import { PluginService } from '../core/services/plugin.service';
+import { TranslateService } from '@ngx-translate/core';
 import { OriginImage } from './../core/services/jmessage.service';
 
 declare var window: any;
@@ -38,7 +39,9 @@ export class MessageComponent implements OnInit {
   userinfo: any; //登录人信息
   plf: string; // 记录是什么平台
   firstTimeRefresh: boolean = true; // 是否第一次进入这个画面
-  pos: number[] = [113.200585, 22.889573];
+  pos: any[] = [];
+  translateTexts: any; // 记录转换后的文本(简繁体)
+
 
 
   constructor(public navCtrl: NavController,
@@ -53,7 +56,8 @@ export class MessageComponent implements OnInit {
     private events: Events,
     private databaseService: DatabaseService,
     private pluginService: PluginService,
-    private geolocation: Geolocation
+    private geolocation: Geolocation,
+    private translate: TranslateService
   ) {
   }
 
@@ -79,7 +83,7 @@ export class MessageComponent implements OnInit {
       } else if (this.platform.is('android')) {
         this.plf = 'android';
       }
-      
+
 
       // 读取离线消息
       // this.jmessageService.jmessageOffline = this.jmessageService.onSyncOfflineMessage().subscribe(async (res) => {
@@ -152,6 +156,15 @@ export class MessageComponent implements OnInit {
       })
 
     }
+
+    this.translate.get(['messagecomponent.deleteMessageAlertTitle', 'messagecomponent.cancel', 'messagecomponent.confirm']).subscribe((res) => {
+      this.translateTexts = res;
+    })
+    this.translate.onLangChange.subscribe(() => {
+      this.translate.get(['messagecomponent.deleteMessageAlertTitle', 'messagecomponent.cancel', 'messagecomponent.confirm']).subscribe((res) => {
+        this.translateTexts = res;
+      })
+    });
   }
 
   async handleTextMessage(res: TextMessage) {
@@ -468,10 +481,10 @@ export class MessageComponent implements OnInit {
   public async deleteMessage(item: any) {
     let that = this;
     let alert = this.alertCtrl.create();
-    alert.setTitle(this.languageContent.deleteMessageAlertTitle);
-    alert.addButton(this.languageContent.cancel);
+    alert.setTitle(this.translateTexts['messagecomponent.deleteMessageAlertTitle']);
+    alert.addButton(this.translateTexts['messagecomponent.cancel']);
     alert.addButton({
-      text: this.languageContent.confirm,
+      text: this.translateTexts['messagecomponent.confirm'],
       handler: (data: string) => {
         // that.databaseService.deleteMessagesByUser(that.userinfo.username, item.fromUserName, item.toUserName).then((res) => {
         that.databaseService.deleteMessagesByUser(that.userinfo.username, item.owner, item.toUserName).then((res) => {

@@ -5,28 +5,28 @@
 </ion-header>
 <ion-content class="page-content">
     <ion-list>
-         <ion-item (tap)="goToNoticePage('att')" *ngIf="att_length>0">{{languageContent.att}}
+        <ion-item (tap)="goToNoticePage('att')" *ngIf="att_length>0">{{'alertcomponent.att' | translate}}
             <ion-note item-right class="item-count" *ngIf="att_unread>0">{{att_unread}}</ion-note>
         </ion-item>
-        <ion-item (tap)="goToNoticePage('pro')" *ngIf="pro_length>0">{{languageContent.pro}}
+        <ion-item (tap)="goToNoticePage('pro')" *ngIf="pro_length>0">{{'alertcomponent.pro' | translate}}
             <ion-note item-right class="item-count" *ngIf="pro_unread>0">{{pro_unread}}</ion-note>
         </ion-item>
-        <ion-item (tap)="goToNoticePage('sal')" *ngIf="sal_length>0">{{languageContent.sal}}
+        <ion-item (tap)="goToNoticePage('sal')" *ngIf="sal_length>0">{{'alertcomponent.sal' | translate}}
             <ion-note item-right class="item-count" *ngIf="sal_unread>0">{{sal_unread}}</ion-note>
         </ion-item>
-        <ion-item (tap)="goToNoticePage('pur')" *ngIf="pur_length>0">{{languageContent.pur}}
+        <ion-item (tap)="goToNoticePage('pur')" *ngIf="pur_length>0">{{'alertcomponent.pur' | translate}}
             <ion-note item-right class="item-count" *ngIf="pur_unread>0">{{pur_unread}}</ion-note>
         </ion-item>
-        <ion-item (tap)="goToNoticePage('inv')" *ngIf="inv_length>0">{{languageContent.inv}}
+        <ion-item (tap)="goToNoticePage('inv')" *ngIf="inv_length>0">{{'alertcomponent.inv' | translate}}
             <ion-note item-right class="item-count" *ngIf="inv_unread>0">{{inv_unread}}</ion-note>
         </ion-item>
-        <ion-item (tap)="goToNoticePage('fin')" *ngIf="fin_length>0">{{languageContent.fin}}
+        <ion-item (tap)="goToNoticePage('fin')" *ngIf="fin_length>0">{{'alertcomponent.fin' | translate}}
             <ion-note item-right class="item-count" *ngIf="fin_unread>0">{{fin_unread}}</ion-note>
         </ion-item>
-        <ion-item (tap)="goToNoticePage('sfcs')" *ngIf="sfcs_length>0">{{languageContent.sfcs}}
+        <ion-item (tap)="goToNoticePage('sfcs')" *ngIf="sfcs_length>0">{{'alertcomponent.sfcs' | translate}}
             <ion-note item-right class="item-count" *ngIf="sfcs_unread>0">{{sfcs_unread}}</ion-note>
         </ion-item>
-        <ion-item (tap)="goToNoticePage('ims')" *ngIf="ims_length>0">{{languageContent.ims}}
+        <ion-item (tap)="goToNoticePage('ims')" *ngIf="ims_length>0">{{'alertcomponent.ims' | translate}}
             <ion-note item-right class="item-count" *ngIf="ims_unread>0">{{ims_unread}}</ion-note>
         </ion-item>
     </ion-list>
