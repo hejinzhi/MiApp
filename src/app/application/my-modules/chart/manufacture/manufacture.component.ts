@@ -12,7 +12,7 @@ export class ManufactureComponent implements OnInit {
   ngOnInit() {}
 
   mps_day() {
-    this.navCtrl.push('MpaDayComponent')
+    this.navCtrl.push('MpaDayComponent');
   }
 
   mps_month() {
@@ -20,6 +20,6 @@ export class ManufactureComponent implements OnInit {
   }
 
   pl() {
-
+    this.navCtrl.push('PlFlowComponent');
   }
 }
