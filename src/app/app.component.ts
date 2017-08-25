@@ -52,8 +52,10 @@ export class MyAppComponent {
             statusBar.styleDefault();
             splashScreen.hide();
             this.jMessage.init();
+
             await this.appInit();
-            translate.setDefaultLang('zh-CN');
+            // 不能设'zh-CN',否则会失效
+            translate.setDefaultLang('zh-TW');
             this.setDefaultLanguage();
             this.plugin.checkAppForUpdate();
             if (platform.is('cordova') && platform.is('android')) {
