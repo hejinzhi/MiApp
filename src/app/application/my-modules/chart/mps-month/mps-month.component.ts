@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { IonicPage } from 'ionic-angular';
+import { TranslateService } from '@ngx-translate/core';
 
 import { PluginService }   from '../../../../core/services/plugin.service';
 import { ChartService } from '../shared/service/chart.service';
@@ -23,13 +24,17 @@ export class MpsMonthComponent {
   mi_type:string;
   yearValues:string = ''+new Date().getFullYear();//日期控件的可选择年份
   max:string = moment(new Date()).format('YYYY-MM'); //日期控件的最大选择日期
+  translateTexts: any = {};
+
   constructor(
     private plugin: PluginService,
     private chartService: ChartService,
-    private cacheService: CacheService
+    private cacheService: CacheService,
+    private translate: TranslateService
   ) {  }
 
   async ionViewDidLoad() {
+    this.subscribeTranslateText();
     await this.initTotal();
     setTimeout(()=>{
       this.chartService.initScroll('sg-mps-month','#mySegment')
@@ -38,6 +43,15 @@ export class MpsMonthComponent {
 
   ionViewWillLeave() {
     this.chartService.unObserveOffsetTop();
+  }
+
+  /**
+   * 获得i18n的翻译信息
+   */
+  subscribeTranslateText() {
+    this.translate.get(['chart.mps_title1', 'chart.mps_title2', 'chart.mps_title3', 'chart.mps_title4']).subscribe((res) => {
+        this.translateTexts = res;
+      })
   }
 
   /**
@@ -98,16 +112,16 @@ export class MpsMonthComponent {
     let title = '';
     switch(type) {
       case 'MD1':
-      title = 'MSL MFGC制造一部(MD 1)';
+      title = this.translateTexts['chart.mps_title1'];
       break;
       case 'MD2':
-      title = 'MSL MFGC制造二部(MD 2)';
+      title = this.translateTexts['chart.mps_title2'];
       break;
       case 'MD3':
-      title = 'MSL MFGC制造三部(MD 3)';
+      title = this.translateTexts['chart.mps_title3'];
       break;
       case 'MSL':
-      title = 'MSL MPS达成率';
+      title = this.translateTexts['chart.mps_title4'];
       break;
     }
     option1.title.text = title;

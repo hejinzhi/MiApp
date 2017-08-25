@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { IonicPage } from 'ionic-angular';
+import { TranslateService } from '@ngx-translate/core';
 
 import { PluginService }   from '../../../../core/services/plugin.service';
 import { ChartService } from '../shared/service/chart.service';
@@ -16,44 +17,112 @@ import * as moment from 'moment';
 })
 export class PlFlowComponent {
 
-  endTime:string = moment(new Date()).format('YYYY-MM-DD');
+  endTime:string = moment(Date.parse(new Date().toString())-60*60*24*1000).format('YYYY-MM-DD');
   className:string = this.constructor.name;
   tableInfo:TableModel;
-  subInfo: TableModel;
-  mi_type:string;
   yearValues:string = ''+new Date().getFullYear();//日期控件的可选择年份
-  max:string = moment(new Date()).format('YYYY-MM-DD'); //日期控件的最大选择日期
-
-  deptMes:{id:number,name:string}[] =[
-    {id:82,name:'MSL MC MDⅡ 生產二處Backend生產一課'},
-    {id:81,name:'MSL MC MD I製造一處'},
-    {id:101,name:'MSL MC MDⅡ 生產二處Backend生產二課'},
-    {id:121,name:'MSL MC MDⅢ PCBA生產制造'},
-    {id:141,name:'系統一處'},
-    {id:161,name:'系統二處'},
-    {id:162,name:'系統三處'},
-    {id:1,name:'MSL MC MD I 製造二處'},
-    {id:181,name:'MSL MC MD I Bose制造處'},
-    {id:102,name:'MSL MC MDⅡ NPI生產處'}
-  ]
+  max:string = moment(Date.parse(new Date().toString())-60*60*24*1000).format('YYYY-MM-DD'); //日期控件的最大选择日期
+  defaultDeptID:number =1;
+  translateTexts: any = {};
+  deptMes:{id:number,name:string}[];
   constructor(
     private plugin: PluginService,
     private chartService: ChartService,
-    private cacheService: CacheService
+    private cacheService: CacheService,
+    private translate: TranslateService
   ) {
 
   }
 
   async ionViewDidLoad() {
-    this.tableInfo = await this.initInfo(1);
+    this.subscribeTranslateText();
+    this.deptMes = [
+      {id:82,name:this.translateTexts['chart.dept82']},
+      {id:81,name:this.translateTexts['chart.dept81']},
+      {id:101,name:this.translateTexts['chart.dept101']},
+      {id:141,name:this.translateTexts['chart.dept141']},
+      {id:161,name:this.translateTexts['chart.dept161']},
+      {id:162,name:this.translateTexts['chart.dept162']},
+      {id:1,name:this.translateTexts['chart.dept1']},
+      {id:181,name:this.translateTexts['chart.dept181']},
+      {id:102,name:this.translateTexts['chart.dept102']}
+    ];
+    this.render();
+  }
+
+  /**
+   * 获得i18n的翻译信息
+   */
+  subscribeTranslateText() {
+    this.translate.get(['chart.dept1', 'chart.dept82', 'chart.dept81',
+    'chart.dept101', 'chart.dept141', 'chart.dept161',
+    'chart.dept162', 'chart.dept181', 'chart.dept102'
+  ]).subscribe((res) => {
+        this.translateTexts = res;
+      })
+  }
+
+  /**
+   * 渲染画面（图和表）
+   */
+  async render() {
+    let raw = await this.getInfo();
+    this.tableInfo = JSON.parse(this.plugin.chineseConv(raw));
     if(!this.tableInfo) return;
+    this.makeChart()
   }
+
+  /**
+   * 获得所需要的数据
+   */
+  async getInfo() {
+    let type = this.endTime+'#'+this.defaultDeptID;
+    let cache = this.cacheService.get(this.className,type);
+    // 如果缓存里没有，则到服务器查找
+    if(!cache) {
+      let loading = this.plugin.createLoading();
+      loading.present();
+      cache = await this.initInfo();
+      loading.dismiss();
+      this.cacheService.update(this.className,type,cache);
+    }
+    return cache;
+  }
+
+  /**
+   * 搜索条件改变后触发
+   */
   search() {
-
+    this.render();
   }
 
-  async initInfo(deptID:number) {
-    let res:any = await this.chartService.getPlFlowChartInfo(this.endTime.replace(/\-/g,''),deptID).catch((e) => {
+  /**
+   * 绑定数据及画图
+   */
+  makeChart() {
+    let option = JSON.parse(OptionsConfig.PlFlow.option1);
+    let data = this.tableInfo.data;
+    option.title.text = data[1][0];
+    option.xAxis[0].data = data[0].slice(2).map((i:string) => i.slice(2));
+    option.series = option.series.map((item:any,index:number) => {
+      let target = data[index+1];
+      item.name = target[1]
+      item.data =  item.data.map((subList:any,idx:number) => {
+        subList.value = target[idx+2]?target[idx+2]:'0';
+        subList.value = subList.value.replace(/\,/g,'');
+        return subList;
+      })
+      return item;
+    })
+    this.chartService.makeChart('main1',this.chartService.optionConv(JSON.stringify(option)));
+  }
+
+  /**
+   * 向服务器请求数据
+   * @return {TableModel} 自定义表格格式
+   */
+  async initInfo() {
+    let res:any = await this.chartService.getPlFlowChartInfo(this.endTime.replace(/\-/g,''),this.defaultDeptID).catch((e) => {
       this.plugin.errorDeal(e)
       return '';
     });

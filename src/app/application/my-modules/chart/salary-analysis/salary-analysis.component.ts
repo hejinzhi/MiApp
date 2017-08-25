@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { NavController, NavParams, IonicPage } from 'ionic-angular';
+import { TranslateService } from '@ngx-translate/core';
 
 import { PluginService }   from '../../../../core/services/plugin.service';
 import { ChartService } from '../shared/service/chart.service';
@@ -17,16 +18,19 @@ export class SalaryAnalysisComponent {
 
   tableInfo:TableModel;
   className:string = this.constructor.name;
+  translateTexts: any = {};
 
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
     private plugin: PluginService,
     private chartService: ChartService,
-    private cacheService: CacheService
+    private cacheService: CacheService,
+    private translate: TranslateService
   ) { }
 
   async ionViewDidLoad() {
+    this.subscribeTranslateText();
     this.tableInfo = await this.getInfo();
     if(!this.tableInfo) return;
     let wholeData = this.tableInfo.data;
@@ -35,6 +39,16 @@ export class SalaryAnalysisComponent {
     this.chartService.makeChart('main3', this.chartService.optionConv(this.initOption3(wholeData)))
     this.chartService.makeChart('main4', this.chartService.optionConv(this.initOption4(wholeData)))
   }
+
+  /**
+   * 获得i18n的翻译信息
+   */
+  subscribeTranslateText() {
+    this.translate.get(['chart.salary_rate']).subscribe((res) => {
+        this.translateTexts = res;
+      })
+  }
+
 
   /**
    * 获得数据
@@ -84,7 +98,7 @@ export class SalaryAnalysisComponent {
       list.value = target[index+1];
       return list;
     })
-    option2.title.text = 'IDL 年资比例';
+    option2.title.text = 'IDL ' + this.translateTexts['chart.salary_rate'];
     return JSON.stringify(option2);
   }
 
@@ -115,7 +129,7 @@ export class SalaryAnalysisComponent {
       list.value = target[index+1];
       return list;
     })
-    option4.title.text = 'DL 年资比例';
+    option4.title.text = 'DL ' + this.translateTexts['chart.salary_rate'];
     return JSON.stringify(option4);
   }
 

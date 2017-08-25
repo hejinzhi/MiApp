@@ -21,8 +21,8 @@ export class StorageComponent {
 
   ionViewDidLoad() {
   }
-  starage_age() {
-    this.navCtrl.push('StarageAgeAnalysisComponent')
+  storage_age() {
+    this.navCtrl.push('StorageAgeAnalysisComponent')
   }
   storage_flow() {
     this.navCtrl.push('StorageFlowComponent')

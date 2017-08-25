@@ -1,9 +1,10 @@
 import { NgModule } from '@angular/core';
-import { ChineseConv } from './chinese-conv.pipe';
 import { MyNumber } from './my-number.pipe';
+import {  PipesModule as SharePipesModule } from '../../../../../shared/pipe/pipes.module';
 
 @NgModule({
-  declarations: [ ChineseConv, MyNumber ],
-  exports: [ChineseConv, MyNumber ]
+  imports: [SharePipesModule],
+  declarations: [ MyNumber ],
+  exports: [ MyNumber, SharePipesModule]
 })
 export class PipesModule { }
