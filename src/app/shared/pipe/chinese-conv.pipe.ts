@@ -7,8 +7,10 @@ export class ChineseConv implements PipeTransform {
   constructor(private translate: TranslateService){}
   transform(value: string): string {
     if (value) {
+      let currentLang = this.translate.currentLang;
+      if(!currentLang) return value;
       let chinese = ['ZH-CN','ZH-TW'];
-      let idx = chinese.indexOf(this.translate.currentLang.toUpperCase());
+      let idx = chinese.indexOf(currentLang.toUpperCase());
       switch (idx) {
         case 0:
           // return sify(JSON.stringify(value)).replace(/^\"/g, '').replace(/\"$/g, '');
