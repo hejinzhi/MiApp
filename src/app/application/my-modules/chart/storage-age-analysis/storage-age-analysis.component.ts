@@ -8,10 +8,10 @@ import { OptionsConfig } from '../shared/config/options.config';
 
 @IonicPage()
 @Component({
-  selector: 'sg-starage-age-analysis',
-  templateUrl: 'starage-age-analysis.component.html'
+  selector: 'sg-storage-age-analysis',
+  templateUrl: 'storage-age-analysis.component.html'
 })
-export class StarageAgeAnalysisComponent {
+export class StorageAgeAnalysisComponent {
 
   pageY: number;
   pageX: number;

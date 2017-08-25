@@ -5,11 +5,12 @@ import { FormTypePipe } from './form-type.pipe';
 import { WeekNamePipe } from './week-name.pipe';
 import { DuringPipe } from './during.pipe';
 import { LengthPipe } from './length.pipe';
-import { ChineseConv } from './chinese-conv.pipe';
 import { MydatePipe } from './mydate.pipe';
+import {  PipesModule as SharePipesModule } from '../../../../../shared/pipe/pipes.module';
 
 @NgModule({
-  declarations: [ReasonTypePipe, OtherTypePipe, FormTypePipe, WeekNamePipe, DuringPipe, LengthPipe, ChineseConv, MydatePipe],
-  exports: [ReasonTypePipe, OtherTypePipe, FormTypePipe, WeekNamePipe, DuringPipe, LengthPipe, ChineseConv, MydatePipe]
+  imports: [SharePipesModule],
+  declarations: [ReasonTypePipe, OtherTypePipe, FormTypePipe, WeekNamePipe, DuringPipe, LengthPipe, MydatePipe],
+  exports: [ReasonTypePipe, OtherTypePipe, FormTypePipe, WeekNamePipe, DuringPipe, LengthPipe, MydatePipe, SharePipesModule]
 })
 export class PipesModule { }

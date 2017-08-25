@@ -52,7 +52,7 @@ export class ChartConfig {
    *  url
    *  get
    *  dateStr:YYYYMMDD
-   *  deptID: [82,81,101,121,141,161,162,1,181,102]
+   *  deptID: [82,81,101,141,161,162,1,181,102]
    */
   static getPlFlowChartInfo = EnvConfig.baseUrl + 'ReportErp/GetPLRate?dateStr={dateStr}&deptID={deptID}';
 }

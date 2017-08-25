@@ -41,7 +41,7 @@ export class PluginService {
       this.translateTexts = res;
     })
   }
-  chineseConv(value: string) {
+  chineseConv(value: any) {
     let chinese = ['ZH-CN', 'ZH-TW'];
     let idx = chinese.indexOf(this.translate.currentLang.toUpperCase());
     switch (idx) {
