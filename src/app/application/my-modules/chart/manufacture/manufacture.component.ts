@@ -19,7 +19,7 @@ export class ManufactureComponent implements OnInit {
     this.navCtrl.push('MpsMonthComponent');
   }
 
-  pl() {
+  pl_flow() {
     this.navCtrl.push('PlFlowComponent');
   }
 }

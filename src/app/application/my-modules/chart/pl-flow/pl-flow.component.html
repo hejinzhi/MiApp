@@ -1,7 +1,7 @@
 <ion-header>
 
   <ion-navbar>
-    <ion-title>PL庫周轉天數(日報)</ion-title>
+    <ion-title>{{ 'chart.pl_flow' | translate}}</ion-title>
   </ion-navbar>
 
 </ion-header>
@@ -9,14 +9,14 @@
 
 <ion-content>
   <ion-item *ngIf="deptMes">
-    <ion-label>部门</ion-label>
-    <ion-select cancelText="取消" okText="确认" #deptID [(ngModel)]="defaultDeptID" (ionChange)="search()">
+    <ion-label>{{ 'deptName' | translate}}</ion-label>
+    <ion-select [cancelText]="'cancel' | translate" [okText]="'confirm' | translate" #deptID [(ngModel)]="defaultDeptID" (ionChange)="search()">
       <ion-option *ngFor="let item of deptMes" [value]="item.id" >{{item.name}}</ion-option>
     </ion-select>
   </ion-item>
   <ion-item>
-  <ion-label>查询结束时间</ion-label><ion-datetime displayFormat="YYYY/MM/DD"
-  [cancelText]="'取消'" [doneText]="'确认'" [(ngModel)]="endTime"
+  <ion-label>{{ 'chart.search_begin_time' | translate }}</ion-label><ion-datetime displayFormat="YYYY/MM/DD"
+  [cancelText]="'cancel' | translate" [doneText]="'confirm' | translate" [(ngModel)]="endTime"
   [yearValues]="yearValues" [max]="max" (ionChange)="search()"
   ></ion-datetime>
   </ion-item>

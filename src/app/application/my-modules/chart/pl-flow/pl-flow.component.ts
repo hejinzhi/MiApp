@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { IonicPage } from 'ionic-angular';
+import { TranslateService } from '@ngx-translate/core';
 
 import { PluginService }   from '../../../../core/services/plugin.service';
 import { ChartService } from '../shared/service/chart.service';
@@ -22,28 +23,45 @@ export class PlFlowComponent {
   yearValues:string = ''+new Date().getFullYear();//日期控件的可选择年份
   max:string = moment(Date.parse(new Date().toString())-60*60*24*1000).format('YYYY-MM-DD'); //日期控件的最大选择日期
   defaultDeptID:number =1;
-  deptMes:{id:number,name:string}[] =[
-    {id:82,name:'MSL MC MDⅡ 生產二處Backend生產一課'},
-    {id:81,name:'MSL MC MD I製造一處'},
-    {id:101,name:'MSL MC MDⅡ 生產二處Backend生產二課'},
-    {id:141,name:'系統一處'},
-    {id:161,name:'系統二處'},
-    {id:162,name:'系統三處'},
-    {id:1,name:'MSL MC MD I 製造二處'},
-    {id:181,name:'MSL MC MD I Bose制造處'},
-    {id:102,name:'MSL MC MDⅡ NPI生產處'}
-  ]
+  translateTexts: any = {};
+  deptMes:{id:number,name:string}[];
   constructor(
     private plugin: PluginService,
     private chartService: ChartService,
-    private cacheService: CacheService
+    private cacheService: CacheService,
+    private translate: TranslateService
   ) {
 
   }
 
   async ionViewDidLoad() {
+    this.subscribeTranslateText();
+    this.deptMes = [
+      {id:82,name:this.translateTexts['chart.dept82']},
+      {id:81,name:this.translateTexts['chart.dept81']},
+      {id:101,name:this.translateTexts['chart.dept101']},
+      {id:141,name:this.translateTexts['chart.dept141']},
+      {id:161,name:this.translateTexts['chart.dept161']},
+      {id:162,name:this.translateTexts['chart.dept162']},
+      {id:1,name:this.translateTexts['chart.dept1']},
+      {id:181,name:this.translateTexts['chart.dept181']},
+      {id:102,name:this.translateTexts['chart.dept102']}
+    ];
     this.render();
   }
+
+  /**
+   * 获得i18n的翻译信息
+   */
+  subscribeTranslateText() {
+    this.translate.get(['chart.dept1', 'chart.dept82', 'chart.dept81',
+    'chart.dept101', 'chart.dept141', 'chart.dept161',
+    'chart.dept162', 'chart.dept181', 'chart.dept102'
+  ]).subscribe((res) => {
+        this.translateTexts = res;
+      })
+  }
+
   /**
    * 渲染画面（图和表）
    */

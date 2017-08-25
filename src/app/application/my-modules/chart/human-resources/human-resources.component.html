@@ -1,7 +1,7 @@
 <ion-header>
 
   <ion-navbar>
-    <ion-title>ERP-人力資源</ion-title>
+    <ion-title>{{ 'chart.tab4' | translate }}</ion-title>
   </ion-navbar>
 
 </ion-header>
@@ -10,10 +10,10 @@
 <ion-content>
   <ion-list class="myList">
     <button ion-item (tap)='salary()'>
-    年資分析(月報)
+    {{ 'chart.salary' | translate }}
     </button>
     <button ion-item (tap)='dismission()'>
-    離職率分析(月報)
+    {{ 'chart.dismission' | translate }}
     </button>
   </ion-list>
 </ion-content>

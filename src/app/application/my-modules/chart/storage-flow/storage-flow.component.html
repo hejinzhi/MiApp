@@ -1,7 +1,7 @@
 <ion-header>
 
   <ion-navbar>
-    <ion-title>存貨周轉天數(月報)</ion-title>
+    <ion-title>{{ 'chart.storage_flow' | translate }}</ion-title>
   </ion-navbar>
 
 </ion-header>
@@ -9,8 +9,8 @@
 
 <ion-content>
   <ion-item>
-  <ion-label>查询开始时间</ion-label><ion-datetime displayFormat="YYYY/MM"
-  [cancelText]="'取消'" [doneText]="'确认'" [(ngModel)]="startTime"
+  <ion-label>{{ 'chart.search_begin_time' | translate }}</ion-label><ion-datetime displayFormat="YYYY/MM"
+  [cancelText]="'cancel' | translate" [doneText]="'confirm' | translate" [(ngModel)]="startTime"
   min="2000" (ionChange)="search()"
   ></ion-datetime>
   </ion-item>

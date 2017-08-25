@@ -1,7 +1,7 @@
 <ion-header>
 
   <ion-navbar>
-    <ion-title>ERP-生產管理</ion-title>
+    <ion-title>{{'chart.tab3' | translate}}</ion-title>
   </ion-navbar>
 
 </ion-header>
@@ -10,13 +10,13 @@
 <ion-content>
   <ion-list class="myList">
     <button ion-item (tap)='mps_day()'>
-    MPS達成率(日報)
+    {{ 'chart.mps_day' | translate}}
     </button>
     <button ion-item (tap)='mps_month()'>
-    MPS達成率(月報)
+    {{ 'chart.mps_month' | translate}}
     </button>
-    <button ion-item (tap)='pl()'>
-    PL庫周轉天數(日報)
+    <button ion-item (tap)='pl_flow()'>
+    {{ 'chart.pl_flow' | translate}}
     </button>
   </ion-list>
 </ion-content>

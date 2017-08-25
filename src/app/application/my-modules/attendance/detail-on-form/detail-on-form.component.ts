@@ -65,7 +65,7 @@ export class DetailOnFormComponent {
 
   subscribeTranslateText() {
     this.translate.get(['attendance.date_required_err', 'attendance.date_BeforeMonth_err',
-    'attendance.no_result']).subscribe((res) => {
+    'attendance.no_month_result']).subscribe((res) => {
         this.translateTexts = res;
       })
   }
