@@ -1,7 +1,8 @@
 import { Component } from '@angular/core';
 import { IonicPage } from 'ionic-angular';
+import { TranslateService } from '@ngx-translate/core';
 
-import { PluginService }   from '../../../../core/services/plugin.service';
+import { PluginService } from '../../../../core/services/plugin.service';
 import { ChartService } from '../shared/service/chart.service';
 import { CacheService } from '../../../../core/services/cache.service';
 
@@ -16,24 +17,28 @@ import * as moment from 'moment';
 })
 export class SaleMonthComponent {
 
-  endTime:string = moment(new Date()).format('YYYY-MM');
-  className:string = this.constructor.name;
-  tableInfo:TableModel;
+  endTime: string = moment(new Date()).format('YYYY-MM');
+  className: string = this.constructor.name;
+  tableInfo: TableModel;
   subInfo: TableModel;
-  mi_type:string;
-  yearValues:string = ''+new Date().getFullYear();//日期控件的可选择年份
-  max:string = moment(new Date()).format('YYYY-MM'); //日期控件的最大选择日期
+  mi_type: string;
+  yearValues: string = '' + new Date().getFullYear();//日期控件的可选择年份
+  max: string = moment(new Date()).format('YYYY-MM'); //日期控件的最大选择日期
+  translateTexts: any = {};
+
   constructor(
     private plugin: PluginService,
     private chartService: ChartService,
-    private cacheService: CacheService
-  ) {  }
+    private cacheService: CacheService,
+    private translate: TranslateService
+  ) { }
 
   async ionViewDidLoad() {
+    this.subscribeTranslateText();
     await this.initTotal();
-    setTimeout(()=>{
-      this.chartService.initScroll('sg-sale-month','#mySegment')
-    },100);
+    setTimeout(() => {
+      this.chartService.initScroll('sg-sale-month', '#mySegment')
+    }, 100);
   }
 
   ionViewWillLeave() {
@@ -41,12 +46,22 @@ export class SaleMonthComponent {
   }
 
   /**
+   * 获得i18n的翻译
+   */
+  subscribeTranslateText() {
+    this.translate.get(['chart.sale_reach_rate']).subscribe((res) => {
+        this.translateTexts = res;
+      })
+  }
+
+
+  /**
    * 渲染总图
    */
   async initTotal() {
     this.tableInfo = await this.getInfo('MSL')
-    if(!this.tableInfo) return;
-    this.chartService.makeChart('main1', this.chartService.optionConv(this.initOption(this.tableInfo,'MSL')));
+    if (!this.tableInfo) return;
+    this.chartService.makeChart('main1', this.chartService.optionConv(this.initOption(this.tableInfo, 'MSL')));
   }
 
   /**
@@ -62,8 +77,8 @@ export class SaleMonthComponent {
    */
   async initSub() {
     this.subInfo = await this.getInfo(this.mi_type)
-    if(!this.subInfo) return;
-    this.chartService.makeChart('main2', this.chartService.optionConv(this.initOption(this.subInfo,this.mi_type)),true);
+    if (!this.subInfo) return;
+    this.chartService.makeChart('main2', this.chartService.optionConv(this.initOption(this.subInfo, this.mi_type)), true);
   }
 
   /**
@@ -81,28 +96,28 @@ export class SaleMonthComponent {
    * @param  {string}     type 数据的类别名['TBU', 'CBU', 'EBU', 'MBU', 'MSL_CM', 'MSL']
    * @return {string}          stringify后的option配置
    */
-  initOption(info:TableModel,type:string) {
+  initOption(info: TableModel, type: string) {
     let option1 = JSON.parse(OptionsConfig.saleAchievement.option2);
     let data = info.data;
-    let xAxis:string[] = [];
+    let xAxis: string[] = [];
     data.slice(1).forEach((list) => {
       xAxis.push(list[0]);
     })
-    option1.xAxis[0].data =xAxis;
-    option1.series = option1.series.map((list:any,idx:number) => {
-      list.data=[];
+    option1.xAxis[0].data = xAxis;
+    option1.series = option1.series.map((list: any, idx: number) => {
+      list.data = [];
       data.slice(1).forEach((lst) => {
-        list.data.push(lst[idx+2])
+        list.data.push(lst[idx + 2])
       })
-      if(list.data[0].indexOf('%')>-1) {
-        for(let i =0;i<list.data.length;i++) {
-          if(!list.data[i]) continue
-          list.data[i] = list.data[i].replace('%','');
+      if (list.data[0].indexOf('%') > -1) {
+        for (let i = 0; i < list.data.length; i++) {
+          if (!list.data[i]) continue
+          list.data[i] = list.data[i].replace('%', '');
         }
       }
       return list;
     });
-    let title = type + '出货达成率';
+    let title = type + this.translateTexts['chart.sale_reach_rate'];
 
     option1.title.text = title;
     return JSON.stringify(option1);
@@ -113,18 +128,18 @@ export class SaleMonthComponent {
    * @param  {string} type          自定义类别名字['TBU', 'CBU', 'EBU', 'MBU', 'MSL_CM', 'MSL']
    * @return {TableModel}           自定义表格格式
    */
-  async getInfo(type:string) {
-    let cache = this.cacheService.get(this.className,type);
+  async getInfo(type: string) {
+    let cache = this.cacheService.get(this.className, type);
     // 如果缓存里没有，则到服务器查找
-    if(!cache) {
+    if (!cache) {
       let loading = this.plugin.createLoading();
       loading.present();
       cache = await this.initInfo(type);
       loading.dismiss();
-      if(!cache) return;
-      this.cacheService.update(this.className,type,cache);
+      if (!cache) return;
+      this.cacheService.update(this.className, type, cache);
     }
-    if(cache) {
+    if (cache) {
       cache = this.afterGet(cache);
     }
     return cache;
@@ -135,20 +150,20 @@ export class SaleMonthComponent {
    * @param  {TableModel} tableInfo 总数据
    * @return {TableModel}           处理后的数据
    */
-  afterGet(tableInfo:TableModel) {
+  afterGet(tableInfo: TableModel) {
     let data = tableInfo.data || [];
-    let time = this.endTime.replace('-','');
+    let time = this.endTime.replace('-', '');
     let month = +this.endTime.split('-')[1];
-    let idx:number;
-    for(let i= data.length-1;i>0;i--) {
-      if(data[i][0] == time) {
+    let idx: number;
+    for (let i = data.length - 1; i > 0; i--) {
+      if (data[i][0] == time) {
         idx = i;
       }
-      if(idx) {
+      if (idx) {
         break;
       }
     }
-    data = data.slice(0,1).concat(data.slice(month>4?month-5+1:1,idx+1))
+    data = data.slice(0, 1).concat(data.slice(month > 4 ? month - 5 + 1 : 1, idx + 1))
     tableInfo.data = data;
     return tableInfo;
 
@@ -159,20 +174,20 @@ export class SaleMonthComponent {
    * @param  {string} type 自定义名称['TBU', 'CBU', 'EBU', 'MBU', 'MSL_CM', 'MSL']
    * @return {TableModel}      自定义表格对象
    */
-  async initInfo(type:string) {
+  async initInfo(type: string) {
     let all = ['TBU', 'CBU', 'EBU', 'MBU', 'MSL_CM', 'MSL'];
-    if(all.indexOf(type)<0) return;
-    let res:any = await this.chartService.getSaleMonthChartInfo(type).catch((e) => {
+    if (all.indexOf(type) < 0) return;
+    let res: any = await this.chartService.getSaleMonthChartInfo(type).catch((e) => {
       this.plugin.errorDeal(e);
       return '';
     })
-    if(!res) return;
-    let data = res.json().map((list:any) => {
+    if (!res) return;
+    let data = res.json().map((list: any) => {
       return this.chartService.changeObjectToArray(list);
     })
     return {
-      caption:'',
-      data:data
+      caption: '',
+      data: data
     }
   }
 }

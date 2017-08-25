@@ -23,7 +23,9 @@ export class AttendanceService {
     private plugin: PluginService,
     private translate: TranslateService
   ) {
-    this.subscribeTranslateText();
+    this.translate.onLangChange.subscribe(() => {
+      this.subscribeTranslateText()
+    })
   }
 
   subscribeTranslateText() {

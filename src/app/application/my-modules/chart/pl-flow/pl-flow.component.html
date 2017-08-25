@@ -1,0 +1,47 @@
+<ion-header>
+
+  <ion-navbar>
+    <ion-title>{{ 'chart.pl_flow' | translate}}</ion-title>
+  </ion-navbar>
+
+</ion-header>
+
+
+<ion-content>
+  <ion-item *ngIf="deptMes">
+    <ion-label>{{ 'deptName' | translate}}</ion-label>
+    <ion-select [cancelText]="'cancel' | translate" [okText]="'confirm' | translate" #deptID [(ngModel)]="defaultDeptID" (ionChange)="search()">
+      <ion-option *ngFor="let item of deptMes" [value]="item.id" >{{item.name}}</ion-option>
+    </ion-select>
+  </ion-item>
+  <ion-item>
+  <ion-label>{{ 'chart.search_begin_time' | translate }}</ion-label><ion-datetime displayFormat="YYYY/MM/DD"
+  [cancelText]="'cancel' | translate" [doneText]="'confirm' | translate" [(ngModel)]="endTime"
+  [yearValues]="yearValues" [max]="max" (ionChange)="search()"
+  ></ion-datetime>
+  </ion-item>
+
+  <div class="myTable" *ngIf="tableInfo">
+    <table class="table table-striped table-bordered">
+      <caption *ngIf="tableInfo.caption">{{tableInfo.caption}}</caption>
+      <thead>
+        <tr>
+          <th *ngFor="let item of tableInfo.data[0]">{{item}}</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <th scope="row" class="row1" rowspan="4">{{tableInfo.data[1][0]}}</th>
+          <th scope="row" *ngFor="let subitem of tableInfo.data[1].slice(1)">{{ subitem }}</th>
+        </tr>
+        <tr *ngFor="let item1 of tableInfo.data.slice(2)">
+          <th scope="row" *ngFor="let subitem1 of item1.slice(1)" >{{ subitem1 }}</th>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div id="main1" class="chart">
+
+  </div>
+</ion-content>

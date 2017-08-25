@@ -201,6 +201,17 @@ export class ChartService {
     return this.myHttp.get(ChartConfig.getSaleMonthChartInfo.replace('{type}',type));
   }
 
+  /**
+   * 获得PL庫周轉天數(日報)的信息
+   * @param  {string} date   日期，格式为YYYYMMDD
+   * @param  {number} deptID [82,81,101,141,161,162,1,181,102] 之一
+   * @return {Promise<response>} http的结果
+   */
+  getPlFlowChartInfo(date:string,deptID:number) {
+    if(date.length !== 8) throw new Error('date:'+date+'does not mark the requested date formatter,the right formatter should be YYYYMMDD');
+    if([82,81,101,141,161,162,1,181,102].indexOf(deptID)<0) throw new Error('department:'+deptID+'is not exit');
+    return this.myHttp.get(ChartConfig.getPlFlowChartInfo.replace('{dateStr}',date).replace('{deptID}',deptID+''))
+  }
 
 
 

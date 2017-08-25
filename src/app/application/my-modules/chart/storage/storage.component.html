@@ -1,9 +1,9 @@
 <ion-header>
 
   <ion-navbar>
-    <ion-title>ERP-庫存管理</ion-title>
+    <ion-title>{{ 'chart.tab1' | translate}}</ion-title>
     <ion-buttons>
-      <button ion-button (tap)="exit()">返回</button>
+      <button ion-button (tap)="exit()">{{ 'exit' | translate}}</button>
     </ion-buttons>
   </ion-navbar>
 
@@ -13,16 +13,16 @@
 <ion-content>
   <ion-list class="myList">
     <button ion-item (tap)='storage_flow()'>
-    存貨周轉天數(月報)
+    {{ 'chart.storage_flow' | translate}}
     </button>
-    <button ion-item (tap)='starage_age()'>
-    庫存賬齡分析(月報)
+    <button ion-item (tap)='storage_age()'>
+    {{ 'chart.storage_age' | translate}}
     </button>
     <button ion-item (tap)='obs_storage()'>
-    OBS庫存分析(週報)
+    {{ 'chart.obs_storage' | translate}}
     </button>
     <button ion-item (tap)='obs_po()'>
-    OBS PO分析(週報)
+    {{ 'chart.obs_po' | translate}}
     </button>
   </ion-list>
 </ion-content>

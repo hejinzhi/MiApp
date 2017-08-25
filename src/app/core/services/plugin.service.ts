@@ -22,7 +22,9 @@ export class PluginService {
     private platform: Platform,
     private translate: TranslateService
   ) {
-    this.subscribeTranslateText();
+    this.translate.onLangChange.subscribe(() => {
+      this.subscribeTranslateText()
+    })
   }
 
   appNewVersion: string = '';
@@ -39,7 +41,7 @@ export class PluginService {
       this.translateTexts = res;
     })
   }
-  chineseConv(value: string) {
+  chineseConv(value: any) {
     let chinese = ['ZH-CN', 'ZH-TW'];
     let idx = chinese.indexOf(this.translate.currentLang.toUpperCase());
     switch (idx) {

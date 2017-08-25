@@ -80,6 +80,7 @@ export class SetComponent implements OnInit {
       text: this.translateTexts['confirm'],
       handler: (data: string) => {
         this.translate.use(data);
+        localStorage.setItem('preferLang',data);
         this.plugin.showToast('已更改为'+data)
       }
     });
