@@ -1,70 +1,51 @@
-import { Component, OnInit, Input, Output, OnChanges, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, Output, OnChanges, EventEmitter, SimpleChanges } from '@angular/core';
 
 @Component({
     selector: 'sg-checkbox',
     templateUrl: 'checkbox.component.html'
 })
 export class CheckboxComponent implements OnInit, OnChanges {
-    constructor() { }
+    constructor(
+    ) { }
 
 
     selectOptions: string[] = ['正常', '異常'];
-
-    showOptions: { title: string; checked: boolean }[] = [];
+    public checkedIdx: number;
 
     @Output()
-    // selectedValue: EventEmitter<string> = new EventEmitter();
-    selectedValue: EventEmitter<{ title: string; checked: boolean }> = new EventEmitter();
+    selectedValue: EventEmitter<string> = new EventEmitter();
+
+    @Input()
+    reset: boolean;
+
+    @Input()
+    value: string;
 
     ngOnInit() {
-        let temp: { title: string; checked: boolean }[] = [];
-        this.selectOptions.forEach((v) => {
-            temp.push({
-                title: v,
-                checked: false
-            })
-        });
-        this.showOptions = temp;
-    }
-
-    change(option: { title: string; checked: boolean }) {
-        // if (option.title === this.selectOptions[1] && option.checked) {
-        //     this.selectedValue.emit(option);
-        // }
-        if (option.checked) {
-            this.selectedValue.emit(option);
+        if (this.value === this.selectOptions[0]) {
+            this.checkedIdx = 0;
+        } else if (this.value === this.selectOptions[1]) {
+            this.checkedIdx = 1;
         }
-        this.showOptions.forEach((v) => {
-            if (v.title === option.title) {
-            } else {
-                if (option.checked) {
-                    // this.selectedValue.emit(title);
-                    v.checked = false;
-                }
-            }
+    }
 
-        });
+    change(event: boolean, i: number) {
+        if (event) {
+            this.checkedIdx = i;
+            this.selectedValue.emit(this.selectOptions[i]);
 
-        // for (let i = 0; i < this.showOptions.length; i++) {
-        //     // if (this.showOptions[i].checked) {
-        //     //     this.selectedValue.emit(this.showOptions[i]);
-        //     //     break;
-        //     // }
-        //     if (this.showOptions[i].title === title) {
-        //         break;
-        //     } else {
-        //         if (checked) {
-        //             this.selectedValue.emit(this.showOptions[i]);
-        //             this.showOptions[i].checked = false;
-        //         }
-        //     }
-        // }
+        } else {
+            this.checkedIdx = -1
+            this.selectedValue.emit('');
+        }
+    }
 
-
+    ngOnChanges(event: SimpleChanges) {
+        if (event && event.reset) {
+            this.checkedIdx = -1;
+        }
 
     }
 
-    ngOnChanges() {
 
-    }
 }

@@ -15,7 +15,7 @@
       <p>{{i+1}}. {{list.desc}}</p>
       <p [ngStyle]="{color: list.priority==='Major'?'red':'green'}" class="priority">嚴重度:{{list.priority}}</p>
     </div>
-    <sg-checkbox *ngIf="list.type === 'checkbox'" (selectedValue)="selectedValue(list,$event)"></sg-checkbox>
+    <sg-checkbox *ngIf="list.type === 'checkbox'" (selectedValue)="selectedValue(list,$event)" [reset]="reset[i].reset" [value]="list.value"></sg-checkbox>
     <div *ngIf="list.type === 'input'" class="my-div">
       请输入数值:
       <input type="number" [(ngModel)]="list.value">

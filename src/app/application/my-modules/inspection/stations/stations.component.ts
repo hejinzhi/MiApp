@@ -1,8 +1,10 @@
+import { CommonService } from './../../../../core/services/common.service';
 import { GridModel } from './../grid/grid.component';
 import { ChecklistComponent } from './../checklist/checklist.component';
 import { NavController, NavParams, DomController } from 'ionic-angular';
 import { Component, OnInit } from '@angular/core';
 import { Mode } from "../grid/grid.component";
+
 
 @Component({
     selector: 'sg-stations',
@@ -11,7 +13,8 @@ import { Mode } from "../grid/grid.component";
 export class StationsComponent implements OnInit {
     constructor(
         private navCtrl: NavController,
-        private navParams: NavParams
+        private navParams: NavParams,
+        private commonService: CommonService
     ) { }
 
     mode: number = Mode.STATION;
@@ -40,13 +43,21 @@ export class StationsComponent implements OnInit {
     }
 
     chooseStation(event: GridModel) {
-        //     this.navCtrl.push(ChecklistComponent, {
-        //         data: {
-        //             title: event.title,
-        //             showCheckbox: event.showCheckbox
-        //         }
-        //     });
         this.navCtrl.push(ChecklistComponent, { data: event, line: this.line });
+    }
+
+    // 先检查是否已经全部打上勾，如果没有则报错
+    submitStations() {
+        let allCheck: boolean = true;
+        for (let i = 0; i < this.stations.length; i++) {
+            if (this.stations[i].showCheckbox) { }
+            else {
+                this.commonService.showAlert('錯誤', `第${i + 1}項尚未進行檢查，請檢查后再提交。`);
+                allCheck = false;
+                break;
+            }
+        }
+
     }
 }
 
