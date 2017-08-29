@@ -289,7 +289,7 @@
     "storage_age":"库存帐龄分析(月报)",
     "obs_storage": "OBS库存分析(周报)",
     "obs_po": "OBS PO分析(周报)",
-    "search_begin_time" : "查询开始时间",
+    "search_begin_time" : "查询结束时间",
     "sale_day": "出货达成率(日报)",
     "sale_month": "出货达成率(月报)",
     "sale_reach_rate": "出货达成率",

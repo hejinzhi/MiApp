@@ -24,11 +24,20 @@ export class PluginService {
   ) {
     this.translate.onLangChange.subscribe(() => {
       this.subscribeTranslateText()
+      this.chineseConvUserMes()
     })
   }
 
   appNewVersion: string = '';
   translateTexts: any = {};
+
+  /**
+   * 对本地用户信息简繁体更新
+   */
+  chineseConvUserMes() {
+    if(!localStorage.getItem('currentUser')) return
+    localStorage.setItem('currentUser',this.chineseConv(JSON.parse(localStorage.getItem('currentUser'))))
+  }
 
   /**
    * 获得i18n的翻译内容
