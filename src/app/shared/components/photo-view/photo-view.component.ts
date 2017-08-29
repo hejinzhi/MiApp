@@ -1,7 +1,13 @@
+<<<<<<< HEAD
 import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
 import { ModalController, ViewController, ActionSheetController } from 'ionic-angular';
+=======
+import { Component, OnInit, Output, EventEmitter } from '@angular/core';
+import { ModalController, ViewController, ActionSheetController, IonicPage } from 'ionic-angular';
+>>>>>>> b32ba95c9756cbd76cc3ea499d84a7de4914d03d
 import { PluginService } from '../../../core/services/plugin.service';
 
+@IonicPage()
 @Component({
   selector: 'sg-photo-view',
   templateUrl: 'photo-view.component.html',
