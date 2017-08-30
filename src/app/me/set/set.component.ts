@@ -38,19 +38,19 @@ export class SetComponent implements OnInit {
     }
   }
   ngOnInit() {
-    this.translate.get(['meComponent.languageChangeAlertTitle', 'meComponent.simple_Chinese', 'meComponent.traditional_Chinese', 'cancel', 'confirm'
+    this.translate.stream(['meComponent.languageChangeAlertTitle', 'meComponent.simple_Chinese', 'meComponent.traditional_Chinese', 'cancel', 'confirm'
       , 'meComponent.reStartAppAlertTitle', 'meComponent.reStartAppAlertMes', 'meComponent.logoutAlertTitle', 'meComponent.logoutAlertMes'
       , 'meComponent.exitAlertTitle', 'meComponent.exitAlertMes', 'Y', 'N']).subscribe((res) => {
         this.translateTexts = res;
       })
 
-    this.translate.onLangChange.subscribe(() => {
-      this.translate.get(['meComponent.languageChangeAlertTitle', 'meComponent.simple_Chinese', 'meComponent.traditional_Chinese', 'cancel', 'confirm'
-        , 'meComponent.reStartAppAlertTitle', 'meComponent.reStartAppAlertMes', 'meComponent.logoutAlertTitle', 'meComponent.logoutAlertMes'
-        , 'meComponent.exitAlertTitle', 'meComponent.exitAlertMes', 'Y', 'N']).subscribe((res) => {
-          this.translateTexts = res;
-        })
-    });
+    // this.translate.onLangChange.subscribe(() => {
+    //   this.translate.get(['meComponent.languageChangeAlertTitle', 'meComponent.simple_Chinese', 'meComponent.traditional_Chinese', 'cancel', 'confirm'
+    //     , 'meComponent.reStartAppAlertTitle', 'meComponent.reStartAppAlertMes', 'meComponent.logoutAlertTitle', 'meComponent.logoutAlertMes'
+    //     , 'meComponent.exitAlertTitle', 'meComponent.exitAlertMes', 'Y', 'N']).subscribe((res) => {
+    //       this.translateTexts = res;
+    //     })
+    // });
   }
 
   checkUpdate() {

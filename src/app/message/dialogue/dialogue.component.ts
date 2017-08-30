@@ -18,6 +18,8 @@ import { KeyboardAttachDirective } from '../shared/directive/KeyboardAttachDirec
 import { UserModel } from '../../shared/models/user.model';
 import { ImageViewerController } from 'ionic-img-viewer';
 
+declare var window: any;
+declare var cordova: any;
 
 @Component({
     selector: 'sg-dialogue',
@@ -64,6 +66,7 @@ export class DialogueComponent implements OnInit {
     addCtrl: string = 'N';
 
     audioRecorderAPI = (<any>window).plugins ? (<any>window).plugins.audioRecorderAPI || null : null;
+    permissions = (<any>cordova).plugins ? (<any>cordova).plugins.permissions || null : null;
     isrec: boolean = false;
     isvoice: boolean = false;
     recvoicetime: number;
@@ -71,9 +74,7 @@ export class DialogueComponent implements OnInit {
     openvoiceflag: boolean = false;
     voiceflagdesc: string = '按住 說話';
 
-
     istop: boolean = false;
-
 
     constructor(private messageservice: MessageService,
         public params: NavParams,
@@ -124,6 +125,7 @@ export class DialogueComponent implements OnInit {
             this.plf = 'ios';
         } else if (this.platform.is('android')) {
             this.plf = 'android';
+             this.permissions.hasPermission(this.permissions.RECORD_AUDIO,(status:any)=>{this.checkPermissionCallback(status);} , null);
         }
         this.keyboard.hideKeyboardAccessoryBar(true);
         this.keyboard.disableScroll(true);
@@ -134,6 +136,17 @@ export class DialogueComponent implements OnInit {
         await this.loadMessage();
     }
 
+    checkPermissionCallback(status: any) {
+        if (!status.hasPermission) {
+            var errorCallback = function () {
+                console.warn('Record audio permission is not turned on');
+            }
+            this.permissions.requestPermission(this.permissions.RECORD_AUDIO, function (status: any) {
+                if (!status.hasPermission)
+                    errorCallback();
+            }, errorCallback);
+        }
+    }
 
     async ionViewDidEnter() {
         this.events.subscribe('msg.onReceiveMessage', async (msg: any) => {
@@ -515,14 +528,13 @@ export class DialogueComponent implements OnInit {
         this.navCtrl.push(MapComponent, content);
     }
 
-    onvoice() {
+    async onvoice() {
         this.isvoice = !this.isvoice;
     }
 
     rec_voice() {
         this.isrec = true;
         this.voiceflagdesc = '鬆開 結束';
-        // console.log(this.isrec, 'isrec');
         this.recvoicetime = +new Date();
         this.audioRecorderAPI.record((msg: any) => {
             this.isrec = false;

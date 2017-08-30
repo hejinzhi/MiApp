@@ -157,14 +157,14 @@ export class MessageComponent implements OnInit {
 
     }
 
-    this.translate.get(['messagecomponent.deleteMessageAlertTitle', 'messagecomponent.cancel', 'messagecomponent.confirm']).subscribe((res) => {
+    this.translate.stream(['messagecomponent.deleteMessageAlertTitle', 'messagecomponent.cancel', 'messagecomponent.confirm']).subscribe((res) => {
       this.translateTexts = res;
     })
-    this.translate.onLangChange.subscribe(() => {
-      this.translate.get(['messagecomponent.deleteMessageAlertTitle', 'messagecomponent.cancel', 'messagecomponent.confirm']).subscribe((res) => {
-        this.translateTexts = res;
-      })
-    });
+    // this.translate.onLangChange.subscribe(() => {
+    //   this.translate.get(['messagecomponent.deleteMessageAlertTitle', 'messagecomponent.cancel', 'messagecomponent.confirm']).subscribe((res) => {
+    //     this.translateTexts = res;
+    //   })
+    // });
   }
 
   async handleTextMessage(res: TextMessage) {
