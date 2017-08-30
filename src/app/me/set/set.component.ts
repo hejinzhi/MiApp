@@ -60,7 +60,7 @@ export class SetComponent implements OnInit {
   changeFont() {
     let that = this;
     let alert = this.alertCtrl.create();
-    let lang = this.translate.currentLang.toUpperCase();
+    let lang = this.translate.currentLang?this.translate.currentLang.toUpperCase():'ZH-TW';
     alert.setTitle(this.translateTexts['meComponent.languageChangeAlertTitle']);
     alert.addInput({
       type: 'radio',

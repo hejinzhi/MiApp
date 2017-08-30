@@ -52,8 +52,9 @@ export class MyAppComponent {
             statusBar.styleDefault();
             splashScreen.hide();
             this.jMessage.init();
+
             await this.appInit();
-            translate.setDefaultLang('zh-CN');
+            translate.setDefaultLang('zh-TW');
             this.setDefaultLanguage();
             this.plugin.checkAppForUpdate();
             if (platform.is('cordova') && platform.is('android')) {
@@ -126,30 +127,37 @@ export class MyAppComponent {
 
     setDefaultLanguage() {
         let preferLang = localStorage.getItem('preferLang');
+        let targetLang:string;
         if(preferLang) {
-          this.translate.use(preferLang);
-          return;
+          targetLang = preferLang;
+        } else {
+          // 若用户没有调整过语言版本，则选择与浏览器一致的版本
+          let userLanguage = window.navigator.language.toLowerCase();
+          let languageType = ['zh']
+          let index = -1;
+          languageType.forEach((val, idx) => {
+              if (userLanguage.indexOf(val) > -1) {
+                  index = idx;
+                  return;
+              }
+          })
+          if (index === 0) {
+              if (userLanguage === 'zh-cn') {
+                  targetLang = 'zh-CN'
+              } else {
+                  targetLang = 'zh-TW'
+              }
+          }
+          if (index === -1) {
+              targetLang = 'zh-CN'
+          }
         }
-        // 若用户没有调整过语言版本，则选择与浏览器一致的版本
-        let userLanguage = window.navigator.language.toLowerCase();
-        let languageType = ['zh']
-        let index = -1;
-        languageType.forEach((val, idx) => {
-            if (userLanguage.indexOf(val) > -1) {
-                index = idx;
-                return;
-            }
-        })
-        if (index === 0) {
-            if (userLanguage === 'zh-cn') {
-                this.translate.use('zh-CN');
-            } else {
-                this.translate.use('zh-TW');
-            }
+        if(targetLang === this.translate.getDefaultLang()) {
+          let lang = ['zh-CN', 'zh-TW'];
+          this.translate.use(lang.filter((lg)=> lg !== targetLang)[0]).subscribe(() => setTimeout(() =>this.translate.use(targetLang),20))
         }
-        if (index === -1) {
-            this.translate.use('zh-CN');
-        }
+        this.translate.use(targetLang);
+
     }
 
     registerBackButtonAction() {
