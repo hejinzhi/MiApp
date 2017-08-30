@@ -38,19 +38,11 @@ export class SetComponent implements OnInit {
     }
   }
   ngOnInit() {
-    this.translate.get(['meComponent.languageChangeAlertTitle', 'meComponent.simple_Chinese', 'meComponent.traditional_Chinese', 'cancel', 'confirm'
+    this.translate.stream(['meComponent.languageChangeAlertTitle', 'meComponent.zh-CN', 'meComponent.zh-TW', 'cancel', 'confirm'
       , 'meComponent.reStartAppAlertTitle', 'meComponent.reStartAppAlertMes', 'meComponent.logoutAlertTitle', 'meComponent.logoutAlertMes'
-      , 'meComponent.exitAlertTitle', 'meComponent.exitAlertMes', 'Y', 'N']).subscribe((res) => {
+      , 'meComponent.exitAlertTitle', 'meComponent.exitAlertMes', 'Y', 'N', 'change_to']).subscribe((res) => {
         this.translateTexts = res;
       })
-
-    this.translate.onLangChange.subscribe(() => {
-      this.translate.get(['meComponent.languageChangeAlertTitle', 'meComponent.simple_Chinese', 'meComponent.traditional_Chinese', 'cancel', 'confirm'
-        , 'meComponent.reStartAppAlertTitle', 'meComponent.reStartAppAlertMes', 'meComponent.logoutAlertTitle', 'meComponent.logoutAlertMes'
-        , 'meComponent.exitAlertTitle', 'meComponent.exitAlertMes', 'Y', 'N']).subscribe((res) => {
-          this.translateTexts = res;
-        })
-    });
   }
 
   checkUpdate() {
@@ -64,13 +56,13 @@ export class SetComponent implements OnInit {
     alert.setTitle(this.translateTexts['meComponent.languageChangeAlertTitle']);
     alert.addInput({
       type: 'radio',
-      label: this.translateTexts['meComponent.simple_Chinese'],
+      label: this.translateTexts['meComponent.zh-CN'],
       value: 'zh-CN',
       checked: lang === 'ZH-CN'
     });
     alert.addInput({
       type: 'radio',
-      label: this.translateTexts['meComponent.traditional_Chinese'],
+      label: this.translateTexts['meComponent.zh-TW'],
       value: 'zh-TW',
       checked: lang === 'ZH-TW'
     });
@@ -81,7 +73,7 @@ export class SetComponent implements OnInit {
       handler: (data: string) => {
         this.translate.use(data);
         localStorage.setItem('preferLang',data);
-        this.plugin.showToast('已更改为'+data)
+        this.plugin.showToast(this.translateTexts['change_to']+this.translateTexts['meComponent.'+data])
       }
     });
     alert.present();

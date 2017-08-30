@@ -113,8 +113,8 @@
     "logout": "註銷",
     "exitApp": "退出",
     "languageChangeAlertTitle": "語言版本選擇",
-    "simple_Chinese": "簡體中文",
-    "traditional_Chinese": "繁體中文",
+    "zh-CN": "簡體中文",
+    "zh-TW": "繁體中文",
     "reStartAppAlertTitle": "馬上重啟?",
     "reStartAppAlertMes": "重啟后,版本切換才能正式生效",
     "logoutAlertTitle": "註銷",
@@ -363,5 +363,6 @@
   "alert": "警告",
   "no_wifi_alert": "目前不是在WIFI網絡,是否繼續下載操作",
   "error": "錯誤",
-  "exit":"退出"
+  "exit":"退出",
+  "change_to": "已更改為"
 }
