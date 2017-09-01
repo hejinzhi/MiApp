@@ -1,6 +1,6 @@
 <ion-header>
   <ion-navbar>
-    <ion-title>{{type | sgFormType | sgChineseConv}}</ion-title>
+    <ion-title>{{type | sgFormType | translate}}</ion-title>
   </ion-navbar>
 
 </ion-header>
@@ -12,23 +12,23 @@
       <h2 no-padding class="myRow">
         <ion-row>
           <p>{{ user.empno }}</p>
-          <p>{{ user.nickname }}</p>
+          <p>{{ user.nickname | sgChineseConv }}</p>
         </ion-row>
         <ion-row>
           <p>{{item.IDATE.replace("T",'0').substr(0,10) | sgMydate:"MM/DD/YY"}}</p>
-          <p>{{fontContent.week}}{{item.IWEEK}}</p>
+          <p>{{'attendance.week' | translate}}{{item.IWEEK}}</p>
         </ion-row>
         <ion-row>
-          <p>{{item.ACT_ITIME1?item.ACT_ITIME1:'没有记录'| sgChineseConv}}</p>
-          <p>{{item.ACT_ITIME4?item.ACT_ITIME4:'没有记录'| sgChineseConv}}</p>
+          <p>{{item.ACT_ITIME1?item.ACT_ITIME1:'attendance.no_data'| translate}}</p>
+          <p>{{item.ACT_ITIME4?item.ACT_ITIME4:'attendance.no_data'| translate}}</p>
         </ion-row>
         <ion-row>
-          <p>{{item.ACT_ITIME3?item.ACT_ITIME3:'没有记录'| sgChineseConv}}</p>
-          <p>{{item.ACT_ITIME2?item.ACT_ITIME2:'没有记录'| sgChineseConv}}</p>
+          <p>{{item.ACT_ITIME3?item.ACT_ITIME3:'attendance.no_data'| translate}}</p>
+          <p>{{item.ACT_ITIME2?item.ACT_ITIME2:'attendance.no_data'| translate}}</p>
         </ion-row>
         <ion-row>
-          <p>{{fontContent.off_hour}}:{{item.OFF_HOURS.toFixed(2)}}</p>
-          <p>{{fontContent.work_hour}}:{{item.WORK_HOURS.toFixed(2)}}</p>
+          <p>{{'attendance.off_hour' | translate}}:{{item.OFF_HOURS.toFixed(2)}}</p>
+          <p>{{'attendance.work_hour' | translate}}:{{item.WORK_HOURS.toFixed(2)}}</p>
         </ion-row>
       </h2>
     </button>

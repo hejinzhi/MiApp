@@ -1,3 +1,4 @@
+import { ChecklistComponent } from './application/my-modules/inspection/checklist/checklist.component';
 import { IpqaComponent } from './application/my-modules/inspection/ipqa/ipqa.component';
 import { Component, ViewChild, enableProdMode } from '@angular/core';
 import { Platform, Nav, Keyboard, IonicApp, MenuController, App } from 'ionic-angular';
@@ -43,16 +44,36 @@ export class MyAppComponent {
     ) {
 
         // if (platform.is('cordova')) {
-        //   enableProdMode();
+        //     enableProdMode();
         // }
 
 
         platform.ready().then(async () => {
+            // test
             // this.rootPage = IpqaComponent;
+
+            // statusBar.styleDefault();
+            // splashScreen.hide();
+
+            // cordova.plugins.backgroundMode.setDefaults({
+            //     title: 'MiOA',
+            //     text: 'MiOA正在后台运行',
+            //     icon: 'icon',// this will look for icon.png in platforms/android/res/drawable|mipmap
+            //     // color: String // hex format like 'F14F4D'
+            //     resume: true,
+            //     hidden: false,
+            //     // bigText: 'MiOA正在后台运行 bigText'
+            // });
+            // cordova.plugins.backgroundMode.setEnabled(true);
+            //end test
+
             statusBar.styleDefault();
             splashScreen.hide();
             this.jMessage.init();
+
             await this.appInit();
+            translate.setDefaultLang('zh-TW');
+            this.setDefaultLanguage();
             this.plugin.checkAppForUpdate();
             if (platform.is('cordova') && platform.is('android')) {
                 let original = platform.runBackButtonAction;
@@ -92,7 +113,6 @@ export class MyAppComponent {
                 });
             }
         });
-        translate.setDefaultLang('zh-CN');
     }
 
     async appInit() {
@@ -118,47 +138,44 @@ export class MyAppComponent {
             this.rootPage = LoginComponent;
         }
 
-
-
-        this.setDefaultLanguage();
         if (!localStorage.getItem('appVersion')) {
             localStorage.setItem('appVersion', EnvConfig.appVersion);
         }
     }
 
     setDefaultLanguage() {
-        // if (localStorage.getItem('languageType')) return;
-        let lg = localStorage.getItem('languageType');
-        if (lg) {
-            if (lg === 'simple_Chinese') {
-                this.translate.use('zh-CN');
-            } else {
-                this.translate.use('zh-TW');
-            }
-            return;
+        let preferLang = localStorage.getItem('preferLang');
+        let targetLang:string;
+        if(preferLang) {
+          targetLang = preferLang;
+        } else {
+          // 若用户没有调整过语言版本，则选择与浏览器一致的版本
+          let userLanguage = window.navigator.language.toLowerCase();
+          let languageType = ['zh']
+          let index = -1;
+          languageType.forEach((val, idx) => {
+              if (userLanguage.indexOf(val) > -1) {
+                  index = idx;
+                  return;
+              }
+          })
+          if (index === 0) {
+              if (userLanguage === 'zh-cn') {
+                  targetLang = 'zh-CN'
+              } else {
+                  targetLang = 'zh-TW'
+              }
+          }
+          if (index === -1) {
+              targetLang = 'zh-CN'
+          }
         }
-        let userLanguage = window.navigator.language.toLowerCase();
-        let languageType = ['zh']
-        let index = -1;
-        languageType.forEach((val, idx) => {
-            if (userLanguage.indexOf(val) > -1) {
-                index = idx;
-                return;
-            }
-        })
-        if (index === 0) {
-            if (userLanguage === 'zh-cn') {
-                localStorage.setItem('languageType', 'simple_Chinese');
-                this.translate.use('zh-CN');
-            } else {
-                localStorage.setItem('languageType', 'traditional_Chinese');
-                this.translate.use('zh-TW');
-            }
+        if(targetLang === this.translate.getDefaultLang()) {
+          let lang = ['zh-CN', 'zh-TW'];
+          this.translate.use(lang.filter((lg)=> lg !== targetLang)[0]).subscribe(() => setTimeout(() =>this.translate.use(targetLang),20))
         }
-        if (index === -1) {
-            localStorage.setItem('languageType', 'simple_Chinese');
-            this.translate.use('zh-CN');
-        }
+        this.translate.use(targetLang);
+
     }
 
     registerBackButtonAction() {

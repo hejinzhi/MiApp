@@ -12,14 +12,14 @@ export class ManufactureComponent implements OnInit {
   ngOnInit() {}
 
   mps_day() {
-    this.navCtrl.push('MpaDayComponent')
+    this.navCtrl.push('MpaDayComponent');
   }
 
   mps_month() {
     this.navCtrl.push('MpsMonthComponent');
   }
 
-  pl() {
-
+  pl_flow() {
+    this.navCtrl.push('PlFlowComponent');
   }
 }

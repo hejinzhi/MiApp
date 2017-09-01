@@ -1,0 +1,50 @@
+sg-exception-detail {
+  .my-row {
+    margin-bottom: 5px;
+    display: flex;
+    .left-col {
+      width: 25%;
+      text-align: center;
+    }
+    .right-col {
+      .my-item {
+        width: 100%;
+      }
+      .item-ios {
+        padding-left: 0;
+        border-radius: 0;
+        font-size: inherit;
+      }
+      width: 74%;
+      ion-input {
+        border-bottom: 1px solid #c8c7cc;
+      }
+      ion-textarea {
+        border: 1px solid #c8c7cc;
+      }
+      .plus {
+        display: flex;
+        align-items: center;
+        ion-input {
+          width: 90%;
+        }
+        .plus-img {
+          span {
+            height: 39px;
+            width: 39px;
+            font-size: 30px;
+            text-align: center;
+          }
+        }
+      }
+    }
+  }
+  .my-invalid {
+    border: 1px solid red !important;
+  }
+  .my-content {
+    overflow: scroll;
+    height: 100%;
+    width: 100%;
+  }
+}

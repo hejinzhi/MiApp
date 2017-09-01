@@ -1,7 +1,7 @@
 <ion-header>
 
   <ion-navbar>
-    <ion-title>離職率分析(月報)</ion-title>
+    <ion-title>{{ 'chart.dismission' | translate}}</ion-title>
   </ion-navbar>
 
 </ion-header>
@@ -30,7 +30,7 @@
   <div [ngSwitch]="mi_type" class = "segment" *ngIf="mi_type">
 
     <div *ngSwitchDefault>
-      <sg-table [tableData]="subInfo"></sg-table>
+      <sg-table [tableData]="subInfo" *ngIf="subInfo"></sg-table>
       <div id="main2" class="chart">
 
       </div>

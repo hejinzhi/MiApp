@@ -1,6 +1,7 @@
 import { Component, ChangeDetectorRef } from '@angular/core';
 import { NavController, NavParams, PopoverController, IonicPage } from 'ionic-angular';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { TranslateService } from '@ngx-translate/core';
 
 import { Observable }        from 'rxjs/Observable';
 import { Subject }           from 'rxjs/Subject';
@@ -59,6 +60,8 @@ export class BusinessFormComponent {
   myValidators: {};
   MyValidatorControl: MyValidatorModel;
   businessType = new HolidayType().businessType;
+  translateTexts: any = {};
+
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
@@ -67,7 +70,8 @@ export class BusinessFormComponent {
     private formBuilder: FormBuilder,
     private validateService: ValidateService,
     private plugin: PluginService,
-    private attendanceService: AttendanceService
+    private attendanceService: AttendanceService,
+    private translate: TranslateService
   ) { }
 
   async ionViewDidLoad() {
@@ -95,7 +99,7 @@ export class BusinessFormComponent {
       this.tempcolleague = this.businsessMes.colleague;
       this.haveSaved = true;
     }
-
+    this.subscribeTranslateText();
     this.todo = this.initWork(this.businsessMes);
     this.MyValidatorControl = this.initValidator(this.businsessMes);
     this.myValidators = this.MyValidatorControl.validators;
@@ -103,7 +107,7 @@ export class BusinessFormComponent {
       .debounceTime(300)        // wait for 300ms pause in events
       .distinctUntilChanged()   // ignore if next search term is same as previous
       .switchMap(term => {
-        if (term.length > 0) {
+        if (term.trim().length > 0) {
           return this.attendanceService.getAgent(term);
         } else {
           return Observable.of<any>([])
@@ -111,7 +115,8 @@ export class BusinessFormComponent {
       })
       .catch(error => {
         // TODO: real error handling
-        return Observable.of<string>(error);
+        console.log(error)
+        return Observable.of<any>([]);
       });
     if (!this.haveSaved && !this.todo.controls['businessTime'].value) {
       let day = new Date().toISOString()
@@ -138,28 +143,39 @@ export class BusinessFormComponent {
       })
     }
   }
+
+  subscribeTranslateText() {
+    this.translate.get(['attendance.sign_success', 'attendance.save_success',
+    'attendance.business_reasonType_required_err', 'attendance.colleague_required_err', 'attendance.businessTime_required_err',
+     'attendance.reason_required_err','attendance.reason_minlength_err','attendance.startTime_required_err','attendance.startTime_timeSmaller_err',
+     'attendance.endTime_required_err','attendance.endTime_timeBigger_err'
+  ]).subscribe((res) => {
+        this.translateTexts = res;
+      })
+  }
+
   initValidator(bind: any) {
     let newValidator = new MyValidatorModel([
-      { name: 'reasonType', valiItems: [{ valiName: 'Required', errMessage: this.fontContent.reasonType_required_err, valiValue: true }] },
+      { name: 'reasonType', valiItems: [{ valiName: 'Required', errMessage: this.translateTexts['attendance.business_reasonType_required_err'], valiValue: true }] },
       { name: 'autoSet', valiItems: [] },
-      { name: 'colleague', valiItems: [{ valiName: 'Required', errMessage: this.fontContent.colleague_required_err, valiValue: true }] },
-      { name: 'businessTime', valiItems: [{ valiName: 'Required', errMessage: this.fontContent.businessTime_required_err, valiValue: true }] },
+      { name: 'colleague', valiItems: [{ valiName: 'Required', errMessage: this.translateTexts['attendance.colleague_required_err'], valiValue: true }] },
+      { name: 'businessTime', valiItems: [{ valiName: 'Required', errMessage: this.translateTexts['attendance.businessTime_required_err'], valiValue: true }] },
       {
         name: 'reason', valiItems: [
-          { valiName: 'Required', errMessage: this.fontContent.reason_required_err, valiValue: true },
-          { valiName: 'Minlength', errMessage: this.fontContent.reason_minlength_err, valiValue: 2 }
+          { valiName: 'Required', errMessage: this.translateTexts['attendance.reason_required_err'], valiValue: true },
+          { valiName: 'Minlength', errMessage: this.translateTexts['attendance.reason_minlength_err'], valiValue: 2 }
         ]
       },
       {
         name: 'startTime', valiItems: [
-          { valiName: 'Required', errMessage: this.fontContent.startTime_required_err, valiValue: true },
-          { valiName: 'TimeSmaller', errMessage: this.fontContent.startTime_timeSmaller_err, valiValue: 'endTime' }
+          { valiName: 'Required', errMessage: this.translateTexts['attendance.startTime_required_err'], valiValue: true },
+          { valiName: 'TimeSmaller', errMessage: this.translateTexts['attendance.startTime_timeSmaller_err'], valiValue: 'endTime' }
         ]
       },
       {
         name: 'endTime', valiItems: [
-          { valiName: 'Required', errMessage: this.fontContent.endTime_required_err, valiValue: true },
-          { valiName: 'TimeBigger', errMessage: this.fontContent.endTime_timeBigger_err, valiValue: 'startTime' }
+          { valiName: 'Required', errMessage: this.translateTexts['attendance.endTime_required_err'], valiValue: true },
+          { valiName: 'TimeBigger', errMessage: this.translateTexts['attendance.endTime_timeBigger_err'], valiValue: 'startTime' }
         ]
       }
     ], bind)
@@ -257,7 +273,7 @@ export class BusinessFormComponent {
     let res: any = await this.attendanceService.sendSign(this.formData);
     loading.dismiss()
     if (res.status) {
-      this.plugin.showToast(this.fontContent.sign_success);
+      this.plugin.showToast(this.translateTexts['attendance.sign_success']);
       this.formData.status = 'WAITING';
       // this.navCtrl.popToRoot();
       let content = res.content;
@@ -289,7 +305,7 @@ export class BusinessFormComponent {
       this.hourCount = data.HOURS;
       this.dayCount = data.DAYS
       this.haveSaved = true;
-      this.plugin.showToast(this.fontContent.save_success);
+      this.plugin.showToast(this.translateTexts['attendance.save_success']);
     }
   };
 }

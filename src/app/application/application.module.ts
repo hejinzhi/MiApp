@@ -14,11 +14,14 @@ import { AttendanceModule } from './my-modules/attendance/attendance.module';
 import { ChartModule } from './my-modules/chart/chart.module';
 import { ApplicationGridComponent } from './application-grid/application-grid.component';
 import { PipesModule } from '../shared/pipe/pipes.module';
+import { RewardModule } from './my-modules/others/reward/reward.module';
+import { DutyDailyModule } from './my-modules/others/dutydaily/dutydaily.module';
 
 
 
 @NgModule({
-  imports: [CommonModule, IonicModule, SharedModule, BookLibraryModule, AttendanceModule, PipesModule, ChartModule, TranslateModule.forChild(), InspectionModule],
+
+  imports: [CommonModule, IonicModule, SharedModule, BookLibraryModule, AttendanceModule, PipesModule, ChartModule, TranslateModule.forChild(), InspectionModule, RewardModule, DutyDailyModule],
   declarations: [ApplicationComponent, MoreApplicationComponent, ApplicationGridComponent],
   exports: [ApplicationComponent, MoreApplicationComponent, ApplicationGridComponent],
   entryComponents: [ApplicationComponent, MoreApplicationComponent, ApplicationGridComponent],

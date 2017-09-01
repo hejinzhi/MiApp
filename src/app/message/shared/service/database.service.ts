@@ -256,6 +256,7 @@ export class DatabaseService {
       let msgs = [];
       if (data.rows.length > 0) {
         for (var i = 0; i < data.rows.length; i++) {
+          let extra = this.changeStrToJson(data.rows.item(i).EXTRA);
           msgs.push({
             id: data.rows.item(i).ID,
             toUserName: data.rows.item(i).TO_USER_NAME,
@@ -267,7 +268,8 @@ export class DatabaseService {
             type: data.rows.item(i).TYPE,
             unread: data.rows.item(i).UNREAD,
             childType: data.rows.item(i).CHILD_TYPE,
-            extra: data.rows.item(i).EXTRA,
+            // extra: data.rows.item(i).EXTRA,
+            extra: extra,
             imageHeight: data.rows.item(i).IMAGE_HEIGHT,
             imageWidth: data.rows.item(i).IMAGE_WIDTH,
             duration: data.rows.item(i).DURATION,

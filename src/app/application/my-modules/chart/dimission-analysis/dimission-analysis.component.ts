@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { NavController, NavParams, IonicPage } from 'ionic-angular';
+import { TranslateService } from '@ngx-translate/core';
 
 import { PluginService }   from '../../../../core/services/plugin.service';
 import { ChartService } from '../shared/service/chart.service';
@@ -20,20 +21,33 @@ export class DimissionAnalysisComponent {
   subInfo:TableModel;//下一级的数据
   mi_type:string;//选择的下一级类型
   className:string = this.constructor.name;
+  translateTexts: any = {};
+
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
     private plugin: PluginService,
     private chartService: ChartService,
-    private cacheService: CacheService
+    private cacheService: CacheService,
+    private translate: TranslateService
   ) { }
 
   async ionViewDidLoad() {
+    this.subscribeTranslateText();
     this.wholeInfo = await this.getInfo('T');
     this.makeChart('main1', this.wholeInfo,1);
     setTimeout(()=>{
       this.chartService.initScroll('sg-dimission-analysis','#mySegment')
     },100);
+  }
+
+  /**
+   * 获得i18n的翻译信息
+   */
+  subscribeTranslateText() {
+    this.translate.get(['chart.dismission_rate', 'chart.dismission_total_title']).subscribe((res) => {
+        this.translateTexts = res;
+      })
   }
 
   /**
@@ -61,7 +75,6 @@ export class DimissionAnalysisComponent {
    * 根据选择的标签更改视图
    */
   async changeShow() {
-    this.subInfo = {caption:'',data:[]}
     this.subInfo = await this.getInfo(this.mi_type);
     if(this.mi_type === 'S+A') {
       let lastOrder;//倒数第几的位置
@@ -103,7 +116,7 @@ export class DimissionAnalysisComponent {
       return item;
     })
     option.legend.data = legend.reverse();
-    option.title.text = tableInfo.caption.substr(0,tableInfo.caption.length-3)
+    option.title.text = tableInfo.caption.replace('(%)','');
     this.chartService.makeChart(id,this.chartService.optionConv(JSON.stringify(option)),setHeight);
   }
 
@@ -116,16 +129,16 @@ export class DimissionAnalysisComponent {
     let title = '';
     switch(type){
       case 'T':
-      title = '年度离职率(%)';
+      title = this.translateTexts['chart.dismission_total_title'];
       break;
       case 'DL':
-      title = 'DL离职率(%)';
+      title = 'DL'+this.translateTexts['chart.dismission_rate'] +'(%)';
       break;
       case 'IDL':
-      title = 'IDL离职率(%)';
+      title = 'IDL'+this.translateTexts['chart.dismission_rate'] +'(%)';
       break;
       case 'S+A':
-      title = 'S+A离职率(%)';
+      title = 'S+A'+this.translateTexts['chart.dismission_rate'] +'(%)';
       break;
     }
     let res:any = await this.chartService.getDimissionChartInfo(type).catch((e) => {

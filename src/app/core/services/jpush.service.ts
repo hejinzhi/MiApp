@@ -23,7 +23,7 @@ export class JPushService {
     }
 
     init() {
-        this.jPushPlugin.init();
+        window.plugins.jPushPlugin.init();
     };
 
     // 设置服务器角标
