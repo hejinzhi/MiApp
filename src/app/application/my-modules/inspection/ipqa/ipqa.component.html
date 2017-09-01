@@ -8,7 +8,7 @@
     <ion-item>
       <ion-label>请选择线别:</ion-label>
       <ion-select [(ngModel)]="line" (ionChange)="onSelectChange($event)">
-        <ion-option [value]="l" *ngFor="let l of lines">{{l}}</ion-option>
+        <ion-option [value]="line.LINE_NAME" *ngFor="let line of lines">{{line.LINE_NAME}}</ion-option>
       </ion-select>
     </ion-item>
   </ion-list>

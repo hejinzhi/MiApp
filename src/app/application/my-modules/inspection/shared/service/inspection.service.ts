@@ -1,15 +1,32 @@
+import { MyHttpService } from './../../../../../core/services/myHttp.service';
+import { InspectionConfig } from './../config/inspection.config';
 import { Injectable } from '@angular/core';
+
 
 @Injectable()
 export class InspectionService {
 
-    constructor() { }
+    constructor(
+        private myHttp: MyHttpService
+    ) { }
 
-    getLines(): Promise<string[]> {
-        return new Promise((resolve, reject) => {
-            resolve(['S6-1F', 'S6-2F', 'S10-3F']);
-        });
+    getNames(): Promise<any> {
+        return this.myHttp.get(InspectionConfig.getNamesUrl);
     }
+
+    getLines(): Promise<any> {
+        return this.myHttp.get(InspectionConfig.getLinesUrl);
+    }
+
+    // getModules(line: string): Promise<any> {
+    //     return this.myHttp.get(InspectionConfig.getChecklistUrl + `?LINE_NAME=${line}`);
+    // }
+
+    // getLines(): Promise<string[]> {
+    //     return new Promise((resolve, reject) => {
+    //         resolve(['S6-1F', 'S6-2F', 'S10-3F']);
+    //     });
+    // }
 
     getModules(line: string): Promise<string[]> {
         return new Promise((resolve, reject) => {

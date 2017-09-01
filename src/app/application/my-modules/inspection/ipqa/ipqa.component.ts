@@ -14,7 +14,7 @@ export class IpqaComponent implements OnInit {
     // 从服务器获取回来的线别选项
     lines: string[] = [];
     // 用户选择的线别
-    line: string;
+    line: any[];
     // 某线别下的模块
     modules: GridModel[] = [];
     // 站点
@@ -24,7 +24,7 @@ export class IpqaComponent implements OnInit {
     selectedStations: string[] = [];
 
     // 被选中的模块
-    selectedModules: string[] = [];
+    selectedModules: any[] = [];
 
     constructor(
         private navCtrl: NavController,
@@ -34,7 +34,9 @@ export class IpqaComponent implements OnInit {
     }
 
     async ngOnInit() {
-        this.lines = await this.inspectionService.getLines();
+        // this.lines = await this.inspectionService.getLines();
+        let res = await this.inspectionService.getLines();
+        this.lines = res.json();
     }
 
     /**
@@ -51,6 +53,7 @@ export class IpqaComponent implements OnInit {
         let stationResult = await this.inspectionService.getAllStations(line);
         this.stations = this.addCheckboxAttribute(stationResult, true);
     }
+
 
     addCheckboxAttribute(target: string[], showFlag: boolean): GridModel[] {
         let temp: GridModel[] = [];

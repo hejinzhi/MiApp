@@ -49,7 +49,8 @@
               <div class="plus">
                 <ion-input type="text" [formControlName]="i"></ion-input>
                 <div class="plus-img">
-                  <span class="iconfontyyy input_icon plus" (tap)="addCheckPerson()">&#xe649;</span>
+                  <span class="iconfontyyy" (tap)="addCheckPerson()" *ngIf="i==0">&#xe649;</span>
+                  <span class="iconfontyyy" (tap)="removeCheckPerson(i)" *ngIf="i>0">&#xe61a;</span>
                 </div>
               </div>
             </div>

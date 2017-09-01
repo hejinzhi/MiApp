@@ -51,6 +51,11 @@ export class ExceptionDetailComponent implements OnInit {
         this.viewCtrl.dismiss();
     }
 
+    removeCheckPerson(index: number) {
+        let checkPersons = this.formModel.get('checkPersons') as FormArray;
+        checkPersons.removeAt(index);
+    }
+
     addPictures() {
         let pictures = this.formModel.get('pictures') as FormArray;
         pictures.push(new FormControl(''));
