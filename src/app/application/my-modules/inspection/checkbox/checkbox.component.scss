@@ -1,0 +1,16 @@
+sg-checkbox {
+  .my-row {
+    // padding: 0 16px;
+  }
+  .my-col {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+  }
+  .left-option {
+    display: inline-block;
+    padding-left: 10px;
+    height: 21px;
+    line-height: 21px;
+  }
+}

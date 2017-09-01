@@ -1,3 +1,4 @@
+import { ChecklistComponent } from './application/my-modules/inspection/checklist/checklist.component';
 import { IpqaComponent } from './application/my-modules/inspection/ipqa/ipqa.component';
 import { Component, ViewChild, enableProdMode } from '@angular/core';
 import { Platform, Nav, Keyboard, IonicApp, MenuController, App } from 'ionic-angular';
@@ -43,12 +44,29 @@ export class MyAppComponent {
     ) {
 
         // if (platform.is('cordova')) {
-        //   enableProdMode();
+        //     enableProdMode();
         // }
 
 
         platform.ready().then(async () => {
+            // test
             // this.rootPage = IpqaComponent;
+
+            // statusBar.styleDefault();
+            // splashScreen.hide();
+
+            // cordova.plugins.backgroundMode.setDefaults({
+            //     title: 'MiOA',
+            //     text: 'MiOA正在后台运行',
+            //     icon: 'icon',// this will look for icon.png in platforms/android/res/drawable|mipmap
+            //     // color: String // hex format like 'F14F4D'
+            //     resume: true,
+            //     hidden: false,
+            //     // bigText: 'MiOA正在后台运行 bigText'
+            // });
+            // cordova.plugins.backgroundMode.setEnabled(true);
+            //end test
+
             statusBar.styleDefault();
             splashScreen.hide();
             this.jMessage.init();

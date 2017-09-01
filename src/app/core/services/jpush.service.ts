@@ -23,16 +23,16 @@ export class JPushService {
     }
 
     init() {
-        this.jPushPlugin.init();
+        window.plugins.jPushPlugin.init();
     };
 
     // 设置服务器角标
     setBadge(num: number) {
-        this.jPushPlugin.setBadge(num);
+        window.plugins.jPushPlugin.setBadge(num);
     }
 
     // 设置本地角标
     setApplicationIconBadgeNumber(num: number) {
-        this.jPushPlugin.setApplicationIconBadgeNumber(num);
+        window.plugins.jPushPlugin.setApplicationIconBadgeNumber(num);
     }
 }

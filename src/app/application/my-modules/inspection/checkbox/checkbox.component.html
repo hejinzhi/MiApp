@@ -1,0 +1,16 @@
+<!-- <ion-row class="my-row">
+  <ion-col class="my-col" *ngFor="let option of showOptions">
+    <ion-item>
+      <ion-label>{{option.title}}</ion-label>
+      <ion-checkbox [(ngModel)]="option.checked" (ionChange)="change(option)"></ion-checkbox>
+    </ion-item>
+  </ion-col>
+</ion-row> -->
+<ion-row class="my-row">
+  <ion-col class="my-col" *ngFor="let option of selectOptions; let i=index">
+    <ion-item>
+      <ion-label>{{option}}</ion-label>
+      <ion-checkbox [ngModel]="checkedIdx == i" (ngModelChange)="change($event,i)" [disabled]="checkedIdx >= 0 && checkedIdx != i"></ion-checkbox>
+    </ion-item>
+  </ion-col>
+</ion-row>
