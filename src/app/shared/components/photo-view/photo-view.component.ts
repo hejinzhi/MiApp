@@ -2,7 +2,6 @@ import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { ModalController, ViewController, ActionSheetController, IonicPage } from 'ionic-angular';
 import { PluginService } from '../../../core/services/plugin.service';
 
-@IonicPage()
 @Component({
   selector: 'sg-photo-view',
   templateUrl: 'photo-view.component.html',
