@@ -1,1 +1,19 @@
-sg-checklist {}
+sg-checklist {
+  .item-ios {
+    font-size: 14px;
+  }
+  .my-content {
+    padding: 13px 16px 0 16px;
+    .priority {
+      margin-top: 10px;
+    }
+  }
+  .my-div {
+    display: flex;
+    align-items: center;
+    padding-left: 14px;
+    height: 40px;
+    color: #666666;
+    width: 100%;
+  }
+}

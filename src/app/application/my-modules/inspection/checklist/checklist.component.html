@@ -1,7 +1,24 @@
 <ion-header>
   <ion-navbar>
-    <ion-title>check list</ion-title>
+    <ion-title>{{station?.title}}</ion-title>
+    <ion-buttons end>
+      <button ion-button (tap)="finishCheckedStation()">提交</button>
+    </ion-buttons>
   </ion-navbar>
 </ion-header>
 <ion-content>
+  <!-- <div *ngFor="let list of checkList;let i =index">
+    {{i+1}}{{list.desc}}
+  </div> -->
+  <ion-card *ngFor="let list of checkList;let i =index">
+    <div class="my-content">
+      <p>{{i+1}}. {{list.desc}}</p>
+      <p [ngStyle]="{color: list.priority==='Major'?'red':'green'}" class="priority">嚴重度:{{list.priority}}</p>
+    </div>
+    <sg-checkbox *ngIf="list.type === 'checkbox'" (selectedValue)="selectedValue(list,$event)" [reset]="reset[i].reset" [value]="list.value"></sg-checkbox>
+    <div *ngIf="list.type === 'input'" class="my-div">
+      请输入数值:
+      <input type="number" [(ngModel)]="list.value">
+    </div>
+  </ion-card>
 </ion-content>

@@ -1,3 +1,4 @@
+import { CommonService } from './services/common.service';
 import { NgModule, Optional, SkipSelf } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpModule } from '@angular/http';
@@ -37,7 +38,8 @@ import { CacheService } from './services/cache.service';
         Network,
         SQLite,
         EncryptUtilService,
-        CacheService
+        CacheService,
+        CommonService
     ],
     exports: []
 })

@@ -6,75 +6,11 @@
 <ion-content>
   <ion-grid>
     <ion-row center wrap>
-      <ion-col col-4 class="grid-col">
+      <ion-col col-4 class="grid-col" *ngFor="let name of names" (tap)="goToDetailPage(name.ID)">
         <div class="grid-content">
           <a>
-            <img src="assets/icon/7s.gif" class="grid-img">
-            <div class="grid-name">7S</div>
-          </a>
-        </div>
-      </ion-col>
-      <ion-col col-4 class="grid-col">
-        <div class="grid-content">
-          <a>
-            <img src="assets/icon/xiaoyeban.gif" class="grid-img">
-            <div class="grid-name">小夜班</div>
-          </a>
-        </div>
-      </ion-col>
-      <ion-col col-4 class="grid-col">
-        <div class="grid-content">
-          <a>
-            <img src="assets/icon/dayeban.gif" class="grid-img">
-            <div class="grid-name">大夜班</div>
-          </a>
-        </div>
-      </ion-col>
-      <ion-col col-4 class="grid-col">
-        <div class="grid-content">
-          <a>
-            <img src="assets/icon/anfang.gif" class="grid-img">
-            <div class="grid-name">安全官</div>
-          </a>
-        </div>
-      </ion-col>
-      <ion-col col-4 class="grid-col">
-        <div class="grid-content">
-          <a>
-            <img src="assets/icon/jifang.gif" class="grid-img">
-            <div class="grid-name">MIS机房</div>
-          </a>
-        </div>
-      </ion-col>
-      <ion-col col-4 class="grid-col" (tap)="goToIPQA()">
-        <div class="grid-content">
-          <a>
-            <img src="assets/icon/IPQA.gif" class="grid-img">
-            <div class="grid-name">IPQA</div>
-          </a>
-        </div>
-      </ion-col>
-      <ion-col col-4 class="grid-col">
-        <div class="grid-content">
-          <a>
-            <img src="assets/icon/peidianfang.gif" class="grid-img">
-            <div class="grid-name">配电房</div>
-          </a>
-        </div>
-      </ion-col>
-      <ion-col col-4 class="grid-col">
-        <div class="grid-content">
-          <a>
-            <img src="assets/icon/baojie.gif" class="grid-img">
-            <div class="grid-name">保洁</div>
-          </a>
-        </div>
-      </ion-col>
-      <ion-col col-4 class="grid-col">
-        <div class="grid-content">
-          <a>
-            <img src="assets/icon/miehuoqi.gif" class="grid-img">
-            <div class="grid-name">消防</div>
+            <img [src]="name.IMAGE_URL" class="grid-img">
+            <div class="grid-name">{{name.NAME}}</div>
           </a>
         </div>
       </ion-col>

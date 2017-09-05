@@ -1,11 +1,13 @@
 <?xml version='1.0' encoding='utf-8'?>
-<widget id="io.mitac.miapp" version="0.0.1" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+<widget id="io.mitac.mioa" version="0.0.1" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
     <name>MiOA</name>
     <description>An awesome Ionic/Cordova app.</description>
     <author email="hi@ionicframework" href="http://ionicframework.com/">Ionic Framework Team</author>
     <content src="index.html" />
     <access origin="*" />
     <allow-navigation href="http://ionic.local/*" />
+    <allow-navigation href="http://192.168.133.131:8100" />
+    <allow-navigation href="http://10.86.13.20:8100" />
     <allow-intent href="http://*/*" />
     <allow-intent href="https://*/*" />
     <allow-intent href="tel:*" />
@@ -16,6 +18,7 @@
         <allow-intent href="market:*" />
         <preference name="CodePushDeploymentKey" value="MXIRJwWbQNYbexX1YAikVb5aoJEx4ksvOXqog" />
         <preference name="CodePushServerUrl" value="http://218.13.31.13:3000/" />
+        <preference name="loadUrlTimeoutValue" value="700000" />
         <icon density="ldpi" src="resources\android\icon\drawable-ldpi-icon.png" />
         <icon density="mdpi" src="resources\android\icon\drawable-mdpi-icon.png" />
         <icon density="hdpi" src="resources\android\icon\drawable-hdpi-icon.png" />
@@ -72,7 +75,7 @@
         <splash height="480" src="resources/ios/splash/Default~iphone.png" width="320" />
     </platform>
     <preference name="webviewbounce" value="false" />
-    <preference name="AndroidLaunchMode" value="standard" />
+    <preference name="AndroidLaunchMode" value="singleInstance" />
     <preference name="UIWebViewBounce" value="false" />
     <preference name="DisallowOverscroll" value="true" />
     <preference name="android-minSdkVersion" value="16" />
@@ -87,6 +90,8 @@
         <param name="ios-package" onload="true" value="CDVStatusBar" />
     </feature>
     <icon src="resources\android\icon\drawable-xhdpi-icon.png" />
+    <engine name="android" spec="~6.2.3" />
+    <engine name="ios" spec="~4.4.0" />
     <plugin name="com.synconset.imagepicker" spec="https://github.com/Telerik-Verified-Plugins/ImagePicker.git">
         <variable name="PHOTO_LIBRARY_USAGE_DESCRIPTION" value=" " />
     </plugin>
@@ -108,7 +113,7 @@
     <plugin name="cordova-sqlite-storage" spec="~2.0.4" />
     <plugin name="ionic-plugin-keyboard" spec="~2.2.1" />
     <plugin name="jmessage-phonegap-plugin" spec="^3.0.7">
-        <variable name="APP_KEY" value="c35bdfd0449ed461f7adad98" />
+        <variable name="APP_KEY" value="c5b6f10164cf612885a251bf" />
     </plugin>
     <plugin name="phonegap-plugin-barcodescanner" spec="~6.0.6" />
 </widget>

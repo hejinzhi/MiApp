@@ -14,14 +14,17 @@ export class IpqaComponent implements OnInit {
     // 从服务器获取回来的线别选项
     lines: string[] = [];
     // 用户选择的线别
-    line: string;
+    line: any[];
     // 某线别下的模块
-    modules: string[] = [];
-    // 站点,不带状态的。就是没有记录用户是否勾选了这个站点
-    stations: string[] = [];
+    modules: GridModel[] = [];
+    // 站点
+    stations: GridModel[] = [];
 
     // 被选择了的站点
     selectedStations: string[] = [];
+
+    // 被选中的模块
+    selectedModules: any[] = [];
 
     constructor(
         private navCtrl: NavController,
@@ -30,9 +33,10 @@ export class IpqaComponent implements OnInit {
 
     }
 
-
     async ngOnInit() {
-        this.lines = await this.inspectionService.getLines();
+        // this.lines = await this.inspectionService.getLines();
+        let res = await this.inspectionService.getLines();
+        this.lines = res.json();
     }
 
     /**
@@ -40,55 +44,79 @@ export class IpqaComponent implements OnInit {
      */
     async onSelectChange(line: string) {
         // 获取该线别下的所有模块
-        this.modules = await this.inspectionService.getModules(line);
+        let moduleResult: string[] = await this.inspectionService.getModules(line);
+        this.selectedModules = moduleResult;
+        this.modules = this.addCheckboxAttribute(moduleResult, true);
+
+
         // 获取该线别下的所有站点
-        this.stations = await this.inspectionService.getAllStations(line);
-        this.selectedStations = this.stations;
+        let stationResult = await this.inspectionService.getAllStations(line);
+        this.stations = this.addCheckboxAttribute(stationResult, true);
+    }
+
+
+    addCheckboxAttribute(target: string[], showFlag: boolean): GridModel[] {
+        let temp: GridModel[] = [];
+        target.forEach((v, i) => {
+            temp.push({
+                title: v,
+                showCheckbox: showFlag
+            });
+        });
+        return temp;
     }
 
 
     /**
      * @param  {GridModel} 记录从子组件返回的模块数组
      */
-    async changeModule(modules: GridModel[]) {
+    async changeModule(module: GridModel) {
         let result: string[] = [];
-        modules.forEach((module) => {
-            if (module.showCheckbox) {
-                result.push(module.title);
+        // modules.forEach((module) => {
+        //     if (module.showCheckbox) {
+        //         result.push(module.title);
+        //     }
+        // });
+        let index = this.selectedModules.indexOf(module.title);
+        if (module.showCheckbox) {
+            if (index === -1) {
+                this.selectedModules.push(module.title);
             }
-        });
-        this.stations = await this.inspectionService.getStationsByModules(result);
-        this.selectedStations = this.stations;
+        } else {
+            if (index > -1) {
+                this.selectedModules.splice(index, 1);
+            }
+        }
+        let stationResult = await this.inspectionService.getStationsByModules(this.selectedModules);
+        this.stations = this.addCheckboxAttribute(stationResult, true);
     }
 
     /**
      * @param  {GridModel} 记录从子组件返回的站点数组
      */
-    changeStation(stations: GridModel[]) {
-        let temp: string[] = [];
-        stations.filter((s) => {
-            return s.showCheckbox === true;
-        }).forEach((v) => {
-            temp.push(v.title);
-        });
+    changeStation(stations: GridModel) {
+        // let temp: GridModel[] = [];
+        // stations.filter((s) => {
+        //     return s.showCheckbox === true;
+        // }).forEach((v) => {
+        //     temp.push({
+        //         title: v.title,
+        //         showCheckbox: true
+        //     });
+        // });
         // this.stations = temp;
-        this.selectedStations = temp;
+        // this.selectedStations = temp;
+        this.stations.forEach((value, index) => {
+            if (value.title === stations.title) {
+                this.stations[index].showCheckbox = stations.showCheckbox;
+            }
+        });
     }
 
     goToChooseStationPage() {
-        this.navCtrl.push(StationsComponent, { stations: this.selectedStations });
+        this.navCtrl.push(StationsComponent, { stations: this.stations, line: this.line });
     }
 
-    // addShowCheckboxAttribute(stations: string[]): GridModel[] {
-    //     let temp: GridModel[] = [];
-    //     stations.forEach((station) => {
-    //         temp.push({
-    //             title: station,
-    //             showCheckbox: true
-    //         });
-    //     });
-    //     return temp;
-    // }
 
 
 }

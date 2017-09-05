@@ -1,4 +1,4 @@
-import { Component, OnInit, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { ModalController, ViewController, ActionSheetController, IonicPage } from 'ionic-angular';
 import { PluginService } from '../../../core/services/plugin.service';
 
@@ -8,16 +8,28 @@ import { PluginService } from '../../../core/services/plugin.service';
 })
 export class PhotoViewComponent implements OnInit {
 
-  imgs:string[]= [];
-  @Output() imgsChange = new EventEmitter<string[]>();
+  @Input()
+  imgs: string[];
+
+  //DATA_URL : 0 ,FILE_URI : 1, NATIVE_URI : 2
+  @Input()
+  destinationType: number = 0;
+  @Output()
+  imgsChange = new EventEmitter<string[]>();
 
   constructor(
     public modalCtrl: ModalController,
-    private plugin:PluginService,
+    private plugin: PluginService,
     private actionSheetCtrl: ActionSheetController
-  ) {  }
+  ) { }
 
-  ngOnInit() {}
+  ngOnInit() {
+    if (this.imgs) {
+
+    } else {
+      this.imgs = [];
+    }
+  }
 
   /**
    * 添加图片
@@ -54,22 +66,26 @@ export class PhotoViewComponent implements OnInit {
    */
   async getNewPhoto(type: number, size: number) {
     if (!this.plugin.isCordova()) return;
-    let temp = await this.plugin.getNewPhoto(type, size,{
-      allowEdit:false,quality:100
-    }).catch((e)=> {
+    let temp = await this.plugin.getNewPhoto(type, size, {
+      allowEdit: false,
+      quality: 100,
+      destinationType: this.destinationType
+    }).catch((e) => {
       console.log(e)
     });
-    if(!temp) return;
-    temp = 'data:image/jpeg;base64,' + temp;
+    if (!temp) return;
+    if (this.destinationType === 0) {
+      temp = 'data:image/jpeg;base64,' + temp;
+    }
     this.imgs.push(temp)
-    this.imgsChange.emit(this.imgs)
+    this.imgsChange.emit(this.imgs);
   }
 
   /**
    * 选择图片，并用模态框展示
    * @param  {number} idx 当前图片的序号
    */
-  selectPhoto(idx:number) {
+  selectPhoto(idx: number) {
     this.presentProfileModal(idx);
   }
 
@@ -77,11 +93,11 @@ export class PhotoViewComponent implements OnInit {
    * 初始化模态框
    * @param  {number} idx 当前图片的序号
    */
-  presentProfileModal(idx:number) {
-   let profileModal = this.modalCtrl.create('PhotoDetailComponent', { imgs: this.imgs,idx:idx });
-   profileModal.onDidDismiss(data => {
-     this.imgsChange.emit(this.imgs)
-   });
-   profileModal.present();
- }
+  presentProfileModal(idx: number) {
+    let profileModal = this.modalCtrl.create('PhotoDetailComponent', { imgs: this.imgs, idx: idx });
+    profileModal.onDidDismiss(data => {
+      this.imgsChange.emit(this.imgs)
+    });
+    profileModal.present();
+  }
 }

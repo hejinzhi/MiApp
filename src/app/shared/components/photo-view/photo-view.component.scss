@@ -1,6 +1,6 @@
-sg-photo-view{
+sg-photo-view {
   .container {
-    width:320px;
+    // width:320px;
     overflow: hidden;
     display: flex;
     flex-wrap: wrap;
@@ -12,7 +12,7 @@ sg-photo-view{
     margin: 4px;
     &.has-photo {
       border: none;
-      img{
+      img {
         width: 100%;
         height: 100%;
       }
