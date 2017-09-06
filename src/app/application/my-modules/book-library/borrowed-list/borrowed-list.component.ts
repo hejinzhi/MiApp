@@ -15,8 +15,6 @@ export class BorrowedListComponent implements OnInit {
     ) {
 
     }
-    languageType: string = localStorage.getItem('languageType')
-    languageContent = LanguageConfig.borrowListComponent[this.languageType];
     title: string;
     books: any[]; // 接收传递过来的书籍信息
     type: string;   // 判断是“已预约图书”还是“已借图书”转跳过来的
@@ -26,7 +24,6 @@ export class BorrowedListComponent implements OnInit {
         this.books = this.navParams.get('books');
         this.type = this.navParams.get('type');
         if (this.type === 'book') {
-            // this.title = this.languageContent.booked;
             this.translate.get('bookLibrary.booked').subscribe((title) => {
                 this.title = title;
             });
@@ -34,7 +31,6 @@ export class BorrowedListComponent implements OnInit {
             this.showActualBackDate = false;
         }
         else if (this.type === 'borrow') {
-            // this.title = this.languageContent.borrowed;
             this.translate.get('bookLibrary.borrowed').subscribe((title) => {
                 this.title = title;
             });
@@ -42,7 +38,6 @@ export class BorrowedListComponent implements OnInit {
             this.showActualBackDate = false;
         }
         else if (this.type === 'payback') {
-            // this.title = this.languageContent.payback;
             this.translate.get('bookLibrary.paybacked').subscribe((title) => {
                 this.title = title;
             });
