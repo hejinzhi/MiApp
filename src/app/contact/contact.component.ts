@@ -15,9 +15,6 @@ import { LanguageConfig } from './shared/config/language.config';
   templateUrl: 'contact.component.html'
 })
 export class ContactComponent {
-
-  languageType: string = localStorage.getItem('languageType');
-  languageContent = LanguageConfig.contactComponent[this.languageType];
   contacter: any[] = [];
   searchFilter: string; // 记录搜索条件
   searchResult: any[] = []; // 保存通过searchbar搜索后返回的结果

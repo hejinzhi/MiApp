@@ -1,8 +1,8 @@
 <ion-header>
   <ion-navbar>
-    <ion-title>{{station?.title}}</ion-title>
+    <ion-title>{{station.title |sgChineseConv}}</ion-title>
     <ion-buttons end>
-      <button ion-button (tap)="finishCheckedStation()">提交</button>
+      <button ion-button (tap)="finishCheckedStation()">{{'inspection.ipqa.submit' | translate}}</button>
     </ion-buttons>
   </ion-navbar>
 </ion-header>
@@ -12,12 +12,12 @@
   </div> -->
   <ion-card *ngFor="let list of checkList;let i =index">
     <div class="my-content">
-      <p>{{i+1}}. {{list.desc}}</p>
-      <p [ngStyle]="{color: list.priority==='Major'?'red':'green'}" class="priority">嚴重度:{{list.priority}}</p>
+      <p>{{i+1}}. {{list.desc |sgChineseConv}}</p>
+      <p [ngStyle]="{color: list.priority==='Major'?'red':'green'}" class="priority">{{'inspection.ipqa.priority'| translate}}:{{list.priority}}</p>
     </div>
     <sg-checkbox *ngIf="list.type === 'checkbox'" (selectedValue)="selectedValue(list,$event)" [reset]="reset[i].reset" [value]="list.value"></sg-checkbox>
     <div *ngIf="list.type === 'input'" class="my-div">
-      请输入数值:
+      {{'inspection.ipqa.keyinNumber' | translate}}:
       <input type="number" [(ngModel)]="list.value">
     </div>
   </ion-card>

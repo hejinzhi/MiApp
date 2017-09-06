@@ -1,11 +1,10 @@
-import { CommonService } from './../../../../core/services/common.service';
+import { CommonService } from './../../../../../core/services/common.service';
 import { GridModel } from './../grid/grid.component';
-import { ChecklistComponent } from './../checklist/checklist.component';
-import { NavController, NavParams, DomController } from 'ionic-angular';
+import { NavController, NavParams, DomController, IonicPage } from 'ionic-angular';
 import { Component, OnInit } from '@angular/core';
 import { Mode } from "../grid/grid.component";
 
-
+@IonicPage()
 @Component({
     selector: 'sg-stations',
     templateUrl: 'stations.component.html'
@@ -43,7 +42,7 @@ export class StationsComponent implements OnInit {
     }
 
     chooseStation(event: GridModel) {
-        this.navCtrl.push(ChecklistComponent, { data: event, line: this.line });
+        this.navCtrl.push('ChecklistComponent', { data: event, line: this.line });
     }
 
     // 先检查是否已经全部打上勾，如果没有则报错

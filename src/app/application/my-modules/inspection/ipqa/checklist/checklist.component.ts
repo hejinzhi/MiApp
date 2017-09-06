@@ -1,12 +1,10 @@
-import { CommonService } from './../../../../core/services/common.service';
-import { CheckboxComponent } from './../checkbox/checkbox.component';
-import { ExceptionDetailComponent } from './../exception-detail/exception-detail.component';
+import { CommonService } from './../../../../../core/services/common.service';
 import { InspectionService, Checklist } from './../shared/service/inspection.service';
 import { GridModel } from './../grid/grid.component';
-import { NavController, NavParams, ModalController } from 'ionic-angular';
+import { NavController, NavParams, ModalController, IonicPage } from 'ionic-angular';
 import { Component, OnInit, ViewChild } from '@angular/core';
 
-
+@IonicPage()
 @Component({
     selector: 'sg-checklist',
     templateUrl: 'checklist.component.html'
@@ -61,7 +59,7 @@ export class ChecklistComponent implements OnInit {
     selectedValue(list: Checklist, event: any) {
         list.value = event;
         if (event === '異常') {
-            let exceptionDetailModel = this.modalCtrl.create(ExceptionDetailComponent, { line: this.line, checklist: list.desc });
+            let exceptionDetailModel = this.modalCtrl.create('ExceptionDetailComponent', { line: this.line, checklist: list.desc });
             exceptionDetailModel.onWillDismiss((data: any) => {
                 if (data && (data.selected === false)) {
                     list.value = '';

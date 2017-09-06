@@ -7,32 +7,77 @@ import { BookLibraryConfig } from '../config/book-library.config';
 import { MyHttpService } from '../../../../../core/services/myHttp.service';
 import { LanguageConfig } from '../config/language.config';
 import { Http } from '@angular/http';
+import { TranslateService } from '@ngx-translate/core';
 
+export class TranslateMode {
+    error: string;
+    errorMsg1: string;
+    errorMsg2: string;
+    errorMsg3: string;
+    errorMsg4: string;
+    successMsg1: string;
+    successMsg2: string;
+    borrowPromptTitle: string;
+    borrowPromptContent: string;
+    paybackPromptTitle: string;
+    paybackPromptContent: string;
+    cancel: string;
+    confirm: string;
+}
 
 @Injectable()
 export class BookLibraryService {
 
+    translateTexts: TranslateMode = new TranslateMode(); // 记录转换后的文本(简繁体)
     constructor(
         private myHttp: MyHttpService,
         private barcodeScanner: BarcodeScanner,
         private alertCtrl: AlertController,
-        private http: Http
-    ) { }
+        private http: Http,
+        private translate: TranslateService
+    ) {
+        this.translateLanguage();
+    }
 
-    languageType: string = localStorage.getItem('languageType')
-    languageContent = LanguageConfig.settingComponent[this.languageType];
+
+    async translateLanguage() {
+
+        await this.setLanguage();
+
+        this.translate.onLangChange.subscribe(async () => {
+            await this.setLanguage();
+        })
+    }
+
+    async setLanguage() {
+        let res = await this.translate.get(['bookLibrary.error', 'bookLibrary.errorMsg1', 'bookLibrary.errorMsg2', 'bookLibrary.errorMsg3',
+            'bookLibrary.errorMsg4', 'bookLibrary.successMsg1', 'bookLibrary.successMsg2', 'bookLibrary.borrowPromptTitle',
+            'bookLibrary.borrowPromptContent', 'bookLibrary.paybackPromptTitle', 'bookLibrary.paybackPromptContent'
+            , 'bookLibrary.cancel', 'bookLibrary.confirm']).toPromise();
+        this.translateTexts.error = res['bookLibrary.error'];
+        this.translateTexts.errorMsg1 = res['bookLibrary.errorMsg1'];
+        this.translateTexts.errorMsg2 = res['bookLibrary.errorMsg2'];
+        this.translateTexts.errorMsg3 = res['bookLibrary.errorMsg3'];
+        this.translateTexts.errorMsg4 = res['bookLibrary.errorMsg4'];
+        this.translateTexts.successMsg1 = res['bookLibrary.successMsg1'];
+        this.translateTexts.successMsg2 = res['bookLibrary.successMsg2'];
+        this.translateTexts.borrowPromptTitle = res['bookLibrary.borrowPromptTitle'];
+        this.translateTexts.borrowPromptContent = res['bookLibrary.borrowPromptContent'];
+        this.translateTexts.paybackPromptTitle = res['bookLibrary.paybackPromptTitle'];
+        this.translateTexts.paybackPromptContent = res['bookLibrary.paybackPromptContent'];
+        this.translateTexts.cancel = res['bookLibrary.cancel'];
+        this.translateTexts.confirm = res['bookLibrary.confirm'];
+    }
+
+
+
 
     getAllBooks() {
         return this.myHttp.get(BookLibraryConfig.getBooksUrl + '?companyID=' + EnvConfig.companyID);
-        // return new Promise((resolve, reject) => {
-        //     resolve(this.mockBookList);
-        // });
     }
 
     // 从豆瓣获取图书信息
     getBookInfoFromDouban(isbn13: string) {
-        // return this.myHttp.originGet('https://api.douban.com/v2/book/isbn/' + isbn13);
-        // return this.myHttp.get(BookLibraryConfig.doubanUrl + isbn13);
         return this.http.get(BookLibraryConfig.doubanUrl + isbn13).toPromise();
     }
 
@@ -45,33 +90,6 @@ export class BookLibraryService {
     borrowBook(isbn13: string) {
         return this.myHttp.post(BookLibraryConfig.borrowBookUrl, { ISBN13: isbn13 });
     }
-
-
-
-    // 调用摄像头扫描二维码后从豆瓣获取图书信息，返回图书信息
-    // async scanAndGetBookInfo() {
-    //     let scanRes= await this.barcodeScanner.scan({ resultDisplayDuration: 0, showFlipCameraButton: true, showTorchButton: true });
-
-    //     if (scanRes.cancelled) {
-    //         return Promise.reject('camera cancel');
-    //     }
-    //     else if (scanRes.text.length === 13) {
-    //         try {
-    //             return  this.getBookInfoFromDouban(scanRes.text);
-    //             // let newBookObj = this.transformBookInfo(book.json());
-    //             // return newBookObj;
-    //         }
-    //         catch (err) {
-    //             // this.showError('豆瓣上找不到该书籍的信息，请人工输入.');
-    //             // return {};
-    //             return Promise.reject('豆瓣上找不到该书籍的信息，请人工输入.');
-    //         }
-    //     } else if (scanRes.text.length > 0) {
-    //         // this.showError('你所扫描的并不是有效的ISBN码');
-    //         // return {};
-    //         return Promise.reject('你所扫描的并不是有效的ISBN码');
-    //     }
-    // }
 
     // 调用摄像头扫描
     scan() {
@@ -102,7 +120,7 @@ export class BookLibraryService {
 
     showError(msg: string) {
         let confirm = this.alertCtrl.create({
-            title: this.languageContent.error,
+            title: this.translateTexts.error,
             subTitle: msg,
             buttons: ['OK']
         });
@@ -184,3 +202,4 @@ export class BookLibraryService {
         return this.myHttp.get(BookLibraryConfig.getPrivilegeUrl + `?moduleID=${moduleID}`);
     }
 }
+

@@ -10,6 +10,7 @@ import { TranslateModule } from '@ngx-translate/core';
   entryComponents: [
     PhotoViewComponent
   ],
+  exports: [PhotoViewComponent],
   providers: []
 })
 export class PhotoViewComponentModule { }
