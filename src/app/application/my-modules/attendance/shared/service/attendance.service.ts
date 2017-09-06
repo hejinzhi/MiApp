@@ -23,13 +23,11 @@ export class AttendanceService {
     private plugin: PluginService,
     private translate: TranslateService
   ) {
-    this.translate.onLangChange.subscribe(() => {
-      this.subscribeTranslateText()
-    })
+     this.subscribeTranslateText()
   }
 
   subscribeTranslateText() {
-    this.translate.get(['attendance.month', 'not_found',
+    this.translate.stream(['attendance.month', 'not_found',
       'http_error1', 'http_error2', 'http_error3'
     ]).subscribe((res) => {
       this.translateTexts = res;

@@ -1,3 +1,6 @@
+import { User_Logout } from './../../shared/actions/user.action';
+import { MyStore } from './../../shared/store';
+import { Store } from '@ngrx/store';
 import { Component, OnInit } from '@angular/core';
 import { NavController, NavParams, AlertController, App, Platform, IonicPage } from 'ionic-angular';
 
@@ -29,7 +32,8 @@ export class SetComponent implements OnInit {
     private plugin: PluginService,
     private app: App,
     private platform: Platform,
-    private translate: TranslateService
+    private translate: TranslateService,
+    private store$: Store<MyStore>
   ) {
     if (this.platform.is('ios')) {
       this.plf = 'ios';
@@ -126,8 +130,7 @@ export class SetComponent implements OnInit {
               that.jmessage.removeSyncOfflineMessageListener();
               that.jmessage.loginOut();
             }
-            this.removeAutoLogin();
-            // localStorage.removeItem('currentUser');
+            this.store$.dispatch(new User_Logout())
             this.app.getRootNav().setRoot(LoginComponent);
           }
         }
@@ -135,11 +138,7 @@ export class SetComponent implements OnInit {
     });
     confirm.present();
   }
-  removeAutoLogin() {
-    let user = JSON.parse(localStorage.getItem('currentUser'));
-    user.autoLogin = false;
-    localStorage.setItem('currentUser', JSON.stringify(user));
-  }
+
   exit() {
     let that = this;
     let confirm = this.alertCtrl.create({

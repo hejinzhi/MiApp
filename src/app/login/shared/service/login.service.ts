@@ -1,3 +1,4 @@
+import { Store } from '@ngrx/store';
 import { Injectable } from '@angular/core';
 import { AlertController, LoadingController, Loading } from 'ionic-angular';
 
@@ -8,7 +9,8 @@ import { PluginService } from '../../../core/services/plugin.service';
 import { LoginConfig } from '../../shared/config/login.config';
 import { DatabaseService } from '../../../message/shared/service/database.service';
 import { EncryptUtilService } from '../../../core/services/encryptUtil.service';
-
+import { MyStore } from './../../../shared/store';
+import { User_Login, User_Update } from './../../../shared/actions/user.action';
 
 @Injectable()
 export class LoginService {
@@ -21,15 +23,16 @@ export class LoginService {
         private jmessageService: JMessageService,
         private pluginService: PluginService,
         private messageDatabaseService: DatabaseService,
-        private encryptUtilService: EncryptUtilService
+        private encryptUtilService: EncryptUtilService,
+        private store$: Store<MyStore>
     ) {
 
     }
 
 
-    public async login(username: string, password: string) {
+    public async login(username: string, password: string, extra?:any) {
         this.showLoading();
-        let ADLoginSuccess = await this.myADLogin(username, password, false);
+        let ADLoginSuccess = await this.myADLogin(username, password, false, extra);
         if (ADLoginSuccess) {
             let jMsgLoginSuccess = await this.jMessageLogin(username, password, false);
             if (jMsgLoginSuccess) {
@@ -61,9 +64,10 @@ export class LoginService {
         }
     }
 
-    async myADLogin(username: string, password: string, noErrorMsg: boolean = true) {
+    async myADLogin(username: string, password: string, noErrorMsg: boolean = true, extra?:any) {
         this.currentUser = new UserModel(username, password);
-        localStorage.setItem('currentUser', JSON.stringify(this.currentUser));
+        this.currentUser = Object.assign(this.currentUser, extra);
+        this.store$.dispatch(new User_Update(this.currentUser))
         let res;
         try {
             let enUsername = this.encryptUtilService.AesEncrypt(username, this.encryptUtilService.key, this.encryptUtilService.iv);
@@ -90,9 +94,9 @@ export class LoginService {
             this.currentUser.mobile = user.MOBILE;
             this.currentUser.email = user.EMAIL;
             this.currentUser.telephone = user.TELEPHONE;
-            this.currentUser.autoLogin = true;
-            localStorage.setItem('currentUser', JSON.stringify(this.currentUser));
-
+            console.log(this.currentUser);
+            
+            this.store$.dispatch(new User_Login(this.currentUser));
             if (this.pluginService.isCordova()) {
                 //把登陆人的头像保存到本地
                 let myAvatar = await this.messageDatabaseService.getAvatarByUsername(this.currentUser.username);
