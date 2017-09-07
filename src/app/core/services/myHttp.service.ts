@@ -1,23 +1,30 @@
 import { Injectable } from '@angular/core';
 import { AlertController, App } from 'ionic-angular';
+import { Store } from '@ngrx/store';
 import { Http, Headers, RequestOptions } from '@angular/http';
 import { LoginConfig } from '../../login/shared/config/login.config';
 import { LoginComponent } from '../../login/login.component';
 import { LanguageConfig } from '../config/language.config';
 import { EncryptUtilService } from './encryptUtil.service';
 
+import { MyStore } from './../../shared/store';
+import { UserState } from './../../shared/models/user.model';
+
 @Injectable()
 export class MyHttpService {
 
     languageType: string = localStorage.getItem('languageType');
     languageContent = LanguageConfig.MyHttpService[this.languageType];
-
+    user:UserState
     constructor(
         private http: Http,
         private alertCtrl: AlertController,
         private app: App,
-        private encryptUtilService: EncryptUtilService
-    ) { }
+        private encryptUtilService: EncryptUtilService,
+        private store$: Store<MyStore>
+    ) { 
+        this.store$.select('userReducer').subscribe((user:UserState) => this.user = user);
+    }
 
     postWithoutToken(url: string, body: any) {
         let headers = new Headers({ 'Content-Type': 'application/json; charset=utf-8' });
@@ -94,9 +101,8 @@ export class MyHttpService {
     }
 
     public getNewToken() {
-        let user = JSON.parse(localStorage.getItem('currentUser'));
-        let enUsername = this.encryptUtilService.AesEncrypt(user.username, this.encryptUtilService.key, this.encryptUtilService.iv);
-        let enPassword = this.encryptUtilService.AesEncrypt(user.password, this.encryptUtilService.key, this.encryptUtilService.iv);
+        let enUsername = this.encryptUtilService.AesEncrypt(this.user.username, this.encryptUtilService.key, this.encryptUtilService.iv);
+        let enPassword = this.encryptUtilService.AesEncrypt(this.user.password, this.encryptUtilService.key, this.encryptUtilService.iv);
         return this.postWithoutToken(LoginConfig.loginUrl, { userName: enUsername, password: enPassword });
     }
 

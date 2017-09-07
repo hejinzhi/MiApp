@@ -1,3 +1,4 @@
+import { Store } from '@ngrx/store';
 import { Injectable } from '@angular/core';
 import { Platform, ToastController, LoadingController, AlertController } from 'ionic-angular';
 import { TranslateService } from '@ngx-translate/core';
@@ -8,6 +9,9 @@ import { CodePush } from '@ionic-native/code-push';
 import { Network } from '@ionic-native/network';
 import { SyncStatus } from 'ionic-native';
 import { tify, sify } from 'chinese-conv';
+
+import { MyStore } from './../../shared/store';
+import { User_ChineseConv } from "./../../shared/actions/user.action";
 
 @Injectable()
 export class PluginService {
@@ -20,7 +24,8 @@ export class PluginService {
     private codePush: CodePush,
     private network: Network,
     private platform: Platform,
-    private translate: TranslateService
+    private translate: TranslateService,
+    private store$: Store<MyStore>
   ) {
     this.translate.onLangChange.subscribe(() => {
       this.subscribeTranslateText()
@@ -36,7 +41,7 @@ export class PluginService {
    */
   chineseConvUserMes() {
     if(!localStorage.getItem('currentUser')) return
-    localStorage.setItem('currentUser',this.chineseConv(JSON.parse(localStorage.getItem('currentUser'))))
+    this.store$.dispatch(new User_ChineseConv(JSON.parse(this.chineseConv(JSON.parse(localStorage.getItem('currentUser'))))));
   }
 
   /**
