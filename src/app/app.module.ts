@@ -7,7 +7,10 @@ import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { HttpModule, Http } from '@angular/http';
 import 'rxjs/add/operator/toPromise';
+import { EffectsModule } from "@ngrx/effects";
+import { StoreModule } from "@ngrx/store";
 
+import { userReducer } from "./shared/reducers/user.reducer";
 import { MyAppComponent } from './app.component';
 import { ApplicationModule } from './application/application.module';
 import { MessageModule } from './message/message.module';
@@ -38,6 +41,7 @@ export function createTranslateLoader(http: Http) {
         deps: [Http]
       }
     }),
+    StoreModule.provideStore({userReducer}),
     BrowserModule,
     IonicModule.forRoot(MyAppComponent, {
       tabsHideOnSubPages: true,

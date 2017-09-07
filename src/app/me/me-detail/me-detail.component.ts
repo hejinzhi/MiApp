@@ -1,3 +1,6 @@
+import { User_Update } from './../../shared/actions/user.action';
+import { MyStore } from './../../shared/store';
+import { Store } from '@ngrx/store';
 import { Component, OnInit } from '@angular/core';
 import { NavController, NavParams, ActionSheetController, LoadingController, Loading, IonicPage } from 'ionic-angular';
 import { BarcodeScanner } from '@ionic-native/barcode-scanner';
@@ -6,6 +9,8 @@ import { JMessageService } from '../../core/services/jmessage.service'
 import { PluginService } from '../../core/services/plugin.service';
 import { MeService } from '../shared/service/me.service';
 import { TranslateService } from '@ngx-translate/core';
+
+import { UserState } from './../../shared/models/user.model';
 
 import { LanguageConfig } from '../shared/config/language.config';
 
@@ -29,10 +34,11 @@ export class MeDetailComponent implements OnInit {
     private meService: MeService,
     private barcodeScanner: BarcodeScanner,
     private camera: Camera,
-    private translate: TranslateService
+    private translate: TranslateService,
+    private store$: Store<MyStore>
   ) { }
 
-  user: any;
+  user: UserState;
   base64Image: string;
   loading: Loading;
   translateTexts: any;
@@ -62,14 +68,13 @@ export class MeDetailComponent implements OnInit {
     let temp = await this.plugin.getNewPhoto(type, size).catch((e) => console.log(e));
     if (!temp) return;
     temp = 'data:image/jpeg;base64,' + temp;
-    this.user.avatarUrl = temp;
     this.showLoading();
     await this.meService.setAvatar(temp).catch((err) => {
       console.log(err);
       this.plugin.errorDeal(err);
     });
     await this.meService.setLocalAvatar(this.user.username, temp);
-    localStorage.setItem('currentUser', JSON.stringify(this.user));
+    this.store$.dispatch(new User_Update({avatarUrl:temp}));
     this.loading.dismiss();
     // this.user.avatarurl = await this.plugin.getNewPhoto(type, size);
     // if (!this.user.avatarurl) return;
@@ -195,7 +200,7 @@ export class MeDetailComponent implements OnInit {
     this.plugin.showToast(this.translateTexts['meComponent.correctsuccess'])
   }
   updateUser() {
-    localStorage.setItem('currentUser', JSON.stringify(this.user))
+    this.store$.dispatch(new User_Update(this.user));
   }
   isSame() {
     this.plugin.showToast(this.translateTexts['meComponent.correctsame']);
