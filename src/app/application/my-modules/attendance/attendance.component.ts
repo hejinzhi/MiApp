@@ -4,7 +4,6 @@ import { NavController, NavParams, App, Platform, IonicPage } from 'ionic-angula
 
 import { AttendanceService } from './shared/service/attendance.service';
 
-import { LanguageTypeConfig } from './shared/config/language-type.config';
 
 @IonicPage()
 @Component({
@@ -21,8 +20,6 @@ export class AttendanceComponent {
   tab4Root = 'LeaveMessageMenuComponent';
   tab5Root = 'StatisticsComponent';
 
-  fontType:string = localStorage.getItem('languageType')
-  fontContent = LanguageTypeConfig.attendanceComponent[this.fontType];
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,

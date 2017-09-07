@@ -3,16 +3,12 @@ import { NavController, NavParams } from 'ionic-angular';
 
 import { MyFormModel } from '../shared/models/my-form.model';
 
-import { LanguageTypeConfig } from '../shared/config/language-type.config';
 
 @Component({
   selector: 'sg-list-filter',
   templateUrl: 'list-filter.component.html',
 })
 export class ListFilterComponent implements OnInit {
-
-  fontType:string = localStorage.getItem('languageType')
-  fontContent = LanguageTypeConfig.listFilterComponent[this.fontType];
 
   @Input() myset: any;
 

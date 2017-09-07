@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { NavController, NavParams, IonicPage } from 'ionic-angular';
 
 import { FormType } from '../shared/config/form-type';
-import { LanguageTypeConfig } from '../shared/config/language-type.config';
 
 @IonicPage()
 @Component({

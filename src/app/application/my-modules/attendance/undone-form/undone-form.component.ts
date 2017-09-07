@@ -7,7 +7,6 @@ import { ValidateService } from '../../../../core/services/validate.service';
 import { PluginService } from '../../../../core/services/plugin.service';
 import { AttendanceService } from '../shared/service/attendance.service';
 import { HolidayType } from '../shared/config/holiday-type';
-import { LanguageTypeConfig } from '../shared/config/language-type.config';
 
 import { MyValidatorModel } from '../../../../shared/models/my-validator.model';
 import { MyFormModel } from '../shared/models/my-form.model';
@@ -18,9 +17,6 @@ import { MyFormModel } from '../shared/models/my-form.model';
   templateUrl: 'undone-form.component.html'
 })
 export class UndoneFormComponent {
-
-  fontType: string = localStorage.getItem('languageType')
-  fontContent = LanguageTypeConfig.undoneFormComponent[this.fontType];
 
   leaveMes: {
     absentType: string
@@ -93,7 +89,7 @@ export class UndoneFormComponent {
   }
   subscribeTranslateText() {
     this.translate.get(['attendance.absentType_required_err', 'attendance.reason_required_err', 'attendance.reason_minlength_err', 'attendance.startTime_required_err',
-      'attendance.endTime_required_err']).subscribe((res) => {
+      'attendance.endTime_required_err', 'attendance.submit_succ']).subscribe((res) => {
         this.translateTexts = res;
       })
   }
@@ -149,7 +145,7 @@ name: 'endTime', valiItems: [
     loading.dismiss()
     if (res.status) {
       this.errTip = '';
-      this.plugin.showToast(this.fontContent.submit_succ);
+      this.plugin.showToast(this.translateTexts['submit_succ']);
       this.navCtrl.popToRoot();
     } else {
       this.errTip = res.content;

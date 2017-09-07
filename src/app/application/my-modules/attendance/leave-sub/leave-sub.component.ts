@@ -5,17 +5,12 @@ import { TranslateService } from '@ngx-translate/core';
 import { AttendanceService } from '../shared/service/attendance.service';
 import { PluginService }   from '../../../../core/services/plugin.service';
 
-import { LanguageTypeConfig } from '../shared/config/language-type.config';
-
 @IonicPage()
 @Component({
   selector:'sg-leave-sub',
   templateUrl: 'leave-sub.component.html'
 })
 export class LeaveSubComponent {
-
-  fontType:string = localStorage.getItem('languageType')
-  fontContent = LanguageTypeConfig.leaveSubComponent[this.fontType];
   translateTexts: any = {};
 
   constructor(
