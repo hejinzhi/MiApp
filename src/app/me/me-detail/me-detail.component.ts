@@ -95,8 +95,8 @@ export class MeDetailComponent implements OnInit {
             this.getNewPhoto(0, 400);
           }
         }, {
-          text: this.languageContent.cancel,
-          role: this.languageContent.cancel,
+          text: this.translateTexts['cancel'],
+          role: this.translateTexts['cancel'],
           handler: () => {
             console.log('Cancel clicked');
           }
