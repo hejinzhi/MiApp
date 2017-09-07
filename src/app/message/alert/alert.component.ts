@@ -14,9 +14,6 @@ import { LanguageConfig } from '../shared/config/language.config';
 
 export class AlertComponent implements OnInit {
 
-  languageType: string = localStorage.getItem('languageType');
-  languageContent = LanguageConfig.AlertComponent[this.languageType];
-
   userNickName: string;
   userName: string;
   list: any;

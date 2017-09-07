@@ -17,8 +17,6 @@ import { UserState } from './../shared/models/user.model';
 export class MeComponent implements OnDestroy{
 
   user:UserState;
-  languageType: string = localStorage.getItem('languageType');
-  languageContent = LanguageConfig.meComponent[this.languageType];
 
   mySubscription: Subscription
   constructor(

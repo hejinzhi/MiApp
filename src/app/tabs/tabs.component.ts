@@ -18,8 +18,6 @@ import { TranslateService } from '@ngx-translate/core';
 })
 export class TabsComponent implements OnInit {
     @ViewChild('mainTabs') tabRef: Tabs;
-    languageType: string = localStorage.getItem('languageType');
-    languageContent = LanguageConfig.tabComponent[this.languageType];
     tab1Root = MessageComponent;
     tab2Root = ApplicationComponent;
     tab3Root = ContactComponent;
