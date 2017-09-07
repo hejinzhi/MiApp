@@ -7,7 +7,6 @@ import * as echarts from 'echarts';
 import { PluginService }   from '../../../../core/services/plugin.service';
 import { AttendanceService } from '../shared/service/attendance.service';
 
-import { LanguageTypeConfig } from '../shared/config/language-type.config';
 
 class Chart {
   name: string;
@@ -20,9 +19,6 @@ class Chart {
   templateUrl: 'statistics.component.html'
 })
 export class StatisticsComponent {
-
-  fontType:string = localStorage.getItem('languageType')
-  fontContent = LanguageTypeConfig.statisticsComponent[this.fontType];
 
   totalOT:any[];
   totalLeave:any[];
@@ -194,8 +190,6 @@ export class StatisticsComponent {
   async editMonthLeave() {
     let res: any = await this.attendanceService.getOffDutyTotalDays();
     if (res.status) {
-      console.log(res);
-      
       this.myLeave = res.content.slice(0,new Date().getMonth()+1);
       this.myLeave = this.zeroNotShow(this.myLeave);
       let nowMonthLeave = this.myLeave[this.myLeave.length-1]

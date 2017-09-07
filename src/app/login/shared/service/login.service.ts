@@ -94,8 +94,6 @@ export class LoginService {
             this.currentUser.mobile = user.MOBILE;
             this.currentUser.email = user.EMAIL;
             this.currentUser.telephone = user.TELEPHONE;
-            console.log(this.currentUser);
-            
             this.store$.dispatch(new User_Login(this.currentUser));
             if (this.pluginService.isCordova()) {
                 //把登陆人的头像保存到本地

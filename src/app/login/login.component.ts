@@ -30,7 +30,7 @@ export class LoginComponent {
   ionViewDidLoad() {
     this.store$.select('userReducer').subscribe((user:UserState) => {
       console.log(user);
-      if(user.username) {
+      if(user.nickname) {
         this.registerCredentials = Object.assign(this.registerCredentials, user);
       }
     });
