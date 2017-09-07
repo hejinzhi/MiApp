@@ -11,7 +11,6 @@ import { MyValidatorModel } from '../../../../shared/models/my-validator.model';
 import { FormType } from '../shared/config/form-type';
 
 import { AttendanceConfig } from '../shared/config/attendance.config';
-import { LanguageTypeConfig } from '../shared/config/language-type.config';
 
 @IonicPage()
 @Component({
@@ -25,9 +24,6 @@ export class SearchFormComponent {
     endTime: string,
     form_No: string,
   }
-
-  fontType:string = localStorage.getItem('languageType')
-  fontContent = LanguageTypeConfig.searchFormComponent[this.fontType];
 
   selectMaxYear = AttendanceConfig.SelectedMaxYear;
   todo: FormGroup;

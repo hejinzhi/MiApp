@@ -12,7 +12,6 @@ import { MyFormModel } from '../shared/models/my-form.model';
 import { HolidayType } from '../shared/config/holiday-type';
 
 import { AttendanceConfig } from '../shared/config/attendance.config';
-import { LanguageTypeConfig } from '../shared/config/language-type.config';
 
 @IonicPage()
 @Component({
@@ -34,8 +33,7 @@ export class OverTimeFormComponent {
     No:'',
     data:{}
   }
-  fontType:string = localStorage.getItem('languageType')
-  fontContent = LanguageTypeConfig.overTimeFormComponent[this.fontType];
+
   dutyType: string;
   haveSaved:boolean;
   showReset:boolean;

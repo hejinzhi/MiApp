@@ -1,4 +1,4 @@
-import { User_Logout } from './../../shared/actions/user.action';
+import { User_Logout, User_Update } from './../../shared/actions/user.action';
 import { MyStore } from './../../shared/store';
 import { Store } from '@ngrx/store';
 import { Component, OnInit } from '@angular/core';
@@ -9,8 +9,6 @@ import { PatternLockComponent } from '../../login/pattern-lock/pattern-lock.comp
 import { JMessageService } from '../../core/services/jmessage.service';
 import { PluginService } from '../../core/services/plugin.service';
 import { TranslateService } from '@ngx-translate/core';
-
-import { LanguageConfig } from '../shared/config/language.config';
 
 @IonicPage()
 @Component({
@@ -74,7 +72,7 @@ export class SetComponent implements OnInit {
       text: this.translateTexts['confirm'],
       handler: (data: string) => {
         this.translate.use(data);
-        localStorage.setItem('preferLang',data);
+        this.store$.dispatch(new User_Update({ preferLang: data}))
         this.plugin.showToast(this.translateTexts['change_to']+this.translateTexts['meComponent.'+data])
       }
     });

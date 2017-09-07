@@ -15,7 +15,6 @@ import { MyValidatorModel } from '../../../../shared/models/my-validator.model';
 import { HolidayType } from '../shared/config/holiday-type';
 
 import { AttendanceConfig } from '../shared/config/attendance.config';
-import { LanguageTypeConfig } from '../shared/config/language-type.config';
 
 @IonicPage()
 @Component({
@@ -41,10 +40,6 @@ export class BusinessFormComponent {
     No: '',
     data: {}
   }
-
-  fontType: string = localStorage.getItem('languageType')
-  fontContent = LanguageTypeConfig.businessFormComponent[this.fontType];
-
   startHourRange: string = '';
   endHourRange: string = '';
   errTip: string = '';

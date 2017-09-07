@@ -1,3 +1,4 @@
+import { TranslateService } from '@ngx-translate/core';
 import { Component } from '@angular/core';
 import { NavController, NavParams, IonicPage } from 'ionic-angular';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
@@ -11,7 +12,6 @@ import { MyValidatorModel } from '../../../../shared/models/my-validator.model';
 import { FormType } from '../shared/config/form-type';
 
 import { AttendanceConfig } from '../shared/config/attendance.config';
-import { LanguageTypeConfig } from '../shared/config/language-type.config';
 
 @IonicPage()
 @Component({
@@ -19,10 +19,6 @@ import { LanguageTypeConfig } from '../shared/config/language-type.config';
   templateUrl: 'detail-between-form.component.html'
 })
 export class DetailBetweenFormComponent {
-
-  fontType:string = localStorage.getItem('languageType')
-  fontContent = LanguageTypeConfig.detailBetweenFormComponent[this.fontType];
-
   betweenMes: {
     startTime: string,
     endTime: string,
@@ -33,13 +29,15 @@ export class DetailBetweenFormComponent {
   timeError:string ='';
   myValidators:{};
   MyValidatorControl: MyValidatorModel;
+  translateTexts: any = {};
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
     private formBuilder: FormBuilder,
     private validateService: ValidateService,
     private attendanceService: AttendanceService,
-    private plugin: PluginService
+    private plugin: PluginService,
+    private translate: TranslateService
   ) { }
 
   ionViewDidLoad() {
@@ -67,13 +65,22 @@ export class DetailBetweenFormComponent {
       this.todo.controls[prop].valueChanges.subscribe((value: any) => this.check(value, prop));
     }
   }
+
+  subscribeTranslateText() {
+    this.translate.get(['attendance.startTime_dateNotBigger_err', 'attendance.endTime_DateNotSmaller_err',
+    'attendance.no_swipe','attendance.no_att_detail'
+  ]).subscribe((res) => {
+        this.translateTexts = res;
+      })
+  }
+
   initValidator() {
     let newValidator = new MyValidatorModel([
       {name:'startTime',valiItems:[
-        {valiName:'DateNotBigger',errMessage:this.fontContent.startTime_dateNotBigger_err,valiValue:'endTime'}
+        {valiName:'DateNotBigger',errMessage:this.translateTexts['startTime_dateNotBigger_err'],valiValue:'endTime'}
       ]},
       {name:'endTime',valiItems:[
-        {valiName:'DateNotSmaller',errMessage:this.fontContent.endTime_DateNotSmaller_err,valiValue:'startTime'}
+        {valiName:'DateNotSmaller',errMessage:this.translateTexts['endTime_DateNotSmaller_err'],valiValue:'startTime'}
       ]}
     ],this.betweenMes)
     return newValidator;
@@ -111,7 +118,7 @@ export class DetailBetweenFormComponent {
           swipe_note:res.content
         })
       } else {
-        this.plugin.showToast(this.fontContent.no_swipe)
+        this.plugin.showToast(this.translateTexts['no_swipe'])
       }
     }
     if(this.type === formType.attendance_detail.type) {
@@ -125,7 +132,7 @@ export class DetailBetweenFormComponent {
           attendance_detail:res.content
         })
       } else {
-        this.plugin.showToast(this.fontContent.no_att_detail)
+        this.plugin.showToast(this.translateTexts['no_att_detail'])
       }
     }
     return false;

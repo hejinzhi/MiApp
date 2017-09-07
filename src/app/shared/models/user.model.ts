@@ -13,7 +13,8 @@ export interface UserState {
     telephone: string;
     email: string;
     autoLogin: boolean;
-    rememberPWD: boolean
+    rememberPWD: boolean;
+    preferLang: string
 }
 export class UserModel implements UserState{
     id: string;
@@ -30,6 +31,7 @@ export class UserModel implements UserState{
     telephone: string;
     email: string;
     autoLogin: boolean;
+    preferLang: string;
     rememberPWD: boolean;
     constructor(username: string, password: string) {
         this.username = username;

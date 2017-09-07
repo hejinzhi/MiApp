@@ -4,7 +4,6 @@ import { Component, ChangeDetectorRef, OnDestroy } from '@angular/core';
 import { NavController, IonicPage } from 'ionic-angular';
 
 import { BarcodeScanner } from '@ionic-native/barcode-scanner';
-import { LanguageConfig } from './shared/config/language.config';
 
 import { MyStore } from './../shared/store';
 import { UserState } from './../shared/models/user.model';
@@ -29,8 +28,7 @@ export class MeComponent implements OnDestroy{
   }
 
   ionViewDidLoad() {
-    this.mySubscription = this.store$.select('userReducer').subscribe((user:UserState) => {this.user = user;console.log(user);
-    });
+    this.mySubscription = this.store$.select('userReducer').subscribe((user:UserState) => this.user = user);
   }
 
   ionViewWillLeave() {
