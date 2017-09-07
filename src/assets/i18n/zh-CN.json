@@ -113,8 +113,8 @@
     "logout": "注销",
     "exitApp": "退出",
     "languageChangeAlertTitle": "语言版本选择",
-    "simple_Chinese": "简体中文",
-    "traditional_Chinese": "繁体中文",
+    "zh-CN": "简体中文",
+    "zh-TW": "繁体中文",
     "reStartAppAlertTitle": "马上重启?",
     "reStartAppAlertMes": "重启后,版本切换才能正式生效",
     "logoutAlertTitle": "注销",
@@ -389,5 +389,6 @@
       "closer": "结案人",
       "keyinNumber": "请输入数值"
     }
-  }
+  },
+  "change_to": "已更改为"
 }
