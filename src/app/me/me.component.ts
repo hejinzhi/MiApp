@@ -1,30 +1,43 @@
-import { Component, ChangeDetectorRef } from '@angular/core';
+import { Subscription } from 'rxjs/rx';
+import { Store } from '@ngrx/store';
+import { Component, ChangeDetectorRef, OnDestroy } from '@angular/core';
 import { NavController, IonicPage } from 'ionic-angular';
 
 import { BarcodeScanner } from '@ionic-native/barcode-scanner';
 import { LanguageConfig } from './shared/config/language.config';
 
+import { MyStore } from './../shared/store';
+import { UserState } from './../shared/models/user.model';
 
 @IonicPage()
 @Component({
   selector: 'sg-me',
   templateUrl: 'me.component.html'
 })
-export class MeComponent {
+export class MeComponent implements OnDestroy{
 
-  user:any;
+  user:UserState;
+
+  mySubscription: Subscription
   constructor(
     public navCtrl: NavController,
     private barcodeScanner: BarcodeScanner,
-    private ref: ChangeDetectorRef
+    private ref: ChangeDetectorRef,
+    private store$: Store<MyStore>
   ) {
 
   }
 
-  ionViewWillEnter() {
-    this.user = JSON.parse(localStorage.getItem('currentUser'));
+  ionViewDidLoad() {
+    this.mySubscription = this.store$.select('userReducer').subscribe((user:UserState) => {this.user = user;console.log(user);
+    });
   }
+
   ionViewWillLeave() {
+    
+  }
+  ngOnDestroy() {
+    this.mySubscription.unsubscribe();
   }
   goSetting(): void {
     this.navCtrl.push('SetComponent', {

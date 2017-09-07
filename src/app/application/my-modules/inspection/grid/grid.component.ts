@@ -4,7 +4,7 @@ import { Component, OnInit, Input, OnChanges, Output, EventEmitter } from '@angu
     selector: 'sg-grid',
     templateUrl: 'grid.component.html'
 })
-export class GridComponent implements OnInit, OnChanges {
+export class GridComponent implements OnInit {
 
 
     // 设置标题信息
@@ -12,13 +12,13 @@ export class GridComponent implements OnInit, OnChanges {
     title: string;
 
     @Output()
-    dataChange: EventEmitter<GridModel[]> = new EventEmitter();
+    dataChange: EventEmitter<GridModel> = new EventEmitter();
 
     // 传递进来的数组
     @Input()
-    data: string[];
+    data: GridModel[];
 
-    showData: Array<GridModel>;
+    // showData: Array<GridModel>;
 
     // 设置右上角的勾是否显示
     toggleCheckbox: boolean = true;
@@ -28,7 +28,7 @@ export class GridComponent implements OnInit, OnChanges {
     mode: number = Mode.MODULE_STATION;
 
     constructor() {
-        this.showData = new Array();
+        // this.showData = new Array();
     }
 
     ngOnInit() {
@@ -38,29 +38,29 @@ export class GridComponent implements OnInit, OnChanges {
     onTap(item: GridModel) {
         if (this.mode == Mode.MODULE_STATION) {
             item.showCheckbox = !item.showCheckbox;
-            this.dataChange.emit(this.showData);
+            this.dataChange.emit(item);
         } else {
-            console.log(item);
+            this.dataChange.emit(item);
         }
 
     }
 
-    ngOnChanges() {
-        let temp: GridModel[] = [];
-        this.data.forEach((data) => {
-            let showFlag: boolean;
-            if (this.mode === Mode.MODULE_STATION) {
-                showFlag = true;
-            } else {
-                showFlag = false;
-            }
-            temp.push({
-                title: data,
-                showCheckbox: showFlag
-            });
-        });
-        this.showData = temp;
-    }
+    // ngOnChanges() {
+    //     let temp: GridModel[] = [];
+    //     this.data.forEach((data) => {
+    //         let showFlag: boolean;
+    //         if (this.mode === Mode.MODULE_STATION) {
+    //             showFlag = true;
+    //         } else {
+    //             showFlag = false;
+    //         }
+    //         temp.push({
+    //             title: data,
+    //             showCheckbox: showFlag
+    //         });
+    //     });
+    //     this.showData = temp;
+    // }
 
 
 }

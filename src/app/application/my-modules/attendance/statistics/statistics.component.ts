@@ -7,7 +7,6 @@ import * as echarts from 'echarts';
 import { PluginService }   from '../../../../core/services/plugin.service';
 import { AttendanceService } from '../shared/service/attendance.service';
 
-import { LanguageTypeConfig } from '../shared/config/language-type.config';
 
 class Chart {
   name: string;
@@ -20,9 +19,6 @@ class Chart {
   templateUrl: 'statistics.component.html'
 })
 export class StatisticsComponent {
-
-  fontType:string = localStorage.getItem('languageType')
-  fontContent = LanguageTypeConfig.statisticsComponent[this.fontType];
 
   totalOT:any[];
   totalLeave:any[];

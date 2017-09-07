@@ -1,3 +1,6 @@
+import { User_Logout } from './../../shared/actions/user.action';
+import { MyStore } from './../../shared/store';
+import { Store } from '@ngrx/store';
 import { Component, OnInit } from '@angular/core';
 import { NavController, NavParams, AlertController, App, Platform, IonicPage } from 'ionic-angular';
 
@@ -27,7 +30,8 @@ export class SetComponent implements OnInit {
     private plugin: PluginService,
     private app: App,
     private platform: Platform,
-    private translate: TranslateService
+    private translate: TranslateService,
+    private store$: Store<MyStore>
   ) {
     if (this.platform.is('ios')) {
       this.plf = 'ios';
@@ -36,19 +40,11 @@ export class SetComponent implements OnInit {
     }
   }
   ngOnInit() {
-    this.translate.stream(['meComponent.languageChangeAlertTitle', 'meComponent.simple_Chinese', 'meComponent.traditional_Chinese', 'cancel', 'confirm'
+    this.translate.stream(['meComponent.languageChangeAlertTitle', 'meComponent.zh-CN', 'meComponent.zh-TW', 'cancel', 'confirm'
       , 'meComponent.reStartAppAlertTitle', 'meComponent.reStartAppAlertMes', 'meComponent.logoutAlertTitle', 'meComponent.logoutAlertMes'
-      , 'meComponent.exitAlertTitle', 'meComponent.exitAlertMes', 'Y', 'N']).subscribe((res) => {
+      , 'meComponent.exitAlertTitle', 'meComponent.exitAlertMes', 'Y', 'N', 'change_to']).subscribe((res) => {
         this.translateTexts = res;
       })
-
-    // this.translate.onLangChange.subscribe(() => {
-    //   this.translate.get(['meComponent.languageChangeAlertTitle', 'meComponent.simple_Chinese', 'meComponent.traditional_Chinese', 'cancel', 'confirm'
-    //     , 'meComponent.reStartAppAlertTitle', 'meComponent.reStartAppAlertMes', 'meComponent.logoutAlertTitle', 'meComponent.logoutAlertMes'
-    //     , 'meComponent.exitAlertTitle', 'meComponent.exitAlertMes', 'Y', 'N']).subscribe((res) => {
-    //       this.translateTexts = res;
-    //     })
-    // });
   }
 
   checkUpdate() {
@@ -62,13 +58,13 @@ export class SetComponent implements OnInit {
     alert.setTitle(this.translateTexts['meComponent.languageChangeAlertTitle']);
     alert.addInput({
       type: 'radio',
-      label: this.translateTexts['meComponent.simple_Chinese'],
+      label: this.translateTexts['meComponent.zh-CN'],
       value: 'zh-CN',
       checked: lang === 'ZH-CN'
     });
     alert.addInput({
       type: 'radio',
-      label: this.translateTexts['meComponent.traditional_Chinese'],
+      label: this.translateTexts['meComponent.zh-TW'],
       value: 'zh-TW',
       checked: lang === 'ZH-TW'
     });
@@ -79,7 +75,7 @@ export class SetComponent implements OnInit {
       handler: (data: string) => {
         this.translate.use(data);
         localStorage.setItem('preferLang',data);
-        this.plugin.showToast('已更改为'+data)
+        this.plugin.showToast(this.translateTexts['change_to']+this.translateTexts['meComponent.'+data])
       }
     });
     alert.present();
@@ -132,8 +128,7 @@ export class SetComponent implements OnInit {
               that.jmessage.removeSyncOfflineMessageListener();
               that.jmessage.loginOut();
             }
-            this.removeAutoLogin();
-            // localStorage.removeItem('currentUser');
+            this.store$.dispatch(new User_Logout())
             this.app.getRootNav().setRoot(LoginComponent);
           }
         }
@@ -141,11 +136,7 @@ export class SetComponent implements OnInit {
     });
     confirm.present();
   }
-  removeAutoLogin() {
-    let user = JSON.parse(localStorage.getItem('currentUser'));
-    user.autoLogin = false;
-    localStorage.setItem('currentUser', JSON.stringify(user));
-  }
+
   exit() {
     let that = this;
     let confirm = this.alertCtrl.create({

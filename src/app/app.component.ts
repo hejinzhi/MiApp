@@ -1,3 +1,5 @@
+import { Store } from '@ngrx/store';
+import { ChecklistComponent } from './application/my-modules/inspection/checklist/checklist.component';
 import { IpqaComponent } from './application/my-modules/inspection/ipqa/ipqa.component';
 import { Component, ViewChild, enableProdMode } from '@angular/core';
 import { Platform, Nav, Keyboard, IonicApp, MenuController, App } from 'ionic-angular';
@@ -16,6 +18,9 @@ import { JPushService } from './core/services/jpush.service'
 import { EnvConfig } from './shared/config/env.config';
 import { LoginService } from './login/shared/service/login.service';
 
+import { UserState } from './shared/models/user.model';
+import { MyStore } from './shared/store';
+
 declare var cordova: any;
 declare var window: any;
 
@@ -27,7 +32,7 @@ export class MyAppComponent {
     rootPage: any;
     backButtonPressed: boolean = false;  //用于判断返回键是否触发
     @ViewChild(Nav) nav: Nav;
-
+    user: UserState;
     constructor(private platform: Platform,
         private statusBar: StatusBar,
         private splashScreen: SplashScreen,
@@ -39,16 +44,36 @@ export class MyAppComponent {
         private app: App,
         private jPushService: JPushService,
         private loginService: LoginService,
-        private translate: TranslateService
+        private translate: TranslateService,
+        private store$: Store<MyStore>
     ) {
-
+        this.store$.select('userReducer').subscribe((user:UserState) => {
+            this.user = user
+        })
         // if (platform.is('cordova')) {
-        //   enableProdMode();
+        //     enableProdMode();
         // }
 
 
         platform.ready().then(async () => {
+            // test
             // this.rootPage = IpqaComponent;
+
+            // statusBar.styleDefault();
+            // splashScreen.hide();
+
+            // cordova.plugins.backgroundMode.setDefaults({
+            //     title: 'MiOA',
+            //     text: 'MiOA正在后台运行',
+            //     icon: 'icon',// this will look for icon.png in platforms/android/res/drawable|mipmap
+            //     // color: String // hex format like 'F14F4D'
+            //     resume: true,
+            //     hidden: false,
+            //     // bigText: 'MiOA正在后台运行 bigText'
+            // });
+            // cordova.plugins.backgroundMode.setEnabled(true);
+            //end test
+
             statusBar.styleDefault();
             splashScreen.hide();
             this.jMessage.init();
@@ -98,16 +123,15 @@ export class MyAppComponent {
     }
 
     async appInit() {
-        let user = JSON.parse(localStorage.getItem('currentUser'));
-        if (user) {
-            let ADloginSuccess = await this.loginService.myADLogin(user.username, user.password);
+        if (this.user.username && this.user.password) {
+            let ADloginSuccess = await this.loginService.myADLogin(this.user.username, this.user.password);
             if (ADloginSuccess) {
-                let jMsgLoginSuccess = await this.loginService.jMessageLogin(user.username, user.password);
-                if (jMsgLoginSuccess && user.myNineCode) {
+                let jMsgLoginSuccess = await this.loginService.jMessageLogin(this.user.username, this.user.password);
+                if (jMsgLoginSuccess && this.user.myNineCode) {
                     // 已经有用户信息和设定为要验证手势密码
                     this.rootPage = PatternLockComponent;
                     // this.loginJmes();
-                } else if (jMsgLoginSuccess && user.autoLogin) {
+                } else if (jMsgLoginSuccess && this.user.autoLogin) {
                     this.rootPage = TabsComponent;
                     // this.loginJmes();
                 } else {

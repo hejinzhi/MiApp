@@ -1,10 +1,13 @@
 import { Component } from '@angular/core';
 import { NavController } from 'ionic-angular';
-
+import { Store } from '@ngrx/store';
 
 import { TabsComponent } from '../tabs/tabs.component';
 import { LoginService } from './shared/service/login.service';
 import { JMessageService } from '../core/services/jmessage.service';
+
+import { MyStore } from './../shared/store';
+import { UserState } from './../shared/models/user.model';
 
 declare var window: any;
 
@@ -17,21 +20,27 @@ export class LoginComponent {
   constructor(
     public navCtrl: NavController,
     private loginService: LoginService,
-    private jmessageService: JMessageService
+    private jmessageService: JMessageService,
+    private store$: Store<MyStore>
   ) {
   }
   appVersion: string;
-  registerCredentials = { username: 'jinzhi.he', password: 'pass' };
+  registerCredentials = { username: 'jinzhi.he', password: 'pass', rememberPWD: false, autoLogin: false };
 
   ionViewDidLoad() {
+    this.store$.select('userReducer').subscribe((user:UserState) => {
+      console.log(user);
+      if(user.nickname) {
+        this.registerCredentials = Object.assign(this.registerCredentials, user);
+      }
+    });
     this.appVersion = localStorage.getItem('appVersion');
-    if (!localStorage.getItem('currentUser')) return;
-    let user = JSON.parse(localStorage.getItem('currentUser'));
-    ({ username: this.registerCredentials.username, password: this.registerCredentials.password } = user);
   }
 
   public async login() {
-    let loginSuccess = await this.loginService.login(this.registerCredentials.username, this.registerCredentials.password);
+    let loginSuccess = await this.loginService.login(this.registerCredentials.username, this.registerCredentials.password,{
+      rememberPWD: this.registerCredentials.rememberPWD, autoLogin: this.registerCredentials.autoLogin
+    });
     if (loginSuccess) {
       this.navCtrl.setRoot(TabsComponent);
     } else {

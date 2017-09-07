@@ -8,7 +8,7 @@
     <ion-item>
       <ion-label>请选择线别:</ion-label>
       <ion-select [(ngModel)]="line" (ionChange)="onSelectChange($event)">
-        <ion-option [value]="l" *ngFor="let l of lines">{{l}}</ion-option>
+        <ion-option [value]="line.LINE_NAME" *ngFor="let line of lines">{{line.LINE_NAME}}</ion-option>
       </ion-select>
     </ion-item>
   </ion-list>
@@ -18,5 +18,11 @@
   <div class="next-button" *ngIf="stations.length >0">
     <button ion-button block (tap)="goToChooseStationPage()">下一步</button>
   </div>
-  <!-- <div class="test">dasdsada</div> -->
+  <!-- <ion-card>
+    <ion-card-content>
+      <p>1. 是否每個工作站的靜電皮均接地,作業員是否佩戴靜電環(靜電環/人體綜合靜電測試是否每天進行測試)</p>
+      <p>嚴重度:Major</p>
+    </ion-card-content>
+    <sg-checkbox [selectOptions]="selectOptions" (selectedValue)="selectedValue($event)"></sg-checkbox>
+  </ion-card> -->
 </ion-content>
