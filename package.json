@@ -125,7 +125,8 @@
             "phonegap-plugin-barcodescanner": {},
             "jmessage-phonegap-plugin": {
                 "APP_KEY": "c35bdfd0449ed461f7adad98"
-            }
+            },
+            "cordova-plugin-android-permissions": {}
         }
     }
 }

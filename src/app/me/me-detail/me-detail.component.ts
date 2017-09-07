@@ -16,9 +16,6 @@ import { LanguageConfig } from '../shared/config/language.config';
 })
 export class MeDetailComponent implements OnInit {
 
-  languageType: string = localStorage.getItem('languageType');
-  languageContent = LanguageConfig.MeDetailComponent[this.languageType];
-
   errMes: string
   constructor(public navCtrl: NavController,
     public navParams: NavParams,

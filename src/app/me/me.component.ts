@@ -13,8 +13,6 @@ import { LanguageConfig } from './shared/config/language.config';
 export class MeComponent {
 
   user:any;
-  languageType: string = localStorage.getItem('languageType');
-  languageContent = LanguageConfig.meComponent[this.languageType];
   constructor(
     public navCtrl: NavController,
     private barcodeScanner: BarcodeScanner,

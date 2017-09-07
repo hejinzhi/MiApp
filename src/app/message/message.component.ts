@@ -27,8 +27,6 @@ declare var window: any;
 
 export class MessageComponent implements OnInit {
 
-  languageType: string = localStorage.getItem('languageType');
-  languageContent = LanguageConfig.MessageComponent[this.languageType];
   msgListItem: MessageModel[] = [];
   historyMsg: any[] = []; // 在app.component.ts被赋值
   messageListItem: any[];

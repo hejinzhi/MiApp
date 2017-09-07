@@ -16,8 +16,6 @@ import { LanguageConfig } from '../shared/config/language.config';
 })
 export class SetComponent implements OnInit {
 
-  languageType: string = localStorage.getItem('languageType');
-  languageContent = LanguageConfig.setComponent[this.languageType];
   plf: string; // 判断是什么平台
   translateTexts: any;
 
