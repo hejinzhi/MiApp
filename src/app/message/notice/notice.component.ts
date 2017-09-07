@@ -12,9 +12,6 @@ import { LanguageConfig } from '../shared/config/language.config';
 
 export class NoticeComponent implements OnInit {
 
-  languageType: string = localStorage.getItem('languageType');
-  languageContent = LanguageConfig.NoticeComponent[this.languageType];
-
   fromUserNickName: string;
   fromUserName: string;
   list: any;

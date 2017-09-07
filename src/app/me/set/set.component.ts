@@ -16,6 +16,7 @@ import { TranslateService } from '@ngx-translate/core';
   templateUrl: 'set.component.html'
 })
 export class SetComponent implements OnInit {
+
   plf: string; // 判断是什么平台
   translateTexts: any;
 

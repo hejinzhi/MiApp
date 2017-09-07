@@ -10,8 +10,6 @@ import { LanguageConfig } from '../shared/config/language.config';
 })
 
 export class MapComponent implements OnInit {
-    languageType: string = localStorage.getItem('languageType');
-    languageContent = LanguageConfig.MapComponent[this.languageType];
 
     content: string;
     addCtrl: string = 'Y';
