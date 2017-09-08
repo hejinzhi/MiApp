@@ -13,7 +13,8 @@ import { UserState } from './../shared/models/user.model';
   selector: 'sg-me',
   templateUrl: 'me.component.html'
 })
-export class MeComponent implements OnDestroy{
+export class MeComponent implements OnDestroy {
+
 
   user:UserState;
 
@@ -32,7 +33,7 @@ export class MeComponent implements OnDestroy{
   }
 
   ionViewWillLeave() {
-    
+
   }
   ngOnDestroy() {
     this.mySubscription.unsubscribe();

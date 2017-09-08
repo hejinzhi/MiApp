@@ -14,8 +14,6 @@ import { TranslateService } from '@ngx-translate/core';
 
 // 借书申请，还书，取消预约共用这一个页面
 export class BorrowRequestComponent implements OnInit {
-    languageType: string = localStorage.getItem('languageType')
-    languageContent = LanguageConfig.borrowRequestComponent[this.languageType];
     selectIDs: number[] = []; // 返回的借书人的清单
     books: any[] = []; // 记录后端返回的原始数据
     userListAfterTransform: CheckList[] = []; // 对借书清单进行分组处理，保存处理后的借书清单
@@ -42,7 +40,6 @@ export class BorrowRequestComponent implements OnInit {
         this.books = this.navParams.get('books');
         this.type = this.navParams.get('type');
         if (this.type === 'borrow') {
-            // this.title = this.languageContent.borrowRequest;
             this.translate.get('bookLibrary.borrowRequest').subscribe((title) => {
                 this.title = title;
             });
@@ -50,7 +47,6 @@ export class BorrowRequestComponent implements OnInit {
             this.showPayback = false;
             this.showCancelBook = false;
         } else if (this.type === 'payback') {
-            // this.title = this.languageContent.paybackRequest;
             this.translate.get('bookLibrary.paybackRequest').subscribe((title) => {
                 this.title = title;
             });
@@ -58,7 +54,6 @@ export class BorrowRequestComponent implements OnInit {
             this.showPayback = true;
             this.showCancelBook = false;
         } else if (this.type === 'cancelbook') {
-            // this.title = this.languageContent.cancelBook;
             this.translate.get('bookLibrary.booked').subscribe((title) => {
                 this.title = title;
             });
@@ -67,7 +62,6 @@ export class BorrowRequestComponent implements OnInit {
             this.showCancelBook = true;
         }
         else if (this.type === 'xujie') {
-            // this.title = this.languageContent.cancelBook;
             this.translate.get('bookLibrary.borrowed_books').subscribe((title) => {
                 this.title = title;
             });
@@ -85,7 +79,6 @@ export class BorrowRequestComponent implements OnInit {
         this.translate.get(['bookLibrary.borrowSuc', 'bookLibrary.borrowFail', 'bookLibrary.cancelBookSuc', 'bookLibrary.cancelBookFail',
             'bookLibrary.paybackSuc', 'bookLibrary.paybackFail', 'bookLibrary.renewSuc', 'bookLibrary.renewFail']).subscribe((res) => {
                 this.translateText = res;
-                console.log(this.translateText);
             });
     }
 

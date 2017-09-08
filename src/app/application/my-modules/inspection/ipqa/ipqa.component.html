@@ -6,23 +6,16 @@
 <ion-content>
   <ion-list>
     <ion-item>
-      <ion-label>请选择线别:</ion-label>
+      <ion-label>{{'inspection.ipqa.chooseLine' | translate}}:</ion-label>
       <ion-select [(ngModel)]="line" (ionChange)="onSelectChange($event)">
-        <ion-option [value]="line.LINE_NAME" *ngFor="let line of lines">{{line.LINE_NAME}}</ion-option>
+        <ion-option [value]="line.LINE_NAME" *ngFor="let line of lines">{{line.LINE_NAME |sgChineseConv}}</ion-option>
       </ion-select>
     </ion-item>
   </ion-list>
-  <sg-grid title="模块" [data]="modules" (dataChange)="changeModule($event)"></sg-grid>
+  <sg-grid [title]="translateTexts['inspection.ipqa.module']  " [data]="modules" (dataChange)="changeModule($event)"></sg-grid>
   <div class="line"></div>
-  <sg-grid title="站点" [data]="stations" (dataChange)="changeStation($event)"></sg-grid>
+  <sg-grid [title]="translateTexts['inspection.ipqa.stationTitle'] " [data]="stations" (dataChange)="changeStation($event)"></sg-grid>
   <div class="next-button" *ngIf="stations.length >0">
-    <button ion-button block (tap)="goToChooseStationPage()">下一步</button>
+    <button ion-button block (tap)="goToChooseStationPage()">{{'inspection.ipqa.next' | translate}}</button>
   </div>
-  <!-- <ion-card>
-    <ion-card-content>
-      <p>1. 是否每個工作站的靜電皮均接地,作業員是否佩戴靜電環(靜電環/人體綜合靜電測試是否每天進行測試)</p>
-      <p>嚴重度:Major</p>
-    </ion-card-content>
-    <sg-checkbox [selectOptions]="selectOptions" (selectedValue)="selectedValue($event)"></sg-checkbox>
-  </ion-card> -->
 </ion-content>

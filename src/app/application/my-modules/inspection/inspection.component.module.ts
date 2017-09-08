@@ -1,3 +1,5 @@
+import { SharedModule } from './../../../shared/shared.module';
+import { PipesModule } from './../../../shared/pipe/pipes.module';
 import { InspectionComponent } from './inspection.component';
 import { NgModule } from '@angular/core';
 import { IonicPageModule } from 'ionic-angular';
@@ -7,7 +9,9 @@ import { TranslateModule } from '@ngx-translate/core';
     declarations: [InspectionComponent],
     imports: [
         IonicPageModule.forChild(InspectionComponent),
-        TranslateModule.forChild()
+        TranslateModule.forChild(),
+        // PipesModule
+        SharedModule
     ],
     entryComponents: [
         InspectionComponent

@@ -13,7 +13,13 @@
         <div *ngIf="showAddBookInput">
           {{'bookLibrary.addQty'|translate}}:<input type="text" style="text-indent: 5px;" (input)="inputChange($event)" value="1" />
         </div>
-        <div *ngIf="showPayBackDate">{{'bookLibrary.shouldPayBackDate'|translate}}: {{book.SHOULD_PAYBACK_DATE | date:"y-MM-dd"}}</div>
+        <div *ngIf="showPayBackDate" [class]="compareDate(book.SHOULD_PAYBACK_DATE)">
+          {{'bookLibrary.shouldPayBackDate'|translate}}: {{book.SHOULD_PAYBACK_DATE | date:"y-MM-dd"}}
+        </div>
+        <!-- <div  [ngClass]="{'red':true}">dasda </div> -->
+        <!-- <div *ngIf="showPayBackDate" [ngClass]="{'red':true}">
+            {{'bookLibrary.shouldPayBackDate'|translate}}: {{book.SHOULD_PAYBACK_DATE | date:"y-MM-dd"}}
+        </div> -->
         <div *ngIf="showActualBackDate">{{'bookLibrary.actualPaybackDate'|translate}}: {{book.ACTUAL_PAYBACK_DATE | date:"y-MM-dd"}}</div>
       </div>
     </div>

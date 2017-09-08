@@ -18,9 +18,6 @@ export class BookCardComponent implements OnInit {
     constructor() { }
 
     ngOnInit() {
-        // this.bookList.BOOKS.forEach((item: any) => { 
-        //     item.selectItem = false;
-        // })   
     }
 
     singleSelect(event: any, id: number) {
@@ -37,10 +34,6 @@ export class BookCardComponent implements OnInit {
         if (array.indexOf(item) === -1) {
             array.push(item);
         }
-    }
-
-    test() {
-        console.log(this.selectedBorrowId);
     }
 
     removeItem(array: number[], item: number) {
