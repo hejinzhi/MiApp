@@ -25,11 +25,10 @@ export class LoginComponent {
   ) {
   }
   appVersion: string;
-  registerCredentials = { username: 'jinzhi.he', password: 'pass', rememberPWD: false, autoLogin: false };
+  registerCredentials = { username: '', password: '', rememberPWD: false, autoLogin: false };
 
   ionViewDidLoad() {
     this.store$.select('userReducer').subscribe((user:UserState) => {
-      console.log(user);
       if(user.nickname) {
         this.registerCredentials = Object.assign(this.registerCredentials, user);
       }
