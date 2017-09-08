@@ -387,7 +387,9 @@
       "handler": "處理人",
       "PQE": "PQE",
       "closer": "結案人",
-      "keyinNumber": "請輸入數值"
+      "keyinNumber": "請輸入數值",
+      "the": "第",
+      "error1": "項尚未填寫檢查結果，請填寫后再提交。"
     }
   },
   "change_to": "已更改為"

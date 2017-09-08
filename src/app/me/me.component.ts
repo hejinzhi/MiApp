@@ -14,9 +14,9 @@ import { UserState } from './../shared/models/user.model';
   selector: 'sg-me',
   templateUrl: 'me.component.html'
 })
-export class MeComponent implements OnDestroy{
+export class MeComponent implements OnDestroy {
 
-  user:UserState;
+  user: UserState;
   languageType: string = localStorage.getItem('languageType');
   languageContent = LanguageConfig.meComponent[this.languageType];
 
@@ -31,12 +31,13 @@ export class MeComponent implements OnDestroy{
   }
 
   ionViewDidLoad() {
-    this.mySubscription = this.store$.select('userReducer').subscribe((user:UserState) => {this.user = user;console.log(user);
+    this.mySubscription = this.store$.select('userReducer').subscribe((user: UserState) => {
+      this.user = user;
     });
   }
 
   ionViewWillLeave() {
-    
+
   }
   ngOnDestroy() {
     this.mySubscription.unsubscribe();

@@ -1,4 +1,7 @@
 sg-login {
+  .checkbox-ios .checkbox-icon {
+    border-radius: 0;
+  }
   $color: #3773F7;
   .scroll-content {
     padding-bottom: 0!important;
@@ -7,7 +10,6 @@ sg-login {
     background-image: url('../assets/bg/entry.png');
     background-size: 100% 100%;
     background-repeat: no-repeat;
-
     .login-box {
       display: flex;
       height: 100%;
@@ -15,17 +17,19 @@ sg-login {
       align-items: center;
       .extra-opt {
         display: flex;
+        flex-direction: row;
         align-items: center;
+        ion-label {
+          margin-left: 5px;
+        }
       }
       .list-ios {
-        margin: -1px 0 2px; 
+        margin: -1px 0 2px;
       }
     }
-
     form {
       width: 100%;
     }
-
     ion-item {
       font-size: 0.9em;
       margin-bottom: 10px;
@@ -33,18 +37,15 @@ sg-login {
       box-shadow: none !important;
       background-color: transparent;
     }
-
     .signup-col {
       margin: 0 16px;
       padding-bottom: 20px;
     }
-
     .input-box {
       display: flex;
       justify-content: center;
       align-items: center;
     }
-
     .list-ios {
       width: 80%;
     }
@@ -53,47 +54,39 @@ sg-login {
       box-shadow: none !important;
       margin-left: -16px;
     }
-
     .input-has-focus .item-inner {
       border-bottom-color: $color !important;
     }
-
     .submit-btn {
       background: $color;
       border-radius: 30px !important;
       border: 1px solid #ffffff;
     }
-
     .register-btn {
       color: $color;
       font-size: 0.8em;
     }
   }
-
-  .list-ios > .item-block:first-child {
+  .list-ios>.item-block:first-child {
     border-top: none!important;
   }
-
   .list-ios .item-block .item-inner {
     border-bottom: 1px solid #ffffff!important;
     &:hover {
       border-color: $color!important;
     }
   }
-
-  .list-ios > .item-block:last-child,
-  .list-ios > .item-wrapper:last-child .item-block {
+  .list-ios>.item-block:last-child,
+  .list-ios>.item-wrapper:last-child .item-block {
     border-bottom: none!important;
   }
-
-  .list-ios > .item-block:last-child .item-inner,
-  .list-ios > .item-wrapper:last-child .item-block .item-inner {
+  .list-ios>.item-block:last-child .item-inner,
+  .list-ios>.item-wrapper:last-child .item-block .item-inner {
     border-bottom: 1px solid #ffffff!important;
     &:hover {
       border-color: $color!important;
     }
   }
-
   .rightBottom {
     position: absolute;
     bottom: 5px;
@@ -101,14 +94,14 @@ sg-login {
     color: $color;
   }
   ion-input {
-    margin-left: 20px!important;;
+    margin-left: 20px!important;
+    ;
   }
   .text-input-ios {
     margin: 3px 8px 3px 0 !important;
     padding: 0;
     font-size: 20px;
   }
-
   .iconfontyyy {
     // margin-top: 16px;
     // margin-left: 390%;
