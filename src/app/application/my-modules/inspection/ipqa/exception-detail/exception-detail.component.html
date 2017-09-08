@@ -1,11 +1,11 @@
 <ion-header>
   <ion-navbar>
-    <ion-title>问题详情</ion-title>
+    <ion-title>{{'inspection.ipqa.exceptionTitle' | translate}}</ion-title>
     <ion-buttons start>
-      <button ion-button (click)="goBack()">返回</button>
+      <button ion-button (click)="goBack()">{{'inspection.ipqa.goBack' | translate}}</button>
     </ion-buttons>
     <ion-buttons end>
-      <button ion-button type="submit" (tap)="submitException()" [disabled]="!formModel.valid">提交</button>
+      <button ion-button type="submit" (tap)="submitException()" [disabled]="!formModel.valid">{{'inspection.ipqa.submit' | translate}}</button>
     </ion-buttons>
   </ion-navbar>
 </ion-header>
@@ -14,7 +14,7 @@
     <ion-list>
       <div class="my-row">
         <div class="left-col">
-          <ion-label>*巡检日期:</ion-label>
+          <ion-label>*{{'inspection.ipqa.inspectDate' | translate}}:</ion-label>
         </div>
         <div class="right-col">
           <ion-item class="my-item">
@@ -24,7 +24,7 @@
       </div>
       <div class="my-row">
         <div class="left-col">
-          <ion-label>*班别:</ion-label>
+          <ion-label>*{{'inspection.ipqa.banbie' | translate}}:</ion-label>
         </div>
         <div class="right-col">
           <ion-input type="text" formControlName="banbie" [class.my-invalid]="formModel.get('banbie').invalid && formModel.get('banbie').touched"></ion-input>
@@ -32,7 +32,7 @@
       </div>
       <div class="my-row">
         <div class="left-col">
-          <ion-label>*线别:</ion-label>
+          <ion-label>*{{'inspection.ipqa.line' | translate}}:</ion-label>
         </div>
         <div class="right-col">
           <ion-input type="text" formControlName="address" [class.my-invalid]="formModel.get('address').invalid && formModel.get('address').touched">
@@ -41,7 +41,7 @@
       </div>
       <div class="my-row">
         <div class="left-col">
-          <ion-label>*巡检人员:</ion-label>
+          <ion-label>*{{'inspection.ipqa.inspector' | translate}}:</ion-label>
         </div>
         <div class="right-col">
           <div formArrayName="checkPersons">
@@ -59,7 +59,7 @@
       </div>
       <div class="my-row">
         <div class="left-col">
-          <ion-label>*违反项目:</ion-label>
+          <ion-label>*{{'inspection.ipqa.checklist' | translate}}:</ion-label>
         </div>
         <div class="right-col">
           <ion-textarea formControlName="checklist" cols="10" rows="4" [class.my-invalid]="formModel.get('checklist').invalid && formModel.get('checklist').touched"></ion-textarea>
@@ -67,7 +67,7 @@
       </div>
       <div class="my-row">
         <div class="left-col">
-          <ion-label>*问题描述:</ion-label>
+          <ion-label>*{{'inspection.ipqa.exceptionDesc' | translate}}:</ion-label>
         </div>
         <div class="right-col">
           <ion-textarea formControlName="exceptionDesc" cols="10" rows="4" [class.my-invalid]="formModel.get('exceptionDesc').invalid && formModel.get('exceptionDesc').touched"></ion-textarea>
@@ -75,7 +75,7 @@
       </div>
       <div class="my-row">
         <div class="left-col">
-          <ion-label>相关照片:</ion-label>
+          <ion-label>{{'inspection.ipqa.pictures' | translate}}:</ion-label>
         </div>
         <div class="right-col">
           <!-- <ul formArrayName="pictures">
@@ -89,7 +89,7 @@
       </div>
       <div class="my-row">
         <div class="left-col">
-          <ion-label>*处理人:</ion-label>
+          <ion-label>*{{'inspection.ipqa.handler' | translate}}:</ion-label>
         </div>
         <div class="right-col">
           <ion-input [class.my-invalid]="formModel.get('handler').invalid && formModel.get('handler').touched" type="text" formControlName="handler"></ion-input>
@@ -97,7 +97,7 @@
       </div>
       <div class="my-row">
         <div class="left-col">
-          <ion-label>*PQE:</ion-label>
+          <ion-label>*{{'inspection.ipqa.PQE' | translate}}:</ion-label>
         </div>
         <div class="right-col">
           <ion-input type="text" formControlName="PQE" [class.my-invalid]="formModel.get('PQE').invalid && formModel.get('PQE').touched"></ion-input>
@@ -105,7 +105,7 @@
       </div>
       <div class="my-row">
         <div class="left-col">
-          <ion-label>*结案人:</ion-label>
+          <ion-label>*{{'inspection.ipqa.closer' | translate}}:</ion-label>
         </div>
         <div class="right-col">
           <ion-input type="text" formControlName="closer" [class.my-invalid]="formModel.get('closer').invalid && formModel.get('closer').touched"></ion-input>

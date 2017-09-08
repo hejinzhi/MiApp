@@ -27,8 +27,6 @@ declare var window: any;
 
 export class MessageComponent implements OnInit {
 
-  languageType: string = localStorage.getItem('languageType');
-  languageContent = LanguageConfig.MessageComponent[this.languageType];
   msgListItem: MessageModel[] = [];
   historyMsg: any[] = []; // 在app.component.ts被赋值
   messageListItem: any[];
@@ -69,11 +67,6 @@ export class MessageComponent implements OnInit {
 
   }
 
-  ionViewDidLeave() {
-    // if (this.pluginService.isCordova()) {
-    //   this.jmessageService.jmessageOffline.unsubscribe();
-    // }
-  }
 
   ngOnInit() {
     if (this.pluginService.isCordova()) {
@@ -84,42 +77,7 @@ export class MessageComponent implements OnInit {
         this.plf = 'android';
       }
 
-
-      // 读取离线消息
-      // this.jmessageService.jmessageOffline = this.jmessageService.onSyncOfflineMessage().subscribe(async (res) => {
-      //   console.log(res, 444)
-      //   for (let i = 0; i < res.messageList.length; i++) {
-      //     if (this.plf === 'ios') {
-      //       await this.handleReceiveMessageIos(res.messageList[i]);
-      //     } else if (this.plf === 'android') {
-      //       await this.handleReceiveMessageAndroid(res.messageList[i]);
-      //     }
-
-      //   }
-      //   // this.messageListItem = await this.messageService.getMessageHistory(this.userinfo.username, 'dialogue');
-      //   // this.noticeListItem = await this.messageService.getMessageHistory(this.userinfo.username, 'notice');
-      //   await this.refreshData();
-      //   this.ref.detectChanges();
-      //   this.events.publish('msg.onReceiveMessage');
-      //   this.events.publish('msg.onChangeTabBadge');
-      // });
-
-      // 监听是否有消息推送过来
-      // this.jmessageService.jmessageHandler = this.jmessageService.onReceiveMessage().subscribe(async (res) => {
-      //   console.log(555);
-      //   let msg: any;
-      //   if (this.plf === 'ios') {
-      //     msg = await this.handleReceiveMessageIos(res);
-      //   } else if (this.plf === 'android') {
-      //     msg = await this.handleReceiveMessageAndroid(res);
-      //   }
-      //   await this.refreshData();
-      //   this.ref.detectChanges();
-      //   this.events.publish('msg.onReceiveMessage', msg);
-      //   this.events.publish('msg.onChangeTabBadge');
-      // });
       this.jmessageService.addReceiveMessageListener(async (res: any) => {
-        console.log(res);
         let msg: any;
         if (res.type === 'text') {
           msg = await this.handleTextMessage(res);
@@ -157,14 +115,14 @@ export class MessageComponent implements OnInit {
 
     }
 
-    this.translate.get(['messagecomponent.deleteMessageAlertTitle', 'messagecomponent.cancel', 'messagecomponent.confirm']).subscribe((res) => {
+    this.translate.stream(['messagecomponent.deleteMessageAlertTitle', 'messagecomponent.cancel', 'messagecomponent.confirm']).subscribe((res) => {
       this.translateTexts = res;
     })
-    this.translate.onLangChange.subscribe(() => {
-      this.translate.get(['messagecomponent.deleteMessageAlertTitle', 'messagecomponent.cancel', 'messagecomponent.confirm']).subscribe((res) => {
-        this.translateTexts = res;
-      })
-    });
+    // this.translate.onLangChange.subscribe(() => {
+    //   this.translate.get(['messagecomponent.deleteMessageAlertTitle', 'messagecomponent.cancel', 'messagecomponent.confirm']).subscribe((res) => {
+    //     this.translateTexts = res;
+    //   })
+    // });
   }
 
   async handleTextMessage(res: TextMessage) {

@@ -1,6 +1,6 @@
 <ion-header>
   <ion-navbar>
-    <ion-title>日常巡检</ion-title>
+    <ion-title>{{'inspection.title' | translate}}</ion-title>
   </ion-navbar>
 </ion-header>
 <ion-content>
@@ -10,7 +10,7 @@
         <div class="grid-content">
           <a>
             <img [src]="name.IMAGE_URL" class="grid-img">
-            <div class="grid-name">{{name.NAME}}</div>
+            <div class="grid-name">{{name.NAME |sgChineseConv}}</div>
           </a>
         </div>
       </ion-col>

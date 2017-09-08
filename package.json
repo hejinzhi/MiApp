@@ -128,9 +128,10 @@
             "ionic-plugin-keyboard": {},
             "phonegap-plugin-barcodescanner": {},
             "jmessage-phonegap-plugin": {
-                "APP_KEY": "c5b6f10164cf612885a251bf"
+                "APP_KEY": "c35bdfd0449ed461f7adad98"
             },
-            "cordova-plugin-code-push": {}
+            "cordova-plugin-code-push": {},
+            "cordova-plugin-android-permissions": {}
         },
         "platforms": [
             "android",

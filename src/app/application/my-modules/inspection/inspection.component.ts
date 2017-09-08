@@ -1,4 +1,4 @@
-import { InspectionService } from './shared/service/inspection.service';
+import { InspectionService } from './ipqa/shared/service/inspection.service';
 import { IpqaComponent } from './ipqa/ipqa.component';
 import { IonicPage, NavController } from 'ionic-angular';
 import { Component, OnInit } from '@angular/core';
@@ -26,7 +26,7 @@ export class InspectionComponent implements OnInit {
     goToDetailPage(id: number) {
         // IPQA
         if (id == 3) {
-            this.navCtrl.push(IpqaComponent);
+            this.navCtrl.push('IpqaComponent');
         }
         // ... others
         else {

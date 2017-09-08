@@ -1,10 +1,12 @@
+import { GridModel } from './grid/grid.component';
+import { InspectionService } from './shared/service/inspection.service';
 import { StationsComponent } from './../stations/stations.component';
-import { NavController } from 'ionic-angular';
-import { GridModel } from './../grid/grid.component';
+import { NavController, IonicPage } from 'ionic-angular';
 import { Observable, Observer } from 'rxjs/Rx';
-import { InspectionService } from './../shared/service/inspection.service';
 import { Component, OnInit } from '@angular/core';
+import { TranslateService } from '@ngx-translate/core';
 
+@IonicPage()
 @Component({
     selector: 'sg-ipqa',
     templateUrl: 'ipqa.component.html'
@@ -19,16 +21,19 @@ export class IpqaComponent implements OnInit {
     modules: GridModel[] = [];
     // 站点
     stations: GridModel[] = [];
-
     // 被选择了的站点
     selectedStations: string[] = [];
-
     // 被选中的模块
     selectedModules: any[] = [];
+    translateTexts: any = {
+        'inspection.ipqa.stationTitle': '',
+        'inspection.ipqa.module': ''
+    }; // 记录转换后的文本(简繁体)
 
     constructor(
         private navCtrl: NavController,
-        private inspectionService: InspectionService
+        private inspectionService: InspectionService,
+        private translate: TranslateService
     ) {
 
     }
@@ -37,6 +42,7 @@ export class IpqaComponent implements OnInit {
         // this.lines = await this.inspectionService.getLines();
         let res = await this.inspectionService.getLines();
         this.lines = res.json();
+        this.translateTexts = await this.translate.get(['inspection.ipqa.stationTitle', 'inspection.ipqa.module']).toPromise();
     }
 
     /**
@@ -114,7 +120,7 @@ export class IpqaComponent implements OnInit {
     }
 
     goToChooseStationPage() {
-        this.navCtrl.push(StationsComponent, { stations: this.stations, line: this.line });
+        this.navCtrl.push('StationsComponent', { stations: this.stations, line: this.line });
     }
 
 

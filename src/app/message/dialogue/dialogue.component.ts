@@ -17,7 +17,10 @@ import { DatabaseService } from '../shared/service/database.service';
 import { KeyboardAttachDirective } from '../shared/directive/KeyboardAttachDirective';
 import { UserModel } from '../../shared/models/user.model';
 import { ImageViewerController } from 'ionic-img-viewer';
+import { TranslateService } from '@ngx-translate/core';
 
+declare var window: any;
+declare var cordova: any;
 
 @Component({
     selector: 'sg-dialogue',
@@ -27,8 +30,7 @@ import { ImageViewerController } from 'ionic-img-viewer';
 
 export class DialogueComponent implements OnInit {
     @ViewChild(Content) content: Content;
-    languageType: string = localStorage.getItem('languageType');
-    languageContent = LanguageConfig.DialogueComponent[this.languageType];
+
     _imageViewerCtrl: ImageViewerController;
     list: any;
     listlength: number;
@@ -64,16 +66,17 @@ export class DialogueComponent implements OnInit {
     addCtrl: string = 'N';
 
     audioRecorderAPI = (<any>window).plugins ? (<any>window).plugins.audioRecorderAPI || null : null;
+    permissions = (<any>cordova).plugins ? (<any>cordova).plugins.permissions || null : null;
     isrec: boolean = false;
     isvoice: boolean = false;
     recvoicetime: number;
     endrcevoicetime: number;
     openvoiceflag: boolean = false;
-    voiceflagdesc: string = '按住 說話';
-
+    voiceflagdesc: string;
 
     istop: boolean = false;
 
+    translateTexts: any; // 记录转换后的文本(简繁体)
 
     constructor(private messageservice: MessageService,
         public params: NavParams,
@@ -89,7 +92,8 @@ export class DialogueComponent implements OnInit {
         private http: Http,
         private media: Media,
         public toastCtrl: ToastController,
-        private imageViewerCtrl: ImageViewerController
+        private imageViewerCtrl: ImageViewerController,
+        private translate: TranslateService
     ) {
         this._imageViewerCtrl = imageViewerCtrl;
         this.userName = params.get('fromUserName');
@@ -124,6 +128,7 @@ export class DialogueComponent implements OnInit {
             this.plf = 'ios';
         } else if (this.platform.is('android')) {
             this.plf = 'android';
+            this.permissions.hasPermission(this.permissions.RECORD_AUDIO, (status: any) => { this.checkPermissionCallback(status); }, null);
         }
         this.keyboard.hideKeyboardAccessoryBar(true);
         this.keyboard.disableScroll(true);
@@ -131,9 +136,26 @@ export class DialogueComponent implements OnInit {
 
         this.myNickName = this.userinfo.nickname;
         this.myAvatarSrc = this.userinfo.avatarUrl;
+
+        this.translate.stream(['dialogue.voiceflagdesc1', 'dialogue.voiceflagdesc2', 'dialogue.speakshort']).subscribe((res) => {
+            this.translateTexts = res;
+        })
+        this.voiceflagdesc = this.translateTexts['dialogue.voiceflagdesc1'];
+
         await this.loadMessage();
     }
 
+    checkPermissionCallback(status: any) {
+        if (!status.hasPermission) {
+            var errorCallback = function () {
+                console.warn('Record audio permission is not turned on');
+            }
+            this.permissions.requestPermission(this.permissions.RECORD_AUDIO, function (status: any) {
+                if (!status.hasPermission)
+                    errorCallback();
+            }, errorCallback);
+        }
+    }
 
     async ionViewDidEnter() {
         this.events.subscribe('msg.onReceiveMessage', async (msg: any) => {
@@ -515,23 +537,22 @@ export class DialogueComponent implements OnInit {
         this.navCtrl.push(MapComponent, content);
     }
 
-    onvoice() {
+    async onvoice() {
         this.isvoice = !this.isvoice;
     }
 
     rec_voice() {
         this.isrec = true;
-        this.voiceflagdesc = '鬆開 結束';
-        // console.log(this.isrec, 'isrec');
+        this.voiceflagdesc = this.translateTexts['dialogue.voiceflagdesc2'];
         this.recvoicetime = +new Date();
         this.audioRecorderAPI.record((msg: any) => {
             this.isrec = false;
-            this.voiceflagdesc = '按住 說話';
+            this.voiceflagdesc = this.translateTexts['dialogue.voiceflagdesc1'];
             // console.log('ok: 1' + msg);
         }, (msg: any) => {
             // failed 
             this.isrec = false;
-            this.voiceflagdesc = '按住 說話';
+            this.voiceflagdesc = this.translateTexts['dialogue.voiceflagdesc1'];
             // console.log('ko: 1' + msg);
         }, 90); // record 30 seconds 
     }
@@ -540,7 +561,7 @@ export class DialogueComponent implements OnInit {
         // console.log('touchend');
         if (this.isrec) {
             this.isrec = false;
-            this.voiceflagdesc = '按住 說話';
+            this.voiceflagdesc = this.translateTexts['dialogue.voiceflagdesc1'];
             this.audioRecorderAPI.stop(async (file: any) => {
                 this.endrcevoicetime = +new Date();
                 // let duration = this.endrcevoicetime - this.recvoicetime;
@@ -553,7 +574,7 @@ export class DialogueComponent implements OnInit {
             })
         } else {
             let toast = this.toastCtrl.create({
-                message: '說話時間太短',
+                message: this.translateTexts['dialogue.speakshort'],
                 duration: 2000,
                 position: 'middle'
             });

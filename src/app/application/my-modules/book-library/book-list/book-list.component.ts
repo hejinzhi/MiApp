@@ -6,8 +6,6 @@ import { LanguageConfig } from '../shared/config/language.config';
     templateUrl: 'book-list.component.html'
 })
 export class BookListComponent {
-    languageType: string = localStorage.getItem('languageType');
-    languageContent = LanguageConfig.bookListComponent[this.languageType];
     @Input() books: any[];
     @Input() showAddBookInput: boolean = false; // 是否显示input输入框
     @Input() showPayBackDate: boolean = false;  // 是否显示“应归还时间”
@@ -22,6 +20,15 @@ export class BookListComponent {
         this.addBookQty = 1;
     }
 
+    compareDate(date: any) {
+        let nowDate = new Date().getTime();
+        let shouldPaybackDate = new Date(date).getTime();
+        if (shouldPaybackDate < nowDate) {
+            return 'red';
+        } else {
+            return '';
+        }
+    }
 
 
     ionViewWillEnter() {
