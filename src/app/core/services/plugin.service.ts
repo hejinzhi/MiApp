@@ -50,7 +50,7 @@ export class PluginService {
   subscribeTranslateText() {
     this.translate.get(['update_successed', 'update_success', 'app_size', 'alert', 'no_wifi_alert',
       'restart_for_update', 'update_error', 'is_newest', 'have_new_version', 'attendance.cancle', 'attendance.confirm',
-      'update_content', 'error', 'not_found', 'http_error1', 'http_error2', 'http_error3'
+      'update_content', 'error', 'not_found', 'http_error1', 'http_error2', 'http_error3', 'autologin_err'
     ]).subscribe((res) => {
       this.translateTexts = res;
     })
