@@ -16,7 +16,6 @@ import { MyValidatorModel } from '../../../../shared/models/my-validator.model';
 import { MyFormModel } from '../shared/models/my-form.model';
 
 import { AttendanceConfig } from '../shared/config/attendance.config';
-import { LanguageTypeConfig } from '../shared/config/language-type.config';
 
 @IonicPage()
 @Component({
@@ -42,9 +41,6 @@ export class LeaveFormComponent {
     No: '',
     data: {}
   }
-  fontType:string = localStorage.getItem('languageType')
-  fontContent = LanguageTypeConfig.LeaveFormComponent[this.fontType];
-
   startHourRange: string = '';
   endHourRange: string = '';
   errTip:string ='';

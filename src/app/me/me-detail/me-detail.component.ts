@@ -12,17 +12,12 @@ import { TranslateService } from '@ngx-translate/core';
 
 import { UserState } from './../../shared/models/user.model';
 
-import { LanguageConfig } from '../shared/config/language.config';
-
 @IonicPage()
 @Component({
   selector: 'sg-detail',
   templateUrl: 'me-detail.component.html'
 })
 export class MeDetailComponent implements OnInit {
-
-  languageType: string = localStorage.getItem('languageType');
-  languageContent = LanguageConfig.MeDetailComponent[this.languageType];
 
   errMes: string
   constructor(public navCtrl: NavController,
@@ -98,8 +93,8 @@ export class MeDetailComponent implements OnInit {
             this.getNewPhoto(0, 400);
           }
         }, {
-          text: this.languageContent.cancel,
-          role: this.languageContent.cancel,
+          text: this.translateTexts['cancel'],
+          role: this.translateTexts['cancel'],
           handler: () => {
             console.log('Cancel clicked');
           }

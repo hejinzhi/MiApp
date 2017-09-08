@@ -37,6 +37,18 @@ export class LoginComponent {
     this.appVersion = localStorage.getItem('appVersion');
   }
 
+  check1() {
+    if(!this.registerCredentials.rememberPWD) {
+      this.registerCredentials.autoLogin = false;
+    }
+  }
+
+  check2() {
+    if(this.registerCredentials.autoLogin) {
+      this.registerCredentials.rememberPWD = true;
+    }
+  }
+
   public async login() {
     let loginSuccess = await this.loginService.login(this.registerCredentials.username, this.registerCredentials.password,{
       rememberPWD: this.registerCredentials.rememberPWD, autoLogin: this.registerCredentials.autoLogin

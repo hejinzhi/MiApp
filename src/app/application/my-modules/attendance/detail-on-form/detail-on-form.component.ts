@@ -12,7 +12,6 @@ import { MyValidatorModel } from '../../../../shared/models/my-validator.model';
 import { FormType } from '../shared/config/form-type';
 
 import { AttendanceConfig } from '../shared/config/attendance.config';
-import { LanguageTypeConfig } from '../shared/config/language-type.config';
 
 @IonicPage()
 @Component({
@@ -20,10 +19,6 @@ import { LanguageTypeConfig } from '../shared/config/language-type.config';
   templateUrl: 'detail-on-form.component.html'
 })
 export class DetailOnFormComponent {
-
-  fontType:string = localStorage.getItem('languageType')
-  fontContent = LanguageTypeConfig.detailOnFormComponent[this.fontType];
-
   betweenMes: {
     date: string
   }

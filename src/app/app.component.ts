@@ -150,7 +150,7 @@ export class MyAppComponent {
     }
 
     setDefaultLanguage() {
-        let preferLang = localStorage.getItem('preferLang');
+        let preferLang = this.user.preferLang;
         let targetLang:string;
         if(preferLang) {
           targetLang = preferLang;

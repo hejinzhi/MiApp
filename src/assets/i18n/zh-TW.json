@@ -77,7 +77,10 @@
     "camera": "拍攝",
     "personcard": "個人名片",
     "location": "位置",
-    "send": "發送"
+    "send": "發送",    
+    "voiceflagdesc1":"按住 說話",
+    "voiceflagdesc2":"鬆開 結束",
+    "speakshort":"說話時間太短"
   },
   "alertcomponent": {
     "att": "ERP-人事考勤",

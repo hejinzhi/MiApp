@@ -27,8 +27,6 @@ declare var window: any;
 
 export class MessageComponent implements OnInit {
 
-  languageType: string = localStorage.getItem('languageType');
-  languageContent = LanguageConfig.MessageComponent[this.languageType];
   msgListItem: MessageModel[] = [];
   historyMsg: any[] = []; // 在app.component.ts被赋值
   messageListItem: any[];
@@ -117,14 +115,14 @@ export class MessageComponent implements OnInit {
 
     }
 
-    this.translate.get(['messagecomponent.deleteMessageAlertTitle', 'messagecomponent.cancel', 'messagecomponent.confirm']).subscribe((res) => {
+    this.translate.stream(['messagecomponent.deleteMessageAlertTitle', 'messagecomponent.cancel', 'messagecomponent.confirm']).subscribe((res) => {
       this.translateTexts = res;
     })
-    this.translate.onLangChange.subscribe(() => {
-      this.translate.get(['messagecomponent.deleteMessageAlertTitle', 'messagecomponent.cancel', 'messagecomponent.confirm']).subscribe((res) => {
-        this.translateTexts = res;
-      })
-    });
+    // this.translate.onLangChange.subscribe(() => {
+    //   this.translate.get(['messagecomponent.deleteMessageAlertTitle', 'messagecomponent.cancel', 'messagecomponent.confirm']).subscribe((res) => {
+    //     this.translateTexts = res;
+    //   })
+    // });
   }
 
   async handleTextMessage(res: TextMessage) {

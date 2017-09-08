@@ -5,7 +5,6 @@ import { TranslateService } from '@ngx-translate/core';
 import { AttendanceService } from '../shared/service/attendance.service';
 import { PluginService }   from '../../../../core/services/plugin.service';
 
-import { LanguageTypeConfig } from '../shared/config/language-type.config';
 
 @IonicPage()
 @Component({
@@ -13,10 +12,6 @@ import { LanguageTypeConfig } from '../shared/config/language-type.config';
   templateUrl: 'sign-list.component.html'
 })
 export class SignListComponent {
-
-  fontType:string = localStorage.getItem('languageType')
-  fontContent = LanguageTypeConfig.signListComponent[this.fontType];
-
   type: string;
   items: any;
   translateTexts: any = {};
