@@ -3,7 +3,6 @@ import { NavParams, Events, NavController } from 'ionic-angular';
 import { MessageService } from '../shared/service/message.service';
 import { JMessageService } from '../../core/services/jmessage.service';
 
-import { LanguageConfig } from '../shared/config/language.config';
 
 @Component({
   selector: 'sg-notice',

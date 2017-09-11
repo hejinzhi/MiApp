@@ -1,7 +1,6 @@
 import { Component, ViewChild, OnInit } from '@angular/core';
 import { Tabs } from 'ionic-angular'
 import { NavController, NavParams, App, Platform, IonicPage } from 'ionic-angular';
-import { LanguageConfig } from '../shared/config/language.config';
 
 import { DutyDailyService } from './dutydaily.service';
 import { TranslateService } from '@ngx-translate/core';
