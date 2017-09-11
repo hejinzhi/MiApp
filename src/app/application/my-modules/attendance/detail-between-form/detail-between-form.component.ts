@@ -41,6 +41,7 @@ export class DetailBetweenFormComponent {
   ) { }
 
   ionViewDidLoad() {
+    this.subscribeTranslateText()
     this.type = this.navParams.data.type;
     let date = new Date();
     let today = date.toISOString();
@@ -77,10 +78,10 @@ export class DetailBetweenFormComponent {
   initValidator() {
     let newValidator = new MyValidatorModel([
       {name:'startTime',valiItems:[
-        {valiName:'DateNotBigger',errMessage:this.translateTexts['startTime_dateNotBigger_err'],valiValue:'endTime'}
+        {valiName:'DateNotBigger',errMessage:this.translateTexts['attendance.startTime_dateNotBigger_err'],valiValue:'endTime'}
       ]},
       {name:'endTime',valiItems:[
-        {valiName:'DateNotSmaller',errMessage:this.translateTexts['endTime_DateNotSmaller_err'],valiValue:'startTime'}
+        {valiName:'DateNotSmaller',errMessage:this.translateTexts['attendance.endTime_DateNotSmaller_err'],valiValue:'startTime'}
       ]}
     ],this.betweenMes)
     return newValidator;
@@ -118,7 +119,7 @@ export class DetailBetweenFormComponent {
           swipe_note:res.content
         })
       } else {
-        this.plugin.showToast(this.translateTexts['no_swipe'])
+        this.plugin.showToast(this.translateTexts['attendance.no_swipe'])
       }
     }
     if(this.type === formType.attendance_detail.type) {
@@ -132,7 +133,7 @@ export class DetailBetweenFormComponent {
           attendance_detail:res.content
         })
       } else {
-        this.plugin.showToast(this.translateTexts['no_att_detail'])
+        this.plugin.showToast(this.translateTexts['attendance.no_att_detail'])
       }
     }
     return false;
