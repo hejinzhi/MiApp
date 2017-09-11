@@ -1,9 +1,9 @@
 import { Component, ViewChild } from '@angular/core';
 import { Tabs } from 'ionic-angular'
 import { NavController, NavParams, App, Platform, IonicPage } from 'ionic-angular';
-import { LanguageConfig } from '../shared/config/language.config';
 
 import { RewardService } from './reward.service'
+import { TranslateService } from '@ngx-translate/core';
 
 @IonicPage()
 @Component({
@@ -12,8 +12,6 @@ import { RewardService } from './reward.service'
 })
 export class RewardComponent {
 
-  languageType: string = localStorage.getItem('languageType');
-  languageContent = LanguageConfig.RewardComponent[this.languageType];
   empno: string;
   itemlist: any[];
 
@@ -21,6 +19,7 @@ export class RewardComponent {
     public navCtrl: NavController,
     public navParams: NavParams,
     private rewardService: RewardService,
+    private translate: TranslateService
   ) {
     // console.log(navParams.data.empno,463);
     this.empno = navParams.data.empno;

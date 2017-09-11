@@ -5,7 +5,6 @@ import { MessageService } from '../shared/service/message.service';
 import { JMessageService } from '../../core/services/jmessage.service';
 import { NoticeComponent } from '../notice/notice.component';
 
-import { LanguageConfig } from '../shared/config/language.config';
 
 @Component({
   selector: 'sg-alert',

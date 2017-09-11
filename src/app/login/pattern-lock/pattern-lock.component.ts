@@ -1,21 +1,27 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Subscription } from 'rxjs/rx';
+import { Store } from '@ngrx/store';
+import { Component, OnInit, ChangeDetectorRef, OnDestroy } from '@angular/core';
 import { NavController, NavParams, Platform } from 'ionic-angular';
+import { TranslateService } from '@ngx-translate/core';
+
 import { LoginComponent } from '../login.component';
 import { TabsComponent } from '../../tabs/tabs.component';
 
 import { MyHttpService } from '../../core/services/myHttp.service';
 import { JMessageService } from '../../core/services/jmessage.service';
 import { PluginService } from '../../core/services/plugin.service';
-
-import { LoginConfig } from '../shared/config/login.config';
+import { LoginService } from './../shared/service/login.service';
+import { User_Clear, User_Update } from './../../shared/actions/user.action';
+import { MyStore } from './../../shared/store';
+import { UserState } from './../../shared/models/user.model';
 
 @Component({
   selector: 'sg-pattern-lock',
   templateUrl: 'pattern-lock.component.html'
 })
-export class PatternLockComponent implements OnInit {
+export class PatternLockComponent implements OnInit, OnDestroy {
   needNineCode: boolean;
-  user: any;
+  user: UserState;
   R: number;
   canvasWidth: number;
   canvasHeight: number;
@@ -30,6 +36,9 @@ export class PatternLockComponent implements OnInit {
   myCode: number[] = [];
   canvas: any;
   isHere: boolean = true;
+  translateTexts: any = {};
+  mysubscription: Subscription;
+
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
@@ -37,19 +46,30 @@ export class PatternLockComponent implements OnInit {
     private jmessageService: JMessageService,
     private plugin: PluginService,
     private ref: ChangeDetectorRef,
-    private platform: Platform
+    private platform: Platform,
+    private translate: TranslateService,
+    private store$: Store<MyStore>,
+    private loginService: LoginService,
   ) {
-    // 判定是否是进行验证功能还是更改功能
-    // this.needNineCode = localStorage.getItem('needPassNineCode') == 'true' ? true : false;
-    // this.isVal = !this.navParams.data.reset ? true : false;
-    // this.message = this.isVal ? '请验证手势密码' : '请输入原来的密码';
-    // this.isReSet = localStorage.getItem('myNineCode') ? false : true;
-    // this.message = this.isReSet ? '请设置手势密码' : this.message;
+
   }
 
+  ngOnInit() { 
+    this.subscribeTranslateText();
+    this.mysubscription = this.store$.select('userReducer').subscribe((user:UserState) => this.user = user);
+  }
 
+  ngOnDestroy() {
+    this.mysubscription.unsubscribe();
+  }
 
-  ngOnInit() { }
+  subscribeTranslateText() {
+    this.translate.stream(['PatternLock.set', 'PatternLock.validate', 'PatternLock.original', 'PatternLock.reset_succ', 'PatternLock.reset_err',
+    'PatternLock.repeat', 'PatternLock.right', 'PatternLock.vali_wrong', 'PatternLock.reset', 'PatternLock.vali_wrong1', 'PatternLock.update', 'autologin_err'
+  ]).subscribe((res) => {
+        this.translateTexts = res;
+      })
+  }
 
   back() {
     this.navCtrl.pop();
@@ -62,20 +82,18 @@ export class PatternLockComponent implements OnInit {
       if (this.user && this.user.myNineCode) {
 
       } else {
-        this.message = '请设置手势密码';
+        this.message = this.translateTexts['PatternLock.set'];
       }
 
     } else {
       this.needNineCode = false;
       this.user.myNineCode = '';
       this.isReSet = true;
-      localStorage.setItem('currentUser', JSON.stringify(this.user));
+      this.store$.dispatch(new User_Update(this.user));
     }
   }
 
   ionViewDidLoad() {
-    this.user = JSON.parse(localStorage.getItem('currentUser'));
-
     if (this.user && this.user.myNineCode) {
       this.needNineCode = true;
       this.isReSet = false;
@@ -85,8 +103,8 @@ export class PatternLockComponent implements OnInit {
     }
 
     this.isVal = !this.navParams.data.reset ? true : false;
-    this.message = this.isVal ? '请验证手势密码' : '请输入原来的密码';
-    this.message = this.isReSet ? '请设置手势密码' : this.message;
+    this.message = this.isVal ? this.translateTexts['PatternLock.validate'] : this.translateTexts['PatternLock.original'];
+    this.message = this.isReSet ? this.translateTexts['PatternLock.set'] : this.message;
 
     this.canvas = document.getElementById("lockCanvas");
   }
@@ -95,7 +113,7 @@ export class PatternLockComponent implements OnInit {
   validateId(): void {
     // localStorage.setItem('toValiPassword', 'true');
     this.user.myNineCode = '';
-    localStorage.setItem('currentUser', JSON.stringify(this.user));
+    this.store$.dispatch(new User_Update(this.user));
     this.navCtrl.setRoot(LoginComponent);
   }
 
@@ -134,7 +152,6 @@ export class PatternLockComponent implements OnInit {
     this.canvasWidth = document.body.offsetWidth;//网页可见区域宽
     let leftHeight = document.body.offsetHeight - this.headHeight + 80;
     if (this.isVal) {
-      console.log(this.headHeight)
       this.canvasHeight = (Math.min(this.headHeight, 265) / 0.35 * 0.65 - 80);
     } else {
       this.canvasHeight = this.headHeight / 0.18 * 0.6 - 80;
@@ -256,18 +273,18 @@ export class PatternLockComponent implements OnInit {
       cxt.clearRect(0, 0, this.canvasWidth, this.canvasHeight);
       this.Draw(cxt, this.circleArr, pwdArr, { X: touches.pageX, Y: touches.pageY - this.headHeight });
     }, false);
-    canvas.addEventListener("touchend", (e: any) => {
+    canvas.addEventListener("touchend", async (e: any) => {
       cxt.clearRect(0, 0, this.canvasWidth, this.canvasHeight);
       this.Draw(cxt, this.circleArr, [], null);
 
       if (this.isReSet) {
         if (this.myCode.length > 0) {
           if (this.myCode.join('') == pwdArr.join('')) {
-            this.message = '手势密码设置成功';
+            this.message = this.translateTexts['PatternLock.reset_succ'];
             // localStorage.setItem('myNineCode', this.myCode.join(''));
             // localStorage.setItem('needPassNineCode', 'true');
             this.user.myNineCode = this.myCode.join('');
-            localStorage.setItem('currentUser', JSON.stringify(this.user));
+            this.store$.dispatch(new User_Update(this.user));
             setTimeout(() => {
               if (!this.isVal) {
                 this.navCtrl.pop();
@@ -276,43 +293,32 @@ export class PatternLockComponent implements OnInit {
               }
             }, 300)
           } else {
-            this.message = '两次密码不一致,请重新设置';
+            this.message = this.translateTexts['PatternLock.reset_err'];
           }
         } else {
           this.myCode = pwdArr;
-          this.message = '请再次输入密码';
+          this.message = this.translateTexts['PatternLock.repeat'];
         }
       } else {
         //用户验证判定
         if (this.isVal) {
           // if (localStorage.getItem('myNineCode') == pwdArr.join('')) {
           if (this.user.myNineCode == pwdArr.join('')) {
-            this.message = '密码正确';
+            this.message = this.translateTexts['PatternLock.right'];
             // let user = JSON.parse(localStorage.getItem('currentUser'));
-            this.myHttp.post(LoginConfig.loginUrl, { userName: this.user.username, password: this.user.password }, true).then((res) => {
-              this.user.avatarUrl = res.json().User.AVATAR_URL;
-              this.user.nickname = res.json().User.NICK_NAME;
-              this.user.position = res.json().User.JOB_TITLE;
-              this.user.department = res.json().User.DEPT_NAME;
-              this.user.empno = res.json().User.EMPNO;
-              localStorage.setItem('currentUser', JSON.stringify(this.user));
-            });
-            this.navCtrl.setRoot(TabsComponent);
-            // this.jmessageService.login(this.user.username, this.user.password).then(() => {
-            //   // to do loadUnreadMessage
-            //   this.navCtrl.setRoot(TabsComponent);
-            // });
-            if (this.platform.is('cordova')) {
-              this.jmessageService.autoLogin(this.user.username, this.user.password).then((res) => {
-                if (res) {
+            let ADloginSuccess = await this.loginService.myADLogin(this.user.username, this.user.password);
+            if (ADloginSuccess) {
+                let jMsgLoginSuccess = await this.loginService.jMessageLogin(this.user.username, this.user.password);
+                if(jMsgLoginSuccess) {
                   this.navCtrl.setRoot(TabsComponent);
                 } else {
-                  this.message = 'Jmessage error';
+                  this.loginErrorDeal();
                 }
-              });
+            } else {
+              this.loginErrorDeal();
             }
           } else {
-            this.message = '密码错误！！！';
+            this.message = this.translateTexts['PatternLock.vali_wrong'];
           }
           // 更改手势密码判定
         } else {
@@ -320,35 +326,41 @@ export class PatternLockComponent implements OnInit {
           if (this.canChange) {
             if (this.myCode.length > 0) {
               if (this.myCode.join('') == pwdArr.join('')) {
-                this.message = '已更新密码';
+                this.message = this.translateTexts['PatternLock.update'];
                 // localStorage.setItem('myNineCode', this.myCode.join(''));
                 this.user.myNineCode = this.myCode.join('');
-                localStorage.setItem('currentUser', JSON.stringify(this.user));
+                this.store$.dispatch(new User_Update(this.user));
                 setTimeout(() => {
                   this.navCtrl.pop();
                 }, 300)
               } else {
-                this.message = '两次密码不一致,请重新设置';
+                this.message = this.translateTexts['PatternLock.reset_err'];
                 this.myCode = [];
               }
             } else {
               this.myCode = pwdArr;
-              this.message = '请再次输入密码';
+              this.message = this.translateTexts['PatternLock.repeat'];
             }
           } else {
             // if (localStorage.getItem('myNineCode') == pwdArr.join('')) {
             if (this.user.myNineCode == pwdArr.join('')) {
               this.canChange = true;
-              this.message = '请设置新的密码'
+              this.message = this.translateTexts['PatternLock.reset']
             } else {
               this.canChange = false;
-              this.message = '请重新输入,与原密码不一致'
+              this.message = this.translateTexts['PatternLock.vali_wrong1']
             }
           }
         }
       }
       pwdArr = [];
     }, false);
+  }
+
+  loginErrorDeal() {
+    this.plugin.showToast(this.translateTexts['autologin_err'], 'top', 4000);
+    this.store$.dispatch(new User_Clear())
+    this.navCtrl.setRoot(LoginComponent);
   }
 
 }

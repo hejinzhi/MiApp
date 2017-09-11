@@ -12,7 +12,6 @@ import { NoticeComponent } from './notice/notice.component';
 import { AlertComponent } from './alert/alert.component';
 
 import { MyHttpService } from '../core/services/myHttp.service';
-import { LanguageConfig } from './shared/config/language.config';
 import { DatabaseService } from './shared/service/database.service';
 import { PluginService } from '../core/services/plugin.service';
 import { TranslateService } from '@ngx-translate/core';

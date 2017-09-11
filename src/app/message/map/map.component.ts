@@ -2,7 +2,6 @@ import { Component, OnInit, Input } from '@angular/core';
 import { NavParams } from 'ionic-angular';
 // import { ChartService } from '../shared/service/chart.service';
 
-import { LanguageConfig } from '../shared/config/language.config';
 
 @Component({
     selector: 'sg-mapcomponent',
