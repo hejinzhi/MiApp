@@ -22,6 +22,8 @@ export class OrganizationComponent implements OnInit {
     deptHistory: any[] = []; // 记录被点击过的部门历史
     peopleInDept: any[] = []; // 记录在这个部门内的人
     showPeople: boolean; // 是否显示人员信息
+    site: string;//记录时哪个公司
+
 
     constructor(
         public navCtrl: NavController,
@@ -30,28 +32,47 @@ export class OrganizationComponent implements OnInit {
     ) { }
 
     async ngOnInit() {
-        let res = await this.contactService.getDeptInfoByGrade(EnvConfig.companyID, EnvConfig.maxGrade);
-        let result = res.json();
-        if (result.length > 0) {
-            this.parentDept = result[0];
-            this.deptHistory.push(result[0]);
-        } else {
-            this.parentDept = {
-                DEPTNO: null,
-                DEPTNAME: '未知部门'
-            };
-        }
+        // let res = await this.contactService.getDeptInfoByGrade(EnvConfig.companyID, EnvConfig.maxGrade);
+        // let result = res.json();
+        // if (result.length > 0) {
+        //     this.parentDept = result[0];
+        //     this.deptHistory.push(result[0]);
+        // } else {
+        //     this.parentDept = {
+        //         DEPTNO: null,
+        //         DEPTNAME: ''
+        //     };
+        // }
 
-        let childRes = await this.contactService.getChildDeptInfo(EnvConfig.companyID, this.parentDept.DEPTNO);
-        let childResult = childRes.json();
-        this.childrenDeptList = childResult;
+        // let childRes = await this.contactService.getChildDeptInfo(EnvConfig.companyID, this.parentDept.DEPTNO);
+        // let childResult = childRes.json();
+        // this.childrenDeptList = childResult;
+        this.site = EnvConfig.companyID;
+        this.parentDept = {
+            DEPTNO: 'MITAC',
+            DEPTNAME: '神達集團'
+        };
+        this.deptHistory.push(this.parentDept);
+        this.childrenDeptList = ORG;
     }
 
     async viewChildDept(dept: any) {
         this.deptIndex++;
         this.deptHistory.push(dept);
         this.parentDept = dept;
-        let childRes = await this.contactService.getChildDeptInfo(EnvConfig.companyID, this.parentDept.DEPTNO);
+        if (this.parentDept.DEPTNO === 'MSL') {
+            this.parentDept.DEPTNO = MSL_TOP_DEPTNO;
+            this.site = 'MSL';
+        }
+        else if (this.parentDept.DEPTNO === 'MIC') {
+            this.parentDept.DEPTNO = MIC_TOP_DEPTNO;
+            this.site = 'MIC';
+        }
+        else if (this.parentDept.DEPTNO === 'MKL') {
+            this.parentDept.DEPTNO = MKL_TOP_DEPTNO;
+            this.site = 'MKL';
+        }
+        let childRes = await this.contactService.getChildDeptInfo(this.site, this.parentDept.DEPTNO);
         let childResult = childRes.json();
         if (childResult.length > 0) {
             this.childrenDeptList = childResult;
@@ -73,10 +94,34 @@ export class OrganizationComponent implements OnInit {
     async goBack() {
         let length = this.deptHistory.length;
         this.parentDept = this.deptHistory[length - 2];
-        let childRes = await this.contactService.getChildDeptInfo(EnvConfig.companyID, this.parentDept.DEPTNO);
-        let childResult = childRes.json();
-        this.childrenDeptList = childResult;
+        if (this.parentDept.DEPTNO === 'MITAC') {
+            this.childrenDeptList = ORG;
+        } else {
+            let childRes = await this.contactService.getChildDeptInfo(this.site, this.parentDept.DEPTNO);
+            let childResult = childRes.json();
+            this.childrenDeptList = childResult;
+        }
         this.showPeople = false;
         this.deptHistory.pop();
+
     }
 }
+
+const ORG = [
+    {
+        DEPTNO: 'MIC',
+        DEPTNAME: '神達電腦'
+    },
+    {
+        DEPTNO: 'MSL',
+        DEPTNAME: '順達電腦'
+    },
+    {
+        DEPTNO: 'MKL',
+        DEPTNAME: '昆達電腦'
+    }
+];
+const MSL_TOP_DEPTNO = '00000289';
+const MIC_TOP_DEPTNO = '2S00000';
+const MKL_TOP_DEPTNO = '1000001';
+
