@@ -26,8 +26,6 @@ export class BookLibraryComponent implements OnInit {
         private app: App
     ) { }
 
-    languageType: string = localStorage.getItem('languageType');
-    languageContent = LanguageConfig.bookLibraryComponent[this.languageType];
     books: any[];
     user: any;
     firstIn: boolean = true; // 记录是否第一次打开这个页面，如果是，则显示loading提示框，否则不显示
@@ -126,20 +124,20 @@ export class BookLibraryComponent implements OnInit {
         if (!scanRes.cancelled && scanRes.text.length === 13) {
             let doubanRes = await this.bookService.getBookInfoFromDouban(scanRes.text);
             if (doubanRes.json().code === 6000) {
-                this.showError(this.languageContent.errorMsg1);
+                this.showError(this.bookService.translateTexts.errorMsg1);
             } else {
                 let book = this.bookService.transformBookInfo(doubanRes.json());
                 this.navCtrl.push('BookDetailComponent', { book: book, type: 'addBook' });
                 this.menuCtrl.close();
             }
         } else {
-            this.showError(this.languageContent.errorMsg2);
+            this.showError(this.bookService.translateTexts.errorMsg2);
         }
     }
 
     showError(msg: string) {
         let confirm = this.alertCtrl.create({
-            title: this.languageContent.error,
+            title: this.bookService.translateTexts.error,
             subTitle: msg,
             buttons: ['OK']
         });
@@ -222,7 +220,7 @@ export class BookLibraryComponent implements OnInit {
 
     // 借书申请
     borrowRequest() {
-        this.prompt(this.languageContent.borrowPromptTitle, this.languageContent.borrowPromptContent).then(async (username: string) => {
+        this.prompt(this.bookService.translateTexts.borrowPromptTitle, this.bookService.translateTexts.borrowPromptContent).then(async (username: string) => {
             let res;
             if (username) {
                 res = await this.bookService.getOrderBooks(username.toLowerCase());
@@ -242,7 +240,7 @@ export class BookLibraryComponent implements OnInit {
 
     // 还书申请
     payBackRequest() {
-        this.prompt(this.languageContent.paybackPromptTitle, this.languageContent.paybackPromptContent).then(async (username: string) => {
+        this.prompt(this.bookService.translateTexts.paybackPromptTitle, this.bookService.translateTexts.paybackPromptContent).then(async (username: string) => {
             let res;
             if (username) {
                 res = await this.bookService.getBorrowedBooks(username.toLowerCase());
@@ -273,14 +271,14 @@ export class BookLibraryComponent implements OnInit {
                 ],
                 buttons: [
                     {
-                        text: this.languageContent.cancel,
+                        text: this.bookService.translateTexts.cancel,
                         handler: (data: any) => {
                             console.log('Cancel clicked');
                             reject();
                         }
                     },
                     {
-                        text: this.languageContent.confirm,
+                        text: this.bookService.translateTexts.confirm,
                         handler: (data: any) => {
                             resolve(data.username);
                         }

@@ -10,8 +10,6 @@ import { AttendanceService } from '../shared/service/attendance.service';
 import { MyValidatorModel } from '../../../../shared/models/my-validator.model';
 import { MyFormModel } from '../shared/models/my-form.model';
 
-import { LanguageTypeConfig } from '../shared/config/language-type.config';
-
 @IonicPage()
 @Component({
   selector: 'sg-callback-leave-form',
@@ -28,9 +26,6 @@ export class CallbackLeaveFormComponent {
     No:'',
     data:{}
   }
-  fontType:string = localStorage.getItem('languageType')
-  fontContent = LanguageTypeConfig.callbackLeaveFormComponent[this.fontType];
-
   haveSaved:boolean = false;
   errTip:string ='';
   todo: FormGroup;

@@ -1,7 +1,8 @@
-import { NavParams, ViewController } from 'ionic-angular';
+import { NavParams, ViewController, IonicPage } from 'ionic-angular';
 import { FormBuilder, FormGroup, FormArray, FormControl, Validators } from '@angular/forms';
 import { Component, OnInit } from '@angular/core';
 
+@IonicPage()
 @Component({
     selector: 'sg-exception-detail',
     templateUrl: 'exception-detail.component.html'

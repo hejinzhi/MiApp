@@ -21,13 +21,10 @@ export class BookDetailComponent implements OnInit {
         private translate: TranslateService
     ) { }
 
-    languageType: string = localStorage.getItem('languageType')
-    languageContent = LanguageConfig.bookDetailComponent[this.languageType];
     book: any;
     type: string; // 记录是否由“添加图书”转跳进来的
     showAddBtn: boolean; // 是否显示“录入”按钮
     showBorrowBtn: boolean; //是否显示“借阅”按钮
-    translateTexts: any; // 记录转换后的文本(简繁体)
 
     ngOnInit() {
         this.book = this.navParams.get('book');
@@ -45,11 +42,6 @@ export class BookDetailComponent implements OnInit {
             }
 
         }
-
-        this.translate.get(['bookLibrary.error', 'bookLibrary.errorMsg1', 'bookLibrary.errorMsg2', 'bookLibrary.errorMsg3',
-            'bookLibrary.errorMsg4', 'bookLibrary.successMsg1', 'bookLibrary.successMsg2']).subscribe((res) => {
-                this.translateTexts = res;
-            })
     }
 
     getAddQty(qty: number) {
@@ -58,7 +50,7 @@ export class BookDetailComponent implements OnInit {
 
     showError(msg: string) {
         let confirm = this.alertCtrl.create({
-            title: this.translateTexts['bookLibrary.error'],
+            title: this.bookService.translateTexts.error,
             subTitle: msg,
             buttons: ['OK']
         });
@@ -90,19 +82,19 @@ export class BookDetailComponent implements OnInit {
                 if (!scanRes.cancelled && scanRes.text.length === 13) {
                     let doubanRes = await this.bookService.getBookInfoFromDouban(scanRes.text);
                     if (doubanRes.json().code === 6000) {
-                        this.showError(this.translateTexts['bookLibrary.errorMsg1']);
+                        this.showError(this.bookService.translateTexts.errorMsg1);
                     } else {
                         let book = this.bookService.transformBookInfo(doubanRes.json());
                         this.book = book;
                     }
                 } else {
-                    this.showError(this.translateTexts['bookLibrary.errorMsg2']);
+                    this.showError(this.bookService.translateTexts.errorMsg2);
                 }
             } else {
-                this.showInfo(this.translateTexts['bookLibrary.successMsg1']);
+                this.showInfo(this.bookService.translateTexts.successMsg1);
             }
         } catch (err) {
-            this.showError(this.translateTexts['bookLibrary.errorMsg3']);
+            this.showError(this.bookService.translateTexts.errorMsg3);
         }
 
     }
@@ -110,10 +102,10 @@ export class BookDetailComponent implements OnInit {
     async borrowBook(isbn13: string) {
         try {
             await this.bookService.borrowBook(isbn13);
-            this.showInfo(this.translateTexts['bookLibrary.successMsg2']);
+            this.showInfo(this.bookService.translateTexts.successMsg2);
         }
         catch (err) {
-            this.showError(this.translateTexts['bookLibrary.errorMsg4']);
+            this.showError(this.bookService.translateTexts.errorMsg4);
         }
     }
 

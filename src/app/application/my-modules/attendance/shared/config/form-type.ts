@@ -1,9 +1,5 @@
-import { LanguageTypeConfig } from './language-type.config';
 export class FormType {
-
-  fontType:string = localStorage.getItem('languageType')
-  fontContent = LanguageTypeConfig.formType[this.fontType];
-
+  
   attendance_wrong: {type:string,name:string} = {type:'0',name:'attendance.attendance_wrong'};
 
   attendance_lack: {type:string,name:string} = {type:'1',name:'attendance.attendance_lack'};

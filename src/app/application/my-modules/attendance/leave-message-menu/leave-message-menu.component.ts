@@ -2,7 +2,6 @@ import { Component } from '@angular/core';
 import { NavController, NavParams, IonicPage } from 'ionic-angular';
 
 import { FormType } from '../shared/config/form-type';
-import { LanguageTypeConfig } from '../shared/config/language-type.config';
 
 import { AttendanceService } from '../shared/service/attendance.service';
 import { PluginService }   from '../../../../core/services/plugin.service';
@@ -13,10 +12,6 @@ import { PluginService }   from '../../../../core/services/plugin.service';
   templateUrl: 'leave-message-menu.component.html'
 })
 export class LeaveMessageMenuComponent {
-
-  fontType:string = localStorage.getItem('languageType')
-  fontContent = LanguageTypeConfig.leaveMessageMenuComponent[this.fontType];
-
   formType = new FormType();
   constructor(
     public navCtrl: NavController,

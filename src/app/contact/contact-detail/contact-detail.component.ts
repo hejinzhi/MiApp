@@ -12,8 +12,6 @@ import { PluginService } from '../../core/services/plugin.service';
 })
 export class ContactDetailComponent implements OnInit {
 
-    languageType: string = localStorage.getItem('languageType');
-    languageContent = LanguageConfig.contactDetailComponent[this.languageType];
     personData: any;
     loginUsername: string;
 
@@ -39,7 +37,7 @@ export class ContactDetailComponent implements OnInit {
     }
 
     sendMail() {
-      // this.plugin.showToast(this.languageContent.toMail)
+        // this.plugin.showToast(this.languageContent.toMail)
     }
 
 }

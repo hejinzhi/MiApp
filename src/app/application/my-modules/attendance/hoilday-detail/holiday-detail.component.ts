@@ -1,18 +1,12 @@
 import { Component } from '@angular/core';
 import { NavController, NavParams, IonicPage } from 'ionic-angular';
 
-import { LanguageTypeConfig } from '../shared/config/language-type.config';
-
 @IonicPage()
 @Component({
   selector: 'sg-hoilday-detail',
   templateUrl: 'holiday-detail.component.html'
 })
 export class HoildayDetailComponent {
-
-  fontType:string = localStorage.getItem('languageType')
-  fontContent = LanguageTypeConfig.holidayDetailComponent[this.fontType];
-
   leaveDays:{STADATE:string,detail_used:{type:string,value:string}[],detail_canUse:{type:string,value:string}[]};
   constructor(
     public navCtrl: NavController,

@@ -25,16 +25,27 @@ export class LoginComponent {
   ) {
   }
   appVersion: string;
-  registerCredentials = { username: 'jinzhi.he', password: 'pass', rememberPWD: false, autoLogin: false };
+  registerCredentials = { username: '', password: '', rememberPWD: false, autoLogin: false };
 
   ionViewDidLoad() {
     this.store$.select('userReducer').subscribe((user:UserState) => {
-      console.log(user);
       if(user.nickname) {
         this.registerCredentials = Object.assign(this.registerCredentials, user);
       }
     });
     this.appVersion = localStorage.getItem('appVersion');
+  }
+
+  check1() {
+    if(!this.registerCredentials.rememberPWD) {
+      this.registerCredentials.autoLogin = false;
+    }
+  }
+
+  check2() {
+    if(this.registerCredentials.autoLogin) {
+      this.registerCredentials.rememberPWD = true;
+    }
   }
 
   public async login() {

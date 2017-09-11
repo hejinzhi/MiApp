@@ -20,6 +20,7 @@ import { LoginService } from './login/shared/service/login.service';
 
 import { UserState } from './shared/models/user.model';
 import { MyStore } from './shared/store';
+import { User_Clear } from './shared/actions/user.action';
 
 declare var cordova: any;
 declare var window: any;
@@ -77,10 +78,9 @@ export class MyAppComponent {
             statusBar.styleDefault();
             splashScreen.hide();
             this.jMessage.init();
-
-            await this.appInit();
             translate.setDefaultLang('zh-TW');
             this.setDefaultLanguage();
+            await this.appInit();
             this.plugin.checkAppForUpdate();
             if (platform.is('cordova') && platform.is('android')) {
                 let original = platform.runBackButtonAction;
@@ -123,34 +123,38 @@ export class MyAppComponent {
     }
 
     async appInit() {
-        if (this.user.username && this.user.password) {
-            let ADloginSuccess = await this.loginService.myADLogin(this.user.username, this.user.password);
-            if (ADloginSuccess) {
-                let jMsgLoginSuccess = await this.loginService.jMessageLogin(this.user.username, this.user.password);
-                if (jMsgLoginSuccess && this.user.myNineCode) {
-                    // 已经有用户信息和设定为要验证手势密码
-                    this.rootPage = PatternLockComponent;
-                    // this.loginJmes();
-                } else if (jMsgLoginSuccess && this.user.autoLogin) {
-                    this.rootPage = TabsComponent;
-                    // this.loginJmes();
-                } else {
-                    this.rootPage = LoginComponent;
-                }
-            } else {
-                this.rootPage = LoginComponent;
-            }
-        } else {
-            this.rootPage = LoginComponent;
-        }
-
         if (!localStorage.getItem('appVersion')) {
             localStorage.setItem('appVersion', EnvConfig.appVersion);
         }
+        if(!this.user.username || !this.user.password) {
+            this.rootPage = LoginComponent;
+            return;
+        };
+        if(this.user.myNineCode) {
+            // 已经有用户信息和设定为要验证手势密码
+            this.rootPage = PatternLockComponent;
+        } else {
+            if(this.user.autoLogin) {
+                let ADloginSuccess = await this.loginService.myADLogin(this.user.username, this.user.password);
+                let jMsgLoginSuccess
+                if (ADloginSuccess) {
+                    jMsgLoginSuccess = await this.loginService.jMessageLogin(this.user.username, this.user.password);
+                }
+                if (!ADloginSuccess || ! jMsgLoginSuccess) {
+                    this.store$.dispatch(new User_Clear());
+                    this.rootPage = LoginComponent;
+                    setTimeout(() => this.plugin.showToast(this.plugin.translateTexts['autologin_err'], 'top', 4000),100) 
+                } else {
+                    this.rootPage = TabsComponent;
+                } 
+            } else {
+                this.rootPage = LoginComponent;
+            }
+        }  
     }
 
     setDefaultLanguage() {
-        let preferLang = localStorage.getItem('preferLang');
+        let preferLang = this.user.preferLang;
         let targetLang:string;
         if(preferLang) {
           targetLang = preferLang;

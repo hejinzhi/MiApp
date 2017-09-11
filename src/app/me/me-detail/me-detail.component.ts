@@ -12,8 +12,6 @@ import { TranslateService } from '@ngx-translate/core';
 
 import { UserState } from './../../shared/models/user.model';
 
-import { LanguageConfig } from '../shared/config/language.config';
-
 @IonicPage()
 @Component({
   selector: 'sg-detail',

@@ -1,8 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { NavController, NavParams, App, Platform, IonicPage } from 'ionic-angular';
 
-import { LanguageTypeConfig } from '../shared/config/language-type.config';
-
 import { PluginService }   from '../../../../core/services/plugin.service';
 import { AttendanceService } from '../shared/service/attendance.service';
 
@@ -12,10 +10,6 @@ import { AttendanceService } from '../shared/service/attendance.service';
   templateUrl: 'form-list.component.html',
 })
 export class FormListComponent {
-
-  fontType: string = localStorage.getItem('languageType')
-  fontContent = LanguageTypeConfig.formListComponent[this.fontType];
-
   showList: boolean = false;
 
   type: string = '100';

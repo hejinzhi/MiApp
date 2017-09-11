@@ -5,28 +5,28 @@
         <ion-list>
           <ion-item>
             <ion-label class="iconfontyyy">&#xe75c;</ion-label>
-            <ion-input type="text" placeholder="Username" name="username" [(ngModel)]="registerCredentials.username" required></ion-input>
+            <ion-input type="text" [placeholder]="'username' | translate" name="username" [(ngModel)]="registerCredentials.username" required></ion-input>
           </ion-item>
           <ion-item>
             <ion-label class="iconfontyyy">&#xe63e;</ion-label>
-            <ion-input type="password" placeholder="Password" name="password" [(ngModel)]="registerCredentials.password" required></ion-input>
+            <ion-input type="password" [placeholder]="'password' | translate" name="password" [(ngModel)]="registerCredentials.password" required></ion-input>
           </ion-item>
           <ion-row>
             <ion-col col-6 class="extra-opt">
-              <ion-checkbox color="#3773F7" [(ngModel)]="registerCredentials.rememberPWD" name="rememberPWD"></ion-checkbox>
-              <ion-label>记住密码</ion-label>
+              <ion-checkbox color="#3773F7" [(ngModel)]="registerCredentials.rememberPWD" name="rememberPWD" (ionChange)="check1($event)"></ion-checkbox>
+              <ion-label>{{ 'rememberPWD' | translate}}</ion-label>
             </ion-col>
             <ion-col col-6 class="extra-opt">
-              <ion-checkbox color="#3773F7" [(ngModel)]="registerCredentials.autoLogin" name="autoLogin"></ion-checkbox>
-              <ion-label>自动登录</ion-label>
+              <ion-checkbox color="#3773F7" [(ngModel)]="registerCredentials.autoLogin" name="autoLogin" (ionChange)="check2($event)"></ion-checkbox>
+              <ion-label>{{ 'autoLogin' | translate}}</ion-label>
             </ion-col>
           </ion-row>
         </ion-list>
       </ion-row>
       <ion-row>
         <ion-col class="signup-col">
-          <button ion-button class="submit-btn" full type="submit" [disabled]="!registerForm.form.valid">Login</button>
-          <span ion-button class="register-btn" block clear>Create New Account</span>
+          <button ion-button class="submit-btn" full type="submit" [disabled]="!registerForm.form.valid">{{ 'login' | translate}}</button>
+          <!-- <span ion-button class="register-btn" block clear>Create New Account</span> -->
         </ion-col>
       </ion-row>
     </form>

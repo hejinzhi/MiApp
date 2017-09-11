@@ -1,7 +1,6 @@
-import { User_Logout } from './../../shared/actions/user.action';
-import { MyStore } from './../../shared/store';
+import { Subscription } from 'rxjs/Rx';
 import { Store } from '@ngrx/store';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { NavController, NavParams, AlertController, App, Platform, IonicPage } from 'ionic-angular';
 
 import { LoginComponent } from '../../login/login.component';
@@ -10,18 +9,21 @@ import { JMessageService } from '../../core/services/jmessage.service';
 import { PluginService } from '../../core/services/plugin.service';
 import { TranslateService } from '@ngx-translate/core';
 
-import { LanguageConfig } from '../shared/config/language.config';
+import { UserState } from './../../shared/models/user.model';
+import { User_Logout, User_Update } from './../../shared/actions/user.action';
+import { MyStore } from './../../shared/store';
 
 @IonicPage()
 @Component({
   selector: 'sg-set',
   templateUrl: 'set.component.html'
 })
-export class SetComponent implements OnInit {
+export class SetComponent implements OnInit, OnDestroy {
 
   plf: string; // 判断是什么平台
   translateTexts: any;
-
+  user: UserState
+  mysubscription: Subscription
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
@@ -40,11 +42,16 @@ export class SetComponent implements OnInit {
     }
   }
   ngOnInit() {
+    this.mysubscription = this.store$.select('userReducer').subscribe((user:UserState) => this.user = user);
     this.translate.stream(['meComponent.languageChangeAlertTitle', 'meComponent.zh-CN', 'meComponent.zh-TW', 'cancel', 'confirm'
       , 'meComponent.reStartAppAlertTitle', 'meComponent.reStartAppAlertMes', 'meComponent.logoutAlertTitle', 'meComponent.logoutAlertMes'
       , 'meComponent.exitAlertTitle', 'meComponent.exitAlertMes', 'Y', 'N', 'change_to']).subscribe((res) => {
         this.translateTexts = res;
       })
+  }
+
+  ngOnDestroy() {
+    this.mysubscription.unsubscribe();
   }
 
   checkUpdate() {
@@ -74,7 +81,7 @@ export class SetComponent implements OnInit {
       text: this.translateTexts['confirm'],
       handler: (data: string) => {
         this.translate.use(data);
-        localStorage.setItem('preferLang',data);
+        this.store$.dispatch(new User_Update({ preferLang: data}))
         this.plugin.showToast(this.translateTexts['change_to']+this.translateTexts['meComponent.'+data])
       }
     });

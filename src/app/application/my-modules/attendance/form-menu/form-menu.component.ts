@@ -7,17 +7,12 @@ import { AttendanceService } from '../shared/service/attendance.service';
 
 import { MyFormModel } from '../shared/models/my-form.model';
 
-import { LanguageTypeConfig } from '../shared/config/language-type.config';
-
 @IonicPage()
 @Component({
   selector: 'sg-form-menu',
   templateUrl: 'form-menu.component.html',
 })
 export class FormMenuComponent {
-
-  fontType:string = localStorage.getItem('languageType')
-  fontContent = LanguageTypeConfig.formMenuComponent[this.fontType];
 
   constructor(
     public navCtrl: NavController,

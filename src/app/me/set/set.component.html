@@ -4,13 +4,13 @@
   </ion-navbar>
 </ion-header>
 <ion-content>
-  <ion-list class="myList">
+  <ion-list class="myList" *ngIf="user" >
     <button ion-item class="function-message" disabled>
       <!-- <ion-icon name="swap" color="mac"></ion-icon> -->
       <span class="iconfontyyy" style="color: #3773F7">&#xe621;</span>
         &nbsp;{{'meComponent.flowMes' | translate}}
     </button>
-    <button ion-item class="function-message" (tap)="toNineCode()">
+    <button ion-item class="function-message" (tap)="toNineCode()" [disabled]="!user.rememberPWD">
       <ion-icon name="lock" color="mac"></ion-icon>
         &nbsp;{{'meComponent.lock' | translate}}
     </button>

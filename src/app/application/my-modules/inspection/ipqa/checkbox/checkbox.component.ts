@@ -1,4 +1,5 @@
 import { Component, OnInit, Input, Output, OnChanges, EventEmitter, SimpleChanges } from '@angular/core';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
     selector: 'sg-checkbox',
@@ -6,22 +7,26 @@ import { Component, OnInit, Input, Output, OnChanges, EventEmitter, SimpleChange
 })
 export class CheckboxComponent implements OnInit, OnChanges {
     constructor(
+        private translate: TranslateService
     ) { }
 
-
-    selectOptions: string[] = ['正常', '異常'];
+    // translateTexts: any = {
+    //     'inspection.ipqa.normal': '',
+    //     'inspection.ipqa.exception': ''
+    // }; // 记录转换后的文本(简繁体)
+    translateTexts: any;
+    // selectOptions: string[] = ['正常', '異常'];
+    selectOptions: string[] = [];
     public checkedIdx: number;
+    @Output() selectedValue: EventEmitter<string> = new EventEmitter();
+    @Input() reset: boolean;
+    @Input() value: string;
 
-    @Output()
-    selectedValue: EventEmitter<string> = new EventEmitter();
-
-    @Input()
-    reset: boolean;
-
-    @Input()
-    value: string;
-
-    ngOnInit() {
+    async ngOnInit() {
+        this.selectOptions = [];
+        this.translateTexts = await this.translate.get(['inspection.ipqa.normal', 'inspection.ipqa.exception']).toPromise();
+        this.selectOptions.push(this.translateTexts['inspection.ipqa.normal']);
+        this.selectOptions.push(this.translateTexts['inspection.ipqa.exception']);
         if (this.value === this.selectOptions[0]) {
             this.checkedIdx = 0;
         } else if (this.value === this.selectOptions[1]) {

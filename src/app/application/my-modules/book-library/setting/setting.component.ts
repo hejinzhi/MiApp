@@ -8,8 +8,6 @@ import { LanguageConfig } from '../shared/config/language.config';
     templateUrl: 'setting.component.html'
 })
 export class SettingComponent implements OnInit {
-    languageType: string = localStorage.getItem('languageType')
-    languageContent = LanguageConfig.settingComponent[this.languageType];
     scanFlag: boolean = true;
     batchAddBooks: boolean = true;
 

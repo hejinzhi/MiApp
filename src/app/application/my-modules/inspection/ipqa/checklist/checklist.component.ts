@@ -1,12 +1,11 @@
-import { CommonService } from './../../../../core/services/common.service';
-import { CheckboxComponent } from './../checkbox/checkbox.component';
-import { ExceptionDetailComponent } from './../exception-detail/exception-detail.component';
+import { CommonService } from './../../../../../core/services/common.service';
 import { InspectionService, Checklist } from './../shared/service/inspection.service';
 import { GridModel } from './../grid/grid.component';
-import { NavController, NavParams, ModalController } from 'ionic-angular';
+import { NavController, NavParams, ModalController, IonicPage } from 'ionic-angular';
 import { Component, OnInit, ViewChild } from '@angular/core';
+import { TranslateService } from '@ngx-translate/core';
 
-
+@IonicPage()
 @Component({
     selector: 'sg-checklist',
     templateUrl: 'checklist.component.html'
@@ -22,13 +21,19 @@ export class ChecklistComponent implements OnInit {
     reset: { no: string, reset: boolean }[];
     // 用户选择的线别
     line: string;
-
+    translateText = {
+        error: '',
+        exception: '',
+        the: '',
+        error1: ''
+    };
     constructor(
         private navCtrl: NavController,
         private navParams: NavParams,
         private modalCtrl: ModalController,
         private inspectionService: InspectionService,
-        private commonService: CommonService
+        private commonService: CommonService,
+        private translate: TranslateService
     ) { }
 
     async ngOnInit() {
@@ -40,28 +45,24 @@ export class ChecklistComponent implements OnInit {
         this.checkList.forEach((l) => {
             this.reset.push({ no: l.no, reset: false });
         });
+
+        this.translate.get(['error', 'inspection.ipqa.exception', 'inspection.ipqa.the', 'inspection.ipqa.error1']).subscribe((res) => {
+            this.translateText.error = res['error'];
+            this.translateText.exception = res['inspection.ipqa.exception'];
+            this.translateText.the = res['inspection.ipqa.the'];
+            this.translateText.error1 = res['inspection.ipqa.error1'];
+            console.log(this.translateText)
+        });
     }
 
     gou() {
         this.station.showCheckbox = true;
     }
 
-    // selectedValue(list: Checklist, event: any) {
-    //     list.value = event.checked;
-    //     if (event.title === '異常') {
-    //         let exceptionDetailModel = this.modalCtrl.create(ExceptionDetailComponent, { line: this.line, checklist: list.desc });
-    //         exceptionDetailModel.onWillDismiss((data: any) => {
-    //             if (data && (data.selected === false)) {
-    //                 event.checked = false;
-    //             }
-    //         });
-    //         exceptionDetailModel.present();
-    //     }
-    // }
     selectedValue(list: Checklist, event: any) {
         list.value = event;
-        if (event === '異常') {
-            let exceptionDetailModel = this.modalCtrl.create(ExceptionDetailComponent, { line: this.line, checklist: list.desc });
+        if (event === this.translateText.exception) {
+            let exceptionDetailModel = this.modalCtrl.create('ExceptionDetailComponent', { line: this.line, checklist: list.desc });
             exceptionDetailModel.onWillDismiss((data: any) => {
                 if (data && (data.selected === false)) {
                     list.value = '';
@@ -82,7 +83,7 @@ export class ChecklistComponent implements OnInit {
             if (this.checkList[i].value) { }
             else {
                 // this.showAlert('錯誤', `第${i + 1}項尚未填寫檢查結果，請填寫后再提交。`);
-                this.commonService.showAlert('錯誤', `第${i + 1}項尚未填寫檢查結果，請填寫后再提交。`);
+                this.commonService.showAlert(this.translateText.error, `${this.translateText.the}${i + 1}${this.translateText.error1}`);
                 allCheck = false;
                 break;
             }
