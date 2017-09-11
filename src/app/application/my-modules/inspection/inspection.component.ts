@@ -26,7 +26,7 @@ export class InspectionComponent implements OnInit {
     goToDetailPage(id: number) {
         // IPQA
         if (id == 3) {
-            this.navCtrl.push('IpqaComponent');
+            this.navCtrl.push('MenuComponent');
         }
         // ... others
         else {

@@ -1,0 +1,51 @@
+<ion-header>
+  <ion-navbar>
+    <ion-title>IPQA</ion-title>
+  </ion-navbar>
+</ion-header>
+<ion-content>
+  <ion-grid>
+    <ion-row center wrap>
+      <ion-col col-4 class="grid-col">
+        <div class="grid-content">
+          <a>
+            <img src="assets/icon/list.gif" class="grid-img">
+            <div class="grid-name">巡检名称</div>
+          </a>
+        </div>
+      </ion-col>
+      <ion-col col-4 class="grid-col" (tap)="goToReportPage()">
+        <div class="grid-content">
+          <a>
+            <img src="assets/icon/report.gif" class="grid-img">
+            <div class="grid-name">巡检报告</div>
+          </a>
+        </div>
+      </ion-col>
+      <ion-col col-4 class="grid-col" (tap)="goToReportPage()">
+        <div class="grid-content">
+          <a>
+            <img src="assets/icon/assign.png" class="grid-img">
+            <div class="grid-name">指派处理人</div>
+          </a>
+        </div>
+      </ion-col>
+      <ion-col col-4 class="grid-col">
+        <div class="grid-content">
+          <a>
+            <img src="assets/icon/gaishan.gif" class="grid-img">
+            <div class="grid-name">改善措施</div>
+          </a>
+        </div>
+      </ion-col>
+      <ion-col col-4 class="grid-col">
+        <div class="grid-content">
+          <a>
+            <img src="assets/icon/problem.gif" class="grid-img">
+            <div class="grid-name">问题追踪</div>
+          </a>
+        </div>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>
