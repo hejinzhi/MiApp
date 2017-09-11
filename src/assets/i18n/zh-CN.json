@@ -329,6 +329,10 @@
     "dept181": "MSL MC MD I Bose制造处",
     "dept102": "MSL MC MDⅡ NPI生产处"
   },
+  "otherscomponent":{
+      "dutydaily_title":"每日缺席明细",
+      "reward_title":"奖惩记录"
+  },
   "placeholder": "请输入中文名/英文名/工号",
   "contactTitle": "通讯录",
   "sameDept": "同部门",

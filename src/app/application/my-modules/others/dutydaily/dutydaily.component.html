@@ -1,6 +1,6 @@
 <ion-header>
   <ion-navbar>
-    <ion-title>{{languageContent.title}}</ion-title>
+    <ion-title>{{'otherscomponent.dutydaily_title' | translate}}</ion-title>
   </ion-navbar>
 </ion-header>
 <ion-content>
@@ -26,13 +26,13 @@
   <ion-grid [class.double_row]="i%2===1" *ngFor="let item of itemlist;let i=index">
     <ion-row class="myRow">
       <ion-col col-7>
-        <p>{{ item.SHORT_NAME }}</p>
+        <p>{{ item.SHORT_NAME | sgChineseConv}}</p>
       </ion-col>
       <ion-col col-2>
-        <p>{{item.NAME}}</p>
+        <p>{{item.NAME | sgChineseConv}}</p>
       </ion-col>
       <ion-col col-3>
-        <p>{{item.REMARK }}</p>
+        <p>{{item.REMARK | sgChineseConv}}</p>
       </ion-col>
     </ion-row>
     <div class="grid-footer"></div>
