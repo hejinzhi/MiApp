@@ -12,7 +12,6 @@ import { MapComponent } from '../map/map.component';
 
 import { MessageService } from '../shared/service/message.service';
 import { JMessageService } from '../../core/services/jmessage.service';
-import { LanguageConfig } from '../shared/config/language.config';
 import { DatabaseService } from '../shared/service/database.service';
 import { KeyboardAttachDirective } from '../shared/directive/KeyboardAttachDirective';
 import { UserModel } from '../../shared/models/user.model';

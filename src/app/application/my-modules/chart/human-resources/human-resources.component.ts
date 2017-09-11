@@ -5,18 +5,16 @@ import { LanguageConfig } from '../shared/config/language.config';
 
 @IonicPage()
 @Component({
-  selector:'sg-human-resources',
+  selector: 'sg-human-resources',
   templateUrl: 'human-resources.component.html'
 })
 export class HumanResourcesComponent {
 
-  languageType: string = localStorage.getItem('languageType');
-  languageContent = LanguageConfig.humanResourcesComponent[this.languageType];
 
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
-   ) {}
+  ) { }
 
   ionViewDidLoad() {
   }

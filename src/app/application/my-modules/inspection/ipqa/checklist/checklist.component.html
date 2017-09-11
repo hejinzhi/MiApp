@@ -13,7 +13,7 @@
   <ion-card *ngFor="let list of checkList;let i =index">
     <div class="my-content">
       <p>{{i+1}}. {{list.desc |sgChineseConv}}</p>
-      <p [ngStyle]="{color: list.priority==='Major'?'red':'green'}" class="priority">{{'inspection.ipqa.priority'| translate}}:{{list.priority}}</p>
+      <!-- <p [ngStyle]="{color: list.priority==='Major'?'red':'green'}" class="priority">{{'inspection.ipqa.priority'| translate}}:{{list.priority}}</p> -->
     </div>
     <sg-checkbox *ngIf="list.type === 'checkbox'" (selectedValue)="selectedValue(list,$event)" [reset]="reset[i].reset" [value]="list.value"></sg-checkbox>
     <div *ngIf="list.type === 'input'" class="my-div">

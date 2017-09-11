@@ -1,6 +1,6 @@
 <ion-header>
   <ion-navbar>
-    <ion-title>{{languageContent.title}}</ion-title>
+    <ion-title>{{'otherscomponent.reward_title' | translate}}</ion-title>
   </ion-navbar>
 </ion-header>
 <ion-content>
@@ -8,19 +8,19 @@
     <ion-row class="myRow">
       <ion-col col-5>
         <p>{{ item.DOCNO }}</p>
-        <p>{{ item.EMPNO }}{{ item.NAME }}</p>
+        <p>{{ item.EMPNO | sgChineseConv }}{{ item.NAME | sgChineseConv}}</p>
       </ion-col>
       <ion-col col-4>
         <p>{{item.EFFECT_DATE.substr(0,10) }}</p>
-        <p>{{item.KIND_REMARK}}{{item.TIMES}}次</p>
+        <p>{{item.KIND_REMARK | sgChineseConv}}{{item.TIMES}}次</p>
       </ion-col>
       <ion-col col-3>
         <p>{{item.STATUS }}</p>
-        <p>{{item.SUIT_ORDINANCE }}</p>
+        <p>{{item.SUIT_ORDINANCE | sgChineseConv}}</p>
       </ion-col>
     </ion-row>
     <div class="reason" no-padding>
-      <p>{{item.REASON}}</p>
+      <p>{{item.REASON | sgChineseConv}}</p>
     </div>
     <!--<div class="grid-footer"></div>-->
   </ion-grid>

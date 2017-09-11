@@ -77,10 +77,10 @@
     "camera": "拍攝",
     "personcard": "個人名片",
     "location": "位置",
-    "send": "發送",    
-    "voiceflagdesc1":"按住 說話",
-    "voiceflagdesc2":"鬆開 結束",
-    "speakshort":"說話時間太短"
+    "send": "發送",
+    "voiceflagdesc1": "按住 說話",
+    "voiceflagdesc2": "鬆開 結束",
+    "speakshort": "說話時間太短"
   },
   "alertcomponent": {
     "att": "ERP-人事考勤",
@@ -329,6 +329,10 @@
     "dept181": "MSL MC MD I Bose製造處",
     "dept102": "MSL MC MDⅡ NPI生產處"
   },
+   "otherscomponent":{
+      "dutydaily_title":"每日缺席明細",
+      "reward_title":"獎懲記錄"
+  },
   "placeholder": "請輸入中文名/英文名/工號",
   "contactTitle": "通訊錄",
   "sameDept": "同部門",
@@ -399,7 +403,7 @@
       "priority": "严重度",
       "inspectDate": "巡檢日期",
       "banbie": "班別",
-      "line": "線別",
+      "line": "位置",
       "inspector": "巡檢人員",
       "checklist": "違反項目",
       "exceptionDesc": "問題描述",
