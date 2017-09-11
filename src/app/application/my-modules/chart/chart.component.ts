@@ -5,7 +5,7 @@ import { LanguageConfig } from './shared/config/language.config';
 
 @IonicPage()
 @Component({
-  selector:'sg-chart',
+  selector: 'sg-chart',
   templateUrl: 'chart.component.html'
 })
 export class ChartComponent {
@@ -15,13 +15,11 @@ export class ChartComponent {
   tab3Root = 'ManufactureComponent';
   tab4Root = 'HumanResourcesComponent';
 
-  languageType: string = localStorage.getItem('languageType');
-  languageContent = LanguageConfig.chartComponent[this.languageType];
 
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
-  ) {}
+  ) { }
 
   ionViewDidLoad() {
 

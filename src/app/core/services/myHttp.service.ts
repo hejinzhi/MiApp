@@ -13,17 +13,15 @@ import { UserState } from './../../shared/models/user.model';
 @Injectable()
 export class MyHttpService {
 
-    languageType: string = localStorage.getItem('languageType');
-    languageContent = LanguageConfig.MyHttpService[this.languageType];
-    user:UserState
+    user: UserState
     constructor(
         private http: Http,
         private alertCtrl: AlertController,
         private app: App,
         private encryptUtilService: EncryptUtilService,
         private store$: Store<MyStore>
-    ) { 
-        this.store$.select('userReducer').subscribe((user:UserState) => this.user = user);
+    ) {
+        this.store$.select('userReducer').subscribe((user: UserState) => this.user = user);
     }
 
     postWithoutToken(url: string, body: any) {
@@ -44,7 +42,7 @@ export class MyHttpService {
                 res = await this.getNewToken();
             } catch (err) {
                 if (!loginFlag) {
-                    this.showError(this.languageContent.prompt, this.languageContent.logoutText, () => {
+                    this.showError('Error', 'Your token is already expired,please login again!', () => {
                         this.app.getRootNav().setRoot(LoginComponent);
                     });
                     return;
@@ -66,7 +64,7 @@ export class MyHttpService {
             title: title,
             message: message,
             buttons: [{
-                text: this.languageContent.confirm,
+                text: 'OK',
                 handler: () => {
                     cb();
                 }

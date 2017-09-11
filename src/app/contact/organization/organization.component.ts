@@ -11,8 +11,6 @@ import { LanguageConfig } from '../shared/config/language.config';
 })
 export class OrganizationComponent implements OnInit {
 
-    languageType: string = localStorage.getItem('languageType');
-    languageContent = LanguageConfig.organizationComponent[this.languageType];
     parentDept: any = {
         DEPTNO: null,
         DEPTNAME: null
