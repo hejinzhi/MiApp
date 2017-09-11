@@ -24,8 +24,6 @@ export class ApplicationComponent implements OnInit {
     public app: App) {
   }
 
-  languageType: string = localStorage.getItem('languageType');
-  languageContent = LanguageConfig.ApplicationComponent[this.languageType];
   items: ApplicationItem[]; // 不分类的所有数据
   itemsByGroup: ApplicationItem[][] = []; //按group分组
   showBtn: boolean = false; // 控制是否显示右上角的减号

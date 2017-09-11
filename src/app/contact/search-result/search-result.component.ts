@@ -14,8 +14,6 @@ import { TranslateService } from '@ngx-translate/core';
     templateUrl: 'search-result.component.html'
 })
 export class SearchResultComponent implements OnInit {
-    languageType: string = localStorage.getItem('languageType');
-    languageContent = LanguageConfig.searchResultComponent[this.languageType];
     type: string; // 记录时点击哪个按钮进来的
     typeDesc: string; // 类型的中文描述
     personList: any[] = []; // 记录服务器返回的结果
