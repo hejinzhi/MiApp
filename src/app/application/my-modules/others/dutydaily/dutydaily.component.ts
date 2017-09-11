@@ -3,7 +3,9 @@ import { Tabs } from 'ionic-angular'
 import { NavController, NavParams, App, Platform, IonicPage } from 'ionic-angular';
 import { LanguageConfig } from '../shared/config/language.config';
 
-import { DutyDailyService } from './dutydaily.service'
+import { DutyDailyService } from './dutydaily.service';
+import { TranslateService } from '@ngx-translate/core';
+
 
 @IonicPage()
 @Component({
@@ -12,8 +14,6 @@ import { DutyDailyService } from './dutydaily.service'
 })
 export class DutyDailyComponent implements OnInit {
 
-  languageType: string = localStorage.getItem('languageType');
-  languageContent = LanguageConfig.DutyDailyComponent[this.languageType];
   deptno: string;
   centerflag: string;
   reportdate: string;
@@ -24,6 +24,7 @@ export class DutyDailyComponent implements OnInit {
     public navCtrl: NavController,
     public navParams: NavParams,
     private dutydailyService: DutyDailyService,
+    private translate: TranslateService
   ) {
     this.deptno = navParams.data.deptno;
     this.centerflag = navParams.data.center_flag;
@@ -49,16 +50,4 @@ export class DutyDailyComponent implements OnInit {
     }));
   }
 
-}
-
-export class RewardList {
-  DOCNO: string;
-  EMPNO: string;
-  NAME: string;
-  EFFECT_DATE: string;
-  SUIT_ORDINANCE: string;
-  REASON: string;
-  TIMES: string;
-  STATUS: string;
-  KIND_REMARK: string;
 }
