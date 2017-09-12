@@ -1,3 +1,4 @@
+import { CommonService } from './common.service';
 import { Injectable } from '@angular/core';
 import { Platform } from 'ionic-angular';
 import { BarcodeScanner } from '@ionic-native/barcode-scanner';
@@ -16,7 +17,10 @@ export class JMessageService {
     public syncOfflineMessageHandler: any;
     jmessageHandler: Subscription; //接收句柄，再view被关闭的时候取消订阅，否则对已关闭的view进行数据脏检查会报错
     jmessageOffline: Subscription;
-    constructor(private platform: Platform) {
+    constructor(
+        private platform: Platform,
+        private commonService: CommonService
+    ) {
         // console.log(this.JMessage2, 'sdasdasdasda');
         // console.log(window.JMessage, '111');
         // this.jmessagePlugin = window.JMessage;
@@ -116,6 +120,7 @@ export class JMessageService {
                 resolve(true);
             }, (err: any) => {
                 console.log(err);
+                this.commonService.showAlert('error', 'err');
                 resolve(false);
             });
         });

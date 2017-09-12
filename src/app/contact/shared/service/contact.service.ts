@@ -27,8 +27,8 @@ export class ContactService {
         return this.myHttp.get(ContactConfig.getDeptInfoUrl + `?site=${site}`);
     }
 
-    public getPersonByDept(deptno: string) {
-        return this.myHttp.get(ContactConfig.getPersonByDeptUrl + `?deptno=${deptno}`);
+    public getPersonByDept(site: string, deptno: string) {
+        return this.myHttp.get(ContactConfig.getPersonByDeptUrl + `?site=${site}&deptno=${deptno}`);
     }
 
     public getSubordinate() {
