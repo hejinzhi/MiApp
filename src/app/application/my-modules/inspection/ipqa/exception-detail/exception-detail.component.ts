@@ -1,3 +1,4 @@
+import { UserModel } from './../../../../../shared/models/user.model';
 import { NavParams, ViewController, IonicPage } from 'ionic-angular';
 import { FormBuilder, FormGroup, FormArray, FormControl, Validators } from '@angular/forms';
 import { Component, OnInit } from '@angular/core';
@@ -17,11 +18,17 @@ export class ExceptionDetailComponent implements OnInit {
         private navParams: NavParams,
         private viewCtrl: ViewController
     ) {
+
+    }
+
+    ngOnInit() {
+        let localUser:UserModel=JSON.parse(localStorage.getItem('currentUser'));
+        let user=localUser.empno+','+localUser.nickname+','+localUser.username;
+
         this.formModel = this.fb.group({
             checkDate: [this.getToday(), Validators.required],
             checkPersons: this.fb.array([
-                'FE717 JINZHI.HE 何锦枝',
-                'FE716 HUGH.LIANG 梁铭辉'
+                user
             ], Validators.required),
             banbie: ['白班', Validators.required],
             address: ['', Validators.required],
@@ -32,9 +39,7 @@ export class ExceptionDetailComponent implements OnInit {
             PQE: ['', Validators.required],
             closer: ['', Validators.required]
         });
-    }
 
-    ngOnInit() {
         // 获取线别
         this.line = this.navParams.get('line');
         let address = this.formModel.get('address') as FormControl;

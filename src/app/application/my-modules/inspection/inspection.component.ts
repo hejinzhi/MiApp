@@ -13,24 +13,12 @@ import { Component, OnInit } from '@angular/core';
 export class InspectionComponent implements OnInit {
     constructor(
         private navCtrl: NavController,
-        private inspectionService: InspectionService
     ) { }
 
-    names: any[];
-
     async ngOnInit() {
-        let res = await this.inspectionService.getNames();
-        this.names = res.json();
     }
 
-    goToDetailPage(id: number) {
-        // IPQA
-        if (id == 3) {
-            this.navCtrl.push('MenuComponent');
-        }
-        // ... others
-        else {
-
-        }
+    goToIPQA() {
+        this.navCtrl.push('MenuComponent');
     }
 }
