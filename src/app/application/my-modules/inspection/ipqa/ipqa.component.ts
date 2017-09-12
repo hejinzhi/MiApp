@@ -41,7 +41,9 @@ export class IpqaComponent implements OnInit {
     async ngOnInit() {
         // this.lines = await this.inspectionService.getLines();
         let res = await this.inspectionService.getLines();
-        this.lines = res.json();
+        console.log(res);
+        // this.lines = res.json();
+        this.lines = res;
         this.translateTexts = await this.translate.get(['inspection.ipqa.stationTitle', 'inspection.ipqa.module']).toPromise();
     }
 
