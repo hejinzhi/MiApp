@@ -1,0 +1,62 @@
+<ion-header>
+  <ion-navbar>
+    <ion-title>巡检名称</ion-title>
+  </ion-navbar>
+</ion-header>
+<ion-content>
+  <form [formGroup]="checkForm" *ngIf="checkForm">
+    <ion-list>
+      <ion-item [class.has-success]="checkForm.get('name').dirty && !checkForm.get('name').errors" [class.has-error]="checkForm.get('name').dirty && checkForm.get('name').errors">
+        <ion-label>*巡检名称</ion-label>
+        <ion-input type="text" formControlName="name"></ion-input>
+      </ion-item>
+      <ion-item-divider class='alert' *ngIf="checkForm.get('name').dirty && checkForm.get('name').errors && checkForm.get('name').errors.required">该栏位不能为空</ion-item-divider>
+      <ion-item>
+        <ion-label>备注</ion-label>
+        <ion-input type="text" formControlName="more"></ion-input>
+      </ion-item>
+      <ion-item [class.has-success]="checkForm.get('admin').dirty && !checkForm.get('admin').errors" [class.has-error]="checkForm.get('admin').dirty && checkForm.get('admin').errors">
+        <ion-label>*管理员</ion-label>
+        <ion-input type="text" formControlName="admin"></ion-input>
+      </ion-item>
+      <ion-item-divider class='alert' *ngIf="checkForm.get('admin').dirty && checkForm.get('admin').errors && checkForm.get('admin').errors.required">该栏位不能为空</ion-item-divider>      
+      <ion-item>
+        <ion-label>*巡检频率</ion-label>
+        <ion-select [cancelText]="'attendance.cancle' | translate" [okText]="'attendance.confirm' | translate" formControlName="period">
+          <ion-option value="week">周</ion-option>
+          <ion-option value="month">月</ion-option>
+        </ion-select>
+      </ion-item>
+      <ion-item [class.has-success]="checkForm.get('category').dirty && !checkForm.get('category').errors" [class.has-error]="checkForm.get('category').dirty && checkForm.get('category').errors">
+        <ion-label>*巡检项目分类</ion-label>
+        <ion-input type="text" formControlName="category"></ion-input>
+      </ion-item>
+      <ion-item-divider class='alert' *ngIf="checkForm.get('category').dirty && checkForm.get('category').errors && checkForm.get('category').errors.required">该栏位不能为空</ion-item-divider>      
+      <div formArrayName="lists" class="subForm" *ngIf="showLists">
+        <ion-grid center *ngFor="let ctrl of checkForm.controls['lists'].controls; let i = index;">
+          <ion-row [formGroupName]="i">
+            <ion-col col-11>
+              <ion-item [class.has-success]="checkForm.get('lists').get(i+'').get('list').dirty && !checkForm.get('lists').get(i+'').get('list').errors"
+               [class.has-error]="checkForm.get('lists').get(i+'').get('list').dirty && checkForm.get('lists').get(i+'').get('list').errors">
+                <ion-label>*检查指标</ion-label>
+                <ion-input type="text"formControlName="list"></ion-input>
+              </ion-item>
+              <ion-item-divider class='alert' *ngIf="checkForm.get('lists').get(i+'').get('list').dirty && checkForm.get('lists').get(i+'').get('list').errors && checkForm.get('lists').get(i+'').get('list').errors.required">该栏位不能为空</ion-item-divider>                    
+              <ion-item>
+                <ion-label>*检查类型</ion-label>
+                <ion-select [cancelText]="'attendance.cancle' | translate" [okText]="'attendance.confirm' | translate" formControlName="type">
+                  <ion-option value="single">单选型</ion-option>
+                  <ion-option value="input">输入型</ion-option>
+                </ion-select>
+              </ion-item>
+            </ion-col>
+            <ion-col col-1 class="minus iconfontyyy" (tap)="removeSubFrom(i)">&#xe6bb;</ion-col>
+          </ion-row>
+        </ion-grid>
+      </div>
+      <ion-item-divider class="add" (tap)="addSubFrom()">+添加巡检项目</ion-item-divider>
+    </ion-list>
+    <button ion-button full type="button" (tap)="submit()" [disabled]="checkForm.invalid">提交</button>
+  </form>
+
+</ion-content>
