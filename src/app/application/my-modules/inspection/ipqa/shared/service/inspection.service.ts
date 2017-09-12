@@ -15,19 +15,19 @@ export class InspectionService {
         return this.myHttp.get(InspectionConfig.getNamesUrl);
     }
 
-    getLines(): Promise<any> {
-        return this.myHttp.get(InspectionConfig.getLinesUrl);
-    }
+    // getLines(): Promise<any> {
+    //     return this.myHttp.get(InspectionConfig.getLinesUrl);
+    // }
 
     // getModules(line: string): Promise<any> {
     //     return this.myHttp.get(InspectionConfig.getChecklistUrl + `?LINE_NAME=${line}`);
     // }
 
-    // getLines(): Promise<string[]> {
-    //     return new Promise((resolve, reject) => {
-    //         resolve(['S6-1F', 'S6-2F', 'S10-3F']);
-    //     });
-    // }
+    getLines(): Promise<string[]> {
+        return new Promise((resolve, reject) => {
+            resolve(['S6-1F', 'S6-2F', 'S10-3F']);
+        });
+    }
 
     getModules(line: string): Promise<string[]> {
         return new Promise((resolve, reject) => {
