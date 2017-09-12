@@ -1,0 +1,55 @@
+<ion-header>
+  <ion-navbar>
+    <ion-title>巡检报告</ion-title>
+  </ion-navbar>
+</ion-header>
+<ion-content>
+  <form [formGroup]="reportForm" *ngIf="reportForm">
+    <ion-list>
+      <ion-item>
+        <ion-label>*巡检日期</ion-label>
+        <ion-datetime displayFormat="YYYY/MM/DD" formControlName="date"
+        [cancelText]="'attendance.cancle' | translate" [doneText]="'attendance.confirm' | translate"></ion-datetime>
+      </ion-item>
+      <ion-item>
+        <ion-label>*巡检人员</ion-label>
+        <ion-input type="text" formControlName="people"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label>发现事项</ion-label>
+        <ion-input type="text" formControlName="issue"></ion-input>
+      </ion-item>
+      <div>
+        <div>
+          <ion-item>
+            <ion-label>*时间</ion-label>
+            <ion-datetime displayFormat="HH:mm"
+            [cancelText]="'attendance.cancle' | translate" [doneText]="'attendance.confirm' | translate"
+            ></ion-datetime>
+          </ion-item>
+          <ion-item>
+            <ion-label>*地点</ion-label>
+            <ion-input type="text"></ion-input>
+          </ion-item>
+          <ion-item>
+            <ion-label>*存在问题</ion-label>
+            <ion-toggle></ion-toggle>
+          </ion-item>
+          <ion-item>
+              <ion-label>*问题详述</ion-label>
+              <ion-input type="text"></ion-input>
+          </ion-item>
+          <ion-item>
+              <ion-label>添加图片</ion-label>
+              <sg-photo-view item-end></sg-photo-view>
+          </ion-item>
+          <ion-item>
+              <ion-label>*责任人</ion-label>
+              <ion-input type="text"></ion-input>
+          </ion-item>
+        </div>
+      </div>
+      <ion-item-divider class="add">+添加巡检位置</ion-item-divider>
+    </ion-list>
+  </form>
+</ion-content>
