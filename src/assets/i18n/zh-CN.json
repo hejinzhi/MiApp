@@ -329,9 +329,9 @@
     "dept181": "MSL MC MD I Bose制造处",
     "dept102": "MSL MC MDⅡ NPI生产处"
   },
-  "otherscomponent":{
-      "dutydaily_title":"每日缺席明细",
-      "reward_title":"奖惩记录"
+  "otherscomponent": {
+    "dutydaily_title": "每日缺席明细",
+    "reward_title": "奖惩记录"
   },
   "placeholder": "请输入中文名/英文名/工号",
   "contactTitle": "通讯录",
@@ -414,7 +414,18 @@
       "keyinNumber": "请输入数值",
       "the": "第",
       "error1": "项尚未填写检查结果，请填写后再提交。"
-    }
+    },
+    "inspectionName": "巡检名称",
+    "equip": "设备登记",
+    "inspectionSchedule": "巡检日程",
+    "report": "巡检报告",
+    "gaishan": "改善措施",
+    "problem": "问题追踪",
+    "inspectionCard": "巡检登记卡",
+    "mapping": "对照表",
+    "inspectionHandler": "指派处理人",
+    "boss": "主管巡查",
+    "equip2": "设备巡检"
   },
   "change_to": "已更改为"
 }
