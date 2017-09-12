@@ -6,11 +6,27 @@
 <ion-content>
   <ion-grid>
     <ion-row center wrap>
-      <ion-col col-4 class="grid-col" *ngFor="let name of names" (tap)="goToDetailPage(name.ID)">
+      <ion-col col-4 class="grid-col">
         <div class="grid-content">
           <a>
-            <img [src]="name.IMAGE_URL" class="grid-img">
-            <div class="grid-name">{{name.NAME |sgChineseConv}}</div>
+            <img src="assets/icon/7s.gif" class="grid-img">
+            <div class="grid-name">{{'inspection.boss' | translate}}</div>
+          </a>
+        </div>
+      </ion-col>
+      <ion-col col-4 class="grid-col">
+        <div class="grid-content">
+          <a>
+            <img src="assets/icon/IPQA.gif" class="grid-img" (tap)="goToIPQA()">
+            <div class="grid-name">IPQA</div>
+          </a>
+        </div>
+      </ion-col>
+      <ion-col col-4 class="grid-col">
+        <div class="grid-content">
+          <a>
+            <img src="assets/icon/equip2.png" class="grid-img">
+            <div class="grid-name">{{'inspection.equip2' | translate}}</div>
           </a>
         </div>
       </ion-col>

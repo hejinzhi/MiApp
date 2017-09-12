@@ -9,11 +9,11 @@ export class ApplicationService {
 
     constructor(private myHttp: MyHttpService) { }
 
-    public moveAppToMorePage(moduleID) {
+    public moveAppToMorePage(moduleID: any) {
         return this.myHttp.post(ApplicationConfig.updateModuleDisplayUrl + `?moduleID=${moduleID}&display=N`, {});
     }
 
-    public moveItemToAppPage(moduleID) {
+    public moveItemToAppPage(moduleID: any) {
         return this.myHttp.post(ApplicationConfig.updateModuleDisplayUrl + `?moduleID=${moduleID}&display=Y`, {});
     }
 }
