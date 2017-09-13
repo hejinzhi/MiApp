@@ -170,7 +170,7 @@ export class CheckListComponent implements OnInit {
      * 
      */
     submit() {
-        console.log(this.checkForm.controls);
+        console.log(this.checkForm.value);
         this.clearCache();
     }
 }

@@ -39,7 +39,7 @@
               <ion-item [class.has-success]="checkForm.get('lists').get(i+'').get('list').dirty && !checkForm.get('lists').get(i+'').get('list').errors"
                [class.has-error]="checkForm.get('lists').get(i+'').get('list').dirty && checkForm.get('lists').get(i+'').get('list').errors">
                 <ion-label>*检查指标</ion-label>
-                <ion-input type="text"formControlName="list"></ion-input>
+                <ion-input type="text" formControlName="list"></ion-input>
               </ion-item>
               <ion-item-divider class='alert' *ngIf="checkForm.get('lists').get(i+'').get('list').dirty && checkForm.get('lists').get(i+'').get('list').errors && checkForm.get('lists').get(i+'').get('list').errors.required">该栏位不能为空</ion-item-divider>                    
               <ion-item>

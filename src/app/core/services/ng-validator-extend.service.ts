@@ -17,7 +17,7 @@ export class NgValidatorExtendService {
    * 必须填
    * @return {Function} [验证器]
    */
-  required(): Function {
+  required(): Function | any {
     return (ctrl: AbstractControl) => {
       let value = ctrl.value;
       return value ? null : {
