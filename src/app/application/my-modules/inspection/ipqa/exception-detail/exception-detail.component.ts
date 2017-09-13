@@ -12,7 +12,8 @@ export class ExceptionDetailComponent implements OnInit {
 
     private fb: FormBuilder = new FormBuilder();
     formModel: FormGroup;
-    line: string;
+    line: string; //线别
+    station: string;//站点
     checklist: string;
     constructor(
         private navParams: NavParams,
@@ -27,9 +28,7 @@ export class ExceptionDetailComponent implements OnInit {
 
         this.formModel = this.fb.group({
             checkDate: [this.getToday(), Validators.required],
-            checkPersons: this.fb.array([
-                user
-            ], Validators.required),
+            checkPerson: [user, Validators.required],
             banbie: ['白班', Validators.required],
             address: ['', Validators.required],
             checklist: ['', Validators.required],
@@ -42,8 +41,9 @@ export class ExceptionDetailComponent implements OnInit {
 
         // 获取线别
         this.line = this.navParams.get('line');
+        this.station = this.navParams.get('station');
         let address = this.formModel.get('address') as FormControl;
-        address.setValue(this.line);
+        address.setValue(this.line + ' -- ' + this.station);
 
         // 获取违反的规定描述
         this.checklist = this.navParams.get('checklist');

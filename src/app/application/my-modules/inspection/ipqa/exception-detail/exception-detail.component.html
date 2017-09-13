@@ -44,7 +44,8 @@
           <ion-label>*{{'inspection.ipqa.inspector' | translate}}:</ion-label>
         </div>
         <div class="right-col">
-          <div formArrayName="checkPersons">
+          <ion-input type="text" formControlName="checkPerson" [class.my-invalid]="formModel.get('checkPerson').invalid && formModel.get('checkPerson').touched"></ion-input>
+          <!-- <div formControlName="checkPerson">
             <div *ngFor="let person of formModel.get('checkPersons').controls;let i=index">
               <div class="plus">
                 <ion-input type="text" [formControlName]="i"></ion-input>
@@ -54,7 +55,7 @@
                 </div>
               </div>
             </div>
-          </div>
+          </div> -->
         </div>
       </div>
       <div class="my-row">

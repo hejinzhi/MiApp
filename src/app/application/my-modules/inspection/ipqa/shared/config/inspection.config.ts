@@ -1,12 +1,17 @@
-// import { EnvConfig } from './../../../../../shared/config/env.config';
-let baseUrl: string = 'http://10.86.13.20:3000/';
+import { EnvConfig } from './../../../../../../shared/config/env.config';
+
+// let baseUrl: string = 'http://10.86.13.20:3000/';
 
 export class InspectionConfig {
-    static getNamesUrl = baseUrl + 'name';
+    // static getNamesUrl = EnvConfig.baseUrl + 'name';
 
-    static getLinesUrl = baseUrl + 'lines';
+    static getLinesUrl = EnvConfig.baseUrl + 'IPQA/GetLineConfig';
 
-    static getModulesUrl = baseUrl + 'category';
+    static getCategoryByLineUrl = EnvConfig.baseUrl + 'IPQA/GetCategoryByLine';
 
-    static getChecklistUrl = baseUrl + 'checklist';
+    static getStationByLineUrl = EnvConfig.baseUrl + 'IPQA/GetStationByLine';
+
+    static getStationByCategoryUrl = EnvConfig.baseUrl + 'IPQA/GetStationByCategoryLine';
+
+    static getCheckListByLineStationUrl = EnvConfig.baseUrl + 'IPQA/GetCheckListByLine';
 }
