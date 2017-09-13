@@ -6,9 +6,10 @@ import { IonicModule } from 'ionic-angular';
 
 
 import { SharedModule } from '../../../shared/shared.module';
+import { EquipService } from './equip/shared/service/equip.service';
 
 @NgModule({
     imports: [CommonModule, IonicModule, SharedModule],
-    providers: [InspectionService]
+    providers: [InspectionService,EquipService]
 })
 export class InspectionModule { }

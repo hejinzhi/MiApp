@@ -415,6 +415,19 @@
       "the": "第",
       "error1": "項尚未填寫檢查結果，請填寫后再提交。"
     },
+    "equipcom":{
+      "equip_title":"設備登記",
+      "machine_no":"設備編號",
+      "machine_desc": "設備名稱",
+      "quantity": "數量",
+      "location1": "存放區域",
+      "location4": "存放位置",
+      "production_date": "出廠年月",
+      "effective_date": "有效期",
+      "owner_empno": "負責人",
+      "name_id": "巡檢名稱",
+      "disable_date": "停用日期"
+      },
     "inspectionName": "巡檢名稱",
     "equip": "設備登記",
     "inspectionSchedule": "巡檢日程",
