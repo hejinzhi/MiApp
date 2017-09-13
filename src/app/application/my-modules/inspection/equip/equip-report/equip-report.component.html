@@ -1,0 +1,51 @@
+<ion-header>
+  <ion-navbar>
+    <ion-title>巡检报告</ion-title>
+  </ion-navbar>
+</ion-header>
+<ion-content>
+  <form [formGroup]="reportForm" *ngIf="reportForm">
+    <ion-list>
+      <ion-item class="disabled">
+        <ion-label>*巡检时间</ion-label>
+        <ion-note item-right>
+          {{reportForm.get('time').value}}
+        </ion-note>
+      </ion-item>
+      <ion-item>
+        <ion-label>*设备编号</ion-label>
+        <ion-input type="text" formControlName="number"></ion-input>>
+        <ion-icon name="qr-scanner" color="#3773F7" item-end (click)="scan()"></ion-icon>
+      </ion-item>
+      <ion-item-divider (click)="toggle(i)">
+        XXXX灭火器
+      </ion-item-divider>
+      <div formArrayName="lists" class="subForm">
+        <div *ngFor="let ctrl of reportForm.controls['lists'].controls; let i = index;" class="list" [class.last]="i === reportForm.get('lists').length-1">
+          <div [formGroupName]="i">
+            <ion-item>
+              <ion-label *ngIf="testData"><ion-icon name="information-circle" color="danger" *ngIf="reportForm.get('lists').get(i+'').invalid"></ion-icon>
+                <ion-icon name="checkmark-circle" *ngIf="!reportForm.get('lists').get(i+'').invalid"></ion-icon>*{{testData[i].name}}<span class="float-right">异常</span></ion-label>
+              <ion-checkbox color="#3773F7" item-end formControlName="check"></ion-checkbox>
+            </ion-item>
+            <div class="detail">
+              <ion-item *ngIf="reportForm.get('lists').get(i+'').controls['detail']">
+                <ion-label>*问题详述</ion-label>
+                <ion-input type="text" formControlName="detail"></ion-input>
+              </ion-item>
+              <ion-item *ngIf="reportForm.get('lists').get(i+'').controls['detail']">
+                <div>添加图片</div>
+                <sg-photo-view [imgs]="reportForm.get('lists').get(i+'').controls['imgs'].value"></sg-photo-view>
+              </ion-item>
+              <ion-item *ngIf="reportForm.get('lists').get(i+'').controls['inCharge']">
+                <ion-label>*责任人</ion-label>
+                <ion-input type="text" formControlName="inCharge"></ion-input>
+              </ion-item>
+            </div>
+          </div>
+        </div>
+      </div>
+    </ion-list>
+    <button ion-button full type="button" (tap)="submit()" [disabled]="reportForm.invalid">提交</button>
+  </form>
+</ion-content>
