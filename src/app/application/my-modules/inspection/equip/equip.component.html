@@ -1,0 +1,75 @@
+<ion-header>
+  <ion-navbar>
+    <ion-title>{{'inspection.equip2' | translate }}</ion-title>
+  </ion-navbar>
+</ion-header>
+<ion-content>
+  <ion-grid>
+    <ion-row center wrap>
+      <ion-col col-4 class="grid-col">
+        <div class="grid-content">
+          <a>
+            <img src="assets/icon/list.gif" class="grid-img">
+            <div class="grid-name">{{'inspection.inspectionName' | translate}}</div>
+          </a>
+        </div>
+      </ion-col>
+      <ion-col col-4 class="grid-col" (tap)="goToPage('EquipsettingComponent')">
+        <div class="grid-content">
+          <a>
+              <img src="assets/icon/equip.gif" class="grid-img">
+              <div class="grid-name">{{'inspection.equip' | translate}}</div>
+            </a>
+        </div>
+      </ion-col>
+      <ion-col col-4 class="grid-col">
+          <div class="grid-content">
+            <a>
+                <img src="assets/icon/duty.gif" class="grid-img">
+                <div class="grid-name">{{'inspection.inspectionSchedule' | translate}}</div>
+              </a>
+          </div>
+        </ion-col>
+      <ion-col col-4 class="grid-col" (tap)="goToPage()">
+        <div class="grid-content">
+          <a>
+            <img src="assets/icon/report.gif" class="grid-img">
+            <div class="grid-name">{{'inspection.report' | translate}}</div>
+          </a>
+        </div>
+      </ion-col>
+      <ion-col col-4 class="grid-col">
+        <div class="grid-content">
+          <a>
+            <img src="assets/icon/gaishan.gif" class="grid-img">
+            <div class="grid-name">{{'inspection.gaishan' | translate}}</div>
+          </a>
+        </div>
+      </ion-col>
+      <ion-col col-4 class="grid-col">
+        <div class="grid-content">
+          <a>
+            <img src="assets/icon/problem.gif" class="grid-img">
+            <div class="grid-name">{{'inspection.problem' | translate}}</div>
+          </a>
+        </div>
+      </ion-col>
+      <ion-col col-4 class="grid-col">
+        <div class="grid-content">
+          <a>
+            <img src="assets/icon/card.gif" class="grid-img">
+            <div class="grid-name">{{'inspection.inspectionCard' | translate}}</div>
+          </a>
+        </div>
+      </ion-col>
+      <ion-col col-4 class="grid-col">
+          <div class="grid-content">
+            <a>
+              <img src="assets/icon/mapping.png" class="grid-img">
+              <div class="grid-name">{{'inspection.mapping' | translate}}</div>
+            </a>
+          </div>
+        </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>
