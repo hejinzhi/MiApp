@@ -3,7 +3,6 @@ import { NavController, NavParams } from 'ionic-angular';
 import { ContactService } from '../shared/service/contact.service';
 import { ContactDetailComponent } from '../contact-detail/contact-detail.component';
 import { EnvConfig } from '../../shared/config/env.config';
-import { LanguageConfig } from '../shared/config/language.config';
 
 @Component({
     selector: 'sg-organization',

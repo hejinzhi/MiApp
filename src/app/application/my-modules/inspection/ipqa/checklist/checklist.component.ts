@@ -51,7 +51,6 @@ export class ChecklistComponent implements OnInit {
             this.translateText.exception = res['inspection.ipqa.exception'];
             this.translateText.the = res['inspection.ipqa.the'];
             this.translateText.error1 = res['inspection.ipqa.error1'];
-            console.log(this.translateText)
         });
     }
 

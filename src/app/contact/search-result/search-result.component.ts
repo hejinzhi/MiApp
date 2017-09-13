@@ -6,7 +6,6 @@ import { ContactService } from '../shared/service/contact.service';
 import { ContactDetailComponent } from '../contact-detail/contact-detail.component';
 import { ContactConfig } from '../shared/config/contact.config';
 import { EnvConfig } from '../../shared/config/env.config.ts';
-import { LanguageConfig } from '../shared/config/language.config';
 import { TranslateService } from '@ngx-translate/core';
 
 @Component({

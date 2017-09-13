@@ -22,8 +22,8 @@ export class ExceptionDetailComponent implements OnInit {
     }
 
     ngOnInit() {
-        let localUser:UserModel=JSON.parse(localStorage.getItem('currentUser'));
-        let user=localUser.empno+','+localUser.nickname+','+localUser.username;
+        let localUser: UserModel = JSON.parse(localStorage.getItem('currentUser'));
+        let user = localUser.empno + ',' + localUser.nickname + ',' + localUser.username;
 
         this.formModel = this.fb.group({
             checkDate: [this.getToday(), Validators.required],
@@ -36,8 +36,8 @@ export class ExceptionDetailComponent implements OnInit {
             exceptionDesc: ['', Validators.required],
             pictures: this.fb.array([]),
             handler: ['', Validators.required],
-            PQE: ['', Validators.required],
-            closer: ['', Validators.required]
+            // PQE: ['', Validators.required],
+            // closer: ['', Validators.required]
         });
 
         // 获取线别
