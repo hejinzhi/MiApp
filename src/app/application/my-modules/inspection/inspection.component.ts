@@ -24,4 +24,8 @@ export class InspectionComponent implements OnInit {
     goToEuqip() {
         this.navCtrl.push('EquipComponent');
     }
+    
+    goToBoss() {
+        this.navCtrl.push('BossMenuComponent')
+    }
 }

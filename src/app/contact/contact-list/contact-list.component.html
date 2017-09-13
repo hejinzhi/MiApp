@@ -5,7 +5,7 @@
       <ion-row class="row">
         <ion-col col-2>
           <img  class="avatar" [src]="item.AVATAR_URL" alt="self-photo" *ngIf="item.AVATAR_URL">
-          <span class="avatar" *ngIf="!item.AVATAR_URL">{{item.NICK_NAME.substr(-2) | sgChineseConv}}</span>
+          <span class="avatar blue" *ngIf="!item.AVATAR_URL">{{item.NICK_NAME.substr(-2) | sgChineseConv}}</span>
         </ion-col>
         <ion-col col-4>
           <ion-row class="name">{{item.NICK_NAME | sgChineseConv}}</ion-row>
