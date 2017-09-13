@@ -64,6 +64,7 @@
         "cordova-sqlite-storage": "~2.0.4",
         "crypto-js": "^3.1.9-1",
         "echarts": "^3.5.3",
+        "ion-multi-picker": "^2.1.1",
         "ionic-angular": "3.4.2",
         "ionic-img-viewer": "^2.4.0",
         "ionic-native": "^2.9.0",
