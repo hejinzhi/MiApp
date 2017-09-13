@@ -1,8 +1,8 @@
-import { CacheService } from './../../../../../core/services/cache.service';
 import { IonicPage, AlertController } from 'ionic-angular';
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, FormArray, FormControl, AbstractControl } from '@angular/forms';
+import { FormBuilder, FormGroup, FormArray, FormControl } from '@angular/forms';
 
+import { CacheService } from './../../../../../core/services/cache.service';
 import { NgValidatorExtendService } from './../../../../../core/services/ng-validator-extend.service';
 import * as moment from 'moment'
 
@@ -204,7 +204,7 @@ export class BossReportComponent implements OnInit {
 
     submit() {
         console.log(this.reportForm.value);
-        
+        this.clearCache();
     }
 }
 
