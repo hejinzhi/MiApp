@@ -12,24 +12,7 @@
         <ion-option value=3>7S</ion-option>
       </ion-select>
     </ion-item>
-    <ion-grid>
-      <ion-row>
-        <ion-col col-auto>
-          <ion-item>
-            <ion-label col-auto>*值班日期</ion-label>
-            <ion-datetime [(ngModel)]="start_date" displayFormat="MM月DD日" pickerFormat="YYYY MM DD" [cancelText]="'attendance.cancle' | translate" [doneText]="'attendance.confirm' | translate"
-              min="2017" [max]="selectMaxYear"></ion-datetime>
-          </ion-item>
-        </ion-col>
-        <ion-col>
-          <ion-item>
-            <ion-label col-auto>-</ion-label>
-            <ion-datetime [(ngModel)]="end_date" displayFormat="MM月DD日" pickerFormat="YYYY MM DD" [cancelText]="'attendance.cancle' | translate" [doneText]="'attendance.confirm' | translate"
-              min="2017" [max]="selectMaxYear"></ion-datetime>
-          </ion-item>
-        </ion-col>
-      </ion-row>
-    </ion-grid>
+    <sg-query-date></sg-query-date>
     <ion-toolbar color="light">
       <ion-segment class="top_segment" [(ngModel)]="top_segment">
         <ion-segment-button (click)="select(0)" value="top_0">
