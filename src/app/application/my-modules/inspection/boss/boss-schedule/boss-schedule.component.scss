@@ -1,0 +1,49 @@
+sg-boss-schedule {
+    .array_icon{
+        position: relative;
+        display: inline-block;
+        margin: 1% 0%;
+        height: 24px;
+        width: 100%;
+        // text-align: center;
+       .content{
+        z-index: -1;
+        width: 100%;
+        font-size: 18px; 
+        position: absolute;
+        text-align: center;  
+       }
+       .remove{   
+        position: absolute;
+        height: 24px;
+        width: 24px;
+        font-size: 22px;
+        left: 35%;   
+            // margin-top: 1%; 
+        }
+       .add{
+        position: absolute;
+        height: 24px;
+        width: 24px;
+        font-size: 22px;
+        right: 34%;  
+        //    margin-bottom: 1%; 
+        }  
+    }
+    .person_icon{
+        position: relative;
+        display: inline-block;
+        text-align: center; 
+        line-height:50px;
+        .add{
+            height: 24px;
+            width: 24px; 
+            font-size: 20px;
+        }
+        .remove{
+            height: 24px;
+            width: 24px; 
+            font-size: 20px;
+        }
+    }
+}
