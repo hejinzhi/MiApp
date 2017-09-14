@@ -11,7 +11,7 @@ import { TranslateModule } from '@ngx-translate/core';
         TranslateModule.forChild(),
         SharedModule
     ],
-    exports: [],
+    exports: [QueryDateComponent],
     declarations: [QueryDateComponent],
     providers: [],
     entryComponents: [

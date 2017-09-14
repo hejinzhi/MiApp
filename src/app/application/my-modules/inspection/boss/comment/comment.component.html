@@ -4,15 +4,8 @@
     </ion-navbar>
   </ion-header>
   <ion-content>
-    <ion-item>
-      <ion-label col-4>*巡检名稱</ion-label>
-      <ion-select [(ngModel)]="name_id" [cancelText]="'attendance.cancle' | translate" [okText]="'attendance.confirm' | translate">
-        <ion-option value=1 selected="true">小夜班</ion-option>
-        <ion-option value=2>大夜班</ion-option>
-        <ion-option value=3>7S</ion-option>
-      </ion-select>
-    </ion-item>
-    <sg-query-date></sg-query-date>
+    <sg-query-date [name_id]="name_id" (name_id_change)="nameIdChange($event)" [(start_date)]="start_date" (start_date_change)="stratDateChange($event)"
+    [(end_date)]="end_date" (end_date_change)="endDateChange($event)"></sg-query-date>
     <ion-toolbar color="light">
       <ion-segment class="top_segment" [(ngModel)]="top_segment">
         <ion-segment-button (click)="select(0)" value="top_0">
@@ -35,6 +28,7 @@
           <ion-list *ngIf="selected_segment===0">
             <h1>
               This is the first page
+              <button ion-button (tap)="showdetail()">查看VALUE</button>
             </h1>
           </ion-list>
   

@@ -1,17 +1,25 @@
+<ion-item>
+  <ion-label col-4>*巡检名稱</ion-label>
+  <ion-select [(ngModel)]="name_id" [cancelText]="'attendance.cancle' | translate" [okText]="'attendance.confirm' | translate" (ionChange)="changeNameId()">
+    <ion-option value=1 selected="true">小夜班</ion-option>
+    <ion-option value=2>安全值日官</ion-option>
+    <ion-option value=3>7S</ion-option>
+  </ion-select>
+</ion-item>
 <ion-grid>
   <ion-row>
     <ion-col col-auto>
       <ion-item>
         <ion-label col-auto>*值班日期</ion-label>
-        <ion-datetime displayFormat="MM月DD日" pickerFormat="YYYY MM DD" 
-          min="2017" [max]="selectMaxYear"></ion-datetime>
+        <ion-datetime [(ngModel)]="start_date" displayFormat="MM月DD日" pickerFormat="YYYY MM DD" [cancelText]="'attendance.cancle' | translate" [doneText]="'attendance.confirm' | translate"
+          min="2017" [max]="selectMaxYear" (ionChange)="changeStartDate()"></ion-datetime>
       </ion-item>
     </ion-col>
-    <ion-col>
+    <ion-col col-auto>
       <ion-item>
         <ion-label col-auto>-</ion-label>
-        <ion-datetime  displayFormat="MM月DD日" pickerFormat="YYYY MM DD"
-          min="2017" [max]="selectMaxYear"></ion-datetime>
+        <ion-datetime [(ngModel)]="end_date" displayFormat="MM月DD日" pickerFormat="YYYY MM DD" [cancelText]="'attendance.cancle' | translate" [doneText]="'attendance.confirm' | translate"
+          min="2017" [max]="selectMaxYear" (ionChange)="changeEndDate()"></ion-datetime>
       </ion-item>
     </ion-col>
   </ion-row>
