@@ -6,50 +6,74 @@
 <ion-content>
   <form [formGroup]="reportForm" *ngIf="reportForm">
     <ion-list>
-      <ion-item>
+      <ion-item class="disabled">
         <ion-label>*巡检日期</ion-label>
-        <ion-datetime displayFormat="YYYY/MM/DD" formControlName="date"
-        [cancelText]="'attendance.cancle' | translate" [doneText]="'attendance.confirm' | translate"></ion-datetime>
+        <ion-note item-right>
+            {{reportForm.get('date').value}}
+        </ion-note>
+        <!-- <ion-datetime class ="displayNone" displayFormat="YYYY/MM/DD" formControlName="date" [cancelText]="'attendance.cancle' | translate" [doneText]="'attendance.confirm' | translate"></ion-datetime> -->
       </ion-item>
-      <ion-item>
+      <ion-item class="disabled">
         <ion-label>*巡检人员</ion-label>
-        <ion-input type="text" formControlName="people"></ion-input>
+        <!-- <ion-input type="text" formControlName="people" class ="displayNone"></ion-input> -->
+        <ion-note item-right>
+          {{reportForm.get('people').value}}
+        </ion-note>
       </ion-item>
-      <ion-item>
+      <ion-item class="disabled">
         <ion-label>发现事项</ion-label>
-        <ion-input type="text" formControlName="issue"></ion-input>
+        <!-- <ion-input type="text" formControlName="issueCount" class ="displayNone"></ion-input> -->
+        <ion-note item-right>
+            {{reportForm.get('issueCount').value}}
+          </ion-note>
       </ion-item>
-      <div>
-        <div>
-          <ion-item>
-            <ion-label>*时间</ion-label>
-            <ion-datetime displayFormat="HH:mm"
-            [cancelText]="'attendance.cancle' | translate" [doneText]="'attendance.confirm' | translate"
-            ></ion-datetime>
-          </ion-item>
-          <ion-item>
-            <ion-label>*地点</ion-label>
-            <ion-input type="text"></ion-input>
-          </ion-item>
-          <ion-item>
-            <ion-label>*存在问题</ion-label>
-            <ion-toggle></ion-toggle>
-          </ion-item>
-          <ion-item>
+      <div formArrayName="lists" class="subForm">
+        <div *ngFor="let ctrl of reportForm.controls['lists'].controls; let i = index;">
+          <ion-grid>
+            <ion-row>
+              <ion-col col-11>
+                <ion-item-divider (click)="toggle(i)">
+                  <ion-icon name="information-circle" color="danger" *ngIf="reportForm.get('lists').get(i+'').invalid"></ion-icon>
+                  <ion-icon name="checkmark-circle" *ngIf="!reportForm.get('lists').get(i+'').invalid"></ion-icon>
+                  巡检位置{{i+1}}: {{reportForm.get('lists').get(i+'').controls['site'].value}}
+                  <ion-icon name="arrow-down"></ion-icon>
+                </ion-item-divider>
+              </ion-col>
+              <ion-col col-1 class="minus">
+                <span col-1 class="iconfontyyy" (tap)="removeSubFrom(i)">&#xe6bb;</span>
+              </ion-col>
+            </ion-row>
+          </ion-grid>
+          <div [formGroupName]="i" [class.displayNone]="reportForm.get('lists').get(i+'')['displayNone']" class="subDetail">
+            <ion-item>
+              <ion-label>*时间</ion-label>
+              <ion-datetime displayFormat="HH:mm" formControlName="time" [cancelText]="'attendance.cancle' | translate" [doneText]="'attendance.confirm' | translate"></ion-datetime>
+            </ion-item>
+            <ion-item>
+              <ion-label>*地点</ion-label>
+              <ion-input type="text" formControlName="site"></ion-input>
+            </ion-item>
+            <ion-item>
+              <ion-label>*存在问题</ion-label>
+              <ion-toggle formControlName="hasIssue"></ion-toggle>
+            </ion-item>
+            <ion-item *ngIf="reportForm.get('lists').get(i+'').controls['detail']">
               <ion-label>*问题详述</ion-label>
-              <ion-input type="text"></ion-input>
-          </ion-item>
-          <ion-item>
-              <ion-label>添加图片</ion-label>
-              <sg-photo-view item-end></sg-photo-view>
-          </ion-item>
-          <ion-item>
+              <ion-input type="text" formControlName="detail"></ion-input>
+            </ion-item>
+            <ion-item *ngIf="reportForm.get('lists').get(i+'').controls['detail']">
+              <div>添加图片</div>
+              <sg-photo-view [imgs]="reportForm.get('lists').get(i+'').controls['imgs'].value"></sg-photo-view>
+            </ion-item>
+            <ion-item *ngIf="reportForm.get('lists').get(i+'').controls['inCharge']">
               <ion-label>*责任人</ion-label>
-              <ion-input type="text"></ion-input>
-          </ion-item>
+              <ion-input type="text" formControlName="inCharge"></ion-input>
+            </ion-item>
+          </div>
         </div>
       </div>
-      <ion-item-divider class="add">+添加巡检位置</ion-item-divider>
+      <ion-item-divider class="add" (click)="addCheckSite()">+添加巡检位置</ion-item-divider>
     </ion-list>
+    <button ion-button full type="button" (tap)="submit()" [disabled]="!reportForm.dirty || reportForm.invalid">提交</button>
   </form>
 </ion-content>

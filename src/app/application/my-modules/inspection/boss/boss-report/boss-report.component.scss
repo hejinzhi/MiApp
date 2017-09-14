@@ -1,3 +1,36 @@
 sg-boss-report {
-    
+    .displayNone {
+        display: none;
+    }
+    .subForm {
+        margin: 0px 10px;
+    }
+    .disabled {
+        color: #999;
+        font-weight: 300;
+    }
+    ion-icon[name="arrow-down"]{
+        float: right;
+    }
+    ion-icon[name="checkmark-circle"]{
+        color:#387ef5
+    }
+    ion-icon[name="qr-scanner"] {
+        // float: right;
+        color:#387ef5
+    }
+    .minus {
+        color:red;
+        padding-left:-2%; 
+        background-color: #f7f7f7;
+        display: flex;
+        align-items: center;
+        span{
+            display: inline-block;
+            transform: translate(-85%, -7%);
+        }
+    }
+    .row {
+        background-color: #f7f7f7;
+    }
 }

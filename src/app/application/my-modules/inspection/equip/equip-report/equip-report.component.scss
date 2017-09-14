@@ -1,0 +1,22 @@
+sg-equip-report {
+    .disabled {
+        color: #999;
+        font-weight: 300;
+    }
+    .float-right {
+        display: block;
+        float: right;
+    }
+    .detail {
+        margin: 10px 10px;
+    }
+    .list {
+        background-color: #f7f7f7;
+        &.last{
+            padding-bottom: 1px; 
+        }
+    }
+    ion-icon[name="checkmark-circle"]{
+        color:#387ef5
+    }
+}
