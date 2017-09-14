@@ -30,7 +30,6 @@ export class StationsComponent implements OnInit {
         this.stations = [];
         this.allStations = [];
         let params: any[] = this.navParams.get('stations');
-        console.log(params);
         this.lineName = this.navParams.get('lineName');
         this.lineId = this.navParams.get('lineId');
         let temp: any[] = params.filter((v) => {

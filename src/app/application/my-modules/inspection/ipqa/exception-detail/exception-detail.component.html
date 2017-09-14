@@ -63,7 +63,7 @@
           <ion-label>*{{'inspection.ipqa.checklist' | translate}}:</ion-label>
         </div>
         <div class="right-col">
-          <ion-textarea formControlName="checklist" cols="10" rows="4" [class.my-invalid]="formModel.get('checklist').invalid && formModel.get('checklist').touched"></ion-textarea>
+          <ion-textarea formControlName="checklist_cn" cols="10" rows="4" [class.my-invalid]="formModel.get('checklist_cn').invalid && formModel.get('checklist_cn').touched"></ion-textarea>
         </div>
       </div>
       <div class="my-row">
@@ -88,7 +88,7 @@
           <sg-photo-view destinationType=1></sg-photo-view>
         </div>
       </div>
-      <div class="my-row">
+      <div class="my-row" *ngIf="fromPage === 'handler'">
         <div class="left-col">
           <ion-label>*{{'inspection.ipqa.handler' | translate}}:</ion-label>
         </div>

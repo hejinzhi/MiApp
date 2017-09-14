@@ -14,4 +14,6 @@ export class InspectionConfig {
     static getStationByCategoryUrl = EnvConfig.baseUrl + 'IPQA/GetStationByCategoryLine';
 
     static getCheckListByLineStationUrl = EnvConfig.baseUrl + 'IPQA/GetCheckListByLine';
+
+    static getDutyKind = EnvConfig.baseUrl + 'OverTime/GetOverTimeDutyKind';
 }

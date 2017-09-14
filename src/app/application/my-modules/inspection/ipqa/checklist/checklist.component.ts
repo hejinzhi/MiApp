@@ -46,13 +46,8 @@ export class ChecklistComponent implements OnInit {
         this.stationId = this.navParams.get('stationId');
         this.lineName = this.navParams.get('lineName');
         this.lineId = this.navParams.get('lineId');
-        console.log(this.lineName);
-        console.log(this.lineId);
-        console.log(this.stationId);
         let res = await this.inspectionService.getCheckListByLineStation(EnvConfig.companyID, this.lineId, this.stationId);
-        console.log(res.json());
         this.checkList = res.json();
-        // this.checkList = await this.inspectionService.getChecklistByStation(this.station.title);
         this.checkList.forEach((l) => {
             this.reset.push({ no: l.LINE_NUM, reset: false });
         });
@@ -71,8 +66,17 @@ export class ChecklistComponent implements OnInit {
 
     selectedValue(list: Checklist, event: any) {
         list.VALUE = event;
-        if (event === this.translateText.exception) {
-            let exceptionDetailModel = this.modalCtrl.create('ExceptionDetailComponent', { line: this.lineName, checklist: list.CHECK_LIST, station: this.station.title });
+        if ((event === 'EXCEPTION') || (event === this.translateText.exception)) {
+            let exceptionDetailModel = this.modalCtrl.create('ExceptionDetailComponent',
+                {
+                    line: this.lineName, checklist: {
+                        CHECK_LIST_CN: list.CHECK_LIST_CN,
+                        // CHECK_LIST_EN: list.CHECK_LIST_EN,
+                        CHECK_ID: list.CHECK_ID
+                    },
+                    station: this.station.title,
+                    fromPage: "checklist"
+                });
             exceptionDetailModel.onWillDismiss((data: any) => {
                 if (data && (data.selected === false)) {
                     list.VALUE = '';
@@ -92,7 +96,6 @@ export class ChecklistComponent implements OnInit {
         for (let i = 0; i < this.checkList.length; i++) {
             if (this.checkList[i].VALUE) { }
             else {
-                // this.showAlert('錯誤', `第${i + 1}項尚未填寫檢查結果，請填寫后再提交。`);
                 this.commonService.showAlert(this.translateText.error, `${this.translateText.the}${i + 1}${this.translateText.error1}`);
                 allCheck = false;
                 break;

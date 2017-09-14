@@ -10,7 +10,7 @@
   <ion-card *ngFor="let list of checkList;let i =index">
     <div class="my-content">
       <p>{{ list.LINE_NUM}} {{list.CHECK_LIST_CN|sgChineseConv}}</p>
-      <p *ngIf="list.CHECK_LIST_EN">{{ list.LINE_NUM}} {{list.CHECK_LIST_EN|sgChineseConv}}</p>
+      <p *ngIf="list.CHECK_LIST_EN">{{ list.LINE_NUM}} {{list.CHECK_LIST_EN}}</p>
       <!-- <p>{{i+1}}. {{list.desc |sgChineseConv}}</p> -->
       <!-- <p [ngStyle]="{color: list.priority==='Major'?'red':'green'}" class="priority">{{'inspection.ipqa.priority'| translate}}:{{list.priority}}</p> -->
     </div>

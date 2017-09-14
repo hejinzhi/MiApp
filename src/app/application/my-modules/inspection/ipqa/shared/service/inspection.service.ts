@@ -1,5 +1,5 @@
+import { CommonService } from './../../../../../../core/services/common.service';
 import { MyHttpService } from './../../../../../../core/services/myHttp.service';
-// import { MyHttpService } from './../../../../../core/services/myHttp.service';
 import { InspectionConfig } from './../config/inspection.config';
 import { Injectable } from '@angular/core';
 
@@ -8,7 +8,8 @@ import { Injectable } from '@angular/core';
 export class InspectionService {
 
     constructor(
-        private myHttp: MyHttpService
+        private myHttp: MyHttpService,
+        private commonService: CommonService
     ) { }
 
 
@@ -33,34 +34,20 @@ export class InspectionService {
         return this.myHttp.get(InspectionConfig.getCheckListByLineStationUrl + `?company_name=${companyName}&line_id=${lineId}&station_id=${stationId}`);
     }
 
-
-
-
-
-    getChecklistByStation(station: string): Promise<Checklist[]> {
-        return new Promise((resolve, reject) => {
-            resolve(this.mockChecklist);
+    getDutyKind() {
+        return this.myHttp.post(InspectionConfig.getDutyKind, {
+            IDATE: this.commonService.getToday(), START_TIME: '', END_TIME: ''
         });
     }
-
-
-    mockChecklist: Checklist[] = [
-
-    ]
-
 
 
 }
 
 export class Checklist {
-    // no: string;
-    // desc: string;
-    // priority: string;
-    // type: string;
-    // value: any;
     CATEGORY_ID: number;
     CHECK_ID: number;
-    CHECK_LIST: string;
+    CHECK_LIST_CN: string;
+    CHECK_LIST_EN: string;
     CHECK_TYPE: string;
     COMPANY_NAME: string;
     ENABLED: string;
