@@ -1,0 +1,108 @@
+<ion-header>
+  <ion-navbar>
+    <ion-title>问题及改善措施</ion-title>
+    <ion-buttons end *ngIf="admin">
+        <button ion-button  (tap)="update()">更新</button>
+      </ion-buttons>
+  </ion-navbar>
+</ion-header>
+<ion-content>
+
+
+  <ion-list>
+    <ion-item class="disabled">
+      <ion-label>值班日期</ion-label>
+      <ion-note item-right>
+        {{issue.time}}
+      </ion-note>
+    </ion-item>
+    <ion-item class="disabled">
+      <ion-label>巡检人员</ion-label>
+      <ion-note item-right>
+        {{issue.name}}
+      </ion-note>
+    </ion-item>
+
+    <div *ngIf="type === 1">
+      <ion-item class="disabled">
+        <ion-label>地点</ion-label>
+        <ion-note item-right>
+          {{issue.site}}
+        </ion-note>
+      </ion-item>
+    </div>
+
+    <div *ngIf="type === 2">
+      <ion-item class="disabled">
+        <ion-label>设备编号</ion-label>
+        <ion-note item-right>
+          {{issue.equip_num}}
+        </ion-note>
+      </ion-item>
+      <ion-item class="disabled">
+        <ion-label>存放位置</ion-label>
+        <ion-note item-right>
+          {{issue.site}}
+        </ion-note>
+      </ion-item>
+      <ion-item class="disabled">
+        <ion-label>发现问题</ion-label>
+        <ion-note item-right>
+          {{issue.issue}}
+        </ion-note>
+      </ion-item>
+    </div>
+
+    <ion-item class="disabled">
+      <ion-label>问题详述</ion-label>
+      <ion-note item-right>
+        {{issue.detail}}
+      </ion-note>
+    </ion-item>
+    <ion-item class="disabled">
+      附图
+      <sg-photo-view [opts]="{addable:false,removeable:false}"></sg-photo-view>
+    </ion-item>
+    <ion-item class="disabled" *ngIf="!admin">
+      <ion-label>处理人</ion-label>
+      <ion-note item-right>
+        {{issue.inCharge}}
+      </ion-note>
+      <ion-icon name="refresh" item-end (tap)="pushBack()"></ion-icon>
+    </ion-item>
+    <div *ngIf="admin">
+      <ion-item>
+        <ion-label>处理人</ion-label>
+        <ion-input type="text" [(ngModel)]="issue.inCharge"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label>*状态</ion-label>
+        <ion-select [cancelText]="'attendance.cancle' | translate" [okText]="'attendance.confirm' | translate" [(ngModel)]="status">
+          <ion-option *ngFor="let item of statusList" [value]="item.type">{{item.value}}</ion-option>
+        </ion-select>
+      </ion-item>
+    </div>
+  </ion-list>
+  <form [formGroup]="reportForm" *ngIf="reportForm">
+    <ion-list>
+      <ion-item [class.disabled]="admin">
+        <ion-label>*整改措施</ion-label>
+        <ion-textarea rows="2" cols="20" formControlName="action"></ion-textarea>
+      </ion-item>
+      <ion-item [class.disabled]="admin">
+        <ion-label>改善状况</ion-label>
+        <ion-input type="text" formControlName="improvement"></ion-input>
+      </ion-item>
+      <ion-item>
+        <span [class.disabled]="admin">附图</span>
+        <sg-photo-view [opts]="admin?{addable:false,removeable:false}:{}"></sg-photo-view>
+      </ion-item>
+      <ion-item>
+        <ion-label>导入日期</ion-label>
+        <ion-datetime displayFormat="YYYY/MM/DD" [cancelText]="'attendance.cancle' | translate" [doneText]="'attendance.confirm' | translate"
+          formControlName="import_date"></ion-datetime>
+      </ion-item>
+    </ion-list>
+    <button ion-button full type="button" (tap)="submit()" [disabled]="!reportForm.dirty || reportForm.invalid" *ngIf="!admin">提交</button>    
+  </form>
+</ion-content>
