@@ -1,0 +1,18 @@
+<ion-grid>
+  <ion-row>
+    <ion-col col-auto>
+      <ion-item>
+        <ion-label col-auto>*值班日期</ion-label>
+        <ion-datetime displayFormat="MM月DD日" pickerFormat="YYYY MM DD" 
+          min="2017" [max]="selectMaxYear"></ion-datetime>
+      </ion-item>
+    </ion-col>
+    <ion-col>
+      <ion-item>
+        <ion-label col-auto>-</ion-label>
+        <ion-datetime  displayFormat="MM月DD日" pickerFormat="YYYY MM DD"
+          min="2017" [max]="selectMaxYear"></ion-datetime>
+      </ion-item>
+    </ion-col>
+  </ion-row>
+</ion-grid>
