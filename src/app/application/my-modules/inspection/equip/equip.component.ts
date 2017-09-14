@@ -38,5 +38,7 @@ export class EquipComponent implements OnInit {
         this.navCtrl.push('IssueListComponent',{type:2})
     }
 
-
+    goToPageAdminCheck() {
+        this.navCtrl.push('AdminCheckComponent',{type:2})
+    }
 }

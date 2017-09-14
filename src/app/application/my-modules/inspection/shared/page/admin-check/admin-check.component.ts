@@ -59,7 +59,8 @@ export class AdminCheckComponent implements OnInit {
     console.log(item);
     this.navCtrl.push('IssueDetailComponent', {
         issue: item,
-        type: this.type
+        type: this.type,
+        admin: true
     })
 }
 

@@ -1,4 +1,4 @@
-import { IonicPage, AlertController } from 'ionic-angular';
+import { IonicPage, AlertController, NavParams } from 'ionic-angular';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, FormArray, FormControl } from '@angular/forms';
 
@@ -13,12 +13,36 @@ import * as moment from 'moment'
 })
 
 export class BossReportComponent implements OnInit {
-
+    mark: number[] = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+    totalMark:number = 0;
+    admin: boolean;
     reportForm: FormGroup;
     className: string = this.constructor.name;
     type: string = 'all';
 
+    testAdmin: any = {
+        date: "2017-09-14",
+        issueCount: "1项",
+        lists: [
+            {
+                hasIssue: false,
+                site: "dfgdfgfdg",
+                time: "14:26",
+            },
+            {
+                detail: "ghjhg",
+                hasIssue: true,
+                imgs: [],
+                inCharge: "fghfgh",
+                site: "fghfgh",
+                time: "14:30"
+            }
+        ],
+        people: "小明",
+    }
+
     constructor(
+        private navParams: NavParams,
         private fb: FormBuilder,
         private validExd: NgValidatorExtendService,
         private alertCtrl: AlertController,
@@ -27,46 +51,51 @@ export class BossReportComponent implements OnInit {
 
     ngOnInit() {
         // this.init();
-        this.checkCache();
+        this.admin = this.navParams.get('admin') || false;
+        if(this.admin) {
+            this.init(this.testAdmin)
+        } else {
+            this.checkCache();
+        }
     }
 
-        /**
-     * 清空缓存
-     * 
-     */
+    /**
+ * 清空缓存
+ * 
+ */
     clearCache() {
-        this.cacheService.update(this.className,this.type+'','');
+        this.cacheService.update(this.className, this.type + '', '');
     }
 
     /**
      * 检查是否又未提交或未提交成功的缓存
      * 询问并根据用户选择决定是否恢复数据
      */
-    checkCache():void {
-        let data:any;
-        if(data = this.cacheService.get(this.className,this.type+'')) {
+    checkCache(): void {
+        let data: any;
+        if (data = this.cacheService.get(this.className, this.type + '')) {
             let confirm = this.alertCtrl.create({
                 title: `帮助`,
                 message: `发现之前有未提交的数据, 是否恢复?`,
                 buttons: [
-                  {
-                    text: '取消',
-                    handler: () => {
-                        this.init();
-                        this.clearCache();
+                    {
+                        text: '取消',
+                        handler: () => {
+                            this.init();
+                            this.clearCache();
+                        }
+                    },
+                    {
+                        text: '确定',
+                        handler: () => {
+                            this.init(data)
+                        }
                     }
-                  },
-                  {
-                    text: '确定',
-                    handler: () => {
-                        this.init(data)
-                    }
-                  }
                 ]
-              });
-              confirm.present();
-              confirm.onDidDismiss(() => {
-                if(!this.reportForm) {
+            });
+            confirm.present();
+            confirm.onDidDismiss(() => {
+                if (!this.reportForm) {
                     this.init();
                 }
             })
@@ -78,21 +107,34 @@ export class BossReportComponent implements OnInit {
     init(work: any = {}) {
         let date: string = moment(new Date()).format('YYYY-MM-DD');
         console.log(work);
-        work = work.date? work: new ReportHead(date, '小明')
+        work = work.date ? work : new ReportHead(date, '小明')
         this.reportForm = this.initForm(work);
         this.reportForm.valueChanges.subscribe((value) => {
-            this.cacheService.update(this.className,this.type,value);
+            this.cacheService.update(this.className, this.type, value);
         })
         this.attchSubForm(work.lists);
+        this.reportForm.disable({onlySelf:false})
+        if(this.admin) {
+            let listsForm = this.reportForm.get('lists') as FormArray;
+            Array.prototype.forEach.call(listsForm.controls,(i:FormGroup) => {
+                i.addControl('mark',new FormControl('',this.validExd.required()))
+                i.get('mark').valueChanges.subscribe(() => {
+                    this.totalMark = 0
+                    Array.prototype.forEach.call(listsForm.controls,(sub:FormGroup) => {
+                        this.totalMark += +sub.get('mark').value;
+                    })
+                })
+            })
+        }
     }
 
-    attchSubForm(lists:any[]) {
-        if(!lists || lists.length < 1) return;
-        for(let i=0;i<lists.length;i++) {
+    attchSubForm(lists: any[]) {
+        if (!lists || lists.length < 1) return;
+        for (let i = 0; i < lists.length; i++) {
             let listsForm = this.reportForm.get('lists') as FormArray;
             let target = lists[i];
-            if(target.hasIssue) {
-                listsForm.push(this.addSub2Form(this.initSubForm(target,this.changeIssueCount),target))
+            if (target.hasIssue) {
+                listsForm.push(this.addSub2Form(this.initSubForm(target, this.changeIssueCount), target))
             } else {
                 listsForm.push(this.initSubForm(target, this.changeIssueCount));
             }
@@ -107,7 +149,7 @@ export class BossReportComponent implements OnInit {
     */
     initForm(work: any = {}): FormGroup {
         return this.fb.group({
-            date: [ work.date ],
+            date: [work.date],
             people: [work.people],
             issueCount: [work.issueCount],
             lists: this.fb.array([])
@@ -133,8 +175,8 @@ export class BossReportComponent implements OnInit {
         return sub
     }
 
-    addSub2Form(sub:FormGroup,data?:{detail:string,imgs:string[],inCharge:string}) {
-        data = data || {detail:'',imgs:[],inCharge:''};
+    addSub2Form(sub: FormGroup, data?: { detail: string, imgs: string[], inCharge: string }) {
+        data = data || { detail: '', imgs: [], inCharge: '' };
         sub.addControl('detail', new FormControl(data.detail, [this.validExd.required()]));
         sub.addControl('imgs', new FormControl(data.imgs));
         sub.addControl('inCharge', new FormControl(data.inCharge, [this.validExd.required()]));
@@ -161,17 +203,24 @@ export class BossReportComponent implements OnInit {
     }
 
     hideOldSub(length: number) {
-        if(length<2) return;
+        if (length < 2) return;
         for (let i = 0; i < length - 1; i++) {
             this.reportForm.get('lists').get(i + '')['displayNone'] = true
         }
+    }
+
+    hideAll() {
+        let listsForm = this.reportForm.get('lists') as FormArray;
+        Array.prototype.forEach.call(listsForm.controls,(i:FormGroup) => {
+            i['displayNone'] = true;
+        })
     }
 
     scrollToBottom() {
         setTimeout(() => {
             let div = document.querySelector('sg-boss-report .scroll-content');
             div.scrollTop = div.scrollHeight;
-        },50)      
+        }, 50)
     }
 
     toggle(i: number) {
