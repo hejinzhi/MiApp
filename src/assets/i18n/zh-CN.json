@@ -417,9 +417,23 @@
       "day": "白班",
       "night": "夜班"
     },
+    "equipcom":{
+      "equip_title":"设备登记",
+      "machine_no":"设备编号",
+      "machine_desc": "设备名称",
+      "quantity": "数量",
+      "location1": "存放区域",
+      "location4": "存放位置",
+      "production_date": "出厂年月",
+      "effective_date": "有效期",
+      "owner_empno": "负责人",
+      "name_id": "巡检名称",
+      "disable_date": "停用日期"
+      },
     "inspectionName": "巡检名称",
     "equip": "设备登记",
     "inspectionSchedule": "巡检日程",
+    "inspectionSchedule2": "排班",
     "report": "巡检报告",
     "gaishan": "改善措施",
     "problem": "问题追踪",
@@ -427,6 +441,7 @@
     "mapping": "对照表",
     "inspectionHandler": "指派处理人",
     "boss": "主管巡查",
+    "duty": "考勤记录",
     "equip2": "设备巡检"
   },
   "change_to": "已更改为"

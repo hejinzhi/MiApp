@@ -21,4 +21,11 @@ export class InspectionComponent implements OnInit {
     goToIPQA() {
         this.navCtrl.push('MenuComponent');
     }
+    goToEuqip() {
+        this.navCtrl.push('EquipComponent');
+    }
+    
+    goToBoss() {
+        this.navCtrl.push('BossMenuComponent')
+    }
 }

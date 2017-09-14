@@ -9,6 +9,7 @@ import { ViewController, NavController, NavParams, AlertController, IonicPage} f
 export class PhotoDetailComponent implements OnInit {
 
   imgs:string[];
+  removeable: boolean // 是否可移除
   pageX:number;// 记录开始按的X位置
   idx:number = 0; // 目前显示图片的序号
   timeStart:number; // 记录开始按的X时间
@@ -27,6 +28,7 @@ export class PhotoDetailComponent implements OnInit {
   ngOnInit() {
     this.imgs = this.params.data.imgs || [];
     this.idx = this.params.data.idx || 0;
+    this.removeable = this.params.get('removeable') || true;
     this.switch(this.idx);
   }
   /**

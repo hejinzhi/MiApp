@@ -1,0 +1,75 @@
+<ion-header>
+  <ion-navbar>
+    <ion-title>主管巡查</ion-title>
+  </ion-navbar>
+</ion-header>
+<ion-content>
+  <ion-grid>
+    <ion-row center wrap>
+      <ion-col col-4 class="grid-col" (tap)="goToCheckListPage()">
+        <div class="grid-content">
+          <a>
+            <img src="assets/icon/list.gif" class="grid-img">
+            <div class="grid-name">{{'inspection.inspectionName' | translate}}</div>
+          </a>
+        </div>
+      </ion-col>
+      <ion-col col-4 class="grid-col" (tap)="goToSchedulePage()">
+        <div class="grid-content">
+          <a>
+                <img src="assets/icon/duty.gif" class="grid-img">
+                <div class="grid-name">{{'inspection.inspectionSchedule2' | translate}}</div>
+              </a>
+        </div>
+      </ion-col>
+      <ion-col col-4 class="grid-col" (tap)="goToReportPage()">
+        <div class="grid-content">
+          <a>
+            <img src="assets/icon/report.gif" class="grid-img">
+            <div class="grid-name">{{'inspection.report' | translate}}</div>
+          </a>
+        </div>
+      </ion-col>
+      <ion-col col-4 class="grid-col">
+        <div class="grid-content">
+          <a>
+            <img src="assets/icon/assign.png" class="grid-img">
+            <div class="grid-name">{{'inspection.inspectionHandler' | translate}}</div>
+          </a>
+        </div>
+      </ion-col>
+      <ion-col col-4 class="grid-col" (tap)="goToPageImprove()">
+        <div class="grid-content">
+          <a>
+            <img src="assets/icon/gaishan.gif" class="grid-img">
+            <div class="grid-name">{{'inspection.gaishan' | translate}}</div>
+          </a>
+        </div>
+      </ion-col>
+      <ion-col col-4 class="grid-col" (tap)="goToPageAdminCheck()">
+        <div class="grid-content">
+          <a>
+            <img src="assets/icon/problem.gif" class="grid-img">
+            <div class="grid-name">{{'inspection.problem' | translate}}</div>
+          </a>
+        </div>
+      </ion-col>
+      <ion-col col-4 class="grid-col" (tap)="goToDutyPage()">
+        <div class="grid-content">
+          <a>
+              <img src="assets/icon/onduty.gif" class="grid-img">
+              <div class="grid-name">{{'inspection.duty' | translate}}</div>
+            </a>
+        </div>
+      </ion-col>
+      <ion-col col-4 class="grid-col" (tap)="goToCommentPage()">
+        <div class="grid-content">
+          <a>
+                <img src="assets/icon/7s.gif" class="grid-img">
+                <div class="grid-name">{{'inspection.duty' | translate}}</div>
+              </a>
+        </div>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>

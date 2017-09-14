@@ -6,7 +6,7 @@
     <ion-buttons>
       <button ion-button (tap)="exit()">返回</button>
     </ion-buttons>
-    <ion-buttons end>
+    <ion-buttons end *ngIf="removeable">
       <button ion-button (tap)="delete()" class="iconfontyyy">&#xe643;</button>
     </ion-buttons>
   </ion-navbar>
