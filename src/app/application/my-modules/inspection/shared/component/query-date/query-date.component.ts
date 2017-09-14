@@ -1,4 +1,4 @@
-import { Component, OnInit, Output, EventEmitter, Input, OnChanges } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
 import { IonicPage } from 'ionic-angular';
 import * as moment from 'moment'
 
@@ -6,18 +6,14 @@ import * as moment from 'moment'
   selector: 'sg-query-date',
   templateUrl: 'query-date.component.html'
 })
-export class QueryDateComponent implements OnInit, OnChanges {
-  // @Input()
-  // start_date: string;
+export class QueryDateComponent implements OnInit {
+  @Input() name_id: number;
+  @Input() start_date: string;
+  @Input() end_date: string;
 
-  // @Input()
-  // end_date: string;
-
-  // @Output()
-  // start_date_change = new EventEmitter();
-
-  // @Output()
-  // end_date_change = new EventEmitter();
+  @Output() name_id_change = new EventEmitter();
+  @Output() start_date_change = new EventEmitter();
+  @Output() end_date_change = new EventEmitter();
 
   selectMaxYear = +moment(new Date()).format('YYYY') + 1;
 
@@ -26,9 +22,23 @@ export class QueryDateComponent implements OnInit, OnChanges {
   ngOnInit() {
   }
 
-  ngOnChanges() {
-    // this.start_date_change.emit(this.start_date);
-    // this.end_date_change.emit(this.end_date);
+  // ngOnChanges() {
+  //   console.log(11);
+  //   this.name_id_change.emit(this.name_id);
+  //   this.start_date_change.emit(this.start_date);
+  //   this.end_date_change.emit(this.end_date);
+  // }
+
+  changeNameId() {
+    this.name_id_change.emit(this.name_id);
+  }
+
+  changeStartDate() {
+    this.start_date_change.emit(this.start_date);
+  }
+
+  changeEndDate() {
+    this.end_date_change.emit(this.end_date);
   }
 
 }
