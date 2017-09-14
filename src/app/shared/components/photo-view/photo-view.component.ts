@@ -9,7 +9,17 @@ import { PluginService } from '../../../core/services/plugin.service';
 export class PhotoViewComponent implements OnInit {
 
   @Input()
+  set opts(opts:any) {
+    this.myOpts = Object.assign(this.myOpts,opts);
+  }
+  @Input()
   imgs: string[];
+
+  myOpts={
+    addable: true,
+    scanable: true,
+    removeable: true
+  }
 
   //DATA_URL : 0 ,FILE_URI : 1, NATIVE_URI : 2
   @Input()
@@ -86,6 +96,7 @@ export class PhotoViewComponent implements OnInit {
    * @param  {number} idx 当前图片的序号
    */
   selectPhoto(idx: number) {
+    if(!this.myOpts.scanable) return
     this.presentProfileModal(idx);
   }
 
@@ -94,7 +105,7 @@ export class PhotoViewComponent implements OnInit {
    * @param  {number} idx 当前图片的序号
    */
   presentProfileModal(idx: number) {
-    let profileModal = this.modalCtrl.create('PhotoDetailComponent', { imgs: this.imgs, idx: idx });
+    let profileModal = this.modalCtrl.create('PhotoDetailComponent', { imgs: this.imgs, idx: idx , removeable: this.myOpts.removeable});
     profileModal.onDidDismiss(data => {
       this.imgsChange.emit(this.imgs)
     });
