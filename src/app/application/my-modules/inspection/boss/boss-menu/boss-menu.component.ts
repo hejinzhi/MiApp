@@ -30,6 +30,7 @@ export class BossMenuComponent implements OnInit {
 
     goToPageAdminCheck() {
         this.navCtrl.push('AdminCheckComponent',{type:1})
+    }
     goToSchedulePage() {
         this.navCtrl.push('BossScheduleComponent');
     }
