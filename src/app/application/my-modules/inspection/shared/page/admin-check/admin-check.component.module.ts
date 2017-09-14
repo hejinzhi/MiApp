@@ -1,3 +1,4 @@
+import { QueryDateComponentModule } from './../../component/query-date/query-date.component.module';
 import { EquipItemComponentModule } from './../../component/equip-item/equip-item.component.module';
 import { BossItemComponentModule } from './../../component/boss-item/boss-item.component.module';
 import { AdminCheckComponent } from './admin-check.component';
@@ -10,7 +11,8 @@ import { TranslateModule } from '@ngx-translate/core';
         IonicPageModule.forChild(AdminCheckComponent),
         TranslateModule.forChild(),
         BossItemComponentModule,
-        EquipItemComponentModule
+        EquipItemComponentModule,
+        QueryDateComponentModule
     ],
     exports: [],
     declarations: [AdminCheckComponent],

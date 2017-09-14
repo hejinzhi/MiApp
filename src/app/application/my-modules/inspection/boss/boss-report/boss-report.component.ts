@@ -106,7 +106,6 @@ export class BossReportComponent implements OnInit {
 
     init(work: any = {}) {
         let date: string = moment(new Date()).format('YYYY-MM-DD');
-        console.log(work);
         work = work.date ? work : new ReportHead(date, '小明')
         this.reportForm = this.initForm(work);
         this.reportForm.valueChanges.subscribe((value) => {

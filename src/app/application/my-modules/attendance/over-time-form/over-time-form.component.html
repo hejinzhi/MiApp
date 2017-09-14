@@ -3,6 +3,7 @@
   <ion-navbar>
     <ion-title *ngIf="!formData.status">{{'attendance.new' | translate}}{{formData.type | sgFormType | translate}}</ion-title>
     <ion-title *ngIf="formData.status">{{formData.type | sgFormType | translate}}{{'attendance.detail' | translate}}</ion-title>
+    <sg-back-button></sg-back-button>
     <ion-buttons end >
       <button ion-button icon-only (tap)="presentPopover($event)">
       <ion-icon name="add"></ion-icon>

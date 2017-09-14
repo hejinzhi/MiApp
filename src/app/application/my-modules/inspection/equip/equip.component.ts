@@ -41,4 +41,10 @@ export class EquipComponent implements OnInit {
     goToPageAdminCheck() {
         this.navCtrl.push('AdminCheckComponent',{type:2})
     }
+
+    goToCheckListPage() {
+        this.navCtrl.push('CheckListComponent',{
+            type:3
+        });
+    }
 }
