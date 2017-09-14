@@ -22,4 +22,14 @@ export class BossMenuComponent implements OnInit {
     goToCheckListPage() {
         this.navCtrl.push('CheckListComponent');
     }
+
+    goToSchedulePage() {
+        this.navCtrl.push('BossScheduleComponent');
+    }
+    goToDutyPage() {
+        this.navCtrl.push('BossDutyComponent');
+    }
+    goToCommentPage() {
+        this.navCtrl.push('CommentComponent');
+    }
 }
