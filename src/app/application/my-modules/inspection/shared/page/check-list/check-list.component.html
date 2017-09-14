@@ -54,7 +54,7 @@
           </ion-row>
         </ion-grid>
       </div>
-      <ion-item-divider class="add" (tap)="addSubFrom()">+添加巡检项目</ion-item-divider>
+      <ion-item-divider class="add" (tap)="addSubFrom()" *ngIf="type !== 3">+添加巡检项目</ion-item-divider>
     </ion-list>
     <button ion-button full type="button" (tap)="submit()" [disabled]="checkForm.invalid">提交</button>
   </form>

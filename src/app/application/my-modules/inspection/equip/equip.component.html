@@ -6,7 +6,7 @@
 <ion-content>
   <ion-grid>
     <ion-row center wrap>
-      <ion-col col-4 class="grid-col">
+      <ion-col col-4 class="grid-col" (tap)="goToCheckListPage()">
         <div class="grid-content">
           <a>
             <img src="assets/icon/list.gif" class="grid-img">
@@ -46,7 +46,7 @@
           </a>
         </div>
       </ion-col>
-      <ion-col col-4 class="grid-col">
+      <ion-col col-4 class="grid-col" (tap)="goToPageAdminCheck()">
         <div class="grid-content">
           <a>
             <img src="assets/icon/problem.gif" class="grid-img">

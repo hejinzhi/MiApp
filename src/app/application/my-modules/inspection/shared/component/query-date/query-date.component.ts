@@ -20,6 +20,8 @@ export class QueryDateComponent implements OnInit {
   constructor() { }
 
   ngOnInit() {
+    this.start_date = this.start_date || moment(Date.parse(new Date().toString())-1000*60*60*24*30).format('YYYY-MM-DD');
+    this.end_date = this.end_date || moment(Date.parse(new Date().toString())).format('YYYY-MM-DD');
   }
 
   // ngOnChanges() {
