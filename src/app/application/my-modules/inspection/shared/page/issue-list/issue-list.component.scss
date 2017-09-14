@@ -3,10 +3,4 @@ sg-issue-list {
     color: #999;
     font-weight: 300;
   }
-  .lists {
-    @media screen and (max-width: 400px) {
-      min-width: 400px;
-      overflow: scroll;
-    }
-  }
 }

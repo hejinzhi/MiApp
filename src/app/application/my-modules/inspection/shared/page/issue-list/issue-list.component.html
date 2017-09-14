@@ -17,53 +17,11 @@
         1
       </ion-note>
     </ion-item>
-    <ion-grid class="lists" *ngIf="type === 1">
-      <ion-item *ngFor="let item of testData1" (tap)="toDetail(item)">
-        <ion-row>
-          <ion-col col-5>
-            {{item.time}}
-          </ion-col>
-          <ion-col col-3>
-            {{item.name}}
-          </ion-col>
-          <ion-col col-4>
-            {{item.site}}
-          </ion-col>
-          <ion-col col-10>
-            {{item.detail}}
-          </ion-col>
-          <ion-col col-10>
-            {{item.status}}
-          </ion-col>
-        </ion-row>
-      </ion-item>
-    </ion-grid>
-    <ion-grid class="lists" *ngIf="type === 2">
-      <ion-item *ngFor="let item of testData2" (tap)="toDetail(item)">
-        <ion-row>
-          <ion-col col-5>
-            {{item.time}}
-          </ion-col>
-          <ion-col col-3>
-            {{item.name}}
-          </ion-col>
-          <ion-col col-4>
-            {{item.site}}
-          </ion-col>
-          <ion-col col-5>
-            {{item.equip_num}}
-          </ion-col>
-          <ion-col col-3>
-            {{item.issue}}
-          </ion-col>
-          <ion-col col-4>
-            {{item.status}}
-          </ion-col>
-          <ion-col col-12>
-            {{item.detail}}
-          </ion-col>
-        </ion-row>
-      </ion-item>
-    </ion-grid>
+    <div class="lists" *ngIf="type === 1">
+      <sg-boss-item *ngFor="let item of testData1" (tap)="toDetail(item)" [item]="item"></sg-boss-item>
+    </div>
+    <div class="lists" *ngIf="type === 2">
+      <sg-equip-item *ngFor="let item of testData2" (tap)="toDetail(item)" [item]="item"></sg-equip-item>
+    </div>
   </ion-list>
 </ion-content>
