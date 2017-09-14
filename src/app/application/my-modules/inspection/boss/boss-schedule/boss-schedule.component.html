@@ -1,0 +1,80 @@
+<ion-header>
+  <ion-navbar>
+    <ion-title>排班</ion-title>
+  </ion-navbar>
+</ion-header>
+<ion-content>
+  <ion-item>
+    <ion-label col-4>*巡检名稱</ion-label>
+    <ion-select [(ngModel)]="name_id" [cancelText]="'attendance.cancle' | translate" [okText]="'attendance.confirm' | translate"
+      (ionChange)="changeType()">
+      <ion-option value=1 selected="true">小夜班</ion-option>
+      <ion-option value=2>大夜班</ion-option>
+      <ion-option value=3>7S</ion-option>
+    </ion-select>
+  </ion-item>
+  <form [formGroup]="scheduleForm" *ngIf="scheduleForm">
+    <ion-list>
+      <!-- <ion-item>
+        <ion-label col-4>*巡检名稱</ion-label>
+        <ion-input type="text" formControlName="name_id"></ion-input>
+      </ion-item> -->
+      <ion-item>
+        <ion-label col-4>*開始時段</ion-label>
+        <ion-datetime formControlName="from_time" displayFormat="HH:mm" [cancelText]="'attendance.cancle' | translate" [doneText]="'attendance.confirm' | translate"></ion-datetime>
+      </ion-item>
+      <ion-item>
+        <ion-label col-4>*結束時段</ion-label>
+        <ion-datetime formControlName="to_time" displayFormat="HH:mm" [cancelText]="'attendance.cancle' | translate" [doneText]="'attendance.confirm' | translate"></ion-datetime>
+      </ion-item>
+      <div formArrayName="schedulelines">
+        <div *ngFor="let scheduleline of scheduleForm.get('schedulelines').controls;let i=index" [formGroupName]="i">
+          <div class="array_icon"><span class="iconfontyyy remove" (tap)="removeScheduleLine(i)" *ngIf="i>0">&#xe61a;</span><span class="content">第{{i+1}}組</span>
+            <span class="iconfontyyy add" (tap)="addScheduleLine()">&#xe649;</span>
+          </div>
+          <ion-item *ngIf="this.name_id!=3">
+            <ion-label col-4>*值班日期</ion-label>
+            <ion-datetime formControlName="scheduledate" displayFormat="YYYY年MM月DD日" pickerFormat="YYYY MM DD" [cancelText]="'attendance.cancle' | translate"
+              [doneText]="'attendance.confirm' | translate" min="2017" [max]="selectMaxYear"></ion-datetime>
+          </ion-item>
+          <ion-item *ngIf="this.name_id==3">
+            <ion-label col-4>*巡檢周次</ion-label>
+            <ion-select [cancelText]="'attendance.cancle' | translate" [okText]="'attendance.confirm' | translate" formControlName="scheduledate2">
+              <ion-option value="2017-38">2017 第38周</ion-option>
+              <ion-option value="2017-39">2017 第39周</ion-option>
+            </ion-select>
+          </ion-item>
+          <ion-item *ngIf="this.name_id==3">
+            <ion-label col-4>*巡檢區域</ion-label>
+            <ion-input type="text" formControlName="area"></ion-input>
+          </ion-item>
+          <div formArrayName="empnos">
+            <div *ngFor="let empno of scheduleline.get('empnos').controls;let j=index">
+              <ion-grid>
+                <ion-row>
+                  <ion-col col-11>
+                    <ion-item>
+                      <ion-label col-5>*值班人員{{j+1}}</ion-label>
+                      <ion-input col-7 type="text" [formGroupName]="j"></ion-input>
+                    </ion-item>
+                  </ion-col>
+                  <ion-col col-1>
+                    <div item-rignt class="person_icon">
+                      <span class="iconfontyyy add" *ngIf="j==0" (tap)="addPerson(i)">&#xe649;</span>
+                      <span class="iconfontyyy remove" *ngIf="j>0" (tap)="removePerson(i,j)">&#xe61a;</span>
+                    </div>
+                  </ion-col>
+                </ion-row>
+              </ion-grid>
+            </div>
+          </div>
+          <!-- <ion-item>
+            <ion-label col-4>*值班人員2</ion-label>
+            <ion-input type="text" formControlName="empno2"></ion-input>
+          </ion-item> -->
+        </div>
+      </div>
+    </ion-list>
+  </form>
+  <!-- <button ion-button (tap)="showdetail()">查看VALUE</button> -->
+</ion-content>
