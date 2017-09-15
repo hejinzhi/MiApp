@@ -1,7 +1,7 @@
 <ion-header>
   <ion-navbar>
     <ion-title>{{'inspection.ipqa.exceptionTitle' | translate}}</ion-title>
-    <ion-buttons start>
+    <ion-buttons start *ngIf="this.fromPage === 'checklist'">
       <button ion-button (click)="goBack()">{{'inspection.ipqa.goBack' | translate}}</button>
     </ion-buttons>
     <ion-buttons end>
@@ -88,7 +88,7 @@
           <sg-photo-view destinationType=1></sg-photo-view>
         </div>
       </div>
-      <div class="my-row" *ngIf="fromPage === 'handler'">
+      <div class="my-row" *ngIf="fromPage === 'teamLeader'">
         <div class="left-col">
           <ion-label>*{{'inspection.ipqa.handler' | translate}}:</ion-label>
         </div>
@@ -96,22 +96,40 @@
           <ion-input [class.my-invalid]="formModel.get('handler').invalid && formModel.get('handler').touched" type="text" formControlName="handler"></ion-input>
         </div>
       </div>
-      <!-- <div class="my-row">
+      <div class="my-row" *ngIf="fromPage === 'handler'">
         <div class="left-col">
-          <ion-label>*{{'inspection.ipqa.PQE' | translate}}:</ion-label>
+          <ion-label>*{{'inspection.ipqa.actionDesc' | translate}}:</ion-label>
         </div>
         <div class="right-col">
-          <ion-input type="text" formControlName="PQE" [class.my-invalid]="formModel.get('PQE').invalid && formModel.get('PQE').touched"></ion-input>
+          <ion-textarea formControlName="actionDesc" cols="10" rows="4" [class.my-invalid]="formModel.get('actionDesc').invalid && formModel.get('actionDesc').touched"></ion-textarea>
         </div>
       </div>
-      <div class="my-row">
+      <div class="my-row" *ngIf="fromPage === 'handler'">
         <div class="left-col">
-          <ion-label>*{{'inspection.ipqa.closer' | translate}}:</ion-label>
+          <ion-label>*{{'inspection.ipqa.actionStatus' | translate}}:</ion-label>
         </div>
         <div class="right-col">
-          <ion-input type="text" formControlName="closer" [class.my-invalid]="formModel.get('closer').invalid && formModel.get('closer').touched"></ion-input>
+          <ion-textarea formControlName="actionStatus" cols="10" rows="4" [class.my-invalid]="formModel.get('actionStatus').invalid && formModel.get('actionStatus').touched"></ion-textarea>
         </div>
-      </div> -->
+      </div>
+      <div class="my-row" *ngIf="fromPage === 'handler'">
+        <div class="left-col">
+          <ion-label>{{'inspection.ipqa.actionPictures' | translate}}:</ion-label>
+        </div>
+        <div class="right-col">
+          <sg-photo-view destinationType=1></sg-photo-view>
+        </div>
+      </div>
+      <div class="my-row" *ngIf="fromPage === 'handler'">
+        <div class="left-col">
+          <ion-label>*{{'inspection.ipqa.actionDate' | translate}}:</ion-label>
+        </div>
+        <div class="right-col">
+          <ion-item class="my-item">
+            <ion-datetime type="datetime-local" displayFormat="YYYY/MM/DD" formControlName="actionDate" [class.my-invalid]="formModel.get('actionDate').invalid && formModel.get('actionDate').touched"></ion-datetime>
+          </ion-item>
+        </div>
+      </div>
     </ion-list>
   </form>
 </ion-content>

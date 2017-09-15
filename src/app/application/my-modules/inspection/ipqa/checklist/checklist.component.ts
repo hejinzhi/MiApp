@@ -76,6 +76,7 @@ export class ChecklistComponent implements OnInit {
                     },
                     station: this.station.title,
                     fromPage: "checklist"
+                    // fromPage: "handler"
                 });
             exceptionDetailModel.onWillDismiss((data: any) => {
                 if (data && (data.selected === false)) {

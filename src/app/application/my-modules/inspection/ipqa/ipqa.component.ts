@@ -51,15 +51,6 @@ export class IpqaComponent implements OnInit {
     }
 
     async onSelectChange() {
-        // // 获取该线别下的所有模块
-        // let moduleResult: string[] = await this.inspectionService.getModules(line);
-        // this.selectedModules = moduleResult;
-        // this.modules = this.addCheckboxAttribute(moduleResult, true);
-
-
-        // // 获取该线别下的所有站点
-        // let stationResult = await this.inspectionService.getAllStations(line);
-        // this.stations = this.addCheckboxAttribute(stationResult, true);
 
         // 获取该线别下的所有模块
         let res = await this.inspectionService.getCategoryByLine(EnvConfig.companyID, this.selectedLine.LINE_ID);
@@ -85,19 +76,6 @@ export class IpqaComponent implements OnInit {
         });
         return temp;
     }
-
-
-    // addCheckboxAttribute(target: string[], showFlag: boolean): GridModel[] {
-    //     let temp: GridModel[] = [];
-    //     target.forEach((v, i) => {
-    //         temp.push({
-    //             title: v,
-    //             showCheckbox: showFlag
-    //         });
-    //     });
-    //     return temp;
-    // }
-
 
     /**
      * @param  {GridModel} 记录从子组件返回的模块数组

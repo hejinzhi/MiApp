@@ -40,11 +40,17 @@ export class ExceptionDetailComponent implements OnInit {
             this.translateText.night = res['inspection.ipqa.night'];
         });
 
-        // 获取是从哪个页面转跳过来的。“问题追踪”不显示处理人栏位，而“指派处理人”则显示
+        // 获取是从哪个页面转跳过来的。“问题追踪”不显示处理人栏位(checklist)，而“指派处理人”则显示(teamLeader)
         this.fromPage = this.navParams.get('fromPage');
         this.localUser = JSON.parse(localStorage.getItem('currentUser'));
-        let user = this.localUser.empno + ',' + this.localUser.nickname + ',' + this.localUser.username;
+        this.createFormMode();
+
+
+    }
+
+    async createFormMode() {
         if (this.fromPage === 'checklist') {
+            let user = this.localUser.empno + ',' + this.localUser.nickname + ',' + this.localUser.username;
             this.formModel = this.fb.group({
                 checkDate: [this.commonService.getToday(), Validators.required],
                 checkPerson: [user, Validators.required],
@@ -54,42 +60,56 @@ export class ExceptionDetailComponent implements OnInit {
                 exceptionDesc: ['', Validators.required],
                 pictures: this.fb.array([])
             });
+            // 获取线别
+            this.line = this.navParams.get('line');
+            this.station = this.navParams.get('station');
+            let address = this.formModel.get('address') as FormControl;
+            address.setValue(this.line + ' -- ' + this.station);
+
+            // 获取违反的规定描述
+            this.checklist = this.navParams.get('checklist');
+            console.log(this.checklist);
+            let checklist_cn = this.formModel.get('checklist_cn') as FormControl;
+            checklist_cn.setValue(this.checklist.CHECK_LIST_CN);
+
+            // 获取班別
+            let banbie = this.formModel.get('banbie') as FormControl;
+            let res: any = await this.inspectionService.getDutyKind();
+            let temp: any = res.json();
+            let duty: string = temp.DUTY_KIND;
+            if (duty.substr(0, 1) === '1') {
+                banbie.setValue(this.translateText.day);
+            } else {
+                banbie.setValue(this.translateText.night);
+            }
+        } else if (this.fromPage === 'teamLeader') {
+            let formData = this.navParams.get('formData');
+            this.formModel = this.fb.group({
+                checkDate: [formData.checkDate, Validators.required],
+                checkPerson: [formData.checkPerson, Validators.required],
+                banbie: [formData.banbie, Validators.required],
+                address: [formData.address, Validators.required],
+                checklist_cn: [formData.checklist_cn, Validators.required],
+                exceptionDesc: [formData.exceptionDesc, Validators.required],
+                pictures: this.fb.array([]),
+                handler: ['', Validators.required],
+            });
         } else if (this.fromPage === 'handler') {
             this.formModel = this.fb.group({
-                checkDate: [this.commonService.getToday(), Validators.required],
-                checkPerson: [user, Validators.required],
-                banbie: ['白班', Validators.required],
+                checkDate: ['', Validators.required],
+                checkPerson: ['', Validators.required],
+                banbie: ['', Validators.required],
                 address: ['', Validators.required],
                 checklist_cn: ['', Validators.required],
                 exceptionDesc: ['', Validators.required],
                 pictures: this.fb.array([]),
                 handler: ['', Validators.required],
+                actionDesc: ['', Validators.required],
+                actionStatus: ['', Validators.required],
+                actionPictures: this.fb.array([]),
+                actionDate: ['', Validators.required],
             });
         }
-
-        // 获取线别
-        this.line = this.navParams.get('line');
-        this.station = this.navParams.get('station');
-        let address = this.formModel.get('address') as FormControl;
-        address.setValue(this.line + ' -- ' + this.station);
-
-        // 获取违反的规定描述
-        this.checklist = this.navParams.get('checklist');
-        console.log(this.checklist);
-        let checklist_cn = this.formModel.get('checklist_cn') as FormControl;
-        checklist_cn.setValue(this.checklist.CHECK_LIST_CN);
-
-        // 获取班別
-        let banbie = this.formModel.get('banbie') as FormControl;
-        let res: any = await this.inspectionService.getDutyKind();
-        let temp: any = res.json();
-        let duty: string = temp.DUTY_KIND;
-        if (duty.substr(0, 1) === '1') {
-            banbie.setValue(this.translateText.day);
-        } else {
-            banbie.setValue(this.translateText.night);
-        }
-
     }
 
     submitException() {
@@ -114,13 +134,6 @@ export class ExceptionDetailComponent implements OnInit {
         let checkPersons = this.formModel.get('checkPersons') as FormArray;
         checkPersons.push(new FormControl(''));
     }
-
-    // getToday() {
-    //     let newDate = new Date();
-    //     let month = (newDate.getMonth() + 1) > 9 ? (newDate.getMonth() + 1) : '0' + (newDate.getMonth() + 1);
-    //     let day = newDate.getDate() > 9 ? newDate.getDate() : '0' + newDate.getDate();
-    //     return newDate.getFullYear() + '-' + month + '-' + day;
-    // }
 
     dismiss() {
         this.viewCtrl.dismiss();

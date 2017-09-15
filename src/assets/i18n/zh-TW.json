@@ -415,7 +415,11 @@
       "the": "第",
       "error1": "項尚未填寫檢查結果，請填寫后再提交。",
       "day": "白班",
-      "night": "夜班"
+      "night": "夜班",
+      "actionDesc": "整改措施",
+      "actionStatus": "整改狀況",
+      "actionPictures": "整改後圖片",
+      "actionDate": "導入日期"
     },
     "equipcom": {
       "equip_title": "設備登記",

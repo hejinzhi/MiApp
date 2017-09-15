@@ -18,4 +18,8 @@ export class MenuComponent implements OnInit {
     goToReportPage() {
         this.navCtrl.push('IpqaComponent');
     }
+
+    goToTeamLeader() {
+        this.navCtrl.push('ListComponent', { fromPage: 'teamLeader' })
+    }
 }

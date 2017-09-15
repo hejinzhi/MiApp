@@ -1,0 +1,13 @@
+sg-list {
+  .main-wrapper {
+    // display: flex;
+    // justify-content: space-between;
+    font-size: 14px;
+  }
+  .check-list {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-size: 14px;
+  }
+}
