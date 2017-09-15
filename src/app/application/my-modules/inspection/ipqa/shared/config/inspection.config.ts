@@ -16,4 +16,6 @@ export class InspectionConfig {
     static getCheckListByLineStationUrl = EnvConfig.baseUrl + 'IPQA/GetCheckListByLine';
 
     static getDutyKind = EnvConfig.baseUrl + 'OverTime/GetOverTimeDutyKind';
+
+    static getEmp = EnvConfig.baseUrl + 'OffDuty/GetOffDutyAgent';
 }

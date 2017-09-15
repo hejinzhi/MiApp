@@ -24,6 +24,9 @@ export class ExceptionDetailComponent implements OnInit {
         day: '',
         night: ''
     };
+    options: any = {
+        placeholder: '请输入工号/姓名/AD'
+    };
     constructor(
         private navParams: NavParams,
         private viewCtrl: ViewController,
