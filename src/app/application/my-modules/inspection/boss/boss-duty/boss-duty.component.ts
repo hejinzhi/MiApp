@@ -31,12 +31,17 @@ export class BossDutyComponent implements OnInit {
 
     constructor(
         private fb: FormBuilder,
+        private navCtrl: NavController,
         private validExd: NgValidatorExtendService,
     ) {
     }
 
     ngOnInit() {
 
+    }
+
+    goToCheckReport(){
+        this.navCtrl.push('BossReportComponent');
     }
 
     select(index: any) {

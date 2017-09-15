@@ -1,25 +1,24 @@
 import { SharedModule } from './../../../../../shared/shared.module';
 // import { GridComponentModule } from './grid/grid.component.module';
-import { EquipsettingComponent } from './equipsetting.component';
 import { NgModule } from '@angular/core';
 import { IonicPageModule } from 'ionic-angular';
 import { TranslateModule } from '@ngx-translate/core';
-import { MultiPickerModule } from 'ion-multi-picker';
+import { ScheduleDetailComponent } from './schedule-detail.component';
+
 
 @NgModule({
     imports: [
-        IonicPageModule.forChild(EquipsettingComponent),
+        IonicPageModule.forChild(ScheduleDetailComponent),
         TranslateModule.forChild(),
-        SharedModule,
-        MultiPickerModule
+        SharedModule
     ],
     exports: [],
-    declarations: [EquipsettingComponent],
+    declarations: [ScheduleDetailComponent],
     providers: [],
     entryComponents: [
-        EquipsettingComponent
+        ScheduleDetailComponent
     ]
 })
-export class EquipComponentModule { }
+export class ScheduleDetailComponentModule { }
 
 

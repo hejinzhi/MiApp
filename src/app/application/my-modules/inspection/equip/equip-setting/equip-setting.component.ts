@@ -8,10 +8,10 @@ import { EquipService, Machine } from '../shared/service/equip.service';
 
 @IonicPage()
 @Component({
-    selector: 'sg-equipsetting',
-    templateUrl: 'equipsetting.component.html'
+    selector: 'sg-equip-setting',
+ templateUrl: 'equip-setting.component.html'
 })
-export class EquipsettingComponent implements OnInit {
+export class EquipSettingComponent implements OnInit {
 
     formModel: FormGroup;
 
