@@ -27,7 +27,6 @@ export class CommentComponent implements OnInit {
     constructor(
         private navCtrl: NavController,
         private validExd: NgValidatorExtendService,
-        private navCtrl: NavController
     ) { }
 
     ngOnInit() {
