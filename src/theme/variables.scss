@@ -5538,6 +5538,9 @@ ion-alert div.alert-wrapper {
     color: #000;
   }
 }
+ion-app .alert-ios .alert-wrapper {
+  overflow-y: scroll;
+}
 
 ion-picker-cmp .picker-wrapper {
   flex-direction: column-reverse;

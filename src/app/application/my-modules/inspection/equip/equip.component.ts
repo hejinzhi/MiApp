@@ -31,12 +31,20 @@ export class EquipComponent implements OnInit {
     }
 
     goToPageReport() {
-        this.navCtrl.push('EquipReportComponent')
+        this.navCtrl.push('EquipReportComponent');
     }
 
     goToPageImprove() {
         this.navCtrl.push('IssueListComponent',{type:2})
     }
 
+    goToPageAdminCheck() {
+        this.navCtrl.push('AdminCheckComponent',{type:2})
+    }
 
+    goToCheckListPage() {
+        this.navCtrl.push('CheckListComponent',{
+            type:3
+        });
+    }
 }

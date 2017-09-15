@@ -1,0 +1,46 @@
+<ion-header>
+  <ion-navbar>
+    <ion-title>巡檢日程2</ion-title>
+  </ion-navbar>
+</ion-header>
+<ion-content>
+  <div padding>
+    <ion-segment [(ngModel)]="type">
+      <ion-segment-button value="1">
+        全部
+      </ion-segment-button>
+      <ion-segment-button value="2">
+        已完成
+      </ion-segment-button>
+      <ion-segment-button value="3">
+        未完成
+      </ion-segment-button>
+    </ion-segment>
+  </div>
+
+  <div [ngSwitch]="type">
+    <ion-list *ngSwitchCase="'1'">
+      <ion-item class="card">
+        <div>
+          <div>廠區S6 電話機房 S6--1F--01 滅火器兩台</div>
+          <div>巡檢日期 09-01-17~09-30-17 王書利</div>
+        </div>
+        <button ion-button type="button" outline class="check" color="secondary">完成</button>
+      </ion-item>
+      <ion-item class="card">
+        <div>
+          <div>廠區S6 電話機房 S6--1F--01 滅火器兩台</div>
+          <div>巡檢日期 09-01-17~09-30-17 王書利</div>
+        </div>
+        <button ion-button type="button" outline class="check" color="danger">未完成</button>
+      </ion-item>
+    </ion-list>
+
+    <ion-list *ngSwitchCase="'2'">
+      2
+    </ion-list>
+    <ion-list *ngSwitchCase="'3'">
+      3
+    </ion-list>
+  </div>
+</ion-content>

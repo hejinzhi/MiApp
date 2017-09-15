@@ -1,104 +1,66 @@
 <ion-header>
-    <ion-navbar>
-      <ion-title>巡檢報告評分</ion-title>
-    </ion-navbar>
-  </ion-header>
-  <ion-content>
-    <ion-item>
-      <ion-label col-4>*巡检名稱</ion-label>
-      <ion-select [(ngModel)]="name_id" [cancelText]="'attendance.cancle' | translate" [okText]="'attendance.confirm' | translate">
-        <ion-option value=1 selected="true">小夜班</ion-option>
-        <ion-option value=2>大夜班</ion-option>
-        <ion-option value=3>7S</ion-option>
-      </ion-select>
-    </ion-item>
-    <ion-grid>
-      <ion-row>
-        <ion-col col-auto>
-          <ion-item>
-            <ion-label col-auto>*值班日期</ion-label>
-            <ion-datetime [(ngModel)]="start_date" displayFormat="MM月DD日" pickerFormat="YYYY MM DD" [cancelText]="'attendance.cancle' | translate" [doneText]="'attendance.confirm' | translate"
-              min="2017" [max]="selectMaxYear"></ion-datetime>
+  <ion-navbar>
+    <ion-title>巡檢報告評分</ion-title>
+  </ion-navbar>
+</ion-header>
+<ion-content>
+  <sg-query-date [name_id]="name_id" (name_id_change)="nameIdChange($event)" [(start_date)]="start_date" (start_date_change)="stratDateChange($event)"
+    [(end_date)]="end_date" (end_date_change)="endDateChange($event)"></sg-query-date>
+  <ion-toolbar color="light">
+    <ion-segment class="top_segment" [(ngModel)]="top_segment">
+      <ion-segment-button (click)="select(0)" value="top_0">
+        未交報告
+      </ion-segment-button>
+      <ion-segment-button (click)="select(1)" value="top_1">
+        未評分
+      </ion-segment-button>
+      <ion-segment-button (click)="select(2)" value="top_2">
+        已評分
+      </ion-segment-button>
+      <ion-segment-button (click)="select(3)" value="top_3">
+        全部
+      </ion-segment-button>
+    </ion-segment>
+  </ion-toolbar>
+  <ion-slides (pan)="panEvent($event)" #mySlider (ionDrag)="onSlideChanged($event)">
+    <ion-slide>
+      <ion-content class="fixed-content">
+        <ion-list >
+          <ion-item class="list">
+              <div class="content">第24組 2017/07/30 江芳雄 7:40~17:08 8H</div>
+            <button type="button" outline class="check" (tap)="goToCheckReport()">巡檢報告</button>
           </ion-item>
-        </ion-col>
-        <ion-col>
-          <ion-item>
-            <ion-label col-auto>-</ion-label>
-            <ion-datetime [(ngModel)]="end_date" displayFormat="MM月DD日" pickerFormat="YYYY MM DD" [cancelText]="'attendance.cancle' | translate" [doneText]="'attendance.confirm' | translate"
-              min="2017" [max]="selectMaxYear"></ion-datetime>
+          <ion-item class="list">
+              <div class="content">第25組 2017/08/06 江芳雄 7:40~17:08 8H</div>
+            <button type="button" outline class="check">巡檢報告</button>
           </ion-item>
-        </ion-col>
-      </ion-row>
-    </ion-grid>
-    <ion-toolbar color="light">
-      <ion-segment class="top_segment" [(ngModel)]="top_segment">
-        <ion-segment-button (click)="select(0)" value="top_0">
-          未交報告
-        </ion-segment-button>
-        <ion-segment-button (click)="select(1)" value="top_1">
-          未評分
-        </ion-segment-button>
-        <ion-segment-button (click)="select(2)" value="top_2">
-          已評分
-        </ion-segment-button>
-        <ion-segment-button (click)="select(3)" value="top_3">
+        </ion-list>
+      </ion-content>
+    </ion-slide>
+    <ion-slide>
+      <ion-scroll scrollY="true" class="fixed-content">
+        <ion-list>
+          <ion-list-header>
+            未產生補休
+          </ion-list-header>
+        </ion-list>
+      </ion-scroll>
+    </ion-slide>
+    <ion-slide>
+      <ion-scroll scrollY="true" class="fixed-content">
+        <ion-list-header>
+          已產生補休
+        </ion-list-header>
+      </ion-scroll>
+    </ion-slide>
+    <ion-slide>
+      <ion-scroll scrollY="true" class="fixed-content">
+        <ion-list-header>
           全部
-        </ion-segment-button>
-      </ion-segment>
-    </ion-toolbar>
-    <ion-slides (pan)="panEvent($event)" #mySlider (ionDrag)="onSlideChanged($event)">
-      <ion-slide>
-        <ion-content class="fixed-content">
-          <ion-list *ngIf="selected_segment===0">
-            <h1>
-              This is the first page
-            </h1>
-          </ion-list>
-  
-          <ion-list *ngIf="selected_segment===1">
-            <h1>
-              This is the second page
-            </h1>
-          </ion-list>
-  
-          <ion-footer no-shadow no-border style="position: fixed; bottom: 0px;">
-            <ion-toolbar color="light">
-              <ion-segment [(ngModel)]="segment">
-                <ion-segment-button value="sites" (click)="select_segment(0)">
-                  first
-                </ion-segment-button>
-                <ion-segment-button value="devices" (click)="select_segment(1)">
-                  second
-                </ion-segment-button>
-              </ion-segment>
-            </ion-toolbar>
-          </ion-footer>
-        </ion-content>
-      </ion-slide>
-      <ion-slide>
-        <ion-scroll scrollY="true" class="fixed-content">
-          <ion-list>
-            <ion-list-header>
-              未產生補休
-            </ion-list-header>
-          </ion-list>
-        </ion-scroll>
-      </ion-slide>
-      <ion-slide>
-        <ion-scroll scrollY="true" class="fixed-content">
-          <ion-list-header>
-            已產生補休
-          </ion-list-header>
-        </ion-scroll>
-      </ion-slide>
-      <ion-slide>
-        <ion-scroll scrollY="true" class="fixed-content">
-          <ion-list-header>
-            全部
-          </ion-list-header>
-        </ion-scroll>
-      </ion-slide>
-  
-    </ion-slides>
-  
-  </ion-content>
+        </ion-list-header>
+      </ion-scroll>
+    </ion-slide>
+
+  </ion-slides>
+
+</ion-content>

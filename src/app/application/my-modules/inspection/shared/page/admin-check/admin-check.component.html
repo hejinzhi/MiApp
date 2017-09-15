@@ -5,8 +5,10 @@
 </ion-header>
 <ion-content>
 
+  <sg-query-date></sg-query-date>
+
   <div padding>
-    <ion-segment>
+    <ion-segment [(ngModel)]="status" (ionChange)="changeShow()">
       <ion-segment-button value="1">
         待分配
       </ion-segment-button>
@@ -16,14 +18,18 @@
       <ion-segment-button value="3">
         已处理
       </ion-segment-button>
-      <ion-segment-button value="3">
+      <ion-segment-button value="4">
         HighLight
       </ion-segment-button>
-      <ion-segment-button value="3">
+      <ion-segment-button value="5">
         全部
       </ion-segment-button>
     </ion-segment>
   </div>
-
-
+  <div class="lists" *ngIf="type === 1">
+      <sg-boss-item *ngFor="let item of testData" (tap)="toDetail(item)" [item]="item"></sg-boss-item>
+    </div>
+    <div class="lists" *ngIf="type === 2">
+      <sg-equip-item *ngFor="let item of testData" (tap)="toDetail(item)" [item]="item"></sg-equip-item>
+    </div>
 </ion-content>

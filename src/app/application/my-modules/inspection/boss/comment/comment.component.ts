@@ -16,7 +16,7 @@ export class CommentComponent implements OnInit {
 
     selectMaxYear = +moment(new Date()).format('YYYY') + 1;
 
-    name_id: number;
+    name_id: number = 2;
     start_date: string = moment(new Date()).format('YYYY-MM-DD');
     end_date: string = moment(new Date()).format('YYYY-MM-DD');
 
@@ -24,17 +24,18 @@ export class CommentComponent implements OnInit {
     top_segment = 'top_0';
     segment = 'sites';
 
-    rootNavCtrl: NavController;
-
-
-
     constructor(
-        private fb: FormBuilder,
+        private navCtrl: NavController,
         private validExd: NgValidatorExtendService,
     ) { }
 
     ngOnInit() {
     }
+
+    goToCheckReport(){
+        this.navCtrl.push('BossReportComponent');
+    }
+
     select(index: any) {
         if (index === 2) {
             this.top_segment = 'top_2';
@@ -78,6 +79,27 @@ export class CommentComponent implements OnInit {
                 this.top_segment = 'top_0';
             }
         }, 0)
+    }
+
+    showdetail() {
+        console.log(this.name_id);
+        console.log(this.start_date);
+        console.log(this.end_date);
+        this.navCtrl.push('BossReportComponent',{
+            admin:true
+        })
+    }
+
+    nameIdChange(id: any) {
+        this.name_id = id;
+    }
+
+    stratDateChange(date: string) {
+        this.start_date = date;
+    }
+
+    endDateChange(date: string) {
+        this.end_date = date;
     }
 
 }

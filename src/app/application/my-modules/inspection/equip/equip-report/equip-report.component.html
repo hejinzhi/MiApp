@@ -12,19 +12,30 @@
           {{reportForm.get('time').value}}
         </ion-note>
       </ion-item>
-      <ion-item>
-        <ion-label>*设备编号</ion-label>
-        <ion-input type="text" formControlName="number"></ion-input>>
-        <ion-icon name="qr-scanner" color="#3773F7" item-end (click)="scan()"></ion-icon>
-      </ion-item>
-      <ion-item-divider (click)="toggle(i)">
+      <ion-grid no-padding>
+        <ion-row>
+          <ion-col col-10 class="fix-height">
+            <ion-item>
+              <ion-label>*设备编号</ion-label>
+              <ion-input type="text" formControlName="number"></ion-input>>
+            </ion-item>
+          </ion-col>
+          <ion-col col-2 class="block-none">
+            <ion-item>
+              <ion-icon name="qr-scanner" color="#3773F7" (click)="scan()"></ion-icon>
+            </ion-item>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+      <ion-item-divider>
         XXXX灭火器
       </ion-item-divider>
       <div formArrayName="lists" class="subForm">
         <div *ngFor="let ctrl of reportForm.controls['lists'].controls; let i = index;" class="list" [class.last]="i === reportForm.get('lists').length-1">
           <div [formGroupName]="i">
             <ion-item>
-              <ion-label *ngIf="testData"><ion-icon name="information-circle" color="danger" *ngIf="reportForm.get('lists').get(i+'').invalid"></ion-icon>
+              <ion-label *ngIf="testData">
+                <ion-icon name="information-circle" color="danger" *ngIf="reportForm.get('lists').get(i+'').invalid"></ion-icon>
                 <ion-icon name="checkmark-circle" *ngIf="!reportForm.get('lists').get(i+'').invalid"></ion-icon>*{{testData[i].name}}<span class="float-right">异常</span></ion-label>
               <ion-checkbox color="#3773F7" item-end formControlName="check"></ion-checkbox>
             </ion-item>
@@ -35,7 +46,7 @@
               </ion-item>
               <ion-item *ngIf="reportForm.get('lists').get(i+'').controls['detail']">
                 <div>添加图片</div>
-                <sg-photo-view [imgs]="reportForm.get('lists').get(i+'').controls['imgs'].value"></sg-photo-view>
+                <sg-photo-view [imgs]="reportForm.get('lists').get(i+'').controls['imgs'].value" (imgsChange)="updateImgs($event,reportForm.get('lists').get(i+'').controls['imgs'])"></sg-photo-view>
               </ion-item>
               <ion-item *ngIf="reportForm.get('lists').get(i+'').controls['inCharge']">
                 <ion-label>*责任人</ion-label>
