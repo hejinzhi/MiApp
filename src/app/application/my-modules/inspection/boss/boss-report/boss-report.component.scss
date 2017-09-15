@@ -9,6 +9,12 @@ sg-boss-report {
         color: #999;
         font-weight: 300;
     }
+    .disabled-label {
+        ion-label {
+            color: #999;
+            font-weight: 300;
+        }
+    }
     ion-icon[name="arrow-down"]{
         float: right;
     }
@@ -32,5 +38,10 @@ sg-boss-report {
     }
     .row {
         background-color: #f7f7f7;
+    }
+    .full[col-11] {
+        flex: 0 0 100%;
+        max-width: 100%;
+        width: 100%;
     }
 }

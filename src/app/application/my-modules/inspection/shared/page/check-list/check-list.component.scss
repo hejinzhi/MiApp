@@ -13,4 +13,10 @@ sg-check-list {
     .subForm {
         background-color: #f7f7f7;
     }
+    .fix-height {
+        .item-block {
+            min-height: 0;
+            height: 50px;
+        }
+    }
 }

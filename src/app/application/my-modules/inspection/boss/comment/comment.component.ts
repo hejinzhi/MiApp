@@ -27,6 +27,7 @@ export class CommentComponent implements OnInit {
     constructor(
         private navCtrl: NavController,
         private validExd: NgValidatorExtendService,
+        private navCtrl: NavController
     ) { }
 
     ngOnInit() {
@@ -85,6 +86,9 @@ export class CommentComponent implements OnInit {
         console.log(this.name_id);
         console.log(this.start_date);
         console.log(this.end_date);
+        this.navCtrl.push('BossReportComponent',{
+            admin:true
+        })
     }
 
     nameIdChange(id: any) {
