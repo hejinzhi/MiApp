@@ -35,7 +35,7 @@
       <div formArrayName="lists" class="subForm" *ngIf="showLists">
         <ion-grid center *ngFor="let ctrl of checkForm.controls['lists'].controls; let i = index;">
           <ion-row [formGroupName]="i">
-            <ion-col col-11>
+            <ion-col col-11 class="fix-height">
               <ion-item [class.has-success]="checkForm.get('lists').get(i+'').get('list').dirty && !checkForm.get('lists').get(i+'').get('list').errors"
                [class.has-error]="checkForm.get('lists').get(i+'').get('list').dirty && checkForm.get('lists').get(i+'').get('list').errors">
                 <ion-label>*检查指标</ion-label>
