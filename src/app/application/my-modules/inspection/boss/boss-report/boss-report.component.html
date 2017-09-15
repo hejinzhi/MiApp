@@ -72,7 +72,9 @@
             </ion-item>
             <ion-item *ngIf="reportForm.get('lists').get(i+'').controls['detail']" [class.disabled]="admin">
               <div>附图</div>
-              <sg-photo-view [imgs]="reportForm.get('lists').get(i+'').controls['imgs'].value" [opts]="admin?{addable:false,removeable:false}:{}"></sg-photo-view>
+              <sg-photo-view [imgs]="reportForm.get('lists').get(i+'').controls['imgs'].value" [opts]="admin?{addable:false,removeable:false}:{}"
+              (imgsChange)="updateImgs($event,reportForm.get('lists').get(i+'').controls['imgs'])"
+              ></sg-photo-view>
             </ion-item>
             <ion-item *ngIf="reportForm.get('lists').get(i+'').controls['inCharge']" [class.disabled-label]="admin">
               <ion-label>*责任人</ion-label>

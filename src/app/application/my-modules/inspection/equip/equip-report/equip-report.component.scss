@@ -19,4 +19,30 @@ sg-equip-report {
     ion-icon[name="checkmark-circle"]{
         color:#387ef5
     }
+
+    ion-icon[name="qr-scanner"]{
+        color:#387ef5;
+    }
+    .fix-height {
+        .item-block {
+            min-height: 0;
+            height: 55px;
+        }
+    }
+    .block-none {
+        height: 100%;;
+        display: block;
+       .item-block {
+            padding-left: 0px;
+        }
+        .item-block {
+            min-height: 0;
+            height: 55px;
+        }
+        ion-label {
+            display: flex;
+            justify-content: center;
+        }
+    }
+    
 }

@@ -14,7 +14,7 @@ import * as moment from 'moment'
 
 export class BossReportComponent implements OnInit {
     mark: number[] = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
-    totalMark:number = 0;
+    totalMark: number = 0;
     admin: boolean;
     reportForm: FormGroup;
     className: string = this.constructor.name;
@@ -52,7 +52,7 @@ export class BossReportComponent implements OnInit {
     ngOnInit() {
         // this.init();
         this.admin = this.navParams.get('admin') || false;
-        if(this.admin) {
+        if (this.admin) {
             this.init(this.testAdmin)
         } else {
             this.checkCache();
@@ -112,14 +112,14 @@ export class BossReportComponent implements OnInit {
             this.cacheService.update(this.className, this.type, value);
         })
         this.attchSubForm(work.lists);
-        this.reportForm.disable({onlySelf:false})
-        if(this.admin) {
+        if (this.admin) {
+            this.reportForm.disable({ onlySelf: false })
             let listsForm = this.reportForm.get('lists') as FormArray;
-            Array.prototype.forEach.call(listsForm.controls,(i:FormGroup) => {
-                i.addControl('mark',new FormControl('',this.validExd.required()))
+            Array.prototype.forEach.call(listsForm.controls, (i: FormGroup) => {
+                i.addControl('mark', new FormControl('', this.validExd.required()))
                 i.get('mark').valueChanges.subscribe(() => {
                     this.totalMark = 0
-                    Array.prototype.forEach.call(listsForm.controls,(sub:FormGroup) => {
+                    Array.prototype.forEach.call(listsForm.controls, (sub: FormGroup) => {
                         this.totalMark += +sub.get('mark').value;
                     })
                 })
@@ -201,6 +201,10 @@ export class BossReportComponent implements OnInit {
         this.scrollToBottom();
     }
 
+    updateImgs(imgs:string[], contr:FormControl) {
+        contr.setValue(imgs);
+    }
+
     hideOldSub(length: number) {
         if (length < 2) return;
         for (let i = 0; i < length - 1; i++) {
@@ -210,7 +214,7 @@ export class BossReportComponent implements OnInit {
 
     hideAll() {
         let listsForm = this.reportForm.get('lists') as FormArray;
-        Array.prototype.forEach.call(listsForm.controls,(i:FormGroup) => {
+        Array.prototype.forEach.call(listsForm.controls, (i: FormGroup) => {
             i['displayNone'] = true;
         })
     }

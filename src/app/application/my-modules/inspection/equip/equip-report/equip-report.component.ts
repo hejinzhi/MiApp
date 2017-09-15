@@ -127,6 +127,10 @@ export class EquipReportComponent implements OnInit {
         group.removeControl('detail');
     }
 
+    updateImgs(imgs:string[], contr:FormControl) {
+        contr.setValue(imgs);
+    }
+
     scan() {
         console.log('scanning');
         this.reportForm.get('number').setValue('scan后得到的编号')
