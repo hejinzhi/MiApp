@@ -8,17 +8,17 @@
 </ion-item>
 <ion-grid>
   <ion-row>
-    <ion-col col-auto>
+    <ion-col col-7 no-padding class="start_date">
       <ion-item>
         <ion-label col-auto>*值班日期</ion-label>
-        <ion-datetime [(ngModel)]="start_date" displayFormat="MM月DD日" pickerFormat="YYYY MM DD" [cancelText]="'attendance.cancle' | translate" [doneText]="'attendance.confirm' | translate"
+        <ion-datetime  [(ngModel)]="start_date" displayFormat="MM/DD" pickerFormat="YYYY MM DD" [cancelText]="'attendance.cancle' | translate" [doneText]="'attendance.confirm' | translate"
           min="2017" [max]="selectMaxYear" (ionChange)="changeStartDate()"></ion-datetime>
       </ion-item>
     </ion-col>
-    <ion-col col-auto>
+    <ion-col col-5 no-padding class="end_date">
       <ion-item>
-        <ion-label col-auto>-</ion-label>
-        <ion-datetime [(ngModel)]="end_date" displayFormat="MM月DD日" pickerFormat="YYYY MM DD" [cancelText]="'attendance.cancle' | translate" [doneText]="'attendance.confirm' | translate"
+        <ion-label col-auto class="lab">-</ion-label>
+        <ion-datetime [(ngModel)]="end_date" displayFormat="MM/DD" pickerFormat="YYYY MM DD" [cancelText]="'attendance.cancle' | translate" [doneText]="'attendance.confirm' | translate"
           min="2017" [max]="selectMaxYear" (ionChange)="changeEndDate()"></ion-datetime>
       </ion-item>
     </ion-col>
