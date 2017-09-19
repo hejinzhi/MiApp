@@ -21,7 +21,6 @@ import { SharedModule } from './shared/shared.module';
 import { CoreModule } from './core/core.module';
 import { PipesModule } from './shared/pipe/pipes.module';
 import { MeModule } from './me/me.module';
-import { AutoCompleteModule } from 'ionic2-auto-complete';
 
 export function createTranslateLoader(http: Http) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -58,8 +57,6 @@ export function createTranslateLoader(http: Http) {
     SharedModule,
     CoreModule,
     PipesModule,
-    AutoCompleteModule,
-    // BookLibraryModule
   ],
   bootstrap: [IonicApp],
   entryComponents: [

@@ -1,3 +1,4 @@
+import { Observable } from 'rxjs/Observable';
 import { InspectionService } from './../shared/service/inspection.service';
 import { CommonService } from './../../../../../core/services/common.service';
 import { UserModel } from './../../../../../shared/models/user.model';
@@ -47,8 +48,6 @@ export class ExceptionDetailComponent implements OnInit {
         this.fromPage = this.navParams.get('fromPage');
         this.localUser = JSON.parse(localStorage.getItem('currentUser'));
         this.createFormMode();
-
-
     }
 
     async createFormMode() {

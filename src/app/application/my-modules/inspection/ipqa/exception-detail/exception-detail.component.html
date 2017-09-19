@@ -93,8 +93,7 @@
           <ion-label>*{{'inspection.ipqa.handler' | translate}}:</ion-label>
         </div>
         <div class="right-col">
-          <!-- <ion-input [class.my-invalid]="formModel.get('handler').invalid && formModel.get('handler').touched" type="text" formControlName="handler"></ion-input> -->
-          <ion-auto-complete useIonInput=true [dataProvider]="inspectionService" [options]="options"></ion-auto-complete>
+          <ion-input [class.my-invalid]="formModel.get('handler').invalid && formModel.get('handler').touched" type="text" formControlName="handler"></ion-input>
         </div>
       </div>
       <div class="my-row" *ngIf="fromPage === 'handler'">

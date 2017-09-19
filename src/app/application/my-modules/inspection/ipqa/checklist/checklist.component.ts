@@ -104,8 +104,8 @@ export class ChecklistComponent implements OnInit {
         }
         if (allCheck) {
             console.log(this.checkList)
-            this.station.showCheckbox = true;
-            this.navCtrl.pop();
+            // this.station.showCheckbox = true;
+            // this.navCtrl.pop();
         }
     }
 

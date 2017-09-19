@@ -8,17 +8,21 @@ import { ContactConfig } from '../../shared/config/contact.config';
 @Injectable()
 export class ContactService {
     username: string;
+
     constructor(private myHttp: MyHttpService) {
         this.username = JSON.parse(localStorage.getItem('currentUser')).username;
     }
 
-    // public moveAppToMorePage(moduleID) {
-    //     return this.myHttp.post(ApplicationConfig.updateModuleDisplayUrl + `?moduleID=${moduleID}&display=N`, {});
-    // }
+    public getOrg() {
+        // return new Promise((resolve, reject) => {
+        //     resolve(ORG);
+        // })
+        let user = JSON.parse(localStorage.getItem('currentUser'));
 
-    // public moveItemToAppPage(moduleID) {
-    //     return this.myHttp.post(ApplicationConfig.updateModuleDisplayUrl + `?moduleID=${moduleID}&display=Y`, {});
-    // }
+        return this.myHttp.get(ContactConfig.getOrgUrl + `?user_name=${user.username}`)
+    }
+
+
     public getSameDeptPerson() {
         return this.myHttp.get(ContactConfig.getSameDeptPersonUrl);
     }
@@ -88,3 +92,19 @@ export class ContactService {
         }
     }
 }
+
+
+const ORG = [
+    {
+        DEPTNO: 'MIC',
+        DEPTNAME: '神達電腦'
+    },
+    {
+        DEPTNO: 'MSL',
+        DEPTNAME: '順達電腦'
+    },
+    {
+        DEPTNO: 'MKL',
+        DEPTNAME: '昆達電腦'
+    }
+];

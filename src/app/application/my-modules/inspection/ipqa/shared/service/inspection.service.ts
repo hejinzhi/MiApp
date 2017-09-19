@@ -7,30 +7,10 @@ import { Injectable } from '@angular/core';
 
 @Injectable()
 export class InspectionService {
-    labelAttribute = "name";
     constructor(
         private myHttp: MyHttpService,
         private commonService: CommonService
     ) { }
-
-    getResults(keyword: string) {
-        // return Observable.of(keyword)
-        //     .debounceTime(500)
-        //     .distinctUntilChanged()
-        //     .switchMap((res) => {
-        //         return this.getEmp(res);
-        //     })
-        //     .subscribe((emp) => {
-        //         let temp: any[] = emp.json();
-        //         let emps: string[] = [];
-        //         temp.forEach((value, index) => {
-        //             emps.push(value.AGENT_NAME);
-        //         });
-        //         return temp;
-        //     });
-        return ['FE717', 'FE716'];
-    }
-
 
     getEmp(emp: string) {
         return this.myHttp.get(InspectionConfig.getEmp + `?emp_name=${emp}`);

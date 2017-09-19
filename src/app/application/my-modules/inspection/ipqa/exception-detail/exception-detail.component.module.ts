@@ -1,4 +1,4 @@
-import { AutoCompleteModule } from 'ionic2-auto-complete';
+
 import { SharedModule } from './../../../../../shared/shared.module';
 import { ExceptionDetailComponent } from './exception-detail.component';
 
@@ -11,7 +11,6 @@ import { TranslateModule } from '@ngx-translate/core';
         IonicPageModule.forChild(ExceptionDetailComponent),
         TranslateModule.forChild(),
         SharedModule,
-        AutoCompleteModule
     ],
     exports: [],
     declarations: [ExceptionDetailComponent],
