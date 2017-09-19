@@ -39,7 +39,7 @@
           </ion-item>
           <ion-item *ngIf="this.name_id==3">
             <ion-label col-4>*巡檢周次</ion-label>
-            <ion-select [cancelText]="'attendance.cancle' | translate" [okText]="'attendance.confirm' | translate" formControlName="scheduledate2">
+            <ion-select [cancelText]="'attendance.cancle' | translate" [okText]="'attendance.confirm' | translate" formControlName="scheduledate">
               <ion-option value="2017-38">2017 第38周</ion-option>
               <ion-option value="2017-39">2017 第39周</ion-option>
             </ion-select>
@@ -55,7 +55,7 @@
                   <ion-col col-11>
                     <ion-item>
                       <ion-label col-5>*值班人員{{j+1}}</ion-label>
-                      <ion-input col-7 type="text" [formGroupName]="j"></ion-input>
+                      <ion-input col-7 type="text" [formControlName]="j"></ion-input>
                     </ion-item>
                   </ion-col>
                   <ion-col col-1>
@@ -76,5 +76,5 @@
       </div>
     </ion-list>
   </form>
-  <!-- <button ion-button (tap)="showdetail()">查看VALUE</button> -->
+  <button ion-button (tap)="showdetail()">查看VALUE</button>
 </ion-content>

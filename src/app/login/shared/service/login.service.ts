@@ -11,6 +11,7 @@ import { DatabaseService } from '../../../message/shared/service/database.servic
 import { EncryptUtilService } from '../../../core/services/encryptUtil.service';
 import { MyStore } from './../../../shared/store';
 import { User_Login, User_Update } from './../../../shared/actions/user.action';
+import { EnvConfig } from '../../../shared/config/env.config';
 
 @Injectable()
 export class LoginService {
@@ -30,7 +31,7 @@ export class LoginService {
     }
 
 
-    public async login(username: string, password: string, extra?:any) {
+    public async login(username: string, password: string, extra?: any) {
         this.showLoading();
         let ADLoginSuccess = await this.myADLogin(username, password, false, extra);
         if (ADLoginSuccess) {
@@ -64,7 +65,7 @@ export class LoginService {
         }
     }
 
-    async myADLogin(username: string, password: string, noErrorMsg: boolean = true, extra?:any) {
+    async myADLogin(username: string, password: string, noErrorMsg: boolean = true, extra?: any) {
         this.currentUser = new UserModel(username, password);
         this.currentUser = Object.assign(this.currentUser, extra);
         this.store$.dispatch(new User_Update(this.currentUser))
@@ -85,7 +86,10 @@ export class LoginService {
         let token = res.json().Token;
         if (token) {
             let user = res.json().User;
+            let companys = res.json().Companys;
             this.currentUser.id = user.ID;
+            this.currentUser.companyId = user.COMPANY_ID;
+            this.currentUser.companys = companys;
             this.currentUser.avatarUrl = user.AVATAR_URL;
             this.currentUser.nickname = user.NICK_NAME;
             this.currentUser.position = user.JOB_TITLE;
@@ -95,6 +99,16 @@ export class LoginService {
             this.currentUser.email = user.EMAIL;
             this.currentUser.telephone = user.TELEPHONE;
             this.store$.dispatch(new User_Login(this.currentUser));
+
+            if (localStorage.getItem('appCompanyId')) {
+                EnvConfig.companyID = localStorage.getItem('appCompanyId');
+            } else {
+                if (user.COMPANY_ID) {
+                    EnvConfig.companyID = user.COMPANY_ID;
+                    localStorage.setItem('appCompanyId', user.COMPANY_ID);
+                }
+            }
+
             if (this.pluginService.isCordova()) {
                 //把登陆人的头像保存到本地
                 let myAvatar = await this.messageDatabaseService.getAvatarByUsername(this.currentUser.username);
