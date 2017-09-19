@@ -26,13 +26,10 @@ export class BossScheduleComponent implements OnInit {
 
     ngOnInit() {
         this.init();
-        console.log(this.get_empty_array(3), 222);
     }
 
     init() {
         this.scheduleForm = this.initForm(new schedule());
-        console.log(this.scheduleForm);
-
     }
 
     changeType() {
@@ -51,29 +48,51 @@ export class BossScheduleComponent implements OnInit {
             from_time: [work.from_time, Validators.required],
             to_time: [work.to_time, Validators.required],
             schedulelines: this.fb.array([
-                this.fb.group({
-                    scheduledate: [moment(new Date()).format('YYYY-MM-DD')],
-                    scheduledate2: [''],
-                    area: [''],
-                    empnos: this.fb.array(this.get_empty_array(this.name_id))
-                })
+                this.initSubForm()
             ])
         });
+    };
 
-    }
+    initSubForm() {
+        let sub: any;
+        if (this.name_id == 1 || this.name_id == 2) {
+            sub = this.fb.group({
+                scheduledate: [moment(new Date()).format('YYYY-MM-DD'), Validators.required],
+                empnos: this.fb.array(this.get_empty_array(this.name_id), this.checkEmpno)
+            })
+        }
+        if (this.name_id == 3) {
+            sub = this.fb.group({
+                scheduledate: ['', Validators.required],
+                area: ['', Validators.required],
+                empnos: this.fb.array(this.get_empty_array(this.name_id), this.checkEmpno)
+            })
+        }
+        return sub;
+    };
+
     showdetail() {
-        console.log(this.schedulelines.controls[0].get('empnos'));
         console.log(this.scheduleForm.value);
+        console.log(this.scheduleForm.valid)
+    }
+
+    checkEmpno(control: FormArray) {
+        var valid = false;
+        control.controls.forEach(control => {
+            if (control.value) {
+                valid = true;
+            }
+        })
+        if (valid) {
+            return null;
+        } else {
+            return { empnoIsNotNull: true };
+        }
     }
 
 
     addScheduleLine() {
-        this.schedulelines.push(this.fb.group({
-            scheduledate: [moment(new Date()).format('YYYY-MM-DD')],
-            scheduledate2: [''],
-            area: [''],
-            empnos: this.fb.array(this.get_empty_array(this.name_id))
-        }));
+        this.schedulelines.push(this.initSubForm());
     }
 
     removeScheduleLine(index: any) {
@@ -122,7 +141,6 @@ class schedule {
 
 class scheduleLine {
     scheduledate: string = '';
-    scheduledate2: string = '';
     area: string = '';
     empnos: person[];
 }
