@@ -24,18 +24,18 @@ export class CommentComponent implements OnInit {
     top_segment = 'top_0';
     segment = 'sites';
 
-    rootNavCtrl: NavController;
-
-
-
     constructor(
-        private fb: FormBuilder,
+        private navCtrl: NavController,
         private validExd: NgValidatorExtendService,
-        private navCtrl: NavController
     ) { }
 
     ngOnInit() {
     }
+
+    goToCheckReport(){
+        this.navCtrl.push('BossReportComponent');
+    }
+
     select(index: any) {
         if (index === 2) {
             this.top_segment = 'top_2';

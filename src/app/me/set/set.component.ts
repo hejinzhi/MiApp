@@ -12,6 +12,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { UserState } from './../../shared/models/user.model';
 import { User_Logout, User_Update } from './../../shared/actions/user.action';
 import { MyStore } from './../../shared/store';
+import { EnvConfig } from '../../shared/config/env.config';
 
 @IonicPage()
 @Component({
@@ -43,9 +44,10 @@ export class SetComponent implements OnInit, OnDestroy {
   }
   ngOnInit() {
     this.mysubscription = this.store$.select('userReducer').subscribe((user:UserState) => this.user = user);
+    console.log(this.user,888);
     this.translate.stream(['meComponent.languageChangeAlertTitle', 'meComponent.zh-CN', 'meComponent.zh-TW', 'cancel', 'confirm'
       , 'meComponent.reStartAppAlertTitle', 'meComponent.reStartAppAlertMes', 'meComponent.logoutAlertTitle', 'meComponent.logoutAlertMes'
-      , 'meComponent.exitAlertTitle', 'meComponent.exitAlertMes', 'Y', 'N', 'change_to']).subscribe((res) => {
+      , 'meComponent.exitAlertTitle', 'meComponent.exitAlertMes', 'Y', 'N', 'change_to','meComponent.companyChangeAlertTitle']).subscribe((res) => {
         this.translateTexts = res;
       })
   }
@@ -83,6 +85,31 @@ export class SetComponent implements OnInit, OnDestroy {
         this.translate.use(data);
         this.store$.dispatch(new User_Update({ preferLang: data}))
         this.plugin.showToast(this.translateTexts['change_to']+this.translateTexts['meComponent.'+data])
+      }
+    });
+    alert.present();
+  }
+
+  changeCompany(){
+    let that = this;
+    let alert = this.alertCtrl.create();
+    let companyid = localStorage.getItem('appCompanyId');
+    alert.setTitle(this.translateTexts['meComponent.companyChangeAlertTitle']);
+    this.user.companys.forEach((company:any) => {
+      alert.addInput({
+        type: 'radio',
+        label: company.COMPANY_CNAME,
+        value: company.COMPANY_ID,
+        checked: companyid === company.COMPANY_ID
+      });
+    });  
+    alert.addButton(this.translateTexts['cancel']);
+    alert.addButton({
+      text: this.translateTexts['confirm'],
+      handler: (data: string) => {
+        EnvConfig.companyID = data;
+        localStorage.setItem('appCompanyId', data); 
+        this.plugin.showToast(this.translateTexts['change_to']+data)
       }
     });
     alert.present();
@@ -136,6 +163,7 @@ export class SetComponent implements OnInit, OnDestroy {
               that.jmessage.loginOut();
             }
             this.store$.dispatch(new User_Logout())
+            localStorage.setItem('appCompanyId', ''); 
             this.app.getRootNav().setRoot(LoginComponent);
           }
         }

@@ -31,7 +31,7 @@ export class EquipComponent implements OnInit {
     }
 
     goToPageReport() {
-        this.navCtrl.push('EquipReportComponent')
+        this.navCtrl.push('EquipReportComponent');
     }
 
     goToPageImprove() {

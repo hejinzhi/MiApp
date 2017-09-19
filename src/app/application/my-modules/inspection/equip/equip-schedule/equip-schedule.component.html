@@ -1,0 +1,50 @@
+<ion-header>
+  <ion-navbar>
+    <ion-title>{{'inspection.inspectionSchedule' | translate }}</ion-title>
+  </ion-navbar>
+</ion-header>
+<ion-content>
+  <ion-list>
+    <ion-item>
+      <ion-label col-4>*年度:</ion-label>
+      <ion-datetime  displayFormat="YYYY" pickerFormat="YYYY" [cancelText]="'attendance.cancle' | translate"
+        [doneText]="'attendance.confirm' | translate" min="2017" [max]="selectMaxYear"></ion-datetime>
+    </ion-item>
+    <ion-item>
+      <ion-label col-4>*月份:</ion-label>
+      <ion-datetime  displayFormat="MM" pickerFormat="MM" [cancelText]="'attendance.cancle' | translate"
+       [doneText]="'attendance.confirm' | translate" min="2017" [max]="2017"></ion-datetime>
+    </ion-item>
+    <ion-item>
+      <ion-label col-4>負責單位:</ion-label>
+      <ion-input></ion-input>
+    </ion-item>
+    <ion-item>
+        <ion-label col-4>存放區域:</ion-label>
+        <ion-input></ion-input>
+      </ion-item>
+    <ion-item>
+      <ion-label col-4>{{'inspection.equipcom.name_id' | translate }}:</ion-label>
+      <ion-input></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label col-4>{{'inspection.equipcom.machine_no' | translate }}:</ion-label>
+      <ion-input></ion-input>
+    </ion-item>
+  </ion-list>
+
+  <ion-grid>
+    <ion-row>
+      <ion-col width-50>
+        <ion-buttons left>
+          <button ion-button type="button">產生日程</button>
+        </ion-buttons>
+      </ion-col>
+      <ion-col width-50>
+        <ion-buttons right>
+          <button ion-button class="submit" (tap)="goToDeatilPage()">查看日程</button>
+        </ion-buttons>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>
