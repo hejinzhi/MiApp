@@ -1,5 +1,7 @@
 export interface UserState {
     id : string;
+    companyId: string;
+    companys: any[];
     username: string;
     password: string;
     nickname: string;
@@ -18,6 +20,8 @@ export interface UserState {
 }
 export class UserModel implements UserState{
     id: string;
+    companyId: string;
+    companys: any[];
     username: string;
     password: string;
     nickname: string;
