@@ -6,8 +6,8 @@ import { TranslateModule } from '@ngx-translate/core';
 
 
 @NgModule({
-  // imports: [IonicModule, TranslateModule.forChild()],
-  declarations: [PhotoViewComponent],
+  declarations: [PhotoViewComponent,
+],
   imports: [IonicPageModule.forChild(PhotoViewComponent), TranslateModule.forChild()],
   entryComponents: [
     PhotoViewComponent

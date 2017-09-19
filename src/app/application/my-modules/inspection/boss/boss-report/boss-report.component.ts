@@ -1,5 +1,5 @@
 import { IonicPage, AlertController, NavParams } from 'ionic-angular';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, NgZone } from '@angular/core';
 import { FormBuilder, FormGroup, FormArray, FormControl } from '@angular/forms';
 
 import { CacheService } from './../../../../../core/services/cache.service';
@@ -47,6 +47,7 @@ export class BossReportComponent implements OnInit {
         private validExd: NgValidatorExtendService,
         private alertCtrl: AlertController,
         private cacheService: CacheService,
+        private _ngZone: NgZone
     ) { }
 
     ngOnInit() {
@@ -60,9 +61,9 @@ export class BossReportComponent implements OnInit {
     }
 
     /**
- * 清空缓存
- * 
- */
+     * 清空缓存
+     * 
+     */
     clearCache() {
         this.cacheService.update(this.className, this.type + '', '');
     }
@@ -201,7 +202,7 @@ export class BossReportComponent implements OnInit {
         this.scrollToBottom();
     }
 
-    updateImgs(imgs:string[], contr:FormControl) {
+    updateImgs(imgs: string[], contr: FormControl) {
         contr.setValue(imgs);
     }
 
@@ -220,10 +221,12 @@ export class BossReportComponent implements OnInit {
     }
 
     scrollToBottom() {
-        setTimeout(() => {
-            let div = document.querySelector('sg-boss-report .scroll-content');
-            div.scrollTop = div.scrollHeight;
-        }, 50)
+        this._ngZone.runOutsideAngular(() => {
+            setTimeout(() => {
+                let div = document.querySelector('sg-boss-report .scroll-content');
+                div.scrollTop = div.scrollHeight;
+            }, 50)
+        })
     }
 
     toggle(i: number) {
