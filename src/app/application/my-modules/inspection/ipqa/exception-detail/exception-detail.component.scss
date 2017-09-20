@@ -22,6 +22,9 @@ sg-exception-detail {
       ion-input {
         border-bottom: 1px solid #c8c7cc;
       }
+      .input-wrapper ion-input {
+        border-bottom: none;
+      }
       ion-textarea {
         border: 1px solid #c8c7cc;
       }
