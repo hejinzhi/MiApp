@@ -7,7 +7,7 @@ sg-grid {
     .grid-content {
       //   background-color: #3eaaf4;
       border: 1px solid #3eaaf4;
-      background-color: #bdecfe;
+      background-color: #D8DADA;
       height: 90px;
       //   margin-top: 8px;
       display: flex;
@@ -26,6 +26,9 @@ sg-grid {
         text-overflow: ellipsis;
         color: #1B1C1C;
       }
+    }
+    .green {
+      background-color: #bdecfe;
     }
   }
   .my-header {

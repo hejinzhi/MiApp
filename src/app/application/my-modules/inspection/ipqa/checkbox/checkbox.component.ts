@@ -27,6 +27,7 @@ export class CheckboxComponent implements OnInit, OnChanges {
         this.translateTexts = await this.translate.get(['inspection.ipqa.normal', 'inspection.ipqa.exception']).toPromise();
         this.selectOptions.push(this.translateTexts['inspection.ipqa.normal']);
         this.selectOptions.push(this.translateTexts['inspection.ipqa.exception']);
+        this.selectOptions.push('N/A');
         if (this.value === this.selectOptions[0]) {
             this.checkedIdx = 0;
         } else if (this.value === this.selectOptions[1]) {
@@ -37,7 +38,16 @@ export class CheckboxComponent implements OnInit, OnChanges {
     change(event: boolean, i: number) {
         if (event) {
             this.checkedIdx = i;
-            this.selectedValue.emit(this.selectOptions[i]);
+            // this.selectedValue.emit(this.selectOptions[i]);
+            let value: string;
+            if (i == 0) {
+                value = 'NORMAL';
+            } else if (i == 1) {
+                value = 'EXCEPTION';
+            } else {
+                value = 'N/A';
+            }
+            this.selectedValue.emit(value);
 
         } else {
             this.checkedIdx = -1

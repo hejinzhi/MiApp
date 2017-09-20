@@ -1,3 +1,4 @@
+import { EnvConfig } from './../../../../shared/config/env.config';
 import { GridModel } from './grid/grid.component';
 import { InspectionService } from './shared/service/inspection.service';
 import { StationsComponent } from './../stations/stations.component';
@@ -5,6 +6,7 @@ import { NavController, IonicPage } from 'ionic-angular';
 import { Observable, Observer } from 'rxjs/Rx';
 import { Component, OnInit } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
+
 
 @IonicPage()
 @Component({
@@ -14,17 +16,21 @@ import { TranslateService } from '@ngx-translate/core';
 export class IpqaComponent implements OnInit {
 
     // 从服务器获取回来的线别选项
-    lines: string[] = [];
+    lines: { LINE_NAME: string, LINE_ID: number }[] = [];
     // 用户选择的线别
-    line: any[];
-    // 某线别下的模块
-    modules: GridModel[] = [];
+    selectedLine: { LINE_NAME: string, LINE_ID: number };
     // 站点
-    stations: GridModel[] = [];
+    allStations: { STATION_NAME: string, STATION_ID: number }[] = [];
     // 被选择了的站点
-    selectedStations: string[] = [];
+    // selectedStations: { STATION_NAME: string, STATION_ID: number }[] = [];
+    // 某线别下的模块
+    modules: { title: string, showCheckbox: boolean }[] = [];
+    // 该线别所有的模块
+    allModules: { CATEGORY_NAME: string, CATEGORY_ID: number }[] = [];
     // 被选中的模块
-    selectedModules: any[] = [];
+    // selectedModules: { CATEGORY_NAME: string, CATEGORY_ID: number }[] = [];
+    //
+    stations: { title: string, showCheckbox: boolean }[] = [];
     translateTexts: any = {
         'inspection.ipqa.stationTitle': '',
         'inspection.ipqa.module': ''
@@ -39,81 +45,81 @@ export class IpqaComponent implements OnInit {
     }
 
     async ngOnInit() {
-        // this.lines = await this.inspectionService.getLines();
-        let res = await this.inspectionService.getLines();
-        console.log(res);
-        // this.lines = res.json();
-        this.lines = res;
+        let res = await this.inspectionService.getLines(EnvConfig.companyID);
+        this.lines = res.json();
         this.translateTexts = await this.translate.get(['inspection.ipqa.stationTitle', 'inspection.ipqa.module']).toPromise();
     }
 
-    /**
-     * @param  {string} selectedValue --记录用户选择的线别
-     */
-    async onSelectChange(line: string) {
+    async onSelectChange() {
+
         // 获取该线别下的所有模块
-        let moduleResult: string[] = await this.inspectionService.getModules(line);
-        this.selectedModules = moduleResult;
-        this.modules = this.addCheckboxAttribute(moduleResult, true);
+        let res = await this.inspectionService.getCategoryByLine(EnvConfig.companyID, this.selectedLine.LINE_ID);
+        this.allModules = res.json();
+        // this.selectedModules = this.allModules;
+        this.modules = this.addCheckboxAttribute(this.allModules, true);
 
 
         // 获取该线别下的所有站点
-        let stationResult = await this.inspectionService.getAllStations(line);
-        this.stations = this.addCheckboxAttribute(stationResult, true);
+        let result = await this.inspectionService.getStationByLine(EnvConfig.companyID, this.selectedLine.LINE_ID);
+        this.allStations = result.json();
+        // this.selectedStations = this.allStations;
+        this.stations = this.addCheckboxAttribute(this.allStations, true);
     }
 
-
-    addCheckboxAttribute(target: string[], showFlag: boolean): GridModel[] {
-        let temp: GridModel[] = [];
+    addCheckboxAttribute(target: any[], showFlag: boolean) {
+        let temp: any[] = [];
         target.forEach((v, i) => {
             temp.push({
-                title: v,
+                title: v[Object.keys(v)[0]],
                 showCheckbox: showFlag
             });
         });
         return temp;
     }
 
-
     /**
      * @param  {GridModel} 记录从子组件返回的模块数组
      */
     async changeModule(module: GridModel) {
-        let result: string[] = [];
-        // modules.forEach((module) => {
-        //     if (module.showCheckbox) {
-        //         result.push(module.title);
-        //     }
-        // });
-        let index = this.selectedModules.indexOf(module.title);
-        if (module.showCheckbox) {
-            if (index === -1) {
-                this.selectedModules.push(module.title);
+
+        this.modules.forEach((value, index) => {
+            if (value.title === module.title) {
+                value.showCheckbox = module.showCheckbox;
             }
-        } else {
-            if (index > -1) {
-                this.selectedModules.splice(index, 1);
+        });
+        let categoryIds: number[] = [];
+        let showModules = this.modules.filter((value) => {
+            return value.showCheckbox;
+        });
+        showModules.forEach((value, index) => {
+            let id = this.getModuleId(value.title);
+            if (id > 0) {
+                categoryIds.push(id);
+            }
+        });
+        if (categoryIds.length <= 0) {
+            categoryIds.push(-1);
+        }
+        let res = await this.inspectionService.getStationByCategory(EnvConfig.companyID, this.selectedLine.LINE_ID, categoryIds);
+        let stationResult = res.json();
+        this.stations = this.addCheckboxAttribute(stationResult, true);
+    }
+
+    getModuleId(moduleName: string) {
+        let id: number = -1;
+        for (let i = 0; i < this.allModules.length; i++) {
+            if (this.allModules[i].CATEGORY_NAME === moduleName) {
+                id = this.allModules[i].CATEGORY_ID;
+                break;
             }
         }
-        let stationResult = await this.inspectionService.getStationsByModules(this.selectedModules);
-        this.stations = this.addCheckboxAttribute(stationResult, true);
+        return id;
     }
 
     /**
      * @param  {GridModel} 记录从子组件返回的站点数组
      */
     changeStation(stations: GridModel) {
-        // let temp: GridModel[] = [];
-        // stations.filter((s) => {
-        //     return s.showCheckbox === true;
-        // }).forEach((v) => {
-        //     temp.push({
-        //         title: v.title,
-        //         showCheckbox: true
-        //     });
-        // });
-        // this.stations = temp;
-        // this.selectedStations = temp;
         this.stations.forEach((value, index) => {
             if (value.title === stations.title) {
                 this.stations[index].showCheckbox = stations.showCheckbox;
@@ -122,7 +128,21 @@ export class IpqaComponent implements OnInit {
     }
 
     goToChooseStationPage() {
-        this.navCtrl.push('StationsComponent', { stations: this.stations, line: this.line });
+        this.stations.forEach((value, index) => {
+            value["STATION_ID"] = this.getStationId(value.title);
+        });
+        this.navCtrl.push('StationsComponent', { stations: this.stations, lineName: this.selectedLine.LINE_NAME, lineId: this.selectedLine.LINE_ID });
+    }
+
+    getStationId(stationName: string) {
+        let id: number = -1;
+        for (let i = 0; i < this.allStations.length; i++) {
+            if (this.allStations[i].STATION_NAME === stationName) {
+                id = this.allStations[i].STATION_ID;
+                break;
+            }
+        }
+        return id;
     }
 
 

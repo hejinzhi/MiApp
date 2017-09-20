@@ -14,12 +14,20 @@
       <span class="header-content">{{parentDept.DEPTNAME | sgChineseConv}}</span>
     </div>
     <div class="main-content">
-      <div *ngIf="!showPeople">
+      <div *ngIf="!showPeople && childrenDeptList.length >0 ">
         <div class="my-item" *ngFor="let item of childrenDeptList" (tap)="viewChildDept(item)">
           <div class="left">
             <ion-icon name="menu"></ion-icon>
           </div>
           <div class="right">{{item.DEPTNAME |sgChineseConv}}</div>
+        </div>
+      </div>
+      <div *ngIf="!showPeople && companyList.length >0 && childrenDeptList.length<=0">
+        <div class="my-item" *ngFor="let item of companyList" (tap)="viewCompanyTopDept(item)">
+          <div class="left">
+            <ion-icon name="menu"></ion-icon>
+          </div>
+          <div class="right">{{item.COMPANY_NAME |sgChineseConv}}</div>
         </div>
       </div>
       <sg-contact-list [contacter]="peopleInDept" *ngIf="showPeople" (onClick)="goToDetailPage($event)"></sg-contact-list>

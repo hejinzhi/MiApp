@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { NavController, NavParams } from 'ionic-angular';
 import { ContactService } from '../shared/service/contact.service';
-import { LanguageConfig } from '../shared/config/language.config';
 import { DialogueComponent } from '../../message/dialogue/dialogue.component';
 
 import { PluginService } from '../../core/services/plugin.service';

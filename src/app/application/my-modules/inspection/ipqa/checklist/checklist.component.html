@@ -7,18 +7,17 @@
   </ion-navbar>
 </ion-header>
 <ion-content>
-  <!-- <div *ngFor="let list of checkList;let i =index">
-    {{i+1}}{{list.desc}}
-  </div> -->
   <ion-card *ngFor="let list of checkList;let i =index">
     <div class="my-content">
-      <p>{{i+1}}. {{list.desc |sgChineseConv}}</p>
+      <p>{{ list.LINE_NUM}} {{list.CHECK_LIST_CN|sgChineseConv}}</p>
+      <p *ngIf="list.CHECK_LIST_EN">{{ list.LINE_NUM}} {{list.CHECK_LIST_EN}}</p>
+      <!-- <p>{{i+1}}. {{list.desc |sgChineseConv}}</p> -->
       <!-- <p [ngStyle]="{color: list.priority==='Major'?'red':'green'}" class="priority">{{'inspection.ipqa.priority'| translate}}:{{list.priority}}</p> -->
     </div>
-    <sg-checkbox *ngIf="list.type === 'checkbox'" (selectedValue)="selectedValue(list,$event)" [reset]="reset[i].reset" [value]="list.value"></sg-checkbox>
-    <div *ngIf="list.type === 'input'" class="my-div">
+    <sg-checkbox *ngIf="list.CHECK_TYPE === 'RADIO'" (selectedValue)="selectedValue(list,$event)" [reset]="reset[i].reset" [value]="list.VALUE"></sg-checkbox>
+    <div *ngIf="list.CHECK_TYPE === 'INPUT'" class="my-div">
       {{'inspection.ipqa.keyinNumber' | translate}}:
-      <input type="number" [(ngModel)]="list.value">
+      <input type="number" [(ngModel)]="list.VALUE">
     </div>
   </ion-card>
 </ion-content>
