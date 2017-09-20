@@ -6,21 +6,20 @@ import { AttendanceService } from './../../../application/my-modules/attendance/
 import { Component, OnInit, Input } from '@angular/core';
 
 @Component({
-  selector: 'sg-search-colleague',
-  templateUrl: 'search-colleague.component.html'
+  selector: 'sg-search-emp',
+  templateUrl: 'search-emp.component.html'
 })
-export class SearchColleagueComponent implements OnInit {
+export class SearchEmpComponent implements OnInit {
   @Input()
-  set opt(opt: { formCtr: FormControl, label: string }) {
+  set opt(opt: { formCtr: FormControl }) {
     this.formCtr = opt.formCtr;
-    this.label = opt.label || this.label;
   }
   colleague: Observable<string[]>;// 搜索得到的候选代理人
   tempcolleague: string;
   isSelectcolleague: boolean = false;
   formCtr: FormControl;
-  label: string = "负责人";
   searchTerms = new Subject<string>();
+  showList: boolean = true;
 
   constructor(
     private attendanceService: AttendanceService,
@@ -92,6 +91,6 @@ export class SearchColleagueComponent implements OnInit {
       this.isSelectcolleague = true;
       this.formCtr.setValue(name);
     }
-    this.searchTerms.next('')
+    this.searchTerms.next('');
   }
 }

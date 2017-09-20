@@ -7,7 +7,6 @@ import { ContactService } from './shared/service/contact.service';
 import { SearchResultComponent } from './search-result/search-result.component';
 import { ContactDetailComponent } from './contact-detail/contact-detail.component';
 import { OrganizationComponent } from './organization/organization.component';
-import { LanguageConfig } from './shared/config/language.config';
 
 
 @Component({

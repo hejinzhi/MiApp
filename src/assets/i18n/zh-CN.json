@@ -415,11 +415,17 @@
       "closer": "结案人",
       "keyinNumber": "请输入数值",
       "the": "第",
-      "error1": "项尚未填写检查结果，请填写后再提交。"
+      "error1": "项尚未填写检查结果，请填写后再提交。",
+      "day": "白班",
+      "night": "夜班",
+      "actionDesc": "整改措施",
+      "actionStatus": "整改状况",
+      "actionPictures": "整改后图片",
+      "actionDate": "导入日期"
     },
-    "equipcom":{
-      "equip_title":"设备登记",
-      "machine_no":"设备编号",
+    "equipcom": {
+      "equip_title": "设备登记",
+      "machine_no": "设备编号",
       "machine_desc": "设备名称",
       "quantity": "数量",
       "location1": "存放区域",
@@ -429,7 +435,7 @@
       "owner_empno": "负责人",
       "name_id": "巡检名称",
       "disable_date": "停用日期"
-      },
+    },
     "inspectionName": "巡检名称",
     "equip": "设备登记",
     "inspectionSchedule": "巡检日程",

@@ -1,5 +1,4 @@
 <ion-item>
-  <ion-label *ngIf="label">{{ label | translate}}</ion-label>
   <ion-input type="text" #name (keyup)="search(name.value)" clearInput></ion-input>
 </ion-item>
 <div class="searchOut">

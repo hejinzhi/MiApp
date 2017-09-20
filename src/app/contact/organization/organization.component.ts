@@ -3,7 +3,6 @@ import { NavController, NavParams } from 'ionic-angular';
 import { ContactService } from '../shared/service/contact.service';
 import { ContactDetailComponent } from '../contact-detail/contact-detail.component';
 import { EnvConfig } from '../../shared/config/env.config';
-import { LanguageConfig } from '../shared/config/language.config';
 
 @Component({
     selector: 'sg-organization',
@@ -15,32 +14,13 @@ export class OrganizationComponent implements OnInit {
         DEPTNO: null,
         DEPTNAME: null
     };   // 父部门
+    companyList: Company[] = [];
     childrenDeptList: any[] = []; // 子部门列表
-    deptIndex: number = 1; // 记录目前组织的深度，初始1
+    deptIndex: number = 0; // 记录目前组织的深度，初始0
     deptHistory: any[] = []; // 记录被点击过的部门历史
     peopleInDept: any[] = []; // 记录在这个部门内的人
     showPeople: boolean; // 是否显示人员信息
     site: string;//记录时哪个公司
-
-
-    ORG = [
-        {
-            DEPTNO: 'MIC',
-            DEPTNAME: '神達電腦'
-        },
-        {
-            DEPTNO: 'MSL',
-            DEPTNAME: '順達電腦'
-        },
-        {
-            DEPTNO: 'MKL',
-            DEPTNAME: '昆達電腦'
-        }
-    ];
-    MSL_TOP_DEPTNO = '00000289';
-    MIC_TOP_DEPTNO = '2S00000';
-    MKL_TOP_DEPTNO = '1000001';
-
 
     constructor(
         public navCtrl: NavController,
@@ -49,46 +29,67 @@ export class OrganizationComponent implements OnInit {
     ) { }
 
     async ngOnInit() {
-        // let res = await this.contactService.getDeptInfoByGrade(EnvConfig.companyID, EnvConfig.maxGrade);
-        // let result = res.json();
-        // if (result.length > 0) {
-        //     this.parentDept = result[0];
-        //     this.deptHistory.push(result[0]);
-        // } else {
-        //     this.parentDept = {
-        //         DEPTNO: null,
-        //         DEPTNAME: ''
-        //     };
-        // }
 
-        // let childRes = await this.contactService.getChildDeptInfo(EnvConfig.companyID, this.parentDept.DEPTNO);
-        // let childResult = childRes.json();
-        // this.childrenDeptList = childResult;
         this.site = EnvConfig.companyID;
         this.parentDept = {
             DEPTNO: 'MITAC',
             DEPTNAME: '神達集團'
         };
         this.deptHistory.push(this.parentDept);
-        this.childrenDeptList = this.ORG;
+
+        let res = await this.contactService.getOrg();
+        let companys: any[] = res.json();
+        this.companyList = companys;
+        this.addThreeCompanys();
+
+    }
+
+    addThreeCompanys() {
+        let hardCodeCompanys: Company[] = [
+            {
+                COMPANY_ID: 'MSL',
+                COMPANY_NAME: '佛山市順德區順達電腦廠有限公司',
+                TOP_DEPTNO: '00000289',
+                TOP_DEPTNAME: 'MSL 總公司董事長室'
+            },
+            {
+                COMPANY_ID: 'MIC',
+                COMPANY_NAME: '神達電腦股份有限公司',
+                TOP_DEPTNO: '2S00000',
+                TOP_DEPTNAME: '董事長室(S)'
+            },
+            {
+                COMPANY_ID: 'MKL',
+                COMPANY_NAME: '昆達電腦科技（昆山）有限公司',
+                TOP_DEPTNO: '1000001',
+                TOP_DEPTNAME: 'MKL總公司董事長'
+            }
+        ]
+        for (let i = 0; i < hardCodeCompanys.length; i++) {
+            let flag = true;
+            for (let j = 0; j < this.companyList.length; j++) {
+                if (hardCodeCompanys[i].COMPANY_ID === this.companyList[j].COMPANY_ID) {
+                    flag = false;
+                }
+            }
+            if (flag) {
+                this.companyList.push(hardCodeCompanys[i]);
+            }
+        }
+    }
+
+    async viewCompanyTopDept(company: Company) {
+        let dept = {
+            DEPTNO: company.TOP_DEPTNO,
+            DEPTNAME: company.TOP_DEPTNAME
+        }
+        this.site = company.COMPANY_ID;
+        await this.viewChildDept(dept);
     }
 
     async viewChildDept(dept: any) {
-        this.deptIndex++;
         this.deptHistory.push(dept);
         this.parentDept = dept;
-        if (this.parentDept.DEPTNO === 'MSL') {
-            this.parentDept.DEPTNO = this.MSL_TOP_DEPTNO;
-            this.site = 'MSL';
-        }
-        else if (this.parentDept.DEPTNO === 'MIC') {
-            this.parentDept.DEPTNO = this.MIC_TOP_DEPTNO;
-            this.site = 'MIC';
-        }
-        else if (this.parentDept.DEPTNO === 'MKL') {
-            this.parentDept.DEPTNO = this.MKL_TOP_DEPTNO;
-            this.site = 'MKL';
-        }
         let childRes = await this.contactService.getChildDeptInfo(this.site, this.parentDept.DEPTNO);
         let childResult = childRes.json();
         if (childResult.length > 0) {
@@ -111,8 +112,9 @@ export class OrganizationComponent implements OnInit {
     async goBack() {
         let length = this.deptHistory.length;
         this.parentDept = this.deptHistory[length - 2];
+        console.log(this.parentDept);
         if (this.parentDept.DEPTNO === 'MITAC') {
-            this.childrenDeptList = this.ORG;
+            this.childrenDeptList = [];
         } else {
             let childRes = await this.contactService.getChildDeptInfo(this.site, this.parentDept.DEPTNO);
             let childResult = childRes.json();
@@ -120,8 +122,13 @@ export class OrganizationComponent implements OnInit {
         }
         this.showPeople = false;
         this.deptHistory.pop();
-
     }
 }
 
 
+class Company {
+    COMPANY_ID: string;
+    COMPANY_NAME: string;
+    TOP_DEPTNAME: string;
+    TOP_DEPTNO: string
+}

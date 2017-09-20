@@ -120,7 +120,7 @@ export class JMessageService {
                 resolve(true);
             }, (err: any) => {
                 console.log(err);
-                this.commonService.showAlert('error', 'err');
+                this.commonService.showAlert('error', err);
                 resolve(false);
             });
         });

@@ -5,10 +5,7 @@ import { ApplicationItem } from '../shared/models/application-item.model';
 import { ApplicationService } from './shared/service/application.service';
 import { MoreApplicationComponent } from './more-application/more-application.component';
 import { MyRouter } from '../core/router/my-router.router';
-import { AttendanceComponent } from './my-modules/attendance/attendance.component';
-
 import { InAppBrowser } from '@ionic-native/in-app-browser';
-import { LanguageConfig } from './shared/config/language.config';
 
 @Component({
   selector: 'sg-application',
@@ -123,9 +120,5 @@ export class ApplicationComponent implements OnInit {
       }
     }
     localStorage.setItem('moduleList', JSON.stringify(list));
-  }
-
-  toAttendance() {
-    this.navCtrl.push(AttendanceComponent);
   }
 }

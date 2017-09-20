@@ -19,21 +19,31 @@ export class StationsComponent implements OnInit {
     mode: number = Mode.STATION;
     stations: GridModel[] = [];
 
+    // 站点
+    allStations: { STATION_NAME: string, STATION_ID: number }[] = [];
+
     // 用户选择的线别
-    line: string;
+    lineName: string;
+    lineId: number;
 
     ngOnInit() {
         this.stations = [];
-        let params: GridModel[] = this.navParams.get('stations');
-        this.line = this.navParams.get('line');
-        let temp: GridModel[] = params.filter((v) => {
+        this.allStations = [];
+        let params: any[] = this.navParams.get('stations');
+        this.lineName = this.navParams.get('lineName');
+        this.lineId = this.navParams.get('lineId');
+        let temp: any[] = params.filter((v) => {
             return v.showCheckbox === true;
         });
         temp.forEach((v) => {
             this.stations.push({
                 title: v.title,
                 showCheckbox: false
-            })
+            });
+            this.allStations.push({
+                STATION_NAME: v.title,
+                STATION_ID: v.STATION_ID
+            });
         });
 
         // to do
@@ -42,7 +52,18 @@ export class StationsComponent implements OnInit {
     }
 
     chooseStation(event: GridModel) {
-        this.navCtrl.push('ChecklistComponent', { data: event, line: this.line });
+        this.navCtrl.push('ChecklistComponent', { data: event, stationId: this.getStationId(event.title), lineName: this.lineName, lineId: this.lineId });
+    }
+
+    getStationId(stationName: string) {
+        let id: number = -1;
+        for (let i = 0; i < this.allStations.length; i++) {
+            if (this.allStations[i].STATION_NAME === stationName) {
+                id = this.allStations[i].STATION_ID;
+                break;
+            }
+        }
+        return id;
     }
 
     // 先检查是否已经全部打上勾，如果没有则报错
