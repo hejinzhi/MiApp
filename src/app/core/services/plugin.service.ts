@@ -12,6 +12,7 @@ import { tify, sify } from 'chinese-conv';
 
 import { MyStore } from './../../shared/store';
 import { User_ChineseConv } from "./../../shared/actions/user.action";
+import { EnvConfig } from './../../shared/config/env.config';
 
 @Injectable()
 export class PluginService {
@@ -155,6 +156,7 @@ export class PluginService {
       let des = apk.description.split('&&');
       if (des.length > 1) {
         this.appNewVersion = des[0];
+        if(+EnvConfig.appVersion >= +this.appNewVersion) return;
       }
       let confirm = this.alertCtrl.create({
         title: this.translateTexts['have_new_version'],

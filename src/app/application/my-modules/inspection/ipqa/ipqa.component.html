@@ -7,9 +7,9 @@
   <ion-list>
     <ion-item>
       <ion-label>{{'inspection.ipqa.chooseLine' | translate}}:</ion-label>
-      <ion-select [(ngModel)]="line" (ionChange)="onSelectChange($event)">
-        <!-- <ion-option [value]="line.LINE_NAME" *ngFor="let line of lines">{{line.LINE_NAME |sgChineseConv}}</ion-option> -->
-        <ion-option [value]="line" *ngFor="let line of lines">{{line |sgChineseConv}}</ion-option>
+      <ion-select [(ngModel)]="selectedLine" (ionChange)="onSelectChange()">
+        <ion-option [value]="line" *ngFor="let line of lines">{{line.LINE_NAME |sgChineseConv}}</ion-option>
+        <!-- <ion-option [value]="line" *ngFor="let line of lines">{{line |sgChineseConv}}</ion-option> -->
       </ion-select>
     </ion-item>
   </ion-list>

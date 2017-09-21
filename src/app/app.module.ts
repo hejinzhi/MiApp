@@ -41,7 +41,7 @@ export function createTranslateLoader(http: Http) {
         deps: [Http]
       }
     }),
-    StoreModule.provideStore({userReducer}),
+    StoreModule.provideStore({ userReducer }),
     BrowserModule,
     IonicModule.forRoot(MyAppComponent, {
       tabsHideOnSubPages: true,
@@ -56,8 +56,7 @@ export function createTranslateLoader(http: Http) {
     MeModule,
     SharedModule,
     CoreModule,
-    PipesModule
-    // BookLibraryModule
+    PipesModule,
   ],
   bootstrap: [IonicApp],
   entryComponents: [

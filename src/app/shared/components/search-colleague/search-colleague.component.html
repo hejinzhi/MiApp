@@ -1,0 +1,10 @@
+<ion-item>
+  <ion-label *ngIf="label">{{ label | translate}}</ion-label>
+  <ion-input type="text" #name (keyup)="search(name.value)" clearInput></ion-input>
+</ion-item>
+<div class="searchOut">
+  <ul class="list-group" [class.search]="colleague">
+    <li *ngFor="let person of colleague | async" (tap)="getcolleague(person.AGENT_NAME)" class="search-result list-group-item">{{person.AGENT_NAME | sgChineseConv}}</li>
+  </ul>
+</div>
+<ion-item-divider class='alert' *ngIf="formCtr && formCtr.dirty && formCtr.errors && formCtr.errors.notSelect">请从下拉列表中进行选择</ion-item-divider>

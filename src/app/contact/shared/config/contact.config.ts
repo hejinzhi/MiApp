@@ -1,6 +1,8 @@
-import { EnvConfig } from '../../../shared/config/env.config';
+import { EnvConfig } from './../../../shared/config/env.config';
 
 export class ContactConfig {
+
+    static companyID = EnvConfig.companyID;
 
     // 获取同部门人员信息
     static getSameDeptPersonUrl = EnvConfig.baseUrl + 'Guid/GetDeptUserView';
@@ -25,6 +27,9 @@ export class ContactConfig {
 
     // 获取子部门信息
     static getChildDeptInfoUrl = EnvConfig.baseUrl + 'Guid/GetChildDeptInfo';
+
+    // 获取该员工所属的公司别
+    static getOrgUrl = EnvConfig.baseUrl + 'Guid/GetUserTopOrg';
 
     static pageSize = 30;
 }

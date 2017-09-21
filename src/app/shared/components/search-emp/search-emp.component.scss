@@ -1,0 +1,36 @@
+sg-search-emp {
+  .item-block {
+    min-height: inherit;
+  }
+  .searchOut {
+    position: relative;
+    overflow-y: visible;
+  }
+  .search {
+    position: absolute;
+    max-height: 199px;
+    overflow-y: scroll;
+    // left: 20%;
+    z-index: 1000;
+    width: 100%;
+  }
+  .search-result {
+    cursor: pointer;
+    width: 90%;
+  }
+  .list-group {
+    margin-top: 0;
+    padding-left: 0;
+    margin-bottom: 20px;
+  }
+  .list-group-item {
+    position: relative;
+    display: block;
+    padding: 10px 15px;
+    margin-bottom: 0px;
+    background-color: #fff;
+    border-right: 1px solid #ddd;
+    border-left: 1px solid #ddd;
+    border-bottom: 1px solid #ddd;
+  }
+}

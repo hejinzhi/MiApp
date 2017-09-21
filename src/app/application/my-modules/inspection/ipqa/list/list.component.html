@@ -1,0 +1,39 @@
+<ion-header>
+  <ion-navbar>
+    <ion-title>list</ion-title>
+  </ion-navbar>
+</ion-header>
+<ion-content no-padding>
+  <ion-list>
+    <ion-item *ngFor="let l of formData" (tap)="goToExceptionPage(l)">
+      <div class="main-wrapper">
+        <ion-row>
+          <ion-col col-4>
+            <div>{{l.checkDate}}</div>
+          </ion-col>
+          <ion-col col-8>
+            <div>{{l.checkPerson}}</div>
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col col-4>
+            <div>{{l.banbie}}</div>
+          </ion-col>
+          <ion-col col-8>
+            <div>{{l.address}}</div>
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col>
+            <div class="check-list">{{'inspection.ipqa.checklist' | translate}}: {{l.checklist_cn}}</div>
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col>
+            <div class="check-list">{{'inspection.ipqa.exceptionDesc' | translate}}: {{l.exceptionDesc}}</div>
+          </ion-col>
+        </ion-row>
+      </div>
+    </ion-item>
+  </ion-list>
+</ion-content>

@@ -3,7 +3,8 @@
   <ion-grid>
     <ion-row center wrap>
       <ion-col col-4 class="grid-col" *ngFor="let m of data" (tap)="onTap(m)">
-        <div class="grid-content">
+        <!-- <div class="grid-content green"> -->
+        <div [ngClass]="m.showCheckbox ? 'grid-content green' :'grid-content' ">
           <div class="grid-name">{{m.title |sgChineseConv}}</div>
           <div class="gou" *ngIf="m.showCheckbox"></div>
         </div>

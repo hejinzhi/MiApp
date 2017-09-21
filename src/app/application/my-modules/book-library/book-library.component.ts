@@ -2,10 +2,8 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { NavController, ModalController, MenuController, AlertController, LoadingController, App, IonicPage, NavParams } from 'ionic-angular';
 import { BarcodeScanner } from '@ionic-native/barcode-scanner';
 import { Observable } from 'rxjs/Rx';
-
 import { BookLibraryService } from './shared/service/book-library.service';
 import { BookLibraryConfig } from './shared/config/book-library.config';
-import { LanguageConfig } from './shared/config/language.config';
 
 
 @IonicPage()

@@ -33,12 +33,29 @@
       <div formArrayName="lists" class="subForm">
         <div *ngFor="let ctrl of reportForm.controls['lists'].controls; let i = index;" class="list" [class.last]="i === reportForm.get('lists').length-1">
           <div [formGroupName]="i">
-            <ion-item>
+            <ion-grid no-padding>
+              <ion-row>
+                <ion-col col-19 class="fix-height">
+                  <ion-item>
+                    <ion-label *ngIf="testData">
+                      <ion-icon name="information-circle" color="danger" *ngIf="reportForm.get('lists').get(i+'').invalid"></ion-icon>
+                      <ion-icon name="checkmark-circle" *ngIf="!reportForm.get('lists').get(i+'').invalid"></ion-icon>*{{testData[i].name}}</ion-label>
+                  </ion-item>
+                </ion-col>
+                <ion-col col-3 class="block-none">
+                  <ion-item>
+                    <ion-label><span class="float-righ1t">异常</span></ion-label>
+                    <ion-checkbox color="#3773F7" item-end formControlName="check"></ion-checkbox>
+                  </ion-item>
+                </ion-col>
+              </ion-row>
+            </ion-grid>
+            <!-- <ion-item>
               <ion-label *ngIf="testData">
                 <ion-icon name="information-circle" color="danger" *ngIf="reportForm.get('lists').get(i+'').invalid"></ion-icon>
                 <ion-icon name="checkmark-circle" *ngIf="!reportForm.get('lists').get(i+'').invalid"></ion-icon>*{{testData[i].name}}<span class="float-right">异常</span></ion-label>
               <ion-checkbox color="#3773F7" item-end formControlName="check"></ion-checkbox>
-            </ion-item>
+            </ion-item> -->
             <div class="detail">
               <ion-item *ngIf="reportForm.get('lists').get(i+'').controls['detail']">
                 <ion-label>*问题详述</ion-label>

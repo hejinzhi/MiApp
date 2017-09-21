@@ -1,3 +1,4 @@
+import { SearchColleagueComponentModule } from './../../../../../shared/components/search-colleague/search-colleague.component.module';
 import { PhotoViewComponentModule } from './../../../../../shared/components/photo-view/photo-view.component.module';
 import { BossReportComponent } from './boss-report.component';
 import { NgModule } from '@angular/core';
@@ -8,7 +9,8 @@ import { TranslateModule } from '@ngx-translate/core';
     imports: [
         IonicPageModule.forChild(BossReportComponent),
         TranslateModule.forChild(),
-        PhotoViewComponentModule
+        PhotoViewComponentModule,
+        SearchColleagueComponentModule
     ],
     exports: [],
     declarations: [BossReportComponent],

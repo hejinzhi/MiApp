@@ -1,3 +1,4 @@
+import { EnvConfig } from './../../../../../shared/config/env.config';
 import { CommonService } from './../../../../../core/services/common.service';
 import { InspectionService, Checklist } from './../shared/service/inspection.service';
 import { GridModel } from './../grid/grid.component';
@@ -14,13 +15,15 @@ export class ChecklistComponent implements OnInit {
 
     // 保存传递过来的站点
     station: GridModel;
+    stationId: number;
 
     // 保存站点对应的check list
     checkList: Checklist[];
     // 当勾选‘异常’后点返回，需要取消勾选异常
     reset: { no: string, reset: boolean }[];
     // 用户选择的线别
-    line: string;
+    lineName: string;
+    lineId: number;
     translateText = {
         error: '',
         exception: '',
@@ -40,10 +43,13 @@ export class ChecklistComponent implements OnInit {
         // 因为传递过来的是一个object，传递的是内存地址，所以修改station属性，stations页面也会跟着变化
         this.reset = [];
         this.station = this.navParams.get('data');
-        this.line = this.navParams.get('line');
-        this.checkList = await this.inspectionService.getChecklistByStation(this.station.title);
+        this.stationId = this.navParams.get('stationId');
+        this.lineName = this.navParams.get('lineName');
+        this.lineId = this.navParams.get('lineId');
+        let res = await this.inspectionService.getCheckListByLineStation(EnvConfig.companyID, this.lineId, this.stationId);
+        this.checkList = res.json();
         this.checkList.forEach((l) => {
-            this.reset.push({ no: l.no, reset: false });
+            this.reset.push({ no: l.LINE_NUM, reset: false });
         });
 
         this.translate.get(['error', 'inspection.ipqa.exception', 'inspection.ipqa.the', 'inspection.ipqa.error1']).subscribe((res) => {
@@ -51,7 +57,6 @@ export class ChecklistComponent implements OnInit {
             this.translateText.exception = res['inspection.ipqa.exception'];
             this.translateText.the = res['inspection.ipqa.the'];
             this.translateText.error1 = res['inspection.ipqa.error1'];
-            console.log(this.translateText)
         });
     }
 
@@ -60,14 +65,24 @@ export class ChecklistComponent implements OnInit {
     }
 
     selectedValue(list: Checklist, event: any) {
-        list.value = event;
-        if (event === this.translateText.exception) {
-            let exceptionDetailModel = this.modalCtrl.create('ExceptionDetailComponent', { line: this.line, checklist: list.desc });
+        list.VALUE = event;
+        if ((event === 'EXCEPTION') || (event === this.translateText.exception)) {
+            let exceptionDetailModel = this.modalCtrl.create('ExceptionDetailComponent',
+                {
+                    line: this.lineName, checklist: {
+                        CHECK_LIST_CN: list.CHECK_LIST_CN,
+                        // CHECK_LIST_EN: list.CHECK_LIST_EN,
+                        CHECK_ID: list.CHECK_ID
+                    },
+                    station: this.station.title,
+                    fromPage: "checklist"
+                    // fromPage: "handler"
+                });
             exceptionDetailModel.onWillDismiss((data: any) => {
                 if (data && (data.selected === false)) {
-                    list.value = '';
+                    list.VALUE = '';
                     this.reset.forEach((r) => {
-                        if (r.no === list.no) {
+                        if (r.no === list.LINE_NUM) {
                             r.reset = !r.reset;
                         }
                     })
@@ -80,17 +95,17 @@ export class ChecklistComponent implements OnInit {
     finishCheckedStation() {
         let allCheck: boolean = true;
         for (let i = 0; i < this.checkList.length; i++) {
-            if (this.checkList[i].value) { }
+            if (this.checkList[i].VALUE) { }
             else {
-                // this.showAlert('錯誤', `第${i + 1}項尚未填寫檢查結果，請填寫后再提交。`);
                 this.commonService.showAlert(this.translateText.error, `${this.translateText.the}${i + 1}${this.translateText.error1}`);
                 allCheck = false;
                 break;
             }
         }
         if (allCheck) {
-            this.station.showCheckbox = true;
-            this.navCtrl.pop();
+            console.log(this.checkList)
+            // this.station.showCheckbox = true;
+            // this.navCtrl.pop();
         }
     }
 
