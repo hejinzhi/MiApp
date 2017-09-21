@@ -1,3 +1,4 @@
+import { LocalStorageService } from './../../../../../core/services/localStorage.service';
 import { Observable } from 'rxjs/Observable';
 import { InspectionService } from './../shared/service/inspection.service';
 import { CommonService } from './../../../../../core/services/common.service';
@@ -25,15 +26,13 @@ export class ExceptionDetailComponent implements OnInit {
         day: '',
         night: ''
     };
-    options: any = {
-        placeholder: '请输入工号/姓名/AD'
-    };
     constructor(
         private navParams: NavParams,
         private viewCtrl: ViewController,
         private commonService: CommonService,
         private inspectionService: InspectionService,
-        private translate: TranslateService
+        private translate: TranslateService,
+        private localStorage: LocalStorageService
     ) {
 
     }
@@ -115,9 +114,9 @@ export class ExceptionDetailComponent implements OnInit {
     }
 
     submitException() {
-        console.log(this.formModel);
+        // console.log(this.formModel);
         console.log(this.formModel.value);
-        this.viewCtrl.dismiss();
+        // this.viewCtrl.dismiss();
     }
 
 

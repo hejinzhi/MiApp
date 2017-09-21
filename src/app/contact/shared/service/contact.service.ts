@@ -46,6 +46,10 @@ export class ContactService {
     public getLocalStorage(type: string) {
         return JSON.parse(localStorage.getItem(this.username + '_' + 'contact_' + type));
     }
+    public removeLocalStorage(type: string) {
+        return localStorage.removeItem(this.username + '_' + 'contact_' + type);
+    }
+
 
     public getPersonByName(filter: string, site: string) {
         return this.myHttp.get(ContactConfig.getPersonByNameUrl + `?emp_name=${filter}&site=${site}`);
