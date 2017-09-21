@@ -8,6 +8,7 @@ import { PatternLockComponent } from '../../login/pattern-lock/pattern-lock.comp
 import { JMessageService } from '../../core/services/jmessage.service';
 import { PluginService } from '../../core/services/plugin.service';
 import { TranslateService } from '@ngx-translate/core';
+import { MeService } from '../shared/service/me.service';
 
 import { UserState } from './../../shared/models/user.model';
 import { User_Logout, User_Update } from './../../shared/actions/user.action';
@@ -34,6 +35,7 @@ export class SetComponent implements OnInit, OnDestroy {
     private app: App,
     private platform: Platform,
     private translate: TranslateService,
+    private meService: MeService,
     private store$: Store<MyStore>
   ) {
     if (this.platform.is('ios')) {
@@ -43,11 +45,10 @@ export class SetComponent implements OnInit, OnDestroy {
     }
   }
   ngOnInit() {
-    this.mysubscription = this.store$.select('userReducer').subscribe((user:UserState) => this.user = user);
-    console.log(this.user,888);
+    this.mysubscription = this.store$.select('userReducer').subscribe((user: UserState) => this.user = user);
     this.translate.stream(['meComponent.languageChangeAlertTitle', 'meComponent.zh-CN', 'meComponent.zh-TW', 'cancel', 'confirm'
       , 'meComponent.reStartAppAlertTitle', 'meComponent.reStartAppAlertMes', 'meComponent.logoutAlertTitle', 'meComponent.logoutAlertMes'
-      , 'meComponent.exitAlertTitle', 'meComponent.exitAlertMes', 'Y', 'N', 'change_to','meComponent.companyChangeAlertTitle']).subscribe((res) => {
+      , 'meComponent.exitAlertTitle', 'meComponent.exitAlertMes', 'Y', 'N', 'change_to', 'meComponent.companyChangeAlertTitle']).subscribe((res) => {
         this.translateTexts = res;
       })
   }
@@ -63,7 +64,7 @@ export class SetComponent implements OnInit, OnDestroy {
   changeFont() {
     let that = this;
     let alert = this.alertCtrl.create();
-    let lang = this.translate.currentLang?this.translate.currentLang.toUpperCase():'ZH-TW';
+    let lang = this.translate.currentLang ? this.translate.currentLang.toUpperCase() : 'ZH-TW';
     alert.setTitle(this.translateTexts['meComponent.languageChangeAlertTitle']);
     alert.addInput({
       type: 'radio',
@@ -83,33 +84,41 @@ export class SetComponent implements OnInit, OnDestroy {
       text: this.translateTexts['confirm'],
       handler: (data: string) => {
         this.translate.use(data);
-        this.store$.dispatch(new User_Update({ preferLang: data}))
-        this.plugin.showToast(this.translateTexts['change_to']+this.translateTexts['meComponent.'+data])
+        this.store$.dispatch(new User_Update({ preferLang: data }))
+        this.plugin.showToast(this.translateTexts['change_to'] + this.translateTexts['meComponent.' + data])
       }
     });
     alert.present();
   }
 
-  changeCompany(){
+  changeCompany() {
     let that = this;
     let alert = this.alertCtrl.create();
     let companyid = localStorage.getItem('appCompanyId');
     alert.setTitle(this.translateTexts['meComponent.companyChangeAlertTitle']);
-    this.user.companys.forEach((company:any) => {
+    this.user.companys.forEach((company: any) => {
       alert.addInput({
         type: 'radio',
         label: company.COMPANY_CNAME,
         value: company.COMPANY_ID,
         checked: companyid === company.COMPANY_ID
       });
-    });  
+    });
     alert.addButton(this.translateTexts['cancel']);
     alert.addButton({
       text: this.translateTexts['confirm'],
       handler: (data: string) => {
         EnvConfig.companyID = data;
-        localStorage.setItem('appCompanyId', data); 
-        this.plugin.showToast(this.translateTexts['change_to']+data)
+        localStorage.setItem('appCompanyId', data);
+        this.meService.getUserInfo(this.user.empno, data).then((user: any) => {
+          let res = user.json();
+          if (res[0]) {
+            this.user.department = user.json()[0].DEPT_NAME;
+            this.user.position = user.json()[0].JOB_TITLE;
+            this.store$.dispatch(new User_Update(this.user))
+          }
+        });
+        this.plugin.showToast(this.translateTexts['change_to'] + data)
       }
     });
     alert.present();
@@ -163,7 +172,7 @@ export class SetComponent implements OnInit, OnDestroy {
               that.jmessage.loginOut();
             }
             this.store$.dispatch(new User_Logout())
-            localStorage.setItem('appCompanyId', ''); 
+            localStorage.setItem('appCompanyId', '');
             this.app.getRootNav().setRoot(LoginComponent);
           }
         }

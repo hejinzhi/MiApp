@@ -24,18 +24,18 @@
   </ion-toolbar>
   <ion-slides (pan)="panEvent($event)" #mySlider (ionDrag)="onSlideChanged($event)">
     <ion-slide>
-      <ion-content class="fixed-content">
+      <div class="fixed-content">
         <ion-list >
           <ion-item class="list">
               <div class="content">第24組 2017/07/30 江芳雄 7:40~17:08 8H</div>
-            <button type="button" outline class="check" (tap)="goToCheckReport()">巡檢報告</button>
+            <!-- <button type="button" outline class="check" (tap)="goToCheckReport()">巡檢報告</button> -->
           </ion-item>
           <ion-item class="list">
               <div class="content">第25組 2017/08/06 江芳雄 7:40~17:08 8H</div>
-            <button type="button" outline class="check">巡檢報告</button>
+            <!-- <button type="button" outline class="check">巡檢報告</button> -->
           </ion-item>
         </ion-list>
-      </ion-content>
+      </div>
     </ion-slide>
     <ion-slide>
       <ion-scroll scrollY="true" class="fixed-content">
