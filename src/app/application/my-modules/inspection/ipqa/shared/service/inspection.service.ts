@@ -43,21 +43,22 @@ export class InspectionService {
         });
     }
 
+    getToday() {
+        let rightDate: Date;
+        let now: any = new Date();
+        let yesterday = new Date((now / 1000 - 86400) * 1000);
+        let hour = now.getHours();
+        if (hour >= 8) {
+            rightDate = now;
+        } else {
+            rightDate = yesterday;
+        }
+        let month = (rightDate.getMonth() + 1) > 9 ? (rightDate.getMonth() + 1) : '0' + (rightDate.getMonth() + 1);
+        let day = rightDate.getDate() > 9 ? rightDate.getDate() : '0' + rightDate.getDate();
+        return rightDate.getFullYear() + '-' + month + '-' + day;
+
+    }
+
 
 }
 
-export class Checklist {
-    CATEGORY_ID: number;
-    CHECK_ID: number;
-    CHECK_LIST_CN: string;
-    CHECK_LIST_EN: string;
-    CHECK_TYPE: string;
-    COMPANY_NAME: string;
-    ENABLED: string;
-    LINE_ID: number;
-    LINE_NUM: string;
-    NAME_ID: number;
-    PRIORITY: string;
-    STATION_ID: number;
-    VALUE: any;
-}

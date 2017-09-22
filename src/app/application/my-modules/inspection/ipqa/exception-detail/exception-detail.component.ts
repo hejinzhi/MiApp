@@ -1,7 +1,6 @@
 import { LocalStorageService } from './../../../../../core/services/localStorage.service';
 import { Observable } from 'rxjs/Observable';
 import { InspectionService } from './../shared/service/inspection.service';
-import { CommonService } from './../../../../../core/services/common.service';
 import { UserModel } from './../../../../../shared/models/user.model';
 import { NavParams, ViewController, IonicPage } from 'ionic-angular';
 import { FormBuilder, FormGroup, FormArray, FormControl, Validators } from '@angular/forms';
@@ -18,10 +17,11 @@ export class ExceptionDetailComponent implements OnInit {
     private fb: FormBuilder = new FormBuilder();
     formModel: FormGroup;
     line: string; //线别
-    station: string;//站点
+    station: { STATION_ID: number, STATION_NAME: string };//站点
     checklist: any;
     localUser: UserModel;//当前登录人
     fromPage: string;// 获取是从哪个页面转跳过来的。“问题追踪”不显示处理人栏位，而“指派处理人”则显示
+    localStorageName: string; // 记录本地存储的名字是什么
     translateText = {
         day: '',
         night: ''
@@ -29,7 +29,6 @@ export class ExceptionDetailComponent implements OnInit {
     constructor(
         private navParams: NavParams,
         private viewCtrl: ViewController,
-        private commonService: CommonService,
         private inspectionService: InspectionService,
         private translate: TranslateService,
         private localStorage: LocalStorageService
@@ -43,48 +42,34 @@ export class ExceptionDetailComponent implements OnInit {
             this.translateText.night = res['inspection.ipqa.night'];
         });
 
+
         // 获取是从哪个页面转跳过来的。“问题追踪”不显示处理人栏位(checklist)，而“指派处理人”则显示(teamLeader)
         this.fromPage = this.navParams.get('fromPage');
         this.localUser = JSON.parse(localStorage.getItem('currentUser'));
-        this.createFormMode();
+        // 获取线别
+        this.line = this.navParams.get('line');
+        this.station = this.navParams.get('station');
+        // 获取违反的规定描述
+        this.checklist = this.navParams.get('checklist');
+        await this.createFormMode();
     }
 
     async createFormMode() {
         if (this.fromPage === 'checklist') {
-            let user = this.localUser.empno + ',' + this.localUser.nickname + ',' + this.localUser.username;
-            this.formModel = this.fb.group({
-                checkDate: [this.commonService.getToday(), Validators.required],
-                checkPerson: [user, Validators.required],
-                banbie: ['白班', Validators.required],
-                address: ['', Validators.required],
-                checklist_cn: ['', Validators.required],
-                exceptionDesc: ['', Validators.required],
-                pictures: this.fb.array([])
-            });
-            // 获取线别
-            this.line = this.navParams.get('line');
-            this.station = this.navParams.get('station');
-            let address = this.formModel.get('address') as FormControl;
-            address.setValue(this.line + ' -- ' + this.station);
-
-            // 获取违反的规定描述
-            this.checklist = this.navParams.get('checklist');
-            console.log(this.checklist);
-            let checklist_cn = this.formModel.get('checklist_cn') as FormControl;
-            checklist_cn.setValue(this.checklist.CHECK_LIST_CN);
-
-            // 获取班別
-            let banbie = this.formModel.get('banbie') as FormControl;
-            let res: any = await this.inspectionService.getDutyKind();
-            let temp: any = res.json();
-            let duty: string = temp.DUTY_KIND;
-            if (duty.substr(0, 1) === '1') {
-                banbie.setValue(this.translateText.day);
-            } else {
-                banbie.setValue(this.translateText.night);
+            // 设置本地存储的名字，规则是STATION+STATION_ID+当前日期+STEP3  (STEP3是异常页面,STEP2是checklist页面，STEP1是站点页面)
+            this.localStorageName = 'STATION' + this.station.STATION_ID + this.inspectionService.getToday() + 'STEP3';
+            let localData: ExceptionModel = this.getItem(this.localStorageName, this.checklist.CHECK_ID);
+            if (localData) {
+                this.setCheckListFormModel(localData);
             }
+            else {
+                await this.initCheckListFormModel();
+            }
+
+
         } else if (this.fromPage === 'teamLeader') {
             let formData = this.navParams.get('formData');
+            console.log(formData);
             this.formModel = this.fb.group({
                 checkDate: [formData.checkDate, Validators.required],
                 checkPerson: [formData.checkPerson, Validators.required],
@@ -97,6 +82,7 @@ export class ExceptionDetailComponent implements OnInit {
             });
         } else if (this.fromPage === 'handler') {
             this.formModel = this.fb.group({
+                // checkID: ['', Validators.required],
                 checkDate: ['', Validators.required],
                 checkPerson: ['', Validators.required],
                 banbie: ['', Validators.required],
@@ -113,13 +99,87 @@ export class ExceptionDetailComponent implements OnInit {
         }
     }
 
-    submitException() {
-        // console.log(this.formModel);
-        console.log(this.formModel.value);
-        // this.viewCtrl.dismiss();
+    async initCheckListFormModel() {
+        let user = this.localUser.empno + ',' + this.localUser.nickname + ',' + this.localUser.username.toUpperCase();
+        this.formModel = this.fb.group({
+            checkDate: [this.inspectionService.getToday(), Validators.required],
+            checkPerson: [user, Validators.required],
+            banbie: ['白班', Validators.required],
+            address: ['', Validators.required],
+            checklist_cn: ['', Validators.required],
+            exceptionDesc: ['', Validators.required],
+            pictures: this.fb.array([])
+        });
+
+        let address = this.formModel.get('address') as FormControl;
+        address.setValue(this.line + ' -- ' + this.station.STATION_NAME);
+        let checklist_cn = this.formModel.get('checklist_cn') as FormControl;
+        checklist_cn.setValue(this.checklist.CHECK_LIST_CN);
+        // 获取班別
+        let banbie = this.formModel.get('banbie') as FormControl;
+        let res: any = await this.inspectionService.getDutyKind();
+        let temp: any = res.json();
+        let duty: string = temp.DUTY_KIND;
+        if (duty.substr(0, 1) === '1') {
+            banbie.setValue(this.translateText.day);
+        } else {
+            banbie.setValue(this.translateText.night);
+        }
     }
 
+    setCheckListFormModel(formValue: ExceptionModel) {
+        this.formModel = this.fb.group({
+            checkDate: [formValue.checkDate, Validators.required],
+            checkPerson: [formValue.checkPerson, Validators.required],
+            banbie: [formValue.banbie, Validators.required],
+            address: [formValue.address, Validators.required],
+            checklist_cn: [formValue.checklist_cn, Validators.required],
+            exceptionDesc: [formValue.exceptionDesc, Validators.required],
+            pictures: this.fb.array(formValue.pictures)
+        });
+    }
 
+    submitException() {
+
+        if (this.fromPage === 'checklist') {
+            this.setItem(this.localStorageName, this.formModel.value);
+            this.dismiss();
+        }
+
+    }
+
+    setItem(key: string, data: ExceptionModel) {
+        data = Object.assign(data, { checkID: this.checklist.CHECK_ID });
+        let alreadyInsert: boolean = false;
+        let oldData: ExceptionModel[] = this.localStorage.getItem(key);
+        if (oldData) {
+            for (let i = 0; i < oldData.length; i++) {
+                if (oldData[i].checkID === data.checkID) {
+                    oldData[i] = data;
+                    alreadyInsert = true;
+                }
+            }
+            if (!alreadyInsert) {
+                oldData.push(data);
+            }
+            this.localStorage.setItem(key, oldData);
+        } else {
+            this.localStorage.setItem(key, [data]);
+        }
+    }
+
+    getItem(key: string, checkID: number) {
+        let localData: ExceptionModel[] = this.localStorage.getItem(key);
+        if (localData) {
+            for (let i = 0; i < localData.length; i++) {
+                if (localData[i].checkID === checkID) {
+                    return localData[i];
+                }
+            }
+        } else {
+            return;
+        }
+    }
 
     removeCheckPerson(index: number) {
         let checkPersons = this.formModel.get('checkPersons') as FormArray;
@@ -143,4 +203,23 @@ export class ExceptionDetailComponent implements OnInit {
     goBack() {
         this.viewCtrl.dismiss({ selected: false });
     }
+
+
 }
+
+class ExceptionModel {
+    checkID: number;
+    checkDate: string;
+    checkPerson: string;
+    banbie: string;
+    address: string;
+    checklist_cn: string;
+    exceptionDesc: string;
+    pictures: string[];
+    handler?: string;
+    actionDesc?: string;
+    actionStatus?: string;
+    actionPictures?: string[];
+    actionDate?: string;
+}
+
