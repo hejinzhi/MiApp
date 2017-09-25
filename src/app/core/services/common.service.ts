@@ -1,12 +1,15 @@
 import { AlertController, LoadingController, Loading } from 'ionic-angular';
 import { Injectable } from '@angular/core';
+import { tify, sify } from 'chinese-conv';
+import { TranslateService } from '@ngx-translate/core';
 
 @Injectable()
 export class CommonService {
 
     constructor(
         private alertCtrl: AlertController,
-        private loadingCtrl: LoadingController
+        private loadingCtrl: LoadingController,
+        private translate: TranslateService
     ) { }
 
     loading: Loading;
@@ -35,5 +38,23 @@ export class CommonService {
     }
     hideLoading() {
         this.loading.dismiss();
+    }
+    chineseConv(value: string) {
+        if (value) {
+            let currentLang = this.translate.currentLang;
+            if (!currentLang) return value;
+            let chinese = ['ZH-CN', 'ZH-TW'];
+            let idx = chinese.indexOf(currentLang.toUpperCase());
+            switch (idx) {
+                case 0:
+                    // return sify(JSON.stringify(value)).replace(/^\"/g, '').replace(/\"$/g, '');
+                    return sify(value);
+                case 1:
+                    // return tify(JSON.stringify(value)).replace(/^\"/g, '').replace(/\"$/g, '');
+                    return tify(value);
+                default:
+                    return value;
+            }
+        }
     }
 }

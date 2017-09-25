@@ -35,4 +35,8 @@ export class MeService {
     changeMail(mail: string) {
         return this.myHttp.post(MeConfig.updateUserInfoUrl, { EMAIL: mail });
     }
+
+    getUserInfo(username: string, site: string) {
+        return this.myHttp.get(MeConfig.getUserInfoUrl + '?emp_name=' + username + '&site=' + site);
+    }
 }

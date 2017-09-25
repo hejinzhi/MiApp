@@ -1,9 +1,7 @@
 <ion-item>
   <ion-label col-4>*巡检名稱</ion-label>
   <ion-select [(ngModel)]="name_id" [cancelText]="'attendance.cancle' | translate" [okText]="'attendance.confirm' | translate" (ionChange)="changeNameId()">
-    <ion-option value=1 selected="true">小夜班</ion-option>
-    <ion-option value=2>安全值日官</ion-option>
-    <ion-option value=3>7S</ion-option>
+    <ion-option *ngFor="let item of mrinamelist" [value]="item.NAME_ID">{{item.INSPECT_NAME}}</ion-option>
   </ion-select>
 </ion-item>
 <ion-grid>

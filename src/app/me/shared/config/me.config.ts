@@ -6,4 +6,6 @@ export class MeConfig {
 
     static updateAvatarUrl = EnvConfig.baseUrl + 'Guid/UploadPicture';
 
+
+    static getUserInfoUrl = EnvConfig.baseUrl + 'Guid/GetUserLike';
 }

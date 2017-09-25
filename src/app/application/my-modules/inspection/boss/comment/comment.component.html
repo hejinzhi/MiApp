@@ -4,7 +4,7 @@
   </ion-navbar>
 </ion-header>
 <ion-content>
-  <sg-query-date [name_id]="name_id" (name_id_change)="nameIdChange($event)" [(start_date)]="start_date" (start_date_change)="stratDateChange($event)"
+  <sg-query-date [mri_type]="mri_type" [name_id]="name_id" (name_id_change)="nameIdChange($event)" [(start_date)]="start_date" (start_date_change)="stratDateChange($event)"
     [(end_date)]="end_date" (end_date_change)="endDateChange($event)"></sg-query-date>
   <ion-toolbar color="light">
     <ion-segment class="top_segment" [(ngModel)]="top_segment">
@@ -24,18 +24,18 @@
   </ion-toolbar>
   <ion-slides (pan)="panEvent($event)" #mySlider (ionDrag)="onSlideChanged($event)">
     <ion-slide>
-      <ion-content class="fixed-content">
+      <div class="fixed-content">
         <ion-list >
           <ion-item class="list">
               <div class="content">第24組 2017/07/30 江芳雄 7:40~17:08 8H</div>
-            <button type="button" outline class="check" (tap)="goToCheckReport()">巡檢報告</button>
+            <!-- <button type="button" outline class="check" (tap)="goToCheckReport()">巡檢報告</button> -->
           </ion-item>
           <ion-item class="list">
               <div class="content">第25組 2017/08/06 江芳雄 7:40~17:08 8H</div>
-            <button type="button" outline class="check">巡檢報告</button>
+            <!-- <button type="button" outline class="check">巡檢報告</button> -->
           </ion-item>
         </ion-list>
-      </ion-content>
+      </div>
     </ion-slide>
     <ion-slide>
       <ion-scroll scrollY="true" class="fixed-content">
