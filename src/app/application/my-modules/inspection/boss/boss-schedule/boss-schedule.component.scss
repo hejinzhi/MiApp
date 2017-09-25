@@ -46,4 +46,17 @@ sg-boss-schedule {
             font-size: 20px;
         }
     }
+    .grid{
+        padding: 0px 5px;
+        .row{
+            padding: 0px 5px;
+            .col{
+                max-height: 30%;
+            }
+        }
+    }
+
+   ion-alert div.alert-wrapper .alert-radio-group {
+      max-height: 240px;
+  } 
 }

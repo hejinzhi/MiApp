@@ -4,7 +4,7 @@
   </ion-navbar>
 </ion-header>
 <ion-content>
-  <sg-query-date [name_id]="name_id" (name_id_change)="nameIdChange($event)" [(start_date)]="start_date" (start_date_change)="stratDateChange($event)"
+  <sg-query-date [mri_type]="mri_type" [name_id]="name_id" (name_id_change)="nameIdChange($event)" [(start_date)]="start_date" (start_date_change)="stratDateChange($event)"
     [(end_date)]="end_date" (end_date_change)="endDateChange($event)"></sg-query-date>
   <ion-toolbar color="light">
     <ion-segment class="top_segment" [(ngModel)]="top_segment">

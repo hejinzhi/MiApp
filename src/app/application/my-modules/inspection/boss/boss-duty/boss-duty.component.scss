@@ -1,26 +1,23 @@
 sg-boss-duty {
     .list{
         position: relative;
-        font-size: 14px;
+        font-size: 15px;
         .content{
-            // width: 100px;
-            // display:block;
-            // word-break: break-all;
-            // word-wrap: break-word;
+            overflow: scroll;
         }
-        .check{
-            position: absolute;
-            border-radius: 4px;
-            border-width: 1px;
-            width: 72px;
-            height: 26px;
-            border-style: solid;
-            border-color: gray;
-            // color: #387ef5;
-            background-color: transparent;
-             right: 2%;
-             top:24%;
-            font-size: 14px;
-        }
+        // .check{
+        //     position: absolute;
+        //     border-radius: 4px;
+        //     border-width: 1px;
+        //     width: 72px;
+        //     height: 26px;
+        //     border-style: solid;
+        //     border-color: gray;
+        //     // color: #387ef5;
+        //     background-color: transparent;
+        //      right: 2%;
+        //      top:24%;
+        //     font-size: 14px;
+        // }
     }
 }

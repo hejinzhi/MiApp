@@ -37,10 +37,7 @@
           <ion-item *ngIf="this.inspectPeriod==='weekly'">
             <ion-label col-4>*巡檢周次</ion-label>
             <ion-select col-8 [cancelText]="'attendance.cancle' | translate" [okText]="'attendance.confirm' | translate" formControlName="scheduledate">
-              <ion-option value="201738">17年第38周 09/18-09/22</ion-option>
-              <ion-option value="201739">17年第39周 09/25-09/29</ion-option>
-              <ion-option value="201740">17年第40周 10/02-10/06</ion-option>
-              <ion-option value="201741">17年第41周 10/09-10/13</ion-option>
+              <ion-option *ngFor="let item of weeklist" [value]="item.WEEK_ID">{{item.WEEK_DESC}}</ion-option>
             </ion-select>
           </ion-item>
           <ion-item *ngIf="this.inspectPeriod==='weekly'">
@@ -51,13 +48,10 @@
           </ion-item>
           <div formArrayName="empnos">
             <div *ngFor="let empno of scheduleline.get('empnos').controls;let j=index">
-              <ion-grid>
-                <ion-row>
-                  <ion-col col-11>
-                    <ion-item>
-                      <ion-label col-5>*值班人員{{j+1}}</ion-label>
-                      <ion-input col-7 type="text" [formControlName]="j"></ion-input>
-                    </ion-item>
+              <ion-grid class="grid" >
+                <ion-row class="row">
+                  <ion-col col-11 class="col">
+                    <sg-search-colleague  [opt]="{ formCtr:scheduleForm.get('schedules').get(i+'').get('empnos').get(j+''), label:'*值班人員'+(j+1)}" [formControlName]="j"></sg-search-colleague> 
                   </ion-col>
                   <ion-col col-1>
                     <div item-rignt class="person_icon">
@@ -69,13 +63,10 @@
               </ion-grid>
             </div>
           </div>
-          <!-- <ion-item>
-            <ion-label col-4>*值班人員2</ion-label>
-            <ion-input type="text" formControlName="empno2"></ion-input>
-          </ion-item> -->
         </div>
       </div>
     </ion-list>
   </form>
-  <button ion-button (tap)="showdetail()">查看VALUE</button>
+  <button ion-button full type="button" (tap)="submit()" [disabled]="scheduleForm.invalid">提交</button>
+  <!-- <button ion-button (tap)="showdetail()">查看VALUE</button> -->
 </ion-content>

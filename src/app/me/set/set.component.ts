@@ -1,3 +1,4 @@
+
 import { Subscription } from 'rxjs/Rx';
 import { Store } from '@ngrx/store';
 import { Component, OnInit, OnDestroy } from '@angular/core';
@@ -14,6 +15,7 @@ import { UserState } from './../../shared/models/user.model';
 import { User_Logout, User_Update } from './../../shared/actions/user.action';
 import { MyStore } from './../../shared/store';
 import { EnvConfig } from '../../shared/config/env.config';
+import { CommonService } from './../../core/services/common.service';
 
 @IonicPage()
 @Component({
@@ -36,7 +38,8 @@ export class SetComponent implements OnInit, OnDestroy {
     private platform: Platform,
     private translate: TranslateService,
     private meService: MeService,
-    private store$: Store<MyStore>
+    private store$: Store<MyStore>,
+    private commonService: CommonService
   ) {
     if (this.platform.is('ios')) {
       this.plf = 'ios';
@@ -99,7 +102,7 @@ export class SetComponent implements OnInit, OnDestroy {
     this.user.companys.forEach((company: any) => {
       alert.addInput({
         type: 'radio',
-        label: company.COMPANY_CNAME,
+        label: this.commonService.chineseConv(company.COMPANY_CNAME),
         value: company.COMPANY_ID,
         checked: companyid === company.COMPANY_ID
       });

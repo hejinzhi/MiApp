@@ -15,13 +15,13 @@ import * as moment from 'moment'
 export class BossDutyComponent implements OnInit {
     @ViewChild('mySlider') slider: Slides;
 
-    reportForm: FormGroup;
+    name_id: number = 3;
+    mri_type: string = 'boss';
+    start_date: string = moment(new Date()).format('YYYY-MM-DD');
+    end_date: string = moment(new Date()).format('YYYY-MM-DD');
 
     selectMaxYear = +moment(new Date()).format('YYYY') + 1;
 
-    name_id: number;
-    start_date: string = moment(new Date()).format('YYYY-MM-DD');
-    end_date: string = moment(new Date()).format('YYYY-MM-DD');
 
     selected_segment = 0;
     top_segment = 'top_0';
@@ -40,7 +40,7 @@ export class BossDutyComponent implements OnInit {
 
     }
 
-    goToCheckReport(){
+    goToCheckReport() {
         this.navCtrl.push('BossReportComponent');
     }
 
@@ -87,6 +87,18 @@ export class BossDutyComponent implements OnInit {
                 this.top_segment = 'top_0';
             }
         }, 0)
+    }
+
+    nameIdChange(id: any) {
+        this.name_id = id;
+    }
+
+    stratDateChange(date: string) {
+        this.start_date = date;
+    }
+
+    endDateChange(date: string) {
+        this.end_date = date;
     }
 
 }

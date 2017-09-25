@@ -1,3 +1,5 @@
+import { async } from '@angular/core/testing';
+import { PluginService } from './../../../../../core/services/plugin.service';
 import { IonicPage } from 'ionic-angular';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, FormArray, FormControl, Validators } from '@angular/forms';
@@ -22,13 +24,15 @@ export class BossScheduleComponent implements OnInit {
     to_time: string;
     mrinamelist: any[];
     locationlist: any[];
+    weeklist: any[];
 
     selectMaxYear = +moment(new Date()).format('YYYY') + 1;
     // schedulelines:scheduleline[];
     constructor(
         private fb: FormBuilder,
         private validExd: NgValidatorExtendService,
-        private bossService: BossService
+        private bossService: BossService,
+        private plugin: PluginService,
     ) { }
 
     async  ngOnInit() {
@@ -37,6 +41,8 @@ export class BossScheduleComponent implements OnInit {
         this.mrinamelist = res.json();
         let res1 = await this.bossService.get7SLocation();
         this.locationlist = res1.json();
+        let res2 = await this.bossService.getMriWeek(1, 8);
+        this.weeklist = res2.json();
     }
 
     init() {
@@ -61,7 +67,6 @@ export class BossScheduleComponent implements OnInit {
         let sub: any;
         if (this.inspectPeriod === 'daily') {
             sub = this.fb.group({
-                name_id: [this.name_id, Validators.required],
                 from_time: [this.from_time, Validators.required],
                 to_time: [this.to_time, Validators.required],
                 scheduledate: [moment(new Date()).format('YYYY-MM-DD'), Validators.required],
@@ -70,7 +75,6 @@ export class BossScheduleComponent implements OnInit {
         }
         if (this.inspectPeriod === 'weekly') {
             sub = this.fb.group({
-                name_id: [this.name_id, Validators.required],
                 from_time: [this.from_time, Validators.required],
                 to_time: [this.to_time, Validators.required],
                 scheduledate: ['', Validators.required],
@@ -105,7 +109,7 @@ export class BossScheduleComponent implements OnInit {
     }
 
     showdetail() {
-        console.log(this.scheduleForm);
+        console.log(this.scheduleForm.value);
         console.log(this.scheduleForm.valid)
     }
 
@@ -148,6 +152,7 @@ export class BossScheduleComponent implements OnInit {
     }
 
 
+
     addScheduleLine() {
         this.schedulelines.push(this.initSubForm());
     }
@@ -184,6 +189,100 @@ export class BossScheduleComponent implements OnInit {
             return ['', '', ''];
         }
     }
+
+    async submit() {
+        console.log(this.scheduleForm.value.schedules);
+
+        let send_header = {
+            schedule_header_id: '',
+            company_name: '',
+            name_id: this.name_id,
+            schedule_name: '',
+            schedule_date: '',
+            week: '',
+            from_date: '',
+            to_date: '',
+            from_time: '',
+            to_time: '',
+            enabled_flag: '',
+        };
+
+        let send_line = {
+            schedule_header_id: '',
+            schedule_line_id: '',
+            empno: '',
+            area: ''
+        };
+
+        let send_line_group: any[] = [];
+        let schedules: any[] = [];
+
+        send_header.schedule_header_id = '0';
+        send_header.company_name = localStorage.getItem('appCompanyId');
+        send_header.name_id = this.name_id;
+        if (this.inspectPeriod === 'weekly') {
+
+            send_header.week = this.scheduleForm.value.schedules[0].scheduledate.substring(4, 6);
+            send_header.from_date = this.weeklist.filter((v: any) => (v.WEEK_ID === this.scheduleForm.value.schedules[0].scheduledate))[0].WEEK_START_DAY;
+            send_header.to_date = this.weeklist.filter((v: any) => (v.WEEK_ID === this.scheduleForm.value.schedules[0].scheduledate))[0].WEEK_END_DAY;
+            send_header.schedule_name = this.weeklist.filter((v: any) => (v.WEEK_ID === this.scheduleForm.value.schedules[0].scheduledate))[0].WEEK_DESC;;
+            send_header.schedule_date = '';
+        }
+        if (this.inspectPeriod === 'daily') {
+            send_header.schedule_date = this.scheduleForm.value.schedules[0].scheduledate;
+            send_header.from_date = this.scheduleForm.value.schedules[0].scheduledate;
+            send_header.to_date = this.scheduleForm.value.schedules[0].scheduledate;
+            send_header.week = '';
+            send_header.schedule_date = '';
+        }
+        send_header.from_time = this.from_time;
+        send_header.to_time = this.to_time;
+        send_header.enabled_flag = "Y"
+
+        for (let i = 0; i <= this.scheduleForm.value.schedules.length - 1; i++) {
+            for (let j = 0; j <= this.scheduleForm.value.schedules[i].empnos.length - 1; j++) {
+                send_line.schedule_header_id = '0';
+                send_line.schedule_line_id = '0';
+                send_line.empno = this.scheduleForm.value.schedules[i].empnos[j].split(',')[0];
+                send_line.area = this.scheduleForm.value.schedules[i].area ? this.scheduleForm.value.schedules[i].area : '';
+                send_line_group.push({
+                    "SCHEDULE_HEADER_ID": send_line.schedule_header_id,
+                    "SCHEDULE_LINE_ID": send_line.schedule_line_id,
+                    "EMPNO": send_line.empno,
+                    "AREA": send_line.area
+                });
+            }
+            schedules.push({
+                "Header": {
+                    "SCHEDULE_HEADER_ID": send_header.schedule_header_id,
+                    "SCHEDULE_COMPANY_NAME": send_header.company_name,
+                    "SCHEDULE_NAME_ID": send_header.name_id,
+                    "SCHEDULE_NAME": send_header.schedule_name,
+                    "SCHEDULE_DATE": send_header.schedule_date,
+                    "WEEK": send_header.week,
+                    "FROM_DATE": send_header.from_date,
+                    "TO_DATE": send_header.to_date,
+                    "FROM_TIME": send_header.from_time,
+                    "TO_TIME": send_header.to_time,
+                    "ENABLE_FLAG": send_header.enabled_flag,
+                },
+                "Lines": send_line_group
+            });
+            send_line_group = [];
+        }
+
+        let schedules_data = {
+            "Schedules": schedules
+        };
+
+        console.log(JSON.stringify(schedules_data));
+
+        let loading = this.plugin.createLoading();
+        loading.present();
+        let res: any = await this.bossService.saveSchedule(schedules_data);
+        loading.dismiss();
+        console.log(res,422);
+    }
 }
 
 class schedule {
@@ -194,7 +293,6 @@ class schedule {
 }
 
 class scheduleLine {
-    SCHEDULE_HEADER_ID: number;
     name_id: number;
     from_time: string;
     to_time: string;
