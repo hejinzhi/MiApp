@@ -1,15 +1,25 @@
 import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
 import { IonicPage } from 'ionic-angular';
 import * as moment from 'moment'
+import { CommonService } from '../../service/common.service';
 
 @Component({
   selector: 'sg-query-date',
   templateUrl: 'query-date.component.html'
 })
 export class QueryDateComponent implements OnInit {
-  @Input() name_id: number;
-  @Input() start_date: string;
-  @Input() end_date: string;
+  @Input()
+  name_id: number;
+
+  @Input()
+  mri_type: string = 'IPQA';
+
+  @Input()
+  start_date: string;
+
+  @Input()
+  end_date: string;
+
 
   @Output() name_id_change = new EventEmitter();
   @Output() start_date_change = new EventEmitter();
@@ -17,19 +27,18 @@ export class QueryDateComponent implements OnInit {
 
   selectMaxYear = +moment(new Date()).format('YYYY') + 1;
 
-  constructor() { }
+  mrinamelist: any[];
 
-  ngOnInit() {
-    this.start_date = this.start_date || moment(Date.parse(new Date().toString())-1000*60*60*24*30).format('YYYY-MM-DD');
+  constructor(
+    private commonService: CommonService
+  ) { }
+
+  async ngOnInit() {
+    this.start_date = this.start_date || moment(Date.parse(new Date().toString()) - 1000 * 60 * 60 * 24 * 30).format('YYYY-MM-DD');
     this.end_date = this.end_date || moment(Date.parse(new Date().toString())).format('YYYY-MM-DD');
+    let res = await this.commonService.getMriName(this.mri_type);
+    this.mrinamelist = res.json();
   }
-
-  // ngOnChanges() {
-  //   console.log(11);
-  //   this.name_id_change.emit(this.name_id);
-  //   this.start_date_change.emit(this.start_date);
-  //   this.end_date_change.emit(this.end_date);
-  // }
 
   changeNameId() {
     this.name_id_change.emit(this.name_id);

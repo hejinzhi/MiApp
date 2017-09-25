@@ -36,15 +36,25 @@ export class EquipSettingComponent implements OnInit {
     }
 
     async ngOnInit() {
-        let fb = new FormBuilder();
 
-        this.machine = new Machine('', '', 1, '', '', '', '', moment(new Date()).format('YYYY-MM'), '', '', '', '');
+
+        this.machine = new Machine(0,'','','', 1, '', '', '', '', moment(new Date()).format('YYYY-MM'), '', '', '', '');
         this.locations = this.equipService.locations;
 
+        this.init(this.machine );
+
+
+    }
+
+    init(work: any = {}){
+        let fb = new FormBuilder();
+
         this.formModel = fb.group(
-            {
+            {   
+                machine_id: [work.machine_id],
                 machine_no: [this.machine.machine_no, [Validators.required]],
-                desc: [this.machine.desc, [Validators.required]],
+                company_name:[localStorage.getItem('appCompanyId')],
+                description: [this.machine.description, [Validators.required]],
                 quantity: [this.machine.quantity, [Validators.required]],
                 location1: [this.machine.location1, [Validators.required]],
                 location4: [this.machine.location4, [Validators.required]],
@@ -54,6 +64,7 @@ export class EquipSettingComponent implements OnInit {
                 name_id: [this.machine.name_id, [Validators.required]],
                 disable_date: [this.machine.disable_date]
             });
+
     }
 
     showdetail() {

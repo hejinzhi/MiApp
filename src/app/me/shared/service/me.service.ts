@@ -3,7 +3,7 @@ import { MyHttpService } from '../../../core/services/myHttp.service';
 import { MeConfig } from '../config/me.config';
 import { DatabaseService } from '../../../message/shared/service/database.service';
 
-import { PluginService }   from '../../../core/services/plugin.service';
+import { PluginService } from '../../../core/services/plugin.service';
 
 @Injectable()
 export class MeService {
@@ -22,15 +22,19 @@ export class MeService {
         return this.databaseService.updateAvatarByUsername(username, avatar);
     }
 
-    changeMobile(mobile:string) {
-      return this.myHttp.post(MeConfig.updateUserInfoUrl, { MOBILE: mobile });
+    changeMobile(mobile: string) {
+        return this.myHttp.post(MeConfig.updateUserInfoUrl, { MOBILE: mobile });
     }
 
-    changeTele(tele:string) {
-      return this.myHttp.post(MeConfig.updateUserInfoUrl, { TELEPHONE: tele });
+    changeTele(tele: string) {
+        return this.myHttp.post(MeConfig.updateUserInfoUrl, { TELEPHONE: tele });
     }
 
-    changeMail(mail:string) {
-      return this.myHttp.post(MeConfig.updateUserInfoUrl, { EMAIL: mail });
+    changeMail(mail: string) {
+        return this.myHttp.post(MeConfig.updateUserInfoUrl, { EMAIL: mail });
+    }
+
+    getUserInfo(username: string, site: string) {
+        return this.myHttp.get(MeConfig.getUserInfoUrl + '?emp_name=' + username + '&site=' + site);
     }
 }

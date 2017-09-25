@@ -17,6 +17,7 @@ export class CommentComponent implements OnInit {
     selectMaxYear = +moment(new Date()).format('YYYY') + 1;
 
     name_id: number = 2;
+    mri_type: string = 'boss';
     start_date: string = moment(new Date()).format('YYYY-MM-DD');
     end_date: string = moment(new Date()).format('YYYY-MM-DD');
 
@@ -32,7 +33,7 @@ export class CommentComponent implements OnInit {
     ngOnInit() {
     }
 
-    goToCheckReport(){
+    goToCheckReport() {
         this.navCtrl.push('BossReportComponent');
     }
 
@@ -85,8 +86,8 @@ export class CommentComponent implements OnInit {
         console.log(this.name_id);
         console.log(this.start_date);
         console.log(this.end_date);
-        this.navCtrl.push('BossReportComponent',{
-            admin:true
+        this.navCtrl.push('BossReportComponent', {
+            admin: true
         })
     }
 
