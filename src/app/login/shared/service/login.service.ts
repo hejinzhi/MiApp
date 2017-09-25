@@ -90,7 +90,12 @@ export class LoginService {
             this.currentUser.id = user.ID;
             this.currentUser.companyId = user.COMPANY_ID;
             this.currentUser.companys = companys;
-            this.currentUser.avatarUrl = user.AVATAR_URL;
+            if (user.AVATAR_URL.substr(0, 6) === 'Images') {
+                this.currentUser.avatarUrl = EnvConfig.baseUrl + user.AVATAR_URL;
+            } else {
+                this.currentUser.avatarUrl = user.AVATAR_URL;
+            }
+
             this.currentUser.nickname = user.NICK_NAME;
             this.currentUser.position = user.JOB_TITLE;
             this.currentUser.department = user.DEPT_NAME;

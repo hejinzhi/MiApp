@@ -1,5 +1,5 @@
 <ion-item>
-  <ion-input type="text" #name (keyup)="search(name.value)" clearInput></ion-input>
+  <ion-input type="text" #name (keyup)="search(name.value)" placeholder="{{'placeholder' | translate }}"></ion-input>
 </ion-item>
 <div class="searchOut">
   <ul class="list-group" [class.search]="colleague">

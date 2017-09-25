@@ -28,10 +28,12 @@ export class CheckboxComponent implements OnInit, OnChanges {
         this.selectOptions.push(this.translateTexts['inspection.ipqa.normal']);
         this.selectOptions.push(this.translateTexts['inspection.ipqa.exception']);
         this.selectOptions.push('N/A');
-        if (this.value === this.selectOptions[0]) {
+        if ((this.value === this.selectOptions[0]) || (this.value === 'NORMAL')) {
             this.checkedIdx = 0;
-        } else if (this.value === this.selectOptions[1]) {
+        } else if ((this.value === this.selectOptions[1]) || (this.value === 'EXCEPTION')) {
             this.checkedIdx = 1;
+        } else if ((this.value === 'N/A')) {
+            this.checkedIdx = 2;
         }
     }
 
