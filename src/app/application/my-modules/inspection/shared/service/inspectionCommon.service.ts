@@ -1,3 +1,4 @@
+import { EnvConfig } from './../../../../../shared/config/env.config';
 import { ReportModel } from './../model/ReportModel';
 import { CommonConfig } from './../config/common.config';
 import { MyHttpService } from './../../../../../core/services/myHttp.service';
@@ -22,6 +23,11 @@ export class InspectionCommonService {
 
     uploadPicture(picture: { LINE_ID: number, PICTURE: string }) {
         return this.myHttp.post(CommonConfig.uploadPicture, picture);
+    }
+
+
+    getMriName(type: string) {
+        return this.myHttp.get(CommonConfig.getMriNameUrl + '?type=' + type + '&company_name=' + EnvConfig.companyID);
     }
 
 
