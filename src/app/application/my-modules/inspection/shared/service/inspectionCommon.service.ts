@@ -16,8 +16,12 @@ export class InspectionCommonService {
         return this.myHttp.post(CommonConfig.insertReportData, report);
     }
 
-    getReportDate(headerId: number) {
+    getReportData(headerId: number) {
         return this.myHttp.get(CommonConfig.getReportDate + `?header_id=${headerId}`);
+    }
+
+    uploadPicture(picture: { LINE_ID: number, PICTURE: string }) {
+        return this.myHttp.post(CommonConfig.uploadPicture, picture);
     }
 
 

@@ -189,25 +189,24 @@ export class ChecklistComponent implements OnInit {
             // let localStation = this.localStorage.getItem(this.localStorageStationName);
             let localStation = this.getLocalStationById(this.stationId);
             if (localStation && localStation.headerId > 0) {
-                let res = await this.inspectionCommonService.getReportDate(localStation.headerId);
-                let dataFromServer = res.json();
-                if (dataFromServer) {
-                    headerId = await this.updateAndPostDate(dataFromServer);
-                } else {
+                try {
+                    let res = await this.inspectionCommonService.getReportData(localStation.headerId);
+                    let dataFromServer: ReportModel = res.json();
+                    if (dataFromServer) {
+                        headerId = await this.updateAndPostDate(dataFromServer);
+                        await this.uploadPictures(this.stationId, headerId, dataFromServer);
+                    } else {
+                        headerId = await this.postDataFromLocal();
+                        await this.uploadPictures(this.stationId, headerId);
+                    }
+                } catch (e) {
                     headerId = await this.postDataFromLocal();
+                    await this.uploadPictures(this.stationId, headerId);
                 }
 
             } else {
-                // let obj: ReportModel =  this.combineIpqaReportObj();
-                // try {
-                //     let res = await this.inspectionCommonService.insertReportData(obj);
-                //     console.log(res.json());
-                //     headerId = res.json();
-                // } catch (e) {
-                //     console.log(e);
-                //     headerId = 0;
-                // }
                 headerId = await this.postDataFromLocal();
+                await this.uploadPictures(this.stationId, headerId);
             }
 
 
@@ -218,6 +217,57 @@ export class ChecklistComponent implements OnInit {
         }
         // console.log(this.checkList);
         // console.log(await this.combineIpqaReportObj());
+    }
+
+    async uploadPictures(stationId: number, headerId: number, reportData?: ReportModel) {
+        if (reportData) {
+            this.findAndUploadPicture(stationId, reportData);
+        } else {
+            let res = await this.inspectionCommonService.getReportData(headerId);
+            let reportData: ReportModel = res.json();
+            this.findAndUploadPicture(stationId, reportData);
+            // reportData.Lines.forEach((line,index)=>{
+            //     if(line.PROBLEM_FLAG === 'Y'){
+            //        let res = this.inspectionService.getExceptionDetail(stationId,line.CHECK_ID);
+            //        if(res.PROBLEM_PICTURES.length > 0){
+            //            res.PROBLEM_PICTURES.forEach((img)=>{
+            //             try{
+            //                 this.inspectionCommonService.uploadPicture({LINE_ID:line.LINE_ID,PICTURE:img});
+            //             }catch(e){
+            //                 console.log('Upload images fail!',e);
+            //             }
+            //            });
+            //        }
+            //     }
+            // });
+        }
+
+    }
+
+    findAndUploadPicture(stationId: number, reportData: ReportModel) {
+        reportData.Lines.forEach(async (line, index) => {
+            if (line.PROBLEM_FLAG === 'Y') {
+                let res = this.inspectionService.getExceptionDetail(stationId, line.CHECK_ID);
+                if (res.PROBLEM_PICTURES.length > 0) {
+                    // res.PROBLEM_PICTURES.forEach(async (img) => {
+                    //     img = img.replace('data:image/jpeg;base64,', '');
+                    //     try {
+                    //         await this.inspectionCommonService.uploadPicture({ LINE_ID: line.LINE_ID, PICTURE: img });
+                    //     } catch (e) {
+                    //         console.log('Upload images fail!', e);
+                    //     }
+                    // });
+                    for (let i = 0; i < res.PROBLEM_PICTURES.length; i++) {
+                        let img = res.PROBLEM_PICTURES[i].replace('data:image/jpeg;base64,', '');
+                        try {
+                            await this.inspectionCommonService.uploadPicture({ LINE_ID: line.LINE_ID, PICTURE: img });
+                        } catch (e) {
+                            console.log('Upload images fail!', e);
+                        }
+                    }
+                }
+            }
+        });
     }
 
     async postDataFromLocal() {
@@ -231,7 +281,7 @@ export class ChecklistComponent implements OnInit {
         }
     }
 
-    getLocalStationById(stationId: number) {
+    getLocalStationById(stationId: number): StationModel {
         let localStation = this.localStorage.getItem(this.localStorageStationName);
         if (localStation) {
             for (let i = 0; i < localStation.length; i++) {

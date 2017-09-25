@@ -22,6 +22,8 @@ export class ExceptionDetailComponent implements OnInit {
     localUser: UserModel;//当前登录人
     fromPage: string;// 获取是从哪个页面转跳过来的。“问题追踪”不显示处理人栏位，而“指派处理人”则显示
     localStorageName: string; // 记录本地存储的名字是什么
+    // images: string[] = ['assets/icon/xunjian.jpg', 'assets/icon/IPQA.gif']; // 记录用户选择的照片
+    images: string[]; // 记录用户选择的照片
     translateText = {
         day: '',
         night: ''
@@ -137,11 +139,15 @@ export class ExceptionDetailComponent implements OnInit {
             exceptionDesc: [formValue.exceptionDesc, Validators.required],
             pictures: this.fb.array(formValue.pictures)
         });
+        this.images = formValue.pictures;
     }
 
     submitException() {
 
         if (this.fromPage === 'checklist') {
+            let formValue = this.formModel.value;
+            formValue.pictures = this.images;
+            console.log(formValue);
             this.setItem(this.localStorageName, this.formModel.value);
             this.dismiss();
         }
@@ -183,7 +189,7 @@ export class ExceptionDetailComponent implements OnInit {
 
     // 获取用户选择的照片
     getImages(images: string[]) {
-
+        this.images = images;
     }
 
     removeCheckPerson(index: number) {

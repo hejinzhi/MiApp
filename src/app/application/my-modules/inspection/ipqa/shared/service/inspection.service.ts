@@ -65,7 +65,6 @@ export class InspectionService {
         };
     }
 
-
     getEmp(emp: string) {
         return this.myHttp.get(InspectionConfig.getEmp + `?emp_name=${emp}`);
     }
