@@ -86,7 +86,7 @@
                 </li>
               </ul>
               <button ion-button (tap)="addPictures()">addPictures</button> -->
-          <sg-photo-view destinationType=1></sg-photo-view>
+          <sg-photo-view (imgsChange)="getImages($event)"></sg-photo-view>
         </div>
       </div>
       <div class="my-row" *ngIf="fromPage === 'teamLeader'">

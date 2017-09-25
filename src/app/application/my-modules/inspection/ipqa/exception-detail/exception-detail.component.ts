@@ -56,8 +56,7 @@ export class ExceptionDetailComponent implements OnInit {
 
     async createFormMode() {
         if (this.fromPage === 'checklist') {
-            // 设置本地存储的名字，规则是STATION+STATION_ID+当前日期+STEP3  (STEP3是异常页面,STEP2是checklist页面，STEP1是站点页面)
-            this.localStorageName = 'STATION' + this.station.STATION_ID + this.inspectionService.getToday() + 'STEP3';
+            this.localStorageName = this.inspectionService.getLocalStorageExceptionName(this.station.STATION_ID);
             let localData: ExceptionModel = this.getItem(this.localStorageName, this.checklist.CHECK_ID);
             if (localData) {
                 this.setCheckListFormModel(localData);
@@ -112,7 +111,8 @@ export class ExceptionDetailComponent implements OnInit {
         });
 
         let address = this.formModel.get('address') as FormControl;
-        address.setValue(this.line + ' -- ' + this.station.STATION_NAME);
+        let addressName = this.inspectionService.getLocationName(this.line, this.station.STATION_NAME);
+        address.setValue(addressName);
         let checklist_cn = this.formModel.get('checklist_cn') as FormControl;
         checklist_cn.setValue(this.checklist.CHECK_LIST_CN);
         // 获取班別
@@ -181,6 +181,11 @@ export class ExceptionDetailComponent implements OnInit {
         }
     }
 
+    // 获取用户选择的照片
+    getImages(images: string[]) {
+
+    }
+
     removeCheckPerson(index: number) {
         let checkPersons = this.formModel.get('checkPersons') as FormArray;
         checkPersons.removeAt(index);
@@ -207,7 +212,7 @@ export class ExceptionDetailComponent implements OnInit {
 
 }
 
-class ExceptionModel {
+export class ExceptionModel {
     checkID: number;
     checkDate: string;
     checkPerson: string;
