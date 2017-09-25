@@ -22,7 +22,7 @@ export class DimissionAnalysisComponent {
   mi_type:string;//选择的下一级类型
   className:string = this.constructor.name;
   translateTexts: any = {};
-
+  myChartSub:any
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
@@ -86,9 +86,9 @@ export class DimissionAnalysisComponent {
           break;
         }
       }
-      this.makeChart('main2',this.subInfo,lastOrder,true);
+      this.makeChart('main2',this.subInfo,lastOrder,true,true);
     }else {
-      this.makeChart('main2',this.subInfo,1,true);
+      this.makeChart('main2',this.subInfo,1,true,true);
     }
     this.chartService.scroll_down();
   }
@@ -100,7 +100,7 @@ export class DimissionAnalysisComponent {
    * @param  {number}     lastOrder 所需数据为倒数第几个往上开始
    * @param  {boolean}    setHeight 是否再次设置高度（dom被div等包住时无法使用自适应高度），默认为false
    */
-  makeChart(id:string, tableInfo:TableModel ,lastOrder:number, setHeight:boolean = false) {
+  makeChart(id:string, tableInfo:TableModel ,lastOrder:number, setHeight:boolean = false, isSub:boolean = false) {
     if(!tableInfo) return;
     let option = JSON.parse(OptionsConfig.DimissionAnalysis.option1);
     let infoLength = tableInfo.data.length;
@@ -117,7 +117,14 @@ export class DimissionAnalysisComponent {
     })
     option.legend.data = legend.reverse();
     option.title.text = tableInfo.caption.replace('(%)','');
-    this.chartService.makeChart(id,this.chartService.optionConv(JSON.stringify(option)),setHeight);
+    if(isSub && this.myChartSub) {
+      this.myChartSub.clear();
+      this.myChartSub.setOption(this.chartService.optionConv(JSON.stringify(option)))
+    } else if(isSub && !this.myChartSub) {
+      this.myChartSub = this.chartService.makeChart(id,this.chartService.optionConv(JSON.stringify(option)),setHeight);
+    } else {
+      this.chartService.makeChart(id,this.chartService.optionConv(JSON.stringify(option)),setHeight);
+    }
   }
 
   /**
