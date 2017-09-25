@@ -1,5 +1,6 @@
+import { InspectionService } from './../shared/service/inspection.service';
 import { CommonService } from './../../../../../core/services/common.service';
-import { GridModel } from './../grid/grid.component';
+import { StationModel } from './../grid/grid.component';
 import { NavController, NavParams, DomController, IonicPage } from 'ionic-angular';
 import { Component, OnInit } from '@angular/core';
 import { Mode } from "../grid/grid.component";
@@ -13,22 +14,26 @@ export class StationsComponent implements OnInit {
     constructor(
         private navCtrl: NavController,
         private navParams: NavParams,
-        private commonService: CommonService
+        private commonService: CommonService,
+        private inspectionService: InspectionService
     ) { }
 
     mode: number = Mode.STATION;
-    stations: GridModel[] = [];
+    stations: StationModel[] = [];
 
-    // 站点
-    allStations: { STATION_NAME: string, STATION_ID: number }[] = [];
 
     // 用户选择的线别
     lineName: string;
     lineId: number;
 
+    localStorageStationName: string;// 记录站点的本地存储名称
+
     ngOnInit() {
+        this.init();
+    }
+
+    init() {
         this.stations = [];
-        this.allStations = [];
         let params: any[] = this.navParams.get('stations');
         this.lineName = this.navParams.get('lineName');
         this.lineId = this.navParams.get('lineId');
@@ -38,32 +43,32 @@ export class StationsComponent implements OnInit {
         temp.forEach((v) => {
             this.stations.push({
                 title: v.title,
-                showCheckbox: false
-            });
-            this.allStations.push({
-                STATION_NAME: v.title,
-                STATION_ID: v.STATION_ID
+                showCheckbox: false,
+                stationID: v.STATION_ID,
+                headerId: 0
             });
         });
-
-        // to do
-        // 遍历站点，检查是否已经有当天的check list数据，如果有，则默认勾上，否则不勾。防止user点后退后，这个勾就不见了
-        // ...
-    }
-
-    chooseStation(event: GridModel) {
-        this.navCtrl.push('ChecklistComponent', { data: event, stationId: this.getStationId(event.title), lineName: this.lineName, lineId: this.lineId });
-    }
-
-    getStationId(stationName: string) {
-        let id: number = -1;
-        for (let i = 0; i < this.allStations.length; i++) {
-            if (this.allStations[i].STATION_NAME === stationName) {
-                id = this.allStations[i].STATION_ID;
-                break;
+        this.localStorageStationName = this.inspectionService.getLocalStorageStationName(this.lineId);
+        let localData: StationModel[] = this.getItem(this.localStorageStationName);
+        if (localData) {
+            for (let i = 0; i < localData.length; i++) {
+                for (let j = 0; j < this.stations.length; j++) {
+                    if (localData[i].stationID === this.stations[j].stationID) {
+                        this.stations[j].showCheckbox = localData[i].showCheckbox;
+                        break;
+                    }
+                }
             }
         }
-        return id;
+        this.inspectionService.removeOldLocalStorageData();
+    }
+
+    getItem(key: string) {
+        return JSON.parse(localStorage.getItem(key));
+    }
+
+    chooseStation(event: StationModel) {
+        this.navCtrl.push('ChecklistComponent', { data: event, stationId: event.stationID, lineName: this.lineName, lineId: this.lineId });
     }
 
     // 先检查是否已经全部打上勾，如果没有则报错

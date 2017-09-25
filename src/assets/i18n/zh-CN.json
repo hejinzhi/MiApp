@@ -117,7 +117,7 @@
     "logout": "注销",
     "exitApp": "退出",
     "languageChangeAlertTitle": "语言版本选择",
-    "companyChangeAlertTitle":"公司别选择",
+    "companyChangeAlertTitle": "公司别选择",
     "zh-CN": "简体中文",
     "zh-TW": "繁体中文",
     "reStartAppAlertTitle": "马上重启?",
@@ -335,7 +335,7 @@
     "dutydaily_title": "每日缺席明细",
     "reward_title": "奖惩记录"
   },
-  "placeholder": "请输入中文名/英文名/工号",
+  "placeholder": "请输入英文名/工号/中文名",
   "contactTitle": "通讯录",
   "sameDept": "同部门",
   "subordinated": "我的下属",

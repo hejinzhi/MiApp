@@ -1,3 +1,5 @@
+import { InspectionCommonService } from './../../shared/service/inspectionCommon.service';
+import { LocalStorageService } from './../../../../../core/services/localStorage.service';
 import { SharedModule } from './../../../../../shared/shared.module';
 // import { CheckboxComponentModule } from './../checkbox/checkbox.component.module';
 import { CheckboxComponentModule } from '../checkbox/checkbox.component.module';
@@ -18,7 +20,7 @@ import { TranslateModule } from '@ngx-translate/core';
     ],
     exports: [],
     declarations: [ChecklistComponent],
-    providers: [],
+    providers: [LocalStorageService, InspectionCommonService],
     entryComponents: [
         ChecklistComponent
     ]

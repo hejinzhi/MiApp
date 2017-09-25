@@ -25,7 +25,7 @@ export class LoginComponent {
   ) {
   }
   appVersion: string;
-  registerCredentials = { username: 'jinzhi.he', password: 'pass', rememberPWD: false, autoLogin: false };
+  registerCredentials = { username: 'jinzhi.he', password: 'pass147', rememberPWD: false, autoLogin: false };
   // registerCredentials = { username: '', password: '', rememberPWD: false, autoLogin: false };
 
   ionViewDidLoad() {

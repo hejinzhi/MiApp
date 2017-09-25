@@ -18,4 +18,6 @@ export class InspectionConfig {
     static getDutyKind = EnvConfig.baseUrl + 'OverTime/GetOverTimeDutyKind';
 
     static getEmp = EnvConfig.baseUrl + 'OffDuty/GetOffDutyAgent';
+
+
 }
