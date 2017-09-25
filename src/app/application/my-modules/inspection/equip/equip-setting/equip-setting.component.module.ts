@@ -1,3 +1,4 @@
+import { SearchColleagueComponentModule } from './../../../../../shared/components/search-colleague/search-colleague.component.module';
 import { SharedModule } from './../../../../../shared/shared.module';
 // import { GridComponentModule } from './grid/grid.component.module';
 import { EquipSettingComponent } from './equip-setting.component';
@@ -11,7 +12,8 @@ import { MultiPickerModule } from 'ion-multi-picker';
         IonicPageModule.forChild(EquipSettingComponent),
         TranslateModule.forChild(),
         SharedModule,
-        MultiPickerModule
+        MultiPickerModule,
+        SearchColleagueComponentModule
     ],
     exports: [],
     declarations: [EquipSettingComponent],

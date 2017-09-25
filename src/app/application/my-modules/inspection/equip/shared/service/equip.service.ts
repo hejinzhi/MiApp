@@ -53,7 +53,7 @@ export class Machine {
         public location4: string,
         public production_date: string,
         public effective_date: string,
-        public owner_empno: string,
+        public owner_empno: string, 
         public name_id: string,
         public disable_date: string,
 

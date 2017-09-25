@@ -52,23 +52,23 @@ export class EquipSettingComponent implements OnInit {
         this.formModel = fb.group(
             {   
                 machine_id: [work.machine_id],
-                machine_no: [this.machine.machine_no, [Validators.required]],
+                machine_no: [work.machine_no, [Validators.required]],
                 company_name:[localStorage.getItem('appCompanyId')],
-                description: [this.machine.description, [Validators.required]],
-                quantity: [this.machine.quantity, [Validators.required]],
-                location1: [this.machine.location1, [Validators.required]],
-                location4: [this.machine.location4, [Validators.required]],
-                production_date: [this.machine.production_date, [Validators.required]],
-                effective_date: [this.machine.effective_date],
-                owner_empno: [this.machine.owner_empno, [Validators.required]],
-                name_id: [this.machine.name_id, [Validators.required]],
-                disable_date: [this.machine.disable_date]
+                description: [work.description, [Validators.required]],
+                quantity: [work.quantity, [Validators.required]],
+                location1: [work.location1, [Validators.required]],
+                location4: [work.location4, [Validators.required]],
+                production_date: [work.production_date, [Validators.required]],
+                effective_date: [work.effective_date],
+                owner_empno: [work.owner_empno, [Validators.required]],
+                name_id: [work.name_id, [Validators.required]],
+                disable_date: [work.disable_date]
             });
 
     }
 
     showdetail() {
-        console.log(this.formModel.value);
+        console.log(this.formModel.controls['owner_empno']);
     }
 
 
