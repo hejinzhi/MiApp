@@ -42,8 +42,10 @@ export class EquipService {
 
 export class Machine {
     constructor(
+        public machine_id: number, 
         public machine_no: string,
-        public desc: string,
+        public company_name: string,
+        public description: string,
         public quantity: number,
         public location1: string,
         public location2: string,
