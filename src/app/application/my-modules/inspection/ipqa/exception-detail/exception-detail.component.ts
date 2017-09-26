@@ -78,23 +78,23 @@ export class ExceptionDetailComponent implements OnInit {
                 address: [formData.address, Validators.required],
                 checklist_cn: [formData.checklist_cn, Validators.required],
                 exceptionDesc: [formData.exceptionDesc, Validators.required],
-                pictures: this.fb.array([]),
+                // pictures: this.fb.array([]),
                 handler: ['', Validators.required],
             });
         } else if (this.fromPage === 'handler') {
+            let formData = this.navParams.get('formData');
             this.formModel = this.fb.group({
-                // checkID: ['', Validators.required],
-                checkDate: ['', Validators.required],
-                checkPerson: ['', Validators.required],
-                banbie: ['', Validators.required],
-                address: ['', Validators.required],
-                checklist_cn: ['', Validators.required],
-                exceptionDesc: ['', Validators.required],
-                pictures: this.fb.array([]),
+                checkDate: [formData.checkDate, Validators.required],
+                checkPerson: [formData.checkPerson, Validators.required],
+                banbie: [formData.banbie, Validators.required],
+                address: [formData.address, Validators.required],
+                checklist_cn: [formData.checklist_cn, Validators.required],
+                exceptionDesc: [formData.exceptionDesc, Validators.required],
+                // pictures: this.fb.array([]),
                 handler: ['', Validators.required],
                 actionDesc: ['', Validators.required],
                 actionStatus: ['', Validators.required],
-                actionPictures: this.fb.array([]),
+                // actionPictures: this.fb.array([]),
                 actionDate: ['', Validators.required],
             });
         }
@@ -109,7 +109,7 @@ export class ExceptionDetailComponent implements OnInit {
             address: ['', Validators.required],
             checklist_cn: ['', Validators.required],
             exceptionDesc: ['', Validators.required],
-            pictures: this.fb.array([])
+            // pictures: this.fb.array([])
         });
 
         let address = this.formModel.get('address') as FormControl;
@@ -119,9 +119,6 @@ export class ExceptionDetailComponent implements OnInit {
         checklist_cn.setValue(this.checklist.CHECK_LIST_CN);
         // 获取班別
         let banbie = this.formModel.get('banbie') as FormControl;
-        // let res: any = await this.inspectionService.getDutyKind();
-        // let temp: any = res.json();
-        // let duty: string = temp.DUTY_KIND;
         let duty = await this.inspectionService.getBanBie();
         if (duty.substr(0, 1) === '1') {
             banbie.setValue(this.translateText.day);
@@ -138,7 +135,7 @@ export class ExceptionDetailComponent implements OnInit {
             address: [formValue.address, Validators.required],
             checklist_cn: [formValue.checklist_cn, Validators.required],
             exceptionDesc: [formValue.exceptionDesc, Validators.required],
-            pictures: this.fb.array(formValue.pictures)
+            // pictures: this.fb.array(formValue.pictures)
         });
         this.images = formValue.pictures;
     }

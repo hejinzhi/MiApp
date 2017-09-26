@@ -52,5 +52,8 @@ export class ListComponent implements OnInit {
         if (this.fromPage === 'teamLeader') {
             this.navCtrl.push('ExceptionDetailComponent', { fromPage: this.fromPage, formData: formData });
         }
+        else if (this.fromPage === 'handler') {
+            this.navCtrl.push('ExceptionDetailComponent', { fromPage: this.fromPage, formData: formData });
+        }
     }
 }

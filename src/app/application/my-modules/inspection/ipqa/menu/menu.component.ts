@@ -22,4 +22,10 @@ export class MenuComponent implements OnInit {
     goToTeamLeader() {
         this.navCtrl.push('ListComponent', { fromPage: 'teamLeader' })
     }
+
+    goToTeamHandler() {
+        this.navCtrl.push('ListComponent', { fromPage: 'handler' })
+    }
+
+
 }
