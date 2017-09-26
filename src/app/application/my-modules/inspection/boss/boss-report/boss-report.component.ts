@@ -191,19 +191,11 @@ export class BossReportComponent implements OnInit {
         this.reportForm.controls['issueCount'].setValue(count + '项')
     }
 
-    addIssueDetail() {
-
-    }
-
     addCheckSite() {
         let lists = this.reportForm.get('lists') as FormArray;
         lists.push(this.initSubForm({}, this.changeIssueCount));
         this.hideOldSub(lists.length);
         this.scrollToBottom();
-    }
-
-    updateImgs(imgs: string[], contr: FormControl) {
-        contr.setValue(imgs);
     }
 
     hideOldSub(length: number) {
