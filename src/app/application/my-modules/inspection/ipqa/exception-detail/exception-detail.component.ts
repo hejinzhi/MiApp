@@ -119,9 +119,10 @@ export class ExceptionDetailComponent implements OnInit {
         checklist_cn.setValue(this.checklist.CHECK_LIST_CN);
         // 获取班別
         let banbie = this.formModel.get('banbie') as FormControl;
-        let res: any = await this.inspectionService.getDutyKind();
-        let temp: any = res.json();
-        let duty: string = temp.DUTY_KIND;
+        // let res: any = await this.inspectionService.getDutyKind();
+        // let temp: any = res.json();
+        // let duty: string = temp.DUTY_KIND;
+        let duty = await this.inspectionService.getBanBie();
         if (duty.substr(0, 1) === '1') {
             banbie.setValue(this.translateText.day);
         } else {
