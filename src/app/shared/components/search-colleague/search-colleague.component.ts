@@ -64,14 +64,14 @@ export class SearchColleagueComponent implements OnInit {
       })
 
       // TODO: 设置验证
-      this.formCtr.setValidators(this.validExd.selfDefine(function (ctr: AbstractControl, isSelect: boolean) {
+      this.formCtr.setValidators(this.validExd.selfDefine(function (ctr: AbstractControl) {
         if (this.tempcolleague) {
           this.isSelectcolleague = ctr.value != this.tempcolleague ? false : true;
         }
         return this.isSelectcolleague ? null : {
           'notSelect': true
         }
-      }.bind(this), this.isSelectcolleague))
+      }.bind(this)))
     }
   }
 

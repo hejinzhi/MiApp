@@ -138,6 +138,7 @@ export class ChartService {
     }
     let myChart = this.myChart.init(dom);
     myChart.setOption(option);
+    dom = null;
     return myChart;
   }
 
