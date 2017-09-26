@@ -59,6 +59,11 @@ export class BossService {
       return this.myHttp.post(BossConfig.uploadReport,this.convertReportData(data));
     }
 
+    getEmployeeSchedule() {
+      let company = localStorage.getItem('appCompanyId');
+      return this.myHttp.get(BossConfig.getEmployeeSchedule.replace('{company}',company));
+    }
+
 
     errorDeal(err: any, showAlert: boolean = false) {
         let errTip = '';
