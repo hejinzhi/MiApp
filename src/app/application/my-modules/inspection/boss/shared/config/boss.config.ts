@@ -9,4 +9,12 @@ export class BossConfig {
     static getMriWeek = EnvConfig.baseUrl + 'IPQA/GetMRIWeek';
 
     static saveSchedule = EnvConfig.baseUrl + 'IPQA/UploadSchedule';
+
+    /**
+     * URL
+     * POST<BossReport>
+     * 2017-09-25
+     */
+    static uploadReport = EnvConfig.baseUrl + 'IPQA/UploadReport';
+    
 }

@@ -1,3 +1,4 @@
+import { BossReportState, BossReportModel } from './../store';
 import { PluginService } from './../../../../../../core/services/plugin.service';
 import { MyHttpService } from './../../../../../../core/services/myHttp.service';
 import { Injectable } from '@angular/core';
@@ -48,7 +49,15 @@ export class BossService {
           return Promise.resolve({ content: errTip, status: false })
         });
         
-    } 
+    }
+
+    convertReportData(data:any):BossReportState {
+      return new BossReportModel(data);
+    }
+    
+    uploadReport(data:any) {
+      return this.myHttp.post(BossConfig.uploadReport,this.convertReportData(data));
+    }
 
 
     errorDeal(err: any, showAlert: boolean = false) {
