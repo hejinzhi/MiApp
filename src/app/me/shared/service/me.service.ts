@@ -15,7 +15,9 @@ export class MeService {
     ) { }
 
     setAvatar(avatarUrl: string) {
-        return this.myHttp.post(MeConfig.updateUserInfoUrl, { AVATAR_URL: avatarUrl });
+        // return this.myHttp.post(MeConfig.updateUserInfoUrl, { AVATAR_URL: avatarUrl });
+        let user = JSON.parse(localStorage.getItem('currentUser'));
+        return this.myHttp.post(MeConfig.updateAvatarUrl, { USER_NAME: user.username, PICTURE: avatarUrl });
     }
 
     setLocalAvatar(username: string, avatar: string) {

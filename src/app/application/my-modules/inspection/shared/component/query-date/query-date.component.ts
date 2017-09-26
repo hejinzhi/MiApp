@@ -1,7 +1,7 @@
+import { InspectionCommonService } from './../../service/inspectionCommon.service';
 import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
 import { IonicPage } from 'ionic-angular';
 import * as moment from 'moment'
-import { CommonService } from '../../service/common.service';
 
 @Component({
   selector: 'sg-query-date',
@@ -30,7 +30,7 @@ export class QueryDateComponent implements OnInit {
   mrinamelist: any[];
 
   constructor(
-    private commonService: CommonService
+    private commonService: InspectionCommonService
   ) { }
 
   async ngOnInit() {

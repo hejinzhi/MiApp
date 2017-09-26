@@ -1,3 +1,5 @@
+import { CommonService } from './../../core/services/common.service';
+import { EnvConfig } from './../../shared/config/env.config';
 import { Component, OnInit } from '@angular/core';
 import { NavController, NavParams } from 'ionic-angular';
 import { Observable } from 'rxjs/Rx';
@@ -5,7 +7,7 @@ import { Observable } from 'rxjs/Rx';
 import { ContactService } from '../shared/service/contact.service';
 import { ContactDetailComponent } from '../contact-detail/contact-detail.component';
 import { ContactConfig } from '../shared/config/contact.config';
-import { EnvConfig } from '../../shared/config/env.config.ts';
+
 import { TranslateService } from '@ngx-translate/core';
 
 @Component({
@@ -25,13 +27,35 @@ export class SearchResultComponent implements OnInit {
         public navCtrl: NavController,
         public navParams: NavParams,
         public contactService: ContactService,
-        public translate: TranslateService
+        public translate: TranslateService,
+        public commonService: CommonService
     ) {
 
     }
 
     async ngOnInit() {
         this.type = this.navParams.get('type');
+        let nowTime = new Date().getTime();
+        let localList: { time: number, list: any[] } = this.contactService.getLocalStorage(this.type);
+        if (localList) {
+            // localstorage有效期一天，超过一天才再获取
+            if (nowTime - localList.time > 86400000) {
+                this.contactService.removeLocalStorage(this.type);
+                this.getPersons();
+            } else {
+                this.personList = localList.list;
+                this.personListBackup = localList.list;
+            }
+
+        } else {
+            this.getPersons();
+        }
+
+
+    }
+
+    async getPersons() {
+        this.commonService.showLoading();
         if (this.type === 'sameDept') {
             // this.typeDesc = '同部门';
             this.translate.get('sameDept').subscribe((res) => {
@@ -54,17 +78,19 @@ export class SearchResultComponent implements OnInit {
             let originRes = await this.contactService.getAllPersonByPage(EnvConfig.companyID, 1, ContactConfig.pageSize);
             this.formatAndSaveData(originRes.json());
         }
-
     }
 
-    formatAndSaveData(obj: any) {
-        // let result = obj.sort((v1: any, v2: any) => {
-        //     return v1.NICK_NAME.localeCompare(v2.NICK_NAME, 'zh-Hans-CN');
-        // });
-        // this.personList = result;
+    formatAndSaveData(obj: any[]) {
+        for (let i = 0; i < obj.length; i++) {
+            let avatar = obj[i].AVATAR_URL.substr(0, 6);
+            if (avatar === 'Images') {
+                obj[i].AVATAR_URL = EnvConfig.baseUrl + obj[i].AVATAR_URL
+            }
+        }
         this.personList = obj;
         this.personListBackup = this.personList;
-        this.contactService.setLocalStorage(this.type, this.personList);
+        this.commonService.hideLoading();
+        this.contactService.setLocalStorage(this.type, { time: new Date().getTime(), list: this.personList });
     }
 
     getItems(event: any) {

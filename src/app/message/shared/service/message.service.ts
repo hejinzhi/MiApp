@@ -1,3 +1,4 @@
+import { EnvConfig } from './../../../shared/config/env.config';
 import { Injectable, EventEmitter } from '@angular/core';
 import { Events } from 'ionic-angular';
 import { Observable, Subscription, Subject } from 'rxjs/Rx';
@@ -45,7 +46,8 @@ export class MessageService {
         let fromUserServeObj = res.json();
         if (fromUserServeObj) {
           history[i].fromUserNickName = fromUserServeObj.NICK_NAME;
-          history[i].fromUserAvatarSrc = fromUserServeObj.AVATAR_URL;
+          // history[i].fromUserAvatarSrc = fromUserServeObj.AVATAR_URL;
+          history[i].fromUserAvatarSrc = EnvConfig.baseUrl + fromUserServeObj.AVATAR_URL;
           history[i].timedesc = this.getDateDiff(history[i].time);
           await this.databaseService.insertAvatarTable(history[i].fromUserName, history[i].fromUserNickName, fromUserServeObj.AVATAR_URL);
 
