@@ -186,7 +186,6 @@ export class ChecklistComponent implements OnInit {
         }
         if (allCheck) {
             let headerId: number = 0; // 记录post数据后服务器返回的header id，用于判断数据是否已经成功post
-            // let localStation = this.localStorage.getItem(this.localStorageStationName);
             let localStation = this.getLocalStationById(this.stationId);
             if (localStation && localStation.headerId > 0) {
                 try {
@@ -215,8 +214,6 @@ export class ChecklistComponent implements OnInit {
                 { title: this.station.title, showCheckbox: this.station.showCheckbox, stationID: this.stationId, headerId: headerId });
             this.navCtrl.pop();
         }
-        // console.log(this.checkList);
-        // console.log(await this.combineIpqaReportObj());
     }
 
     async uploadPictures(stationId: number, headerId: number, reportData?: ReportModel) {
@@ -226,20 +223,6 @@ export class ChecklistComponent implements OnInit {
             let res = await this.inspectionCommonService.getReportData(headerId);
             let reportData: ReportModel = res.json();
             this.findAndUploadPicture(stationId, reportData);
-            // reportData.Lines.forEach((line,index)=>{
-            //     if(line.PROBLEM_FLAG === 'Y'){
-            //        let res = this.inspectionService.getExceptionDetail(stationId,line.CHECK_ID);
-            //        if(res.PROBLEM_PICTURES.length > 0){
-            //            res.PROBLEM_PICTURES.forEach((img)=>{
-            //             try{
-            //                 this.inspectionCommonService.uploadPicture({LINE_ID:line.LINE_ID,PICTURE:img});
-            //             }catch(e){
-            //                 console.log('Upload images fail!',e);
-            //             }
-            //            });
-            //        }
-            //     }
-            // });
         }
 
     }
@@ -249,14 +232,6 @@ export class ChecklistComponent implements OnInit {
             if (line.PROBLEM_FLAG === 'Y') {
                 let res = this.inspectionService.getExceptionDetail(stationId, line.CHECK_ID);
                 if (res.PROBLEM_PICTURES.length > 0) {
-                    // res.PROBLEM_PICTURES.forEach(async (img) => {
-                    //     img = img.replace('data:image/jpeg;base64,', '');
-                    //     try {
-                    //         await this.inspectionCommonService.uploadPicture({ LINE_ID: line.LINE_ID, PICTURE: img });
-                    //     } catch (e) {
-                    //         console.log('Upload images fail!', e);
-                    //     }
-                    // });
                     for (let i = 0; i < res.PROBLEM_PICTURES.length; i++) {
                         let img = res.PROBLEM_PICTURES[i].replace('data:image/jpeg;base64,', '');
                         try {
