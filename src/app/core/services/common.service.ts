@@ -1,4 +1,4 @@
-import { AlertController } from 'ionic-angular';
+import { AlertController, LoadingController, Loading } from 'ionic-angular';
 import { Injectable } from '@angular/core';
 import { tify, sify } from 'chinese-conv';
 import { TranslateService } from '@ngx-translate/core';
@@ -8,10 +8,11 @@ export class CommonService {
 
     constructor(
         private alertCtrl: AlertController,
+        private loadingCtrl: LoadingController,
         private translate: TranslateService
     ) { }
 
-
+    loading: Loading;
 
     showAlert(title: string, subtitle: string) {
         let alert = this.alertCtrl.create({
@@ -29,6 +30,15 @@ export class CommonService {
         return newDate.getFullYear() + '-' + month + '-' + day;
     }
 
+    showLoading() {
+        this.loading = this.loadingCtrl.create({
+            content: 'Please wait...'
+        });
+        this.loading.present();
+    }
+    hideLoading() {
+        this.loading.dismiss();
+    }
     chineseConv(value: string) {
         if (value) {
             let currentLang = this.translate.currentLang;

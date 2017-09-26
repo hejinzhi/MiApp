@@ -62,14 +62,15 @@ export class MeDetailComponent implements OnInit {
     if (!this.plugin.isCordova()) return;
     let temp = await this.plugin.getNewPhoto(type, size).catch((e) => console.log(e));
     if (!temp) return;
+    let temp1 = temp;
     temp = 'data:image/jpeg;base64,' + temp;
     this.showLoading();
-    await this.meService.setAvatar(temp).catch((err) => {
+    await this.meService.setAvatar(temp1).catch((err) => {
       console.log(err);
       this.plugin.errorDeal(err);
     });
     await this.meService.setLocalAvatar(this.user.username, temp);
-    this.store$.dispatch(new User_Update({avatarUrl:temp}));
+    this.store$.dispatch(new User_Update({ avatarUrl: temp }));
     this.loading.dismiss();
     // this.user.avatarurl = await this.plugin.getNewPhoto(type, size);
     // if (!this.user.avatarurl) return;

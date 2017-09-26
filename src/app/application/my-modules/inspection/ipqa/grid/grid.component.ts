@@ -14,7 +14,7 @@ export class GridComponent implements OnInit {
     dataChange: EventEmitter<GridModel> = new EventEmitter();
     // 传递进来的数组
     @Input()
-    data: GridModel[];
+    data: StationModel[];
     // 设置右上角的勾是否显示
     toggleCheckbox: boolean = true;
     // 该组件有两种状态，MODULE_STATION是选择模块和站点 STATION是从站点进入到check list
@@ -26,7 +26,7 @@ export class GridComponent implements OnInit {
 
     ngOnInit() { }
 
-    onTap(item: GridModel) {
+    onTap(item: StationModel) {
         if (this.mode == Mode.MODULE_STATION) {
             item.showCheckbox = !item.showCheckbox;
             this.dataChange.emit(item);
@@ -40,6 +40,13 @@ export class GridComponent implements OnInit {
 export class GridModel {
     title: string;
     showCheckbox: boolean;
+}
+
+export class StationModel {
+    title: string;
+    showCheckbox: boolean;
+    stationID: number;
+    headerId: number;
 }
 
 export enum Mode {
