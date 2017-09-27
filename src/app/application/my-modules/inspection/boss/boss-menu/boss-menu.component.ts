@@ -1,5 +1,5 @@
 import { PluginService } from './../../../../../core/services/plugin.service';
-import { IonicPage, NavController } from 'ionic-angular';
+import { IonicPage, NavController, Loading } from 'ionic-angular';
 import { Component, OnInit } from '@angular/core';
 import { BossService } from './../shared/service/boss.service';
 
@@ -20,7 +20,11 @@ export class BossMenuComponent implements OnInit {
     }
 
     async goToReportPage() {
-        let res:any = await this.bossService.getEmployeeSchedule().catch((err:any) => this.plugin.errorDeal(err));
+        let loading = this.plugin.createLoading();
+        loading.present();
+        let res:any = await this.bossService.getEmployeeSchedule().catch((err:any) => {this.plugin.errorDeal(err);return ''});
+        loading.dismiss()
+        if(!res) return;
         res = res.json();
         if(res.length>0) {
             this.navCtrl.push('BossReportComponent',{

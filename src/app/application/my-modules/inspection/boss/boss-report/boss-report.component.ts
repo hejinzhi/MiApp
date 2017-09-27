@@ -4,6 +4,9 @@ import { FormBuilder, FormGroup, FormArray, FormControl } from '@angular/forms';
 
 import { CacheService } from './../../../../../core/services/cache.service';
 import { NgValidatorExtendService } from './../../../../../core/services/ng-validator-extend.service';
+import { PluginService } from './../../../../../core/services/plugin.service';
+import { BossService } from './../shared/service/boss.service';
+
 import * as moment from 'moment'
 
 @IonicPage()
@@ -19,6 +22,9 @@ export class BossReportComponent implements OnInit {
     reportForm: FormGroup;
     className: string = this.constructor.name;
     type: string = 'all';
+    schedule:any[];
+    scheduleType:string;
+    selectSchedule:any;
 
     testAdmin: any = {
         date: "2017-09-14",
@@ -47,16 +53,55 @@ export class BossReportComponent implements OnInit {
         private validExd: NgValidatorExtendService,
         private alertCtrl: AlertController,
         private cacheService: CacheService,
-        private _ngZone: NgZone
+        private _ngZone: NgZone,
+        private plugin: PluginService,
+        private bossService: BossService
     ) { }
 
     ngOnInit() {
         // this.init();
+        let schedule = this.navParams.get('schedule');
         this.admin = this.navParams.get('admin') || false;
+        if(!this.admin && schedule) {
+            this.bindInit(schedule)
+        }
         if (this.admin) {
             this.init(this.testAdmin)
         } else {
             this.checkCache();
+        }
+    }
+
+    changeSchedule() {
+        this.searchNote();
+    }
+
+    /**
+     * 绑定可选择检查项目的select元素的数据
+     * 默认选择数组的第一个检查项目,然后去数据库查找是否已经有记录,有则更新表单
+     * 
+     * @param {*} data 
+     */
+    bindInit(data:any) {
+        this.schedule = data;
+        this.scheduleType = this.schedule[0].NAME_ID;
+        this.searchNote();
+    }
+
+    /**
+     * 去数据库查找是否已经有记录,有则更新表单
+     * 
+     */
+    async searchNote() {
+        this.selectSchedule = this.schedule.filter((i:any) => i.NAME_ID === this.scheduleType)[0];
+        let id  = this.selectSchedule.REPORT_ID;
+        let note;
+        if(+id !== 0) {
+            let loading = this.plugin.createLoading();
+            loading.present();
+            note = await this.bossService.getBossReport(id);
+            loading.dismiss();
+            this.init(note);
         }
     }
 
@@ -105,9 +150,14 @@ export class BossReportComponent implements OnInit {
         }
     }
 
+    /**
+     * 初始化表单
+     * 
+     * @param {*} [work={}] 
+     */
     init(work: any = {}) {
         let date: string = moment(new Date()).format('YYYY-MM-DD');
-        work = work.date ? work : new ReportHead(date, '小明')
+        work = work.date ? work : new ReportHead(date, this.plugin.chineseConv(this.schedule.filter((i:any) => i.NAME_ID === this.scheduleType)[0].PERSON))
         this.reportForm = this.initForm(work);
         this.reportForm.valueChanges.subscribe((value) => {
             this.cacheService.update(this.className, this.type, value);
@@ -128,6 +178,11 @@ export class BossReportComponent implements OnInit {
         }
     }
 
+    /**
+     * 根据已有记录初始化次级表单
+     * 
+     * @param {any[]} lists 
+     */
     attchSubForm(lists: any[]) {
         if (!lists || lists.length < 1) return;
         for (let i = 0; i < lists.length; i++) {
@@ -156,6 +211,12 @@ export class BossReportComponent implements OnInit {
         });
     }
 
+    /**
+     * 初始化次级form
+     * 
+     * @param {*} [work={}]  输入的数据
+     * @param {Function} [cb] hasIssue栏位更改时的钩子函数
+     */
     initSubForm(work: any = {}, cb?: Function) {
         let sub = this.fb.group({
             time: [work.time || moment(new Date()).format('HH:mm'), this.validExd.required()],
@@ -175,6 +236,12 @@ export class BossReportComponent implements OnInit {
         return sub
     }
 
+    /**
+     * 初始化二级form里的可选栏位
+     * 
+     * @param {FormGroup} sub 二级form
+     * @param {{ detail: string, imgs: string[], inCharge: string }} [data] 绑定的数据
+     */
     addSub2Form(sub: FormGroup, data?: { detail: string, imgs: string[], inCharge: string }) {
         data = data || { detail: '', imgs: [], inCharge: '' };
         sub.addControl('detail', new FormControl(data.detail, [this.validExd.required()]));
@@ -183,6 +250,11 @@ export class BossReportComponent implements OnInit {
         return sub;
     }
 
+    /**
+     * 更改出现的问题项
+     * 
+     * @param {boolean} add 是否添加问题项
+     */
     changeIssueCount(add: boolean) {
         let target = this.reportForm.controls['issueCount'];
         let value: string = target.value;
@@ -198,6 +270,12 @@ export class BossReportComponent implements OnInit {
         this.scrollToBottom();
     }
 
+    /**
+     * 隐藏当前二级form前面所有的二级form
+     * 
+     * @param {number} length 当前二级form的序位
+     * @returns 
+     */
     hideOldSub(length: number) {
         if (length < 2) return;
         for (let i = 0; i < length - 1; i++) {
@@ -205,6 +283,10 @@ export class BossReportComponent implements OnInit {
         }
     }
 
+    /**
+     * 隐藏所有的二级form
+     * 
+     */
     hideAll() {
         let listsForm = this.reportForm.get('lists') as FormArray;
         Array.prototype.forEach.call(listsForm.controls, (i: FormGroup) => {
@@ -212,6 +294,10 @@ export class BossReportComponent implements OnInit {
         })
     }
 
+    /**
+     * 滚动到最底
+     * 
+     */
     scrollToBottom() {
         this._ngZone.runOutsideAngular(() => {
             setTimeout(() => {
@@ -221,10 +307,20 @@ export class BossReportComponent implements OnInit {
         })
     }
 
+    /**
+     * 更改当前二级form的是否显示
+     * 
+     * @param {number} i 
+     */
     toggle(i: number) {
         this.reportForm.get('lists').get(i + '')['displayNone'] = !this.reportForm.get('lists').get(i + '')['displayNone'];
     }
 
+    /**
+     * 移除当前二级form
+     * 
+     * @param {number} i 
+     */
     removeSubFrom(i: number) {
         let confirm = this.alertCtrl.create({
             title: `提示`,
@@ -249,8 +345,16 @@ export class BossReportComponent implements OnInit {
 
     }
 
+    /**
+     * 提交
+     * 
+     */
     submit() {
-        console.log(this.reportForm.value);
+        console.log(Object.assign(this.reportForm.value,this.selectSchedule));
+        this.bossService.uploadReport(Object.assign(this.reportForm.value,this.selectSchedule)).then((res) => {
+            console.log(res);
+            console.log(res.json());
+        })
         this.clearCache();
     }
 }

@@ -23,5 +23,12 @@ export class BossConfig {
      * @param {string} {company}
      */
     static getEmployeeSchedule = EnvConfig.baseUrl + 'IPQA/GetEmployeeSchedule?company={company}';
+
+    /**
+     * URL
+     * GET
+     * @param {string} {header_id}
+     */
+    static getBossReport = EnvConfig.baseUrl + 'IPQA/GetReport?header_id={header_id}';
     
 }
