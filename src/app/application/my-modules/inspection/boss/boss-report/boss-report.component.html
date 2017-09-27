@@ -7,6 +7,14 @@
   </ion-navbar>
 </ion-header>
 <ion-content>
+  <ion-list>
+    <ion-item>
+      <ion-label>*检查类型</ion-label>
+      <ion-select [cancelText]="'attendance.cancle' | translate" [okText]="'attendance.confirm' | translate" [(ngModel)]="scheduleType" (ionChange)="changeSchedule()">
+        <ion-option value="{{item.NAME_ID}}" *ngFor="let item of schedule">{{item.INSPECT_NAME}}</ion-option>
+      </ion-select>
+    </ion-item>
+  </ion-list>
   <form [formGroup]="reportForm" *ngIf="reportForm">
     <ion-list>
       <ion-item class="disabled">
@@ -72,16 +80,10 @@
             </ion-item>
             <ion-item *ngIf="reportForm.get('lists').get(i+'').controls['detail']" [class.disabled]="admin">
               <div>附图</div>
-              <sg-photo-view [imgs]="reportForm.get('lists').get(i+'').controls['imgs'].value" [opts]="admin?{addable:false,removeable:false}:{}"
-              (imgsChange)="updateImgs($event,reportForm.get('lists').get(i+'').controls['imgs'])"
-              ></sg-photo-view>
+              <sg-photo-view [opts]="admin?{addable:false,removeable:false}:{}" formControlName="imgs"></sg-photo-view>
             </ion-item>
-            <!-- <ion-item *ngIf="reportForm.get('lists').get(i+'').controls['inCharge']" [class.disabled-label]="admin">
-              <ion-label>*责任人</ion-label>
-              <ion-input type="text" formControlName="inCharge"></ion-input>
-            </ion-item> -->
             <sg-search-colleague *ngIf="reportForm.get('lists').get(i+'').controls['inCharge']" [class.disabled-label]="admin" formControlName="inCharge"
-            [opt]="{formCtr:reportForm.get('lists').get(i+'').controls['inCharge']}">
+              [opt]="{formCtr:reportForm.get('lists').get(i+'').controls['inCharge']}">
             </sg-search-colleague>
             <ion-item *ngIf="reportForm.get('lists').get(i+'').controls['mark']">
               <ion-label>评分</ion-label>

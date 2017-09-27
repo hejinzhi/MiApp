@@ -1,4 +1,4 @@
-import { BossReportState, BossReportModel } from './../store';
+import { BossReportState, BossReportModel, BossReportInsideModel } from './../store';
 import { PluginService } from './../../../../../../core/services/plugin.service';
 import { MyHttpService } from './../../../../../../core/services/myHttp.service';
 import { Injectable } from '@angular/core';
@@ -57,6 +57,21 @@ export class BossService {
     
     uploadReport(data:any) {
       return this.myHttp.post(BossConfig.uploadReport,this.convertReportData(data));
+    }
+
+    async getBossReport(id:string) {
+      let res:any = await this.myHttp.get(BossConfig.getBossReport.replace('{header_id}',id)).catch((err:any) => {this.plugin.errorDeal(err);return ''});
+      if(!res) return;
+      res = res.json();
+      if(res.Header) {
+        return new BossReportInsideModel(res);
+      }
+      return;
+    }
+
+    getEmployeeSchedule() {
+      let company = localStorage.getItem('appCompanyId');
+      return this.myHttp.get(BossConfig.getEmployeeSchedule.replace('{company}',company));
     }
 
 

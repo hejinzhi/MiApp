@@ -1,24 +1,28 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, forwardRef } from '@angular/core';
 import { ModalController, ViewController, ActionSheetController, IonicPage } from 'ionic-angular';
+import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { PluginService } from '../../../core/services/plugin.service';
 
 @Component({
   selector: 'sg-photo-view',
   templateUrl: 'photo-view.component.html',
+  providers: [{ provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => PhotoViewComponent), multi: true, }],
 })
-export class PhotoViewComponent implements OnInit {
+export class PhotoViewComponent implements OnInit, ControlValueAccessor {
+
+  private propagateChange = (_: any) => { };
 
   @Input()
-  set opts(opts:any) {
-    this.myOpts = Object.assign(this.myOpts,opts);
+  set opts(opts: any) {
+    this.myOpts = Object.assign(this.myOpts, opts);
   }
   @Input()
   imgs: string[];
 
-  myOpts={
-    addable: true,
-    scanable: true,
-    removeable: true
+  myOpts = {
+    addable: true,//是否能添加图片
+    scanable: true,//是否进入能浏览图片
+    removeable: true//是否能移除图片
   }
 
   //DATA_URL : 0 ,FILE_URI : 1, NATIVE_URI : 2
@@ -39,7 +43,57 @@ export class PhotoViewComponent implements OnInit {
     } else {
       this.imgs = [];
     }
+    this.bindEventForArray(this.imgs)
   }
+
+  /**
+   * 对能改变数组的方法添加钩子函数
+   * 
+   * @param {any[]} array 
+   */
+  bindEventForArray(array:any[]) {
+    let fun = ['push', 'pop', 'sort', 'reverse', 'unshift', 'shift', 'splice'];
+    fun.forEach((item) =>{
+      let _prototype = Array.prototype[item];
+      let that = this;
+      array[item] = function() {
+        let new_value = _prototype.apply(this,arguments);
+        that.emitChange(this.slice())
+        return new_value;
+      }
+    })
+  }
+
+  /**
+   * 给外部formControl写入数据
+   * 
+   * @param {*} value 
+   */
+  writeValue(value: any) {
+    if (value != undefined) {
+      if (value instanceof Array) {
+        this.imgs = value;
+      } else {
+        this.imgs = [value];
+      }
+      this.bindEventForArray(this.imgs)
+    }
+  }
+
+  /**
+   * 把外面登记的监测change的函数赋值给this.propagateChange
+   * 当内部数据改变时,可使用this.propagateChange(this.imgs.slice())去触发传递出去
+   * @param {*} fn 
+   */
+  registerOnChange(fn: any) {
+    this.propagateChange = fn;
+  }
+
+  /**
+   * 也是一样注册然后调用当 touched 
+   * @param {*} fn 
+   */
+  registerOnTouched(fn:any) { }
 
   /**
    * 添加图片
@@ -87,8 +141,7 @@ export class PhotoViewComponent implements OnInit {
     if (this.destinationType === 0) {
       temp = 'data:image/jpeg;base64,' + temp;
     }
-    this.imgs.push(temp)
-    this.imgsChange.emit(this.imgs);
+    this.imgs.push(temp);
   }
 
   /**
@@ -96,7 +149,7 @@ export class PhotoViewComponent implements OnInit {
    * @param  {number} idx 当前图片的序号
    */
   selectPhoto(idx: number) {
-    if(!this.myOpts.scanable) return
+    if (!this.myOpts.scanable) return
     this.presentProfileModal(idx);
   }
 
@@ -105,10 +158,16 @@ export class PhotoViewComponent implements OnInit {
    * @param  {number} idx 当前图片的序号
    */
   presentProfileModal(idx: number) {
-    let profileModal = this.modalCtrl.create('PhotoDetailComponent', { imgs: this.imgs, idx: idx , removeable: this.myOpts.removeable});
-    profileModal.onDidDismiss(data => {
-      this.imgsChange.emit(this.imgs)
-    });
+    let profileModal = this.modalCtrl.create('PhotoDetailComponent', { imgs: this.imgs, idx: idx, removeable: this.myOpts.removeable });
     profileModal.present();
+  }
+
+  /**
+   * 把change冒泡到外部
+   * 
+   */
+  emitChange(val:any) {
+    this.imgsChange.emit(val);
+    this.propagateChange(val)
   }
 }

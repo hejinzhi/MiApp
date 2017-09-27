@@ -16,5 +16,19 @@ export class BossConfig {
      * 2017-09-25
      */
     static uploadReport = EnvConfig.baseUrl + 'IPQA/UploadReport';
+
+    /**
+     * URL
+     * GET
+     * @param {string} {company}
+     */
+    static getEmployeeSchedule = EnvConfig.baseUrl + 'IPQA/GetEmployeeSchedule?company={company}';
+
+    /**
+     * URL
+     * GET
+     * @param {string} {header_id}
+     */
+    static getBossReport = EnvConfig.baseUrl + 'IPQA/GetReport?header_id={header_id}';
     
 }
