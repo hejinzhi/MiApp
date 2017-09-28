@@ -2,14 +2,14 @@
   <ion-navbar>
     <ion-title>{{'inspection.equipcom.equip_title' | translate }}</ion-title>
     <ion-buttons end>
-      <button ion-button icon-only >
+      <button ion-button icon-only>
           <ion-icon name="add"></ion-icon>
         </button>
     </ion-buttons>
   </ion-navbar>
 </ion-header>
 <ion-content>
-  <form [formGroup]="formModel" *ngIf="formModel">
+  <form [formGroup]="formModel" *ngIf="formModel" (ngSubmit)="saveForm()">
     <ion-list>
       <ion-item>
         <ion-label col-4>*{{'inspection.equipcom.machine_no' | translate }}:</ion-label>
@@ -25,13 +25,13 @@
       </ion-item>
       <ion-item>
         <ion-label col-4>*{{'inspection.equipcom.location1' | translate }}:</ion-label>
-        <ion-multi-picker class="location" formControlName="location1" item-content [multiPickerColumns]="locations" [cancelText]="'attendance.cancle' | translate"
+        <ion-multi-picker col-8 class="location" formControlName="location1" item-content [multiPickerColumns]="locations" [cancelText]="'attendance.cancle' | translate"
           [doneText]="'attendance.confirm' | translate" [separator]="'_'"></ion-multi-picker>
         <!-- <ion-input formControlName="location1"></ion-input> -->
       </ion-item>
       <ion-item>
         <ion-label col-4>*{{'inspection.equipcom.location4' | translate }}:</ion-label>
-        <ion-input formControlName="location4"></ion-input>
+        <ion-input col-8 formControlName="location4"></ion-input>
       </ion-item>
       <ion-item>
         <ion-label col-4>*{{'inspection.equipcom.production_date' | translate }}:</ion-label>
@@ -43,35 +43,34 @@
         <ion-datetime formControlName="effective_date" displayFormat="YYYY年MM月" pickerFormat="YYYY MM" [cancelText]="'attendance.cancle' | translate"
           [doneText]="'attendance.confirm' | translate" min="2000" [max]="selectMaxYear"></ion-datetime>
       </ion-item>
-
-        <!-- <ion-label col-4>*{{'inspection.equipcom.owner_empno' | translate }}:</ion-label>
-        <ion-input formControlName="owner_empno"></ion-input> -->
-        <sg-search-colleague  *ngIf="formModel.controls['owner_empno']" [opt]="{formCtr:formModel.controls['owner_empno'], label:'inspection.equipcom.owner_empno'}" formControlName="owner_empno"></sg-search-colleague>
+      <sg-search-colleague *ngIf="formModel.controls['owner_empno']" [opt]="{formCtr:formModel.controls['owner_empno'], label:'inspection.equipcom.owner_empno'}"
+        formControlName="owner_empno"></sg-search-colleague>
       <ion-item>
         <ion-label col-4>*{{'inspection.equipcom.name_id' | translate }}:</ion-label>
-        <ion-input formControlName="name_id"></ion-input>
+        <ion-select col-8 formControlName="name_id" [cancelText]="'attendance.cancle' | translate" [okText]="'attendance.confirm' | translate">
+          <ion-option *ngFor="let item of mrinamelist" [value]="item.NAME_ID">{{item.INSPECT_NAME}}</ion-option>
+        </ion-select>
       </ion-item>
       <ion-item>
         <ion-label col-4>{{'inspection.equipcom.disable_date' | translate }}:</ion-label>
         <ion-datetime formControlName="disable_date" displayFormat="YYYY年MM月DD日" pickerFormat="YYYY MM DD" [cancelText]="'attendance.cancle' | translate"
           [doneText]="'attendance.confirm' | translate"></ion-datetime>
       </ion-item>
+      <ion-grid>
+        <ion-row>
+          <ion-col width-50>
+            <ion-buttons left>
+              <button ion-button type="button" (tap)="reSet(formModel.value.machine_id)"><span *ngIf="formModel.value.machine_id==0" >{{'attendance.reset' | translate}}</span><span *ngIf="formModel.value.machine_id>0">{{'attendance.new' | translate}}</span></button>
+            </ion-buttons>
+          </ion-col>
+          <ion-col width-50>
+            <ion-buttons right>
+              <button ion-button class="submit" type="submit" [disabled]="!formModel.valid">{{'attendance.save' | translate}}</button>
+            </ion-buttons>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
     </ion-list>
-
-    <ion-grid>
-      <ion-row>
-        <ion-col width-50>
-          <ion-buttons left>
-            <button ion-button type="button" >{{'attendance.reset' | translate}}</button>
-          </ion-buttons>
-        </ion-col>
-        <ion-col width-50>
-          <ion-buttons right>
-            <button ion-button class="submit" type="submit" [disabled]="!formModel.valid">{{'attendance.save' | translate}}</button>
-          </ion-buttons>
-        </ion-col>
-      </ion-row>
-    </ion-grid>
   </form>
   <button ion-button (tap)="showdetail()">查看VALUE</button>
 </ion-content>

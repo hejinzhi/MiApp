@@ -451,5 +451,7 @@
     "equip2": "设备巡检"
   },
   "change_to": "已更改为",
-  "submit_success":"提交成功"
+  "submit_success":"提交成功",
+  "reset_title": "确定要重置吗?",
+  "new_title": "确定要新建吗?"
 }
