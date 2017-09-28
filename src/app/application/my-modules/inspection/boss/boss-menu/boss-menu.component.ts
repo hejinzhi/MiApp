@@ -1,5 +1,7 @@
-import { IonicPage, NavController } from 'ionic-angular';
+import { PluginService } from './../../../../../core/services/plugin.service';
+import { IonicPage, NavController, Loading } from 'ionic-angular';
 import { Component, OnInit } from '@angular/core';
+import { BossService } from './../shared/service/boss.service';
 
 @IonicPage()
 @Component({
@@ -9,14 +11,29 @@ import { Component, OnInit } from '@angular/core';
 export class BossMenuComponent implements OnInit {
     translateTexts: any;
     constructor(
-        private navCtrl: NavController
+        private navCtrl: NavController,
+        private bossService: BossService,
+        private plugin: PluginService
     ) { }
 
     async ngOnInit() {
     }
 
-    goToReportPage() {
-        this.navCtrl.push('BossReportComponent');
+    async goToReportPage() {
+        let loading = this.plugin.createLoading();
+        loading.present();
+        let res:any = await this.bossService.getEmployeeSchedule().catch((err:any) => {this.plugin.errorDeal(err);return ''});
+        loading.dismiss()
+        if(!res) return;
+        res = res.json();
+        if(res.length>0) {
+            this.navCtrl.push('BossReportComponent',{
+                schedule:res
+            });
+        } else {
+            this.plugin.showToast('没找到巡检安排');
+        }
+        
     }
 
     goToCheckListPage() {

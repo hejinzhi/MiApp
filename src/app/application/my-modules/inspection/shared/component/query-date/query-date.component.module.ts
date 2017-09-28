@@ -3,7 +3,6 @@ import { QueryDateComponent } from './query-date.component';
 import { NgModule } from '@angular/core';
 import { IonicPageModule } from 'ionic-angular';
 import { TranslateModule } from '@ngx-translate/core';
-import { CommonService } from '../../service/common.service';
 
 
 @NgModule({
@@ -14,7 +13,7 @@ import { CommonService } from '../../service/common.service';
     ],
     exports: [QueryDateComponent],
     declarations: [QueryDateComponent],
-    providers: [CommonService],
+    providers: [],
     entryComponents: [
         QueryDateComponent
     ]

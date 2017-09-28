@@ -7,6 +7,7 @@ import { FormBuilder, FormGroup, FormArray, FormControl, Validators } from '@ang
 import { NgValidatorExtendService } from './../../../../../core/services/ng-validator-extend.service';
 import * as moment from 'moment'
 import { BossService } from '../shared/service/boss.service';
+import { TranslateService } from '@ngx-translate/core';
 
 @IonicPage()
 @Component({
@@ -15,6 +16,7 @@ import { BossService } from '../shared/service/boss.service';
 })
 
 export class BossScheduleComponent implements OnInit {
+    translateTexts: any;
 
     scheduleForm: FormGroup;
 
@@ -33,6 +35,7 @@ export class BossScheduleComponent implements OnInit {
         private validExd: NgValidatorExtendService,
         private bossService: BossService,
         private plugin: PluginService,
+        private translate: TranslateService,
     ) { }
 
     async  ngOnInit() {
@@ -43,6 +46,10 @@ export class BossScheduleComponent implements OnInit {
         this.locationlist = res1.json();
         let res2 = await this.bossService.getMriWeek(1, 8);
         this.weeklist = res2.json();
+
+        this.translate.stream(['submit_success']).subscribe((res) => {
+            this.translateTexts = res;
+        })
     }
 
     init() {
@@ -233,7 +240,6 @@ export class BossScheduleComponent implements OnInit {
             send_header.from_date = this.scheduleForm.value.schedules[0].scheduledate;
             send_header.to_date = this.scheduleForm.value.schedules[0].scheduledate;
             send_header.week = '';
-            send_header.schedule_date = '';
         }
         send_header.from_time = this.from_time;
         send_header.to_time = this.to_time;
@@ -248,6 +254,7 @@ export class BossScheduleComponent implements OnInit {
                 send_line_group.push({
                     "SCHEDULE_HEADER_ID": send_line.schedule_header_id,
                     "SCHEDULE_LINE_ID": send_line.schedule_line_id,
+                    "LINE_NUM": j + 1,
                     "EMPNO": send_line.empno,
                     "AREA": send_line.area
                 });
@@ -255,8 +262,8 @@ export class BossScheduleComponent implements OnInit {
             schedules.push({
                 "Header": {
                     "SCHEDULE_HEADER_ID": send_header.schedule_header_id,
-                    "SCHEDULE_COMPANY_NAME": send_header.company_name,
-                    "SCHEDULE_NAME_ID": send_header.name_id,
+                    "COMPANY_NAME": send_header.company_name,
+                    "NAME_ID": send_header.name_id,
                     "SCHEDULE_NAME": send_header.schedule_name,
                     "SCHEDULE_DATE": send_header.schedule_date,
                     "WEEK": send_header.week,
@@ -264,7 +271,7 @@ export class BossScheduleComponent implements OnInit {
                     "TO_DATE": send_header.to_date,
                     "FROM_TIME": send_header.from_time,
                     "TO_TIME": send_header.to_time,
-                    "ENABLE_FLAG": send_header.enabled_flag,
+                    "ENABLED": send_header.enabled_flag,
                 },
                 "Lines": send_line_group
             });
@@ -281,7 +288,13 @@ export class BossScheduleComponent implements OnInit {
         loading.present();
         let res: any = await this.bossService.saveSchedule(schedules_data);
         loading.dismiss();
-        console.log(res,422);
+        console.log(res, 422);
+
+        if (!res.status) {
+            // this.errTip = res.content;
+        } else {
+            this.plugin.showToast(this.translateTexts['submit_success']);
+        };
     }
 }
 
