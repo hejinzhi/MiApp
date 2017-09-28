@@ -1,4 +1,3 @@
-import { serverUrl } from './../../../../../../../plugins/code-push/test/acquisition-rest-mock';
 import { LocalStorageService } from './../../../../../core/services/localStorage.service';
 import { Observable } from 'rxjs/Observable';
 import { InspectionService } from './../shared/service/inspection.service';
@@ -74,36 +73,37 @@ export class ExceptionDetailComponent implements OnInit {
             let formData = this.navParams.get('formData');
             console.log(formData);
             this.formModel = this.fb.group({
-                checkDate: [formData.checkDate, Validators.required],
-                checkPerson: [formData.checkPerson, Validators.required],
-                banbie: [formData.banbie, Validators.required],
-                address: [formData.address, Validators.required],
-                checklist_cn: [formData.checklist_cn, Validators.required],
-                exceptionDesc: [formData.exceptionDesc, Validators.required],
+                checkDate: [formData.INSPECT_DATE, Validators.required],
+                checkPerson: [formData.INSPECTOR, Validators.required],
+                banbie: [formData.DUTY_KIND, Validators.required],
+                address: [formData.LOCATION, Validators.required],
+                checklist_cn: [formData.CHECK_LIST_CN, Validators.required],
+                exceptionDesc: [formData.PROBLEM_DESC, Validators.required],
                 // pictures: this.fb.array([]),
                 handler: ['', Validators.required],
             });
         } else if (this.fromPage === 'handler') {
             let formData = this.navParams.get('formData');
-            // this.formModel = this.fb.group({
-            //     checkDate: [{ value: formData.INSPECT_DATE, disabled: true }, Validators.required],
-            //     checkPerson: [{ value: formData.INSPECTOR, disabled: true }, Validators.required],
-            //     banbie: [{ value: formData.DUTY_KIND, disabled: true }, Validators.required],
-            //     address: [{ value: formData.LOCATION, disabled: true }, Validators.required],
-            //     checklist_cn: [{ value: formData.CHECK_LIST_CN, disabled: true }, Validators.required],
-            //     exceptionDesc: [{ value: formData.PROBLEM_DESC, disabled: true }, Validators.required],
-            //     // pictures: this.fb.array([]),
-            //     handler: [{ value: '', disabled: true }, Validators.required],
-            //     actionDesc: ['', Validators.required],
-            //     actionStatus: ['', Validators.required],
-            //     // actionPictures: this.fb.array([]),
-            //     actionDate: ['', Validators.required],
-            // });
-            // this.photoViewOptions = {
-            //     addable: false,
-            //     removeable: false,
-            //     scanable: true
-            // }
+            console.log(formData);
+            this.formModel = this.fb.group({
+                checkDate: [{ value: formData.INSPECT_DATE, disabled: true }, Validators.required],
+                checkPerson: [{ value: formData.INSPECTOR, disabled: true }, Validators.required],
+                banbie: [{ value: formData.DUTY_KIND, disabled: true }, Validators.required],
+                address: [{ value: formData.LOCATION, disabled: true }, Validators.required],
+                checklist_cn: [{ value: formData.CHECK_LIST_CN, disabled: true }, Validators.required],
+                exceptionDesc: [{ value: formData.PROBLEM_DESC, disabled: true }, Validators.required],
+                // pictures: this.fb.array([]),
+                handler: [{ value: '', disabled: true }, Validators.required],
+                actionDesc: ['', Validators.required],
+                actionStatus: ['', Validators.required],
+                // actionPictures: this.fb.array([]),
+                actionDate: ['', Validators.required],
+            });
+            this.photoViewOptions = {
+                addable: false,
+                removeable: false,
+                scanable: true
+            }
             // this.images = ['https://ss0.bdstatic.com/5aV1bjqh_Q23odCf/static/superman/img/logo/bd_logo1_31bdc765.png'];
         }
     }
