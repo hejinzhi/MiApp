@@ -39,13 +39,11 @@ export class BossService {
 
 
     saveSchedule(data:any){
-
         return this.myHttp.post(BossConfig.saveSchedule, data).then((res) => {
-            console.log(res.json(),433);
           return Promise.resolve({ content: '', status: true })
         }).catch((err) => {
           console.log(err);
-          let errTip = this.errorDeal(err);
+          let errTip = this.plugin.errorDeal(err);
           return Promise.resolve({ content: errTip, status: false })
         });
         
@@ -73,33 +71,5 @@ export class BossService {
       let company = localStorage.getItem('appCompanyId');
       return this.myHttp.get(BossConfig.getEmployeeSchedule.replace('{company}',company));
     }
-
-
-    errorDeal(err: any, showAlert: boolean = false) {
-        let errTip = '';
-        switch (err.status) {
-          case 404:
-            this.plugin.showToast(this.translateTexts['not_found']);
-            break;
-          case 400:
-            // if (showAlert) {
-            //   this.plugin.createBasicAlert(this.chineseConv(err.json().ExceptionMessage));
-            // } else {
-            //   this.plugin.showToast(this.chineseConv(err.json().ExceptionMessage));
-            // }
-            errTip = this.plugin.chineseConv(err.json().ExceptionMessage);
-            break;
-          case 0:
-            this.plugin.showToast(this.translateTexts['http_error1']);
-            break;
-          case 500:
-            this.plugin.showToast(this.translateTexts['http_error2']);
-            break;
-          default:
-            this.plugin.showToast(this.translateTexts['http_error3'] + err.status);
-            break;
-        }
-        return errTip
-      }
 
 }

@@ -1,9 +1,25 @@
+import { PluginService } from './../../../../../../core/services/plugin.service';
+import { MyHttpService } from './../../../../../../core/services/myHttp.service';
 import { Injectable } from '@angular/core';
+import { EquipConfig } from '../config/equip.config';
 
 @Injectable()
 export class EquipService {
 
-    constructor() { }
+    constructor(
+        private myHttp: MyHttpService,
+        private plugin: PluginService,
+    ) { }
+
+    saveMachine(data: any) {
+        return this.myHttp.post(EquipConfig.UploadMachine, data).then((res) => {
+            return Promise.resolve({ content: res.json(), status: true })
+        }).catch((err) => {
+            console.log(err);
+            let errTip = this.plugin.errorDeal(err);
+            return Promise.resolve({ content: errTip, status: false })
+        });
+    }
 
     locations = [
         {
@@ -42,7 +58,7 @@ export class EquipService {
 
 export class Machine {
     constructor(
-        public machine_id: number, 
+        public machine_id: number,
         public machine_no: string,
         public company_name: string,
         public description: string,
