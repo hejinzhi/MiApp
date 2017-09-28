@@ -39,6 +39,28 @@ export class CommonService {
         confirm.present();
     }
 
+    showOptionConfirm(title: string, msg: string, cb: any) {
+        let confirm = this.alertCtrl.create({
+            title: title,
+            message: msg,
+            buttons: [
+                {
+                    text: 'Cancel',
+                    handler: () => {
+
+                    }
+                },
+                {
+                    text: 'OK',
+                    handler: () => {
+                        cb();
+                    }
+                }
+            ]
+        });
+        confirm.present();
+    }
+
 
     getToday() {
         let newDate = new Date();

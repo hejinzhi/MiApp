@@ -23,4 +23,6 @@ export class InspectionConfig {
 
     static assignOwnerUrl = EnvConfig.baseUrl + 'IPQA/AssignOwner';
 
+    static handleProblemUrl = EnvConfig.baseUrl + 'IPQA/HandleProblem';
+
 }

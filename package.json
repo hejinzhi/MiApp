@@ -74,7 +74,8 @@
         "phonegap-plugin-barcodescanner": "~6.0.6",
         "rxjs": "5.4.0",
         "sw-toolbox": "3.6.0",
-        "zone.js": "^0.8.12"
+        "zone.js": "^0.8.12",
+        "cordova-plugin-code-push": "~1.9.4-beta"
     },
     "devDependencies": {
         "@ionic/app-scripts": "1.3.0",

@@ -87,11 +87,11 @@ export class InspectionService {
         let localExceptions: ExceptionModel[] = JSON.parse(localStorage.getItem(this.getLocalStorageExceptionName(stationID)));
         if (localExceptions && localExceptions.length > 0) {
             for (let i = 0; i < localExceptions.length; i++) {
-                if (localExceptions[i].checkID === checklistID) {
+                if (localExceptions[i].CHECK_ID === checklistID) {
                     return {
                         PROBLEM_FLAG: 'Y',
-                        PROBLEM_DESC: localExceptions[i].exceptionDesc,
-                        PROBLEM_PICTURES: localExceptions[i].pictures
+                        PROBLEM_DESC: localExceptions[i].PROBLEM_DESC,
+                        PROBLEM_PICTURES: localExceptions[i].PROBLEM_PICTURES
                     };
                 }
             }
@@ -223,6 +223,7 @@ export class InspectionService {
 
     }
 
+    // 上传问题图片
     findAndUploadPicture(stationId: number, reportData: ReportModel) {
         reportData.Lines.forEach(async (line, index) => {
             if (line.PROBLEM_FLAG === 'Y') {
@@ -241,6 +242,7 @@ export class InspectionService {
         });
     }
 
+    // 上传问题图片
     async uploadPictures(stationId: number, headerId: number, reportData?: ReportModel) {
         if (reportData) {
             this.findAndUploadPicture(stationId, reportData);
@@ -250,6 +252,11 @@ export class InspectionService {
             this.findAndUploadPicture(stationId, reportData);
         }
 
+    }
+
+    // 上传处理后照片
+    async uploadActionPicture(lineId: number, picture: string) {
+        await this.inspectionCommonService.uploadActionPicture({ LINE_ID: lineId, PICTURE: picture });
     }
 
     async postDataFromLocal(banbie: string, checkList: Checklist[], lineName: string, stationName: string) {
@@ -320,6 +327,10 @@ export class InspectionService {
 
     assignOwner(obj: { PROBLEM_STATUS: string, OWNER_EMPNO: string, LINE_ID: number }) {
         return this.myHttp.post(InspectionConfig.assignOwnerUrl, obj);
+    }
+
+    handleProblem(obj: { PROBLEM_STATUS: string, ACTION_DESC: string, ACTION_DATE: string, ACTION_STATUS: string, SCORE: string, LINE_ID: number }) {
+        return this.myHttp.post(InspectionConfig.handleProblemUrl, obj);
     }
 
 

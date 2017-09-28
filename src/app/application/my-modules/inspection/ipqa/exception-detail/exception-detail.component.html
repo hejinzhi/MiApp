@@ -18,7 +18,7 @@
         </div>
         <div class="right-col">
           <ion-item class="my-item">
-            <ion-datetime type="datetime-local" displayFormat="YYYY/MM/DD" formControlName="checkDate" [class.my-invalid]="formModel.get('checkDate').invalid && formModel.get('checkDate').touched"></ion-datetime>
+            <ion-datetime type="datetime-local" displayFormat="YYYY/MM/DD" formControlName="INSPECT_DATE" [class.my-invalid]="formModel.get('INSPECT_DATE').invalid && formModel.get('checkDate').touched"></ion-datetime>
           </ion-item>
         </div>
       </div>
@@ -27,7 +27,7 @@
           <ion-label>*{{'inspection.ipqa.banbie' | translate}}:</ion-label>
         </div>
         <div class="right-col">
-          <ion-input type="text" formControlName="banbie" [class.my-invalid]="formModel.get('banbie').invalid && formModel.get('banbie').touched"></ion-input>
+          <ion-input type="text" formControlName="DUTY_KIND" [class.my-invalid]="formModel.get('DUTY_KIND').invalid && formModel.get('DUTY_KIND').touched"></ion-input>
         </div>
       </div>
       <div class="my-row">
@@ -35,7 +35,7 @@
           <ion-label>*{{'inspection.ipqa.line' | translate}}:</ion-label>
         </div>
         <div class="right-col">
-          <ion-input type="text" formControlName="address" [class.my-invalid]="formModel.get('address').invalid && formModel.get('address').touched">
+          <ion-input type="text" formControlName="LOCATION" [class.my-invalid]="formModel.get('LOCATION').invalid && formModel.get('LOCATION').touched">
           </ion-input>
         </div>
       </div>
@@ -44,7 +44,7 @@
           <ion-label>*{{'inspection.ipqa.inspector' | translate}}:</ion-label>
         </div>
         <div class="right-col">
-          <sg-search-emp formControlName="checkPerson" [opt]="{formCtr:formModel.get('checkPerson')}"></sg-search-emp>
+          <sg-search-emp formControlName="INSPECTOR" [opt]="{formCtr:formModel.get('INSPECTOR')}"></sg-search-emp>
           <!-- <ion-input type="text" formControlName="checkPerson" [class.my-invalid]="formModel.get('checkPerson').invalid && formModel.get('checkPerson').touched"></ion-input> -->
           <!-- <div formControlName="checkPerson">
             <div *ngFor="let person of formModel.get('checkPersons').controls;let i=index">
@@ -64,7 +64,7 @@
           <ion-label>*{{'inspection.ipqa.checklist' | translate}}:</ion-label>
         </div>
         <div class="right-col">
-          <ion-textarea formControlName="checklist_cn" cols="10" rows="4" [class.my-invalid]="formModel.get('checklist_cn').invalid && formModel.get('checklist_cn').touched"></ion-textarea>
+          <ion-textarea formControlName="CHECK_LIST_CN" cols="10" rows="4" [class.my-invalid]="formModel.get('CHECK_LIST_CN').invalid && formModel.get('CHECK_LIST_CN').touched"></ion-textarea>
         </div>
       </div>
       <div class="my-row">
@@ -72,7 +72,7 @@
           <ion-label>*{{'inspection.ipqa.exceptionDesc' | translate}}:</ion-label>
         </div>
         <div class="right-col">
-          <ion-textarea formControlName="exceptionDesc" cols="10" rows="4" [class.my-invalid]="formModel.get('exceptionDesc').invalid && formModel.get('exceptionDesc').touched"></ion-textarea>
+          <ion-textarea formControlName="PROBLEM_DESC" cols="10" rows="4" [class.my-invalid]="formModel.get('PROBLEM_DESC').invalid && formModel.get('PROBLEM_DESC').touched"></ion-textarea>
         </div>
       </div>
       <div class="my-row">
@@ -96,9 +96,9 @@
         <div class="right-col">
           <!-- <sg-search-emp formControlName="handler" [opt]="{formCtr:formModel.get('handler')}"></sg-search-emp> -->
           <div class="plus">
-            <sg-search-emp formControlName="handler" [opt]="{formCtr:formModel.get('handler')}"></sg-search-emp>
-            <div class="plus-img" *ngIf="fromPage === 'handler'">
-              <span class="iconfontyyy" (tap)="addCheckPerson()">&#xe633;</span>
+            <sg-search-emp formControlName="OWNER_EMPNO" [opt]="{formCtr:formModel.get('OWNER_EMPNO')}"></sg-search-emp>
+            <div class="plus-img" *ngIf="fromPage === 'handler'" (tap)="resetOwner()">
+              <span class="iconfontyyy">&#xe633;</span>
             </div>
           </div>
         </div>
@@ -108,7 +108,7 @@
           <ion-label>*{{'inspection.ipqa.actionDesc' | translate}}:</ion-label>
         </div>
         <div class="right-col">
-          <ion-textarea formControlName="actionDesc" cols="10" rows="4" [class.my-invalid]="formModel.get('actionDesc').invalid && formModel.get('actionDesc').touched"></ion-textarea>
+          <ion-textarea formControlName="ACTION_DESC" cols="10" rows="4" [class.my-invalid]="formModel.get('ACTION_DESC').invalid && formModel.get('ACTION_DESC').touched"></ion-textarea>
         </div>
       </div>
       <div class="my-row" *ngIf="fromPage === 'handler'">
@@ -116,7 +116,7 @@
           <ion-label>*{{'inspection.ipqa.actionStatus' | translate}}:</ion-label>
         </div>
         <div class="right-col">
-          <ion-textarea formControlName="actionStatus" cols="10" rows="4" [class.my-invalid]="formModel.get('actionStatus').invalid && formModel.get('actionStatus').touched"></ion-textarea>
+          <ion-textarea formControlName="ACTION_STATUS" cols="10" rows="4" [class.my-invalid]="formModel.get('ACTION_STATUS').invalid && formModel.get('ACTION_STATUS').touched"></ion-textarea>
         </div>
       </div>
       <div class="my-row" *ngIf="fromPage === 'handler'">
@@ -124,7 +124,7 @@
           <ion-label>{{'inspection.ipqa.actionPictures' | translate}}:</ion-label>
         </div>
         <div class="right-col">
-          <sg-photo-view destinationType=1></sg-photo-view>
+          <sg-photo-view [imgs]="actionPictures" (imgsChange)="getActionPicture($event)"></sg-photo-view>
         </div>
       </div>
       <div class="my-row" *ngIf="fromPage === 'handler'">
@@ -133,7 +133,7 @@
         </div>
         <div class="right-col">
           <ion-item class="my-item">
-            <ion-datetime type="datetime-local" displayFormat="YYYY/MM/DD" formControlName="actionDate" [class.my-invalid]="formModel.get('actionDate').invalid && formModel.get('actionDate').touched"></ion-datetime>
+            <ion-datetime type="datetime-local" displayFormat="YYYY/MM/DD" formControlName="ACTION_DATE" [class.my-invalid]="formModel.get('ACTION_DATE').invalid && formModel.get('ACTION_DATE').touched"></ion-datetime>
           </ion-item>
         </div>
       </div>

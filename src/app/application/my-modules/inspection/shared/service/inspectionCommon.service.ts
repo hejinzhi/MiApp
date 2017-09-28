@@ -21,8 +21,14 @@ export class InspectionCommonService {
         return this.myHttp.get(CommonConfig.getReportDate + `?header_id=${headerId}`);
     }
 
+    // 上传问题照片
     uploadPicture(picture: { LINE_ID: number, PICTURE: string }) {
         return this.myHttp.post(CommonConfig.uploadPicture, picture);
+    }
+
+    // 上传处理后图片
+    uploadActionPicture(picture: { LINE_ID: number, PICTURE: string }) {
+        return this.myHttp.post(CommonConfig.uploadActionPicture, picture);
     }
 
 
