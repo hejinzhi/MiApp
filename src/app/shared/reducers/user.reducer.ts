@@ -37,8 +37,6 @@ export function userReducer(state = initialState, action: user.UserActions): Use
         case user.USER_CHINESECOV :
             return Object.assign(state, action.payload );
         case user.USER_CLEAR:
-        console.log(444);
-        
             localStorage.removeItem('currentUser')
             return new UserModel('','');
         default:

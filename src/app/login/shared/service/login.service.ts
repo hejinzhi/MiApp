@@ -103,7 +103,7 @@ export class LoginService {
             this.currentUser.mobile = user.MOBILE;
             this.currentUser.email = user.EMAIL;
             this.currentUser.telephone = user.TELEPHONE;
-            this.store$.dispatch(new User_Login(this.currentUser));
+            this.store$.dispatch(new User_Login(JSON.parse(this.pluginService.chineseConv(this.currentUser))));
 
             if (localStorage.getItem('appCompanyId')) {
                 EnvConfig.companyID = localStorage.getItem('appCompanyId');
