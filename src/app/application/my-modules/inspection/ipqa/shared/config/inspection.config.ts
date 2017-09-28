@@ -19,5 +19,10 @@ export class InspectionConfig {
 
     static getEmp = EnvConfig.baseUrl + 'OffDuty/GetOffDutyAgent';
 
+    static getExcReportDataUrl = EnvConfig.baseUrl + 'IPQA/GetExcReportData';
+
+    static assignOwnerUrl = EnvConfig.baseUrl + 'IPQA/AssignOwner';
+
+    static handleProblemUrl = EnvConfig.baseUrl + 'IPQA/HandleProblem';
 
 }

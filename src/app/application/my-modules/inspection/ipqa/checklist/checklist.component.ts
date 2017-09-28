@@ -48,7 +48,6 @@ export class ChecklistComponent implements OnInit {
         private commonService: CommonService,
         private translate: TranslateService,
         private localStorage: LocalStorageService,
-        private inspectionCommonService: InspectionCommonService
     ) { }
 
     async ngOnInit() {
@@ -67,30 +66,16 @@ export class ChecklistComponent implements OnInit {
             this.translateText.night = res['inspection.ipqa.night'];
         });
 
-        let res = await this.inspectionService.getCheckListByLineStation(EnvConfig.companyID, this.lineId, this.stationId);
-        this.checkList = res.json();
-        this.checkList.forEach((l) => {
-            this.reset.push({ no: l.LINE_NUM, reset: false });
-        });
-
         // 设置本地存储的名字，规则是STATION+STATION_ID+当前日期+STEP3  (STEP3是异常页面,STEP2是checklist页面，STEP1是站点页面)
         this.localStorageCheckListName = this.inspectionService.getLocalStorageCheckListName(this.stationId);
-        // this.localStorageStationName = 'LINE' + this.lineId + this.inspectionService.getToday();
         this.localStorageStationName = this.inspectionService.getLocalStorageStationName(this.lineId);
-        // 读取本地数据，如果有就按本地数据赋值
-        let localData: Checklist[] = this.getItem(this.localStorageCheckListName);
-        if (localData) {
-            for (let i = 0; i < localData.length; i++) {
-                for (let j = 0; j < this.checkList.length; j++) {
-                    if (localData[i].CHECK_ID === this.checkList[j].CHECK_ID) {
-                        this.checkList[j].VALUE = localData[i].VALUE;
-                        break;
-                    }
-                }
-            }
-        }
 
-        this.banbie = await this.getBanBie();
+
+        let res = await this.inspectionService.initCheckList(this.lineId, this.stationId, this.localStorageCheckListName);
+        this.checkList = res.checkList;
+        this.reset = res.reset;
+
+        this.banbie = await this.inspectionService.getBanBie();
 
 
     }
@@ -185,185 +170,36 @@ export class ChecklistComponent implements OnInit {
             }
         }
         if (allCheck) {
-            let headerId: number = 0; // 记录post数据后服务器返回的header id，用于判断数据是否已经成功post
-            // let localStation = this.localStorage.getItem(this.localStorageStationName);
-            let localStation = this.getLocalStationById(this.stationId);
-            if (localStation && localStation.headerId > 0) {
-                try {
-                    let res = await this.inspectionCommonService.getReportData(localStation.headerId);
-                    let dataFromServer: ReportModel = res.json();
-                    if (dataFromServer) {
-                        headerId = await this.updateAndPostDate(dataFromServer);
-                        await this.uploadPictures(this.stationId, headerId, dataFromServer);
-                    } else {
-                        headerId = await this.postDataFromLocal();
-                        await this.uploadPictures(this.stationId, headerId);
-                    }
-                } catch (e) {
-                    headerId = await this.postDataFromLocal();
-                    await this.uploadPictures(this.stationId, headerId);
-                }
-
+            let headerId: number = 0;
+            if (!this.inspectionService.hasNoNetwork()) {
+                this.commonService.showLoading();
+                headerId = await this.inspectionService.postDataToServer(this.stationId, this.localStorageStationName, this.banbie, this.checkList, this.lineName, this.station.title);
+                this.commonService.hideLoading();
+                this.station.showCheckbox = true;
+                this.setStationItem(this.localStorageStationName,
+                    { title: this.station.title, showCheckbox: this.station.showCheckbox, stationID: this.stationId, headerId: headerId });
+                this.navCtrl.pop();
             } else {
-                headerId = await this.postDataFromLocal();
-                await this.uploadPictures(this.stationId, headerId);
+                this.commonService.showConfirm('提示', '当前无可用网络，数据暂存在本地，请连接网络后再提交。', () => {
+                    this.station.showCheckbox = true;
+                    this.setStationItem(this.localStorageStationName,
+                        { title: this.station.title, showCheckbox: this.station.showCheckbox, stationID: this.stationId, headerId: headerId });
+                    this.navCtrl.pop();
+                });
             }
 
-
-            this.station.showCheckbox = true;
-            this.setStationItem(this.localStorageStationName,
-                { title: this.station.title, showCheckbox: this.station.showCheckbox, stationID: this.stationId, headerId: headerId });
-            this.navCtrl.pop();
-        }
-        // console.log(this.checkList);
-        // console.log(await this.combineIpqaReportObj());
-    }
-
-    async uploadPictures(stationId: number, headerId: number, reportData?: ReportModel) {
-        if (reportData) {
-            this.findAndUploadPicture(stationId, reportData);
-        } else {
-            let res = await this.inspectionCommonService.getReportData(headerId);
-            let reportData: ReportModel = res.json();
-            this.findAndUploadPicture(stationId, reportData);
-            // reportData.Lines.forEach((line,index)=>{
-            //     if(line.PROBLEM_FLAG === 'Y'){
-            //        let res = this.inspectionService.getExceptionDetail(stationId,line.CHECK_ID);
-            //        if(res.PROBLEM_PICTURES.length > 0){
-            //            res.PROBLEM_PICTURES.forEach((img)=>{
-            //             try{
-            //                 this.inspectionCommonService.uploadPicture({LINE_ID:line.LINE_ID,PICTURE:img});
-            //             }catch(e){
-            //                 console.log('Upload images fail!',e);
-            //             }
-            //            });
-            //        }
-            //     }
-            // });
-        }
-
-    }
-
-    findAndUploadPicture(stationId: number, reportData: ReportModel) {
-        reportData.Lines.forEach(async (line, index) => {
-            if (line.PROBLEM_FLAG === 'Y') {
-                let res = this.inspectionService.getExceptionDetail(stationId, line.CHECK_ID);
-                if (res.PROBLEM_PICTURES.length > 0) {
-                    // res.PROBLEM_PICTURES.forEach(async (img) => {
-                    //     img = img.replace('data:image/jpeg;base64,', '');
-                    //     try {
-                    //         await this.inspectionCommonService.uploadPicture({ LINE_ID: line.LINE_ID, PICTURE: img });
-                    //     } catch (e) {
-                    //         console.log('Upload images fail!', e);
-                    //     }
-                    // });
-                    for (let i = 0; i < res.PROBLEM_PICTURES.length; i++) {
-                        let img = res.PROBLEM_PICTURES[i].replace('data:image/jpeg;base64,', '');
-                        try {
-                            await this.inspectionCommonService.uploadPicture({ LINE_ID: line.LINE_ID, PICTURE: img });
-                        } catch (e) {
-                            console.log('Upload images fail!', e);
-                        }
-                    }
-                }
-            }
-        });
-    }
-
-    async postDataFromLocal() {
-        let obj: ReportModel = this.combineIpqaReportObj();
-        try {
-            let res = await this.inspectionCommonService.insertReportData(obj);
-            return res.json();
-        } catch (e) {
-            console.log(e);
-            return 0;
+            // this.station.showCheckbox = true;
+            // this.setStationItem(this.localStorageStationName,
+            //     { title: this.station.title, showCheckbox: this.station.showCheckbox, stationID: this.stationId, headerId: headerId });
+            // this.navCtrl.pop();
         }
     }
 
-    getLocalStationById(stationId: number): StationModel {
-        let localStation = this.localStorage.getItem(this.localStorageStationName);
-        if (localStation) {
-            for (let i = 0; i < localStation.length; i++) {
-                if (localStation[i].stationID === stationId) {
-                    return localStation[i];
-                }
-            }
-        }
-    }
 
-    async getBanBie() {
-        let res: any = await this.inspectionService.getDutyKind();
-        let temp: any = res.json();
-        let duty: string = temp.DUTY_KIND;
-        return duty;
-    }
-
-    async updateAndPostDate(report: ReportModel) {
-
-        let localData = this.combineIpqaReportObj();
-        localData.Header.HEADER_ID = report.Header.HEADER_ID;
-        localData.Lines.forEach((line, index) => {
-            for (let i = 0; i < report.Lines.length; i++) {
-                if (line.CHECK_ID === report.Lines[i].CHECK_ID) {
-                    line.HEADER_ID = report.Header.HEADER_ID;
-                    line.LINE_ID = report.Lines[i].LINE_ID;
-                    if ((line.CHECK_RESULT === 'NORMAL') || (line.CHECK_RESULT === 'N/A')) {
-                        line.PROBLEM_DESC = '';
-                        line.PROBLEM_FLAG = 'N';
-                        line.PROBLEM_PICTURES = [''];
-                    }
-                    break;
-                }
-            }
-        });
-        try {
-            let res = await this.inspectionCommonService.insertReportData(localData);
-            return res.json();
-        } catch (e) {
-            console.log(e);
-            return 0;
-        }
-
-    }
-
-    combineIpqaReportObj(): ReportModel {
-        let localUser = JSON.parse(localStorage.getItem('currentUser'));
-        let header: ReportHeader = {
-            HEADER_ID: 0,
-            COMPANY_NAME: EnvConfig.companyID,
-            TYPE: 'IPQA',
-            INSPECTOR: localUser.empno,
-            INSPECT_DATE: this.inspectionService.getToday(),
-            DUTY_KIND: this.banbie
-        };
-        let lines: ReportLine[] = [];
-        this.checkList.forEach((checklist, index) => {
-            let exceptionDetail = this.inspectionService.getExceptionDetail(checklist.STATION_ID, checklist.CHECK_ID);
-            lines.push({
-                HEADER_ID: 0,
-                COMPANY_NAME: EnvConfig.companyID,
-                LINE_ID: 0,
-                LINE_NUM: checklist.LINE_NUM,
-                INSPECT_DATE: this.inspectionService.getToday(),
-                LOCATION: this.inspectionService.getLocationName(this.lineName, this.station.title),//this.lineName+ ' -- ' +this.station.title,
-                CHECK_ID: checklist.CHECK_ID,
-                CHECK_LIST_CN: checklist.CHECK_LIST_CN,
-                CHECK_RESULT: checklist.VALUE,
-                PROBLEM_FLAG: exceptionDetail.PROBLEM_FLAG,
-                PROBLEM_DESC: exceptionDetail.PROBLEM_DESC,
-                PROBLEM_STATUS: 'New'
-            })
-        });
-        return {
-            Header: header,
-            Lines: lines
-        };
-    }
 
 }
 
-class Checklist {
+export class Checklist {
     CATEGORY_ID: number;
     CHECK_ID: number;
     CHECK_LIST_CN: string;

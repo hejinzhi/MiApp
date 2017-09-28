@@ -23,6 +23,45 @@ export class CommonService {
         alert.present();
     }
 
+    showConfirm(title: string, msg: string, cb: any) {
+        let confirm = this.alertCtrl.create({
+            title: title,
+            message: msg,
+            buttons: [
+                {
+                    text: 'OK',
+                    handler: () => {
+                        cb();
+                    }
+                }
+            ]
+        });
+        confirm.present();
+    }
+
+    showOptionConfirm(title: string, msg: string, cb: any) {
+        let confirm = this.alertCtrl.create({
+            title: title,
+            message: msg,
+            buttons: [
+                {
+                    text: 'Cancel',
+                    handler: () => {
+
+                    }
+                },
+                {
+                    text: 'OK',
+                    handler: () => {
+                        cb();
+                    }
+                }
+            ]
+        });
+        confirm.present();
+    }
+
+
     getToday() {
         let newDate = new Date();
         let month = (newDate.getMonth() + 1) > 9 ? (newDate.getMonth() + 1) : '0' + (newDate.getMonth() + 1);

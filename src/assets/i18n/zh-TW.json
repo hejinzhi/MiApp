@@ -421,7 +421,9 @@
       "actionDesc": "整改措施",
       "actionStatus": "整改狀況",
       "actionPictures": "整改後圖片",
-      "actionDate": "導入日期"
+      "actionDate": "導入日期",
+      "assignOwner": "指派處理人",
+      "handleProblem": "改善措施"
     },
     "equipcom": {
       "equip_title": "設備登記",
@@ -451,7 +453,7 @@
     "equip2": "设备巡检"
   },
   "change_to": "已更改為",
-  "submit_success":"提交成功",
+  "submit_success": "提交成功",
   "reset_title": "確定要重置嗎?",
   "new_title": "確定要新建嗎?"
 }
