@@ -1,3 +1,5 @@
+import { EnvConfig } from './../../../../../shared/config/env.config';
+import { InspectionService } from './../shared/service/inspection.service';
 import { ExceptionDetailComponent } from './../exception-detail/exception-detail.component';
 import { IpqaModel } from './../shared/model/ipqa';
 import { IonicPage, NavParams, NavController } from 'ionic-angular';
@@ -11,41 +13,47 @@ import { Component, OnInit } from '@angular/core';
 export class ListComponent implements OnInit {
     constructor(
         private navCtrl: NavController,
-        private navParams: NavParams
+        private navParams: NavParams,
+        private inspectionService: InspectionService
     ) { }
 
     fromPage: string; //记录从哪个页面进来 
-    formData: IpqaModel[] = [{
-        checkDate: '2017-09-01',
-        checkPerson: 'FE717,何錦枝,jinzhi.he',
-        banbie: '白班',
-        address: 'S6-1F -- 外觀檢驗檢測',
-        checklist_cn: '產品放置是否不超出棧板,成品產品使用木棧板是否有熱處理標記.',
-        exceptionDesc: '有雜物，放置超過線框規定位置',
-        pictures: '',
-        handler: '',
-        actionDesc: '',
-        actionStatus: '',
-        actionPictures: '',
-        actionDate: ''
-    },
-    {
-        checkDate: '2017-09-02',
-        checkPerson: 'FE717,何錦枝,jinzhi.he',
-        banbie: '白班',
-        address: 'S6-1F -- BGA',
-        checklist_cn: '确認光線是否充足大於且是否定時量測大於1000LUX.如有客戶特殊要求就按客戶要求執行.',
-        exceptionDesc: '光线太暗',
-        pictures: '',
-        handler: '',
-        actionDesc: '',
-        actionStatus: '',
-        actionPictures: '',
-        actionDate: ''
-    }];
+    // formData: IpqaModel[] = [{
+    //     checkDate: '2017-09-01',
+    //     checkPerson: 'FE717,何錦枝,jinzhi.he',
+    //     banbie: '白班',
+    //     address: 'S6-1F -- 外觀檢驗檢測',
+    //     checklist_cn: '產品放置是否不超出棧板,成品產品使用木棧板是否有熱處理標記.',
+    //     exceptionDesc: '有雜物，放置超過線框規定位置',
+    //     pictures: '',
+    //     handler: '',
+    //     actionDesc: '',
+    //     actionStatus: '',
+    //     actionPictures: '',
+    //     actionDate: ''
+    // },
+    // {
+    //     checkDate: '2017-09-02',
+    //     checkPerson: 'FE717,何錦枝,jinzhi.he',
+    //     banbie: '白班',
+    //     address: 'S6-1F -- BGA',
+    //     checklist_cn: '确認光線是否充足大於且是否定時量測大於1000LUX.如有客戶特殊要求就按客戶要求執行.',
+    //     exceptionDesc: '光线太暗',
+    //     pictures: '',
+    //     handler: '',
+    //     actionDesc: '',
+    //     actionStatus: '',
+    //     actionPictures: '',
+    //     actionDate: ''
+    // }];
+    formData: IpqaModel[];
 
-    ngOnInit() {
+    async ngOnInit() {
         this.fromPage = this.navParams.get('fromPage');
+        this.formData = [];
+        // let currentUser = JSON.parse(localStorage.getItem('currentUser'));
+        let res = await this.inspectionService.getExcReportData('New', '', 'IPQA', EnvConfig.companyID);
+        this.formData = res.json();
     }
 
     goToExceptionPage(formData: IpqaModel) {

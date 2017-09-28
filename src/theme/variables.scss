@@ -5473,12 +5473,8 @@ $colors: ( primary: #387ef5, secondary: #32db64, danger: #f53d3d, light: #f4f4f4
 @font-face {
   font-family: 'iconfontyyy';
   /* project id 234366 */
-  src: url('http://at.alicdn.com/t/font_234366_3y8vfc7xp2ervn29.eot');
-  src: url('http://at.alicdn.com/t/font_234366_3y8vfc7xp2ervn29.eot?#iefix') format('embedded-opentype'),
-  url('http://at.alicdn.com/t/font_234366_3y8vfc7xp2ervn29.woff') format('woff'),
-  url('http://at.alicdn.com/t/font_234366_3y8vfc7xp2ervn29.ttf') format('truetype'),
-  url('http://at.alicdn.com/t/font_234366_3y8vfc7xp2ervn29.svg#iconfont') format('svg');
-  
+  src: url('http://at.alicdn.com/t/font_234366_fox554rgo8ddkj4i.eot');
+  src: url('http://at.alicdn.com/t/font_234366_fox554rgo8ddkj4i.eot?#iefix') format('embedded-opentype'), url('http://at.alicdn.com/t/font_234366_fox554rgo8ddkj4i.woff') format('woff'), url('http://at.alicdn.com/t/font_234366_fox554rgo8ddkj4i.ttf') format('truetype'), url('http://at.alicdn.com/t/font_234366_fox554rgo8ddkj4i.svg#iconfont') format('svg');
 }
 
 .iconfontyyy {
@@ -5539,6 +5535,7 @@ ion-alert div.alert-wrapper {
     color: #000;
   }
 }
+
 ion-app .alert-ios .alert-wrapper {
   overflow-y: scroll;
 }

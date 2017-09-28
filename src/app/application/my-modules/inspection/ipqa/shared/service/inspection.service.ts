@@ -314,6 +314,15 @@ export class InspectionService {
         }
     }
 
+    getExcReportData(problemStatus: string, empno: string, type: string, companyName: string) {
+        return this.myHttp.get(InspectionConfig.getExcReportDataUrl + `?problemStatus=${problemStatus}&empno=${empno}&type=${type}&company_name=${companyName}`);
+    }
+
+    assignOwner(obj: { PROBLEM_STATUS: string, OWNER_EMPNO: string, LINE_ID: number }) {
+        return this.myHttp.post(InspectionConfig.assignOwnerUrl, obj);
+    }
+
+
 
 }
 

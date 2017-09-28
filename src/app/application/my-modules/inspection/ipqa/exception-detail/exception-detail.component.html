@@ -86,16 +86,21 @@
                 </li>
               </ul>
               <button ion-button (tap)="addPictures()">addPictures</button> -->
-          <sg-photo-view (imgsChange)="getImages($event)" [imgs]="images"></sg-photo-view>
+          <sg-photo-view (imgsChange)="getImages($event)" [imgs]="images" [opts]="photoViewOptions"></sg-photo-view>
         </div>
       </div>
-      <div class="my-row" *ngIf="fromPage === 'teamLeader'">
+      <div class="my-row" *ngIf="(fromPage === 'teamLeader')||(fromPage === 'handler')">
         <div class="left-col">
           <ion-label>*{{'inspection.ipqa.handler' | translate}}:</ion-label>
         </div>
         <div class="right-col">
-          <sg-search-emp formControlName="handler" [opt]="{formCtr:formModel.get('handler')}"></sg-search-emp>
-          <!-- <ion-input formControlName="handler"></ion-input> -->
+          <!-- <sg-search-emp formControlName="handler" [opt]="{formCtr:formModel.get('handler')}"></sg-search-emp> -->
+          <div class="plus">
+            <sg-search-emp formControlName="handler" [opt]="{formCtr:formModel.get('handler')}"></sg-search-emp>
+            <div class="plus-img" *ngIf="fromPage === 'handler'">
+              <span class="iconfontyyy" (tap)="addCheckPerson()">&#xe633;</span>
+            </div>
+          </div>
         </div>
       </div>
       <div class="my-row" *ngIf="fromPage === 'handler'">
