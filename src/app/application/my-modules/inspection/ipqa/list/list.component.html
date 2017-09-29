@@ -1,6 +1,6 @@
 <ion-header>
   <ion-navbar>
-    <ion-title>list</ion-title>
+    <ion-title>{{title}}</ion-title>
   </ion-navbar>
 </ion-header>
 <ion-content no-padding>
@@ -9,28 +9,28 @@
       <div class="main-wrapper">
         <ion-row>
           <ion-col col-4>
-            <div>{{l.checkDate}}</div>
+            <div>{{l.INSPECT_DATE}}</div>
           </ion-col>
           <ion-col col-8>
-            <div>{{l.checkPerson}}</div>
+            <div>{{l.INSPECTOR}}</div>
           </ion-col>
         </ion-row>
         <ion-row>
           <ion-col col-4>
-            <div>{{l.banbie}}</div>
+            <div>{{l.DUTY_KIND}}</div>
           </ion-col>
           <ion-col col-8>
-            <div>{{l.address}}</div>
+            <div>{{l.LOCATION}}</div>
           </ion-col>
         </ion-row>
         <ion-row>
           <ion-col>
-            <div class="check-list">{{'inspection.ipqa.checklist' | translate}}: {{l.checklist_cn}}</div>
+            <div class="check-list">{{'inspection.ipqa.checklist' | translate}}: {{l.CHECK_LIST_CN}}</div>
           </ion-col>
         </ion-row>
         <ion-row>
           <ion-col>
-            <div class="check-list">{{'inspection.ipqa.exceptionDesc' | translate}}: {{l.exceptionDesc}}</div>
+            <div class="check-list">{{'inspection.ipqa.exceptionDesc' | translate}}: {{l.PROBLEM_DESC}}</div>
           </ion-col>
         </ion-row>
       </div>

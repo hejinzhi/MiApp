@@ -1,4 +1,3 @@
-import { LocalStorageService } from './../../../../../core/services/localStorage.service';
 import { SearchEmpComponentModule } from './../../../../../shared/components/search-emp/search-emp.component.module';
 import { SharedModule } from './../../../../../shared/shared.module';
 import { ExceptionDetailComponent } from './exception-detail.component';
@@ -15,7 +14,7 @@ import { TranslateModule } from '@ngx-translate/core';
     ],
     exports: [],
     declarations: [ExceptionDetailComponent],
-    providers: [LocalStorageService],
+    providers: [],
     entryComponents: [
         ExceptionDetailComponent
     ]
