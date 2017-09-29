@@ -101,6 +101,9 @@ export class BossReportComponent implements OnInit {
             loading.present();
             note = await this.bossService.getBossReport(id);
             loading.dismiss();
+            console.log(note);
+            
+            note.people = this.selectSchedule.PERSON;
             this.init(note);
         }
     }
@@ -127,7 +130,6 @@ export class BossReportComponent implements OnInit {
                     {
                         text: '取消',
                         handler: () => {
-                            this.init();
                             this.clearCache();
                         }
                     },
@@ -189,6 +191,7 @@ export class BossReportComponent implements OnInit {
             let listsForm = this.reportForm.get('lists') as FormArray;
             let target = lists[i];
             if (target.hasIssue) {
+                this.changeIssueCount(true);
                 listsForm.push(this.addSub2Form(this.initSubForm(target, this.changeIssueCount), target))
             } else {
                 listsForm.push(this.initSubForm(target, this.changeIssueCount));
@@ -219,6 +222,7 @@ export class BossReportComponent implements OnInit {
      */
     initSubForm(work: any = {}, cb?: Function) {
         let sub = this.fb.group({
+            LINE_ID:[work.LINE_ID],
             time: [work.time || moment(new Date()).format('HH:mm'), this.validExd.required()],
             site: [work.site, this.validExd.required()],
             hasIssue: [work.hasIssue],
@@ -350,12 +354,16 @@ export class BossReportComponent implements OnInit {
      * 
      */
     submit() {
-        console.log(Object.assign(this.reportForm.value,this.selectSchedule));
-        this.bossService.uploadReport(Object.assign(this.reportForm.value,this.selectSchedule)).then((res) => {
-            console.log(res);
-            console.log(res.json());
-        })
-        this.clearCache();
+        let send = Object.assign(this.reportForm.value,this.selectSchedule);
+        send.PROBLEM_STATUS = 'Waiting';
+        console.log(send);
+        let loading = this.plugin.createLoading();
+        loading.present();
+        this.bossService.uploadReport(send).subscribe((d) => {
+            console.log(d);
+            this.clearCache();
+            loading.dismiss();
+        },(err) => {this.plugin.errorDeal(err);console.log(err)});
     }
 }
 

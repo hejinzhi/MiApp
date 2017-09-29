@@ -14,11 +14,11 @@
     <ion-item class="disabled">
       <ion-label>需改善项目</ion-label>
       <ion-note item-right>
-        1
+        {{1}}
       </ion-note>
     </ion-item>
-    <div class="lists" *ngIf="type === 1">
-      <sg-boss-item *ngFor="let item of testData1" (tap)="toDetail(item)" [item]="item"></sg-boss-item>
+    <div class="lists" *ngIf="type === 1 && list" >
+      <sg-boss-item *ngFor="let item of list" (tap)="toDetail(item)" [item]="item"></sg-boss-item>
     </div>
     <div class="lists" *ngIf="type === 2">
       <sg-equip-item *ngFor="let item of testData2" (tap)="toDetail(item)" [item]="item"></sg-equip-item>
