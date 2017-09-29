@@ -2,8 +2,8 @@
   <ion-navbar>
     <ion-title>{{'inspection.equipcom.equip_title' | translate }}</ion-title>
     <ion-buttons end>
-      <button ion-button icon-only>
-          <ion-icon name="add"></ion-icon>
+      <button ion-button icon-only (tap)="presentPopover($event)" >
+          <ion-icon name="add" ></ion-icon>
         </button>
     </ion-buttons>
   </ion-navbar>
@@ -59,7 +59,7 @@
       <ion-grid>
         <ion-row>
           <ion-col width-50>
-            <ion-buttons left>
+            <ion-buttons left *ngIf="action==='new'">
               <button ion-button type="button" (tap)="reSet(formModel.value.machine_id)"><span *ngIf="formModel.value.machine_id==0" >{{'attendance.reset' | translate}}</span><span *ngIf="formModel.value.machine_id>0">{{'attendance.new' | translate}}</span></button>
             </ion-buttons>
           </ion-col>
@@ -72,5 +72,5 @@
       </ion-grid>
     </ion-list>
   </form>
-  <button ion-button (tap)="showdetail()">查看VALUE</button>
+  <!-- <button ion-button (tap)="showdetail()">查看VALUE</button> -->
 </ion-content>

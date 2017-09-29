@@ -175,7 +175,6 @@ export class SetComponent implements OnInit, OnDestroy {
               that.jmessage.loginOut();
             }
             this.store$.dispatch(new User_Logout())
-            localStorage.setItem('appCompanyId', '');
             this.app.getRootNav().setRoot(LoginComponent);
           }
         }

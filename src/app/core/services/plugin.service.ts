@@ -86,6 +86,13 @@ export class PluginService {
     return this.network.type === 'none';
   }
 
+  getPictureUrlArray(imgs:string):string[] {
+    if(imgs) {
+      return imgs.split(',').map((i) => EnvConfig.baseUrl + i);
+    }
+    return []
+  }
+
   confirmUpdate() {
     this.codePush.notifyApplicationReady().then(() => {
       if (!localStorage.getItem('showConfirmUpdate') || localStorage.getItem('showConfirmUpdate') == '0') return;

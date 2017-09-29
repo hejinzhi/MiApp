@@ -67,10 +67,10 @@ export class IssueDetailComponent implements OnInit {
 
     initForm(work:any={}) {
         let group = this.fb.group({
-            action: [work.action,this.validExd.required()],
-            improvement: [work.improvement],
-            imgs:[work.imgs],
-            import_date: [work.import_date || moment(new Date()).format('YYYY-MM-DD')]
+            ACTION_DESC: [work.action,this.validExd.required()],
+            ACTION_STATUS: [work.improvement],
+            ACTION_PICTURES:[work.imgs],
+            ACTION_DATE: [work.import_date || moment(new Date()).format('YYYY-MM-DD')]
         })
         if (this.admin) {
             group.disable({onlySelf:true});
