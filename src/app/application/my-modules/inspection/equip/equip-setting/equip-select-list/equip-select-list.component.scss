@@ -1,0 +1,18 @@
+sg-equip-select-list {
+  
+    ion-grid {
+        @media screen and (max-width: 400px) {
+          min-width: 400px;
+          overflow: scroll;
+        }
+      }
+      .row {
+        font-size: 1.4rem;
+      }
+      .label-ios {
+        margin: 0 0;
+      }
+      .col {
+        margin: -3px;
+      }
+}

@@ -8,8 +8,10 @@ import * as moment from 'moment';
   templateUrl: './equip-schedule.component.html'
 })
 export class EquipScheduleComponent implements OnInit {
- 
+
   selectMaxYear = +moment(new Date()).format('YYYY') + 10;
+  year:any;
+  month:any;
   constructor(
     private navCtrl: NavController,
   ) { }
@@ -17,7 +19,16 @@ export class EquipScheduleComponent implements OnInit {
   ngOnInit() {
   }
 
-  goToDeatilPage(){
+  ionViewDidLoad(){
+    this.year = moment(new Date()).format('YYYY-MM-DD');
+    this.month = moment(new Date()).format('YYYY-MM-DD');
+  }
+
+  goToDeatilPage() {
     this.navCtrl.push('ScheduleDetailComponent');
+  }
+
+  showdetail(){
+    console.log(this.year);
   }
 }

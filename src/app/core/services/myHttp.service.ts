@@ -84,6 +84,11 @@ export class MyHttpService {
         return this.http.get(url, options).toPromise();
     }
 
+    async delete(url: string) {
+        let options = await this.initOptions(false);
+        return this.http.delete(url, options).toPromise();
+    }
+
     isTokenExpired() {
         let tokenExpired = parseInt(localStorage.getItem('tokenExpires'));
         let nowTime = new Date().getTime();
