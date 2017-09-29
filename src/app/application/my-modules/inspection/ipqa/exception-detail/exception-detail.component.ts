@@ -120,7 +120,10 @@ export class ExceptionDetailComponent implements OnInit {
     // 因为服务器存放的不是完整的url，需要拼接一下
     getLongImageUrl(images: string) {
         let longImages: string[] = [];
-        let imageArray: string[] = images.split(',');
+        let imageArray: string[] = [];
+        if (images) {
+            imageArray = images.split(',');
+        }
         if (imageArray && imageArray.length > 0) {
             for (let i = 0; i < imageArray.length; i++) {
                 longImages.push(EnvConfig.baseUrl + imageArray[i]);
