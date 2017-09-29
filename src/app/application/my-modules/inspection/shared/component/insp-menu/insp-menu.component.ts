@@ -1,5 +1,7 @@
-import { Component } from '@angular/core';
-import { ViewController, NavController, NavParams, AlertController, IonicPage} from 'ionic-angular';
+import { PluginService } from './../../../../../../core/services/plugin.service';
+import { EquipService } from './../../../equip/shared/service/equip.service';
+import { Component, OnInit } from '@angular/core';
+import { ViewController, NavController, NavParams, AlertController, IonicPage } from 'ionic-angular';
 import { TranslateService } from '@ngx-translate/core';
 
 @IonicPage()
@@ -7,33 +9,96 @@ import { TranslateService } from '@ngx-translate/core';
   selector: 'sg-insp-menu',
   templateUrl: 'insp-menu.component.html',
 })
-export class InspMenuComponent {
+export class InspMenuComponent implements OnInit {
 
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
     public alertCtrl: AlertController,
     public viewCtrl: ViewController,
-    private translate: TranslateService
-  ) {}
+    private translate: TranslateService,
+    private equipService: EquipService,
+    private plugin: PluginService,
+  ) { }
   translateTexts: any = {};
+  type_id: any;
+  lastNavCtr: any;
+  that: any;
+  /**
+ * 記錄那個頁面類型調用
+ * 
+ * @param {*} this.navParams.data.type 
+ * 1：EquipSettingComponent
+ */
 
-  ionViewDidLoad(){
+  ngOnInit() {
+    this.type_id = this.navParams.data.type;
+    this.that = this.navParams.data.this;
+    this.lastNavCtr = this.that.navCtrl;
+  }
+
+  ionViewDidLoad() {
+
     this.subscribeTranslateText();
   }
-  ionViewWillEnter(){
+  ionViewWillEnter() {
 
   }
 
   subscribeTranslateText() {
-    this.translate.get(['attendance.no_callback', 'attendance.delete_succ',
-    'attendance.callbackSign_succ', 'attendance.callbackSign_err','attendance.cancle', 'attendance.confirm',
-    'attendance.delete_alert'
-  ]).subscribe((res) => {
-        this.translateTexts = res;
-      })
+    this.translate.get([ 'delete_succ','attendance.cancle', 'attendance.confirm',
+      'delete_alert'
+    ]).subscribe((res) => {
+      this.translateTexts = res;
+    })
   }
 
+  toSearch() {
+    if (this.type_id == 1) {
+      this.viewCtrl.dismiss();
+      this.lastNavCtr.push('InspSearchComponent', { type: this.type_id });
+    }
+  }
 
+  deleteForm() {
+    let confirm = this.alertCtrl.create({
+      title: this.translateTexts['delete_alert'],
+      buttons: [
+        {
+          text: this.translateTexts['attendance.cancle'],
+          handler: () => {
+          }
+        },
+        {
+          text: this.translateTexts['attendance.confirm'],
+          handler: () => {
+            this.toDelete();
+          }
+        }
+      ]
+    });
+    confirm.present();
+
+  }
+
+  async toDelete() {
+    this.viewCtrl.dismiss();
+    let loading = this.plugin.createLoading();
+    loading.present();
+    let res;
+    if (this.type_id == 1) {
+      res = await this.equipService.deleteMachine(this.that.machine.machine_id);
+    }
+    loading.dismiss();
+    if (!res) return;
+    this.plugin.showToast(this.translateTexts['delete_succ']);
+    if (this.lastNavCtr.canGoBack()) {
+      this.lastNavCtr.pop();
+    } else {
+      if (this.that) {
+        this.that.init();
+      }
+    }
+  }
 
 }

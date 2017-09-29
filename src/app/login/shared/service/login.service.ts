@@ -105,14 +105,27 @@ export class LoginService {
             this.currentUser.telephone = user.TELEPHONE;
             this.store$.dispatch(new User_Login(JSON.parse(this.pluginService.chineseConv(this.currentUser))));
 
-            if (localStorage.getItem('appCompanyId')) {
-                EnvConfig.companyID = localStorage.getItem('appCompanyId');
-            } else {
-                if (user.COMPANY_ID) {
-                    EnvConfig.companyID = user.COMPANY_ID;
+            console.log(this.currentUser);
+
+            if (localStorage.getItem('appLoginUser')) {
+                if (this.currentUser.username === localStorage.getItem('appLoginUser')) {
+                    if (localStorage.getItem('appCompanyId')) {
+                        EnvConfig.companyID = localStorage.getItem('appCompanyId');
+                    } else {
+                        localStorage.setItem('appCompanyId', user.COMPANY_ID);
+                        EnvConfig.companyID = localStorage.getItem('appCompanyId');
+                    }
+                } else {
+                    localStorage.setItem('appLoginUser', this.currentUser.username);
                     localStorage.setItem('appCompanyId', user.COMPANY_ID);
+                    EnvConfig.companyID = localStorage.getItem('appCompanyId');
                 }
+            } else {
+                localStorage.setItem('appLoginUser', this.currentUser.username);
+                localStorage.setItem('appCompanyId', user.COMPANY_ID);
+                EnvConfig.companyID = localStorage.getItem('appCompanyId');
             }
+
 
             if (this.pluginService.isCordova()) {
                 //把登陆人的头像保存到本地

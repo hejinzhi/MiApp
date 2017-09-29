@@ -455,5 +455,7 @@
   "change_to": "已更改為",
   "submit_success": "提交成功",
   "reset_title": "確定要重置嗎?",
-  "new_title": "確定要新建嗎?"
+  "new_title": "確定要新建嗎?",
+  "delete_alert": "確定要刪除此記錄嗎?",
+  "delete_succ": "刪除成功"
 }

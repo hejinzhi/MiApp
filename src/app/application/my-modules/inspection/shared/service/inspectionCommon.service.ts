@@ -37,6 +37,9 @@ export class InspectionCommonService {
     }
 
 
+    getMriLookup(type: string) {
+        return this.myHttp.get(CommonConfig.getMriLookupUrl + '?lookup_type=' + type);
+    }
 
 }
 

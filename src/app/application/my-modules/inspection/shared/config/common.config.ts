@@ -7,5 +7,7 @@ export class CommonConfig {
     static getReportDate = EnvConfig.baseUrl + 'IPQA/GetReport';
     static uploadPicture = EnvConfig.baseUrl + 'IPQA/UploadProblemPicture';
     static getMriNameUrl = EnvConfig.baseUrl + 'IPQA/GetMRIName';
+    static getMriLookupUrl = EnvConfig.baseUrl + 'IPQA/GetMRILookup';
     static uploadActionPicture = EnvConfig.baseUrl + 'IPQA/UploadActionPicture';
+
 }

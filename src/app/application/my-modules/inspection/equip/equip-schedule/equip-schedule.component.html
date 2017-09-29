@@ -7,12 +7,12 @@
   <ion-list>
     <ion-item>
       <ion-label col-4>*年度:</ion-label>
-      <ion-datetime  displayFormat="YYYY" pickerFormat="YYYY" [cancelText]="'attendance.cancle' | translate"
+      <ion-datetime  [(ngModel)]="year"  displayFormat="YYYY" pickerFormat="YYYY" [cancelText]="'attendance.cancle' | translate"
         [doneText]="'attendance.confirm' | translate" min="2017" [max]="selectMaxYear"></ion-datetime>
     </ion-item>
     <ion-item>
       <ion-label col-4>*月份:</ion-label>
-      <ion-datetime  displayFormat="MM" pickerFormat="MM" [cancelText]="'attendance.cancle' | translate"
+      <ion-datetime [(ngModel)]="month" displayFormat="MM" pickerFormat="MM" [cancelText]="'attendance.cancle' | translate"
        [doneText]="'attendance.confirm' | translate" min="2017" [max]="2017"></ion-datetime>
     </ion-item>
     <ion-item>
@@ -47,4 +47,5 @@
       </ion-col>
     </ion-row>
   </ion-grid>
+    <button ion-button (tap)="showdetail()">查看VALUE</button>
 </ion-content>
