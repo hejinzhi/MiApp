@@ -1,3 +1,4 @@
+import { BossService } from './../../../boss/shared/service/boss.service';
 import { IonicPage, NavParams, NavController } from 'ionic-angular';
 import { Component, OnInit } from '@angular/core';
 
@@ -24,12 +25,16 @@ export class IssueListComponent implements OnInit {
     {
         time: '2017-05-09 17:20', name: '小东', site: '楼递间', detail: '过期', equip_num: '123456', issue: '是否过期', status: '待处理', inCharge: '小天'
     }]
+
+    list:any;
     constructor(
         private navParams: NavParams,
         private navCtrl: NavController,
+        private bossService: BossService
     ) { }
     ngOnInit() {
         this.type = this.navParams.get('type') || 1;
+        this.bossService.getOwnUndoneReport().subscribe((l) => {console.log(l);this.list=l});
     }
 
     toDetail(item: any) {

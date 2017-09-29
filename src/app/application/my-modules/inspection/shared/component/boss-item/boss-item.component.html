@@ -2,19 +2,19 @@
     <ion-item>
       <ion-row>
         <ion-col col-5>
-          {{item.time}}
+          {{item.INSPECT_DATE}} {{item.INSPECT_TIME}}
         </ion-col>
         <ion-col col-3>
-          {{item.name}}
+          {{item.OWNER_EMPNO?.split(',')[1]}}
         </ion-col>
         <ion-col col-4>
-          {{item.site}}
+          {{item.LOCATION}}
         </ion-col>
         <ion-col col-10>
-          {{item.detail}}
+          {{item.PROBLEM_DESC}}
         </ion-col>
         <ion-col col-10>
-          {{item.status}}
+          {{item.PROBLEM_STATUS}}
         </ion-col>
       </ion-row>
     </ion-item>
