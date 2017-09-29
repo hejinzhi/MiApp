@@ -130,7 +130,6 @@ export class BossReportComponent implements OnInit {
                     {
                         text: '取消',
                         handler: () => {
-                            this.init();
                             this.clearCache();
                         }
                     },
@@ -358,13 +357,13 @@ export class BossReportComponent implements OnInit {
         let send = Object.assign(this.reportForm.value,this.selectSchedule);
         send.PROBLEM_STATUS = 'Waiting';
         console.log(send);
-        
-        this.bossService.uploadReport(send).then((res) => {
-            console.log(res);
-            console.log(res.json());
+        let loading = this.plugin.createLoading();
+        loading.present();
+        this.bossService.uploadReport(send).subscribe((d) => {
+            console.log(d);
             this.clearCache();
-        }).catch((err:any) => this.plugin.errorDeal(err))
-
+            loading.dismiss();
+        },(err) => {this.plugin.errorDeal(err);console.log(err)});
     }
 }
 

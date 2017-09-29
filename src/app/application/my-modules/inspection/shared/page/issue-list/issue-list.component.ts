@@ -1,3 +1,4 @@
+import { PluginService } from './../../../../../../core/services/plugin.service';
 import { BossService } from './../../../boss/shared/service/boss.service';
 import { IonicPage, NavParams, NavController } from 'ionic-angular';
 import { Component, OnInit } from '@angular/core';
@@ -30,7 +31,8 @@ export class IssueListComponent implements OnInit {
     constructor(
         private navParams: NavParams,
         private navCtrl: NavController,
-        private bossService: BossService
+        private bossService: BossService,
+        private plugin: PluginService
     ) { }
     ngOnInit() {
         this.type = this.navParams.get('type') || 1;
@@ -39,6 +41,7 @@ export class IssueListComponent implements OnInit {
 
     toDetail(item: any) {
         console.log(item);
+        item.PROBLEM_PICTURES =this.plugin.getPictureUrlArray(item.PROBLEM_PICTURES)
         this.navCtrl.push('IssueDetailComponent', {
             issue: item,
             type: this.type

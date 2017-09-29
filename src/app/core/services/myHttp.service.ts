@@ -33,27 +33,29 @@ export class MyHttpService {
 
     async initOptions(loginFlag: boolean) {
         let headers = new Headers({ 'Content-Type': 'application/json; charset=utf-8' });
-        let token = JSON.parse(localStorage.getItem('access_token'));
-        if (token && !this.isTokenExpired() && !loginFlag) {
-            headers.append('access_token', token);
-        } else {
-            let res;
-            try {
-                res = await this.getNewToken();
-            } catch (err) {
-                if (!loginFlag) {
-                    this.showError('Error', 'Your token is already expired,please login again!', () => {
-                        this.app.getRootNav().setRoot(LoginComponent);
-                    });
-                    return;
+        if(!loginFlag) {
+            let token = JSON.parse(localStorage.getItem('access_token'));
+            if (token && !this.isTokenExpired()) {
+                headers.append('access_token', token);
+            } else {
+                let res;
+                try {
+                    res = await this.getNewToken();
+                } catch (err) {
+                    if (!loginFlag) {
+                        this.showError('Error', 'Your token is already expired,please login again!', () => {
+                            this.app.getRootNav().setRoot(LoginComponent);
+                        });
+                        return;
+                    }
+    
                 }
-
+                let newToken = res.json().Token;
+                localStorage.setItem('moduleList', JSON.stringify(res.json().Modules));
+                localStorage.setItem('access_token', JSON.stringify(newToken));
+                localStorage.setItem('tokenExpires', res.json().Expires);
+                headers.append('access_token', newToken);
             }
-            let newToken = res.json().Token;
-            localStorage.setItem('moduleList', JSON.stringify(res.json().Modules));
-            localStorage.setItem('access_token', JSON.stringify(newToken));
-            localStorage.setItem('tokenExpires', res.json().Expires);
-            headers.append('access_token', newToken);
         }
         let options = new RequestOptions({ headers: headers });
         return options;

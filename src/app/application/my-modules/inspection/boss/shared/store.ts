@@ -55,6 +55,7 @@ export class BossReportModel implements BossReportState {
             line.LINE_ID = el.LINE_ID?el.LINE_ID:0;
             if(el.hasIssue) {
                 line.PROBLEM_STATUS = data.PROBLEM_STATUS
+                line.PROBLEM_PICTURES = el.imgs.join();
                 line.PROBLEM_DESC = el.detail;
                 line.OWNER_EMPNO = el.inCharge.split(',')[0];
             }

@@ -1,3 +1,5 @@
+import { InspectionCommonService } from './../../../shared/service/inspectionCommon.service';
+import { Lines } from "./../model/lines";
 import { Slides } from 'ionic-angular';
 import { UserState } from './../../../../../../shared/models/user.model';
 import { MyStore } from './../../../../../../shared/store';
@@ -20,7 +22,8 @@ export class BossService {
     private myHttp: MyHttpService,
     private plugin: PluginService,
     private translate: TranslateService,
-    private $store: Store<MyStore>
+    private $store: Store<MyStore>,
+    private inspectionCommonService: InspectionCommonService
   ) {
     this.subscribeTranslateText();
     this.$store.select('userReducer').subscribe((user: UserState) => this.user = user);
@@ -63,7 +66,25 @@ export class BossService {
   }
 
   uploadReport(data: any) {
-    return this.myHttp.post(BossConfig.uploadReport, this.convertReportData(data));
+    let send = this.convertReportData(data);
+    let request:any[] = [];
+    request.push(this.myHttp.post(BossConfig.uploadReport, this.convertReportData(data)))
+    send.Lines.forEach((li) => {
+      if(li.PROBLEM_PICTURES) {
+        let imgs = li.PROBLEM_PICTURES.split(',');
+        if(imgs && imgs.length>0) {
+          imgs.forEach(i => {
+            request.push(this.uploadPicture(+li.LINE_ID,i));
+          })
+        }
+      }
+    })
+    return Observable.forkJoin(...request).map((res:Response[]) => res.map((r) => r.json()));
+  }
+
+  uploadPicture(line_id:number,img:string) {
+    img = img.replace('data:image/jpeg;base64,', '');
+    return this.inspectionCommonService.uploadPicture({LINE_ID:line_id,PICTURE:img});
   }
 
   async getBossReport(id: string) {
