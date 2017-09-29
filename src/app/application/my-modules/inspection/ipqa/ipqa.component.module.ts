@@ -1,3 +1,5 @@
+import { InspectionCommonService } from './../shared/service/inspectionCommon.service';
+import { LocalStorageService } from './../../../../core/services/localStorage.service';
 import { SharedModule } from './../../../../shared/shared.module';
 import { GridComponentModule } from './grid/grid.component.module';
 import { IpqaComponent } from './ipqa.component';
@@ -15,7 +17,7 @@ import { TranslateModule } from '@ngx-translate/core';
     ],
     exports: [],
     declarations: [IpqaComponent],
-    providers: [],
+    providers: [LocalStorageService, InspectionCommonService],
     entryComponents: [
         IpqaComponent
     ]

@@ -41,7 +41,7 @@ export class PluginService {
    * 对本地用户信息简繁体更新
    */
   chineseConvUserMes() {
-    if(!localStorage.getItem('currentUser')) return
+    if (!localStorage.getItem('currentUser')) return
     this.store$.dispatch(new User_ChineseConv(JSON.parse(this.chineseConv(JSON.parse(localStorage.getItem('currentUser'))))));
   }
 
@@ -81,6 +81,18 @@ export class PluginService {
   isWifi() {
     return this.network.type === 'wifi';
   }
+
+  hasNoNetwork() {
+    return this.network.type === 'none';
+  }
+
+  getPictureUrlArray(imgs:string):string[] {
+    if(imgs) {
+      return imgs.split(',').map((i) => EnvConfig.baseUrl + i);
+    }
+    return []
+  }
+
   confirmUpdate() {
     this.codePush.notifyApplicationReady().then(() => {
       if (!localStorage.getItem('showConfirmUpdate') || localStorage.getItem('showConfirmUpdate') == '0') return;
@@ -157,7 +169,7 @@ export class PluginService {
       let des = apk.description.split('&&');
       if (des.length > 1) {
         this.appNewVersion = des[0];
-        if(+EnvConfig.appVersion >= +this.appNewVersion) return;
+        if (+EnvConfig.appVersion >= +this.appNewVersion) return;
       }
       let confirm = this.alertCtrl.create({
         title: this.translateTexts['have_new_version'],

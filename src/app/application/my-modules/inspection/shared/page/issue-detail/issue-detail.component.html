@@ -13,7 +13,7 @@
     <ion-item class="disabled">
       <ion-label>值班日期</ion-label>
       <ion-note item-right>
-        {{issue.time}}
+        {{issue.INSPECT_DATE}}
       </ion-note>
     </ion-item>
     <ion-item class="disabled">
@@ -27,7 +27,7 @@
       <ion-item class="disabled">
         <ion-label>地点</ion-label>
         <ion-note item-right>
-          {{issue.site}}
+          {{issue.LOCATION}}
         </ion-note>
       </ion-item>
     </div>
@@ -42,7 +42,7 @@
       <ion-item class="disabled">
         <ion-label>存放位置</ion-label>
         <ion-note item-right>
-          {{issue.site}}
+          {{issue.LOCATION}}
         </ion-note>
       </ion-item>
       <ion-item class="disabled">
@@ -56,24 +56,24 @@
     <ion-item class="disabled">
       <ion-label>问题详述</ion-label>
       <ion-note item-right>
-        {{issue.detail}}
+        {{issue.PROBLEM_DESC}}
       </ion-note>
     </ion-item>
     <ion-item class="disabled">
       附图
-      <sg-photo-view [opts]="{addable:false,removeable:false}"></sg-photo-view>
+      <sg-photo-view [opts]="{addable:false,removeable:false}" [imgs] = "issue.PROBLEM_PICTURES"></sg-photo-view>
     </ion-item>
     <ion-item class="disabled" *ngIf="!admin">
       <ion-label>处理人</ion-label>
       <ion-note item-right>
-        {{issue.inCharge}}
+        {{issue.OWNER_EMPNO}}
       </ion-note>
       <ion-icon name="refresh" item-end (tap)="pushBack()"></ion-icon>
     </ion-item>
     <div *ngIf="admin">
       <ion-item>
         <ion-label>处理人</ion-label>
-        <ion-input type="text" [(ngModel)]="issue.inCharge"></ion-input>
+        <ion-input type="text" [(ngModel)]="issue.OWNER_EMPNO"></ion-input>
       </ion-item>
       <ion-item>
         <ion-label>*状态</ion-label>
@@ -87,20 +87,20 @@
     <ion-list>
       <ion-item [class.disabled]="admin">
         <ion-label>*整改措施</ion-label>
-        <ion-textarea rows="2" cols="20" formControlName="action"></ion-textarea>
+        <ion-textarea rows="2" cols="20" formControlName="ACTION_DESC"></ion-textarea>
       </ion-item>
       <ion-item [class.disabled]="admin">
         <ion-label>改善状况</ion-label>
-        <ion-input type="text" formControlName="improvement"></ion-input>
+        <ion-input type="text" formControlName="ACTION_STATUS"></ion-input>
       </ion-item>
       <ion-item>
         <span [class.disabled]="admin">附图</span>
-        <sg-photo-view [opts]="admin?{addable:false,removeable:false}:{}"></sg-photo-view>
+        <sg-photo-view [opts]="admin?{addable:false,removeable:false}:{}" formControlName="ACTION_PICTURES"></sg-photo-view>
       </ion-item>
       <ion-item>
         <ion-label>导入日期</ion-label>
         <ion-datetime displayFormat="YYYY/MM/DD" [cancelText]="'attendance.cancle' | translate" [doneText]="'attendance.confirm' | translate"
-          formControlName="import_date"></ion-datetime>
+          formControlName="ACTION_DATE"></ion-datetime>
       </ion-item>
     </ion-list>
     <button ion-button full type="button" (tap)="submit()" [disabled]="!reportForm.dirty || reportForm.invalid" *ngIf="!admin">提交</button>    

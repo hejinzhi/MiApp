@@ -18,6 +18,7 @@ export class PhotoViewComponent implements OnInit, ControlValueAccessor {
   }
   @Input()
   imgs: string[];
+  outImgs: string[];
 
   myOpts = {
     addable: true,//是否能添加图片
@@ -58,7 +59,8 @@ export class PhotoViewComponent implements OnInit, ControlValueAccessor {
       let that = this;
       array[item] = function() {
         let new_value = _prototype.apply(this,arguments);
-        that.emitChange(this.slice())
+        that.outImgs = this.slice();
+        that.emitChange(that.outImgs)
         return new_value;
       }
     })
@@ -72,10 +74,11 @@ export class PhotoViewComponent implements OnInit, ControlValueAccessor {
   writeValue(value: any) {
     if (value != undefined) {
       if (value instanceof Array) {
-        this.imgs = value;
+        this.outImgs = value;
       } else {
-        this.imgs = [value];
+        this.outImgs = [value];
       }
+      this.imgs = this.outImgs.slice();
       this.bindEventForArray(this.imgs)
     }
   }
