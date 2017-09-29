@@ -196,7 +196,7 @@ export class InspectionService {
         };
     }
 
-    async updateAndPostDate(report: ReportModel, banbie: string, checkList: Checklist[], lineName: string, stationName: string) {
+    async updateAndPostData(report: ReportModel, banbie: string, checkList: Checklist[], lineName: string, stationName: string) {
         let localData = this.combineIpqaReportObj(banbie, checkList, lineName, stationName);
         localData.Header.HEADER_ID = report.Header.HEADER_ID;
         localData.Lines.forEach((line, index) => {
@@ -278,7 +278,7 @@ export class InspectionService {
                 let res = await this.inspectionCommonService.getReportData(localStation.headerId);
                 let dataFromServer: ReportModel = res.json();
                 if (dataFromServer) {
-                    headerId = await this.updateAndPostDate(dataFromServer, banbie, checkList, lineName, stationName);
+                    headerId = await this.updateAndPostData(dataFromServer, banbie, checkList, lineName, stationName);
                     await this.uploadPictures(stationId, headerId, dataFromServer);
                 } else {
                     headerId = await this.postDataFromLocal(banbie, checkList, lineName, stationName);
