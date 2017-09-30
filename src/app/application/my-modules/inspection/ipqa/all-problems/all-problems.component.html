@@ -1,0 +1,24 @@
+<ion-header>
+  <ion-navbar>
+    <ion-title>问题追踪</ion-title>
+  </ion-navbar>
+</ion-header>
+<ion-content>
+  <div padding>
+    <ion-segment [(ngModel)]="status" (ionChange)="changeTab()">
+      <ion-segment-button value="New">
+        待分配
+      </ion-segment-button>
+      <ion-segment-button value="Waiting">
+        待处理
+      </ion-segment-button>
+      <ion-segment-button value="Done">
+        已处理
+      </ion-segment-button>
+      <!-- <ion-segment-button value="Close">
+        已结案
+      </ion-segment-button> -->
+    </ion-segment>
+  </div>
+  <sg-ipqa-item *ngFor="let item of listData" [item]="item" (tap)="goToExceptionPage(item)"></sg-ipqa-item>
+</ion-content>

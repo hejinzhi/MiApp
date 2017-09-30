@@ -33,6 +33,7 @@ export class ExceptionDetailComponent implements OnInit {
     };
     formData: ExceptionModel;
     photoViewOptions: { addable: boolean, removeable: boolean, scanable: boolean }; // 控制选择图片的控件是否可以添加或删除图片
+    photoViewAdminOptions: { addable: boolean, removeable: boolean, scanable: boolean }; // 控制选择图片的控件是否可以添加或删除图片
     constructor(
         private navParams: NavParams,
         private viewCtrl: ViewController,
@@ -59,7 +60,6 @@ export class ExceptionDetailComponent implements OnInit {
         this.station = this.navParams.get('station');
         // 获取违反的规定描述
         this.checklist = this.navParams.get('checklist');
-        console.log(this.checklist);
 
         this.formData = this.navParams.get('formData');
 
@@ -67,6 +67,7 @@ export class ExceptionDetailComponent implements OnInit {
     }
 
     async createFormMode() {
+        console.log(this.fromPage);
         if (this.fromPage === 'checklist') {
             this.localStorageName = this.inspectionService.getLocalStorageExceptionName(this.station.STATION_ID);
             let localData: ExceptionModel = this.getItem(this.localStorageName, this.checklist.CHECK_ID);
@@ -92,7 +93,6 @@ export class ExceptionDetailComponent implements OnInit {
             let images: string[] = this.getLongImageUrl(this.formData.PROBLEM_PICTURES);
             this.images = images;
         } else if (this.fromPage === 'handler') {
-            console.log(this.formData);
             this.formModel = this.fb.group({
                 INSPECT_DATE: [{ value: this.formData.INSPECT_DATE, disabled: true }, Validators.required],
                 INSPECTOR: [{ value: this.formData.INSPECTOR, disabled: true }, Validators.required],
@@ -114,6 +114,36 @@ export class ExceptionDetailComponent implements OnInit {
             };
             let images: string[] = this.getLongImageUrl(this.formData.PROBLEM_PICTURES);
             this.images = images;
+        }
+        else if (this.fromPage === 'admin') {
+            this.formModel = this.fb.group({
+                INSPECT_DATE: [{ value: this.formData.INSPECT_DATE, disabled: true }, Validators.required],
+                INSPECTOR: [{ value: this.formData.INSPECTOR, disabled: true }, Validators.required],
+                DUTY_KIND: [{ value: this.formData.DUTY_KIND, disabled: true }, Validators.required],
+                LOCATION: [{ value: this.formData.LOCATION, disabled: true }, Validators.required],
+                CHECK_LIST_CN: [{ value: this.formData.CHECK_LIST_CN, disabled: true }, Validators.required],
+                PROBLEM_DESC: [{ value: this.formData.PROBLEM_DESC, disabled: true }, Validators.required],
+                // pictures: this.fb.array([]),
+                OWNER_EMPNO: [{ value: this.formData.OWNER_EMPNO, disabled: true }, Validators.required],
+                ACTION_DESC: [{ value: this.formData.ACTION_DESC, disabled: true }, Validators.required],
+                ACTION_STATUS: [{ value: this.formData.ACTION_STATUS, disabled: true }, Validators.required],
+                // actionPictures: this.fb.array([]),
+                ACTION_DATE: [{ value: this.formData.ACTION_DATE, disabled: true }, Validators.required],
+            });
+            this.photoViewOptions = {
+                addable: false,
+                removeable: false,
+                scanable: true
+            };
+            this.photoViewAdminOptions = {
+                addable: false,
+                removeable: false,
+                scanable: true
+            };
+            let images: string[] = this.getLongImageUrl(this.formData.PROBLEM_PICTURES);
+            this.images = images;
+            let actionImages: string[] = this.getLongImageUrl(this.formData.ACTION_PICTURES);
+            this.actionPictures = actionImages;
         }
     }
 
@@ -207,15 +237,16 @@ export class ExceptionDetailComponent implements OnInit {
             };
             await this.inspectionService.handleProblem(obj);
 
-            this.actionPictures.forEach(async (value, index) => {
-                let img = value.replace('data:image/jpeg;base64,', '');
-                try {
-                    await this.inspectionService.uploadActionPicture(this.formData.LINE_ID, img);
-                } catch (e) {
-                    console.log('upload action picture error', e);
-                }
-            });
-
+            if (this.actionPictures && this.actionPictures.length > 0) {
+                this.actionPictures.forEach(async (value, index) => {
+                    let img = value.replace('data:image/jpeg;base64,', '');
+                    try {
+                        await this.inspectionService.uploadActionPicture(this.formData.LINE_ID, img);
+                    } catch (e) {
+                        console.log('upload action picture error', e);
+                    }
+                });
+            }
             this.commonService.hideLoading();
 
             let formValue = this.formModel.value;

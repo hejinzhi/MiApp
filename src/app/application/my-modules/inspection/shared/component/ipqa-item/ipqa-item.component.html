@@ -1,0 +1,26 @@
+<ion-grid *ngIf="item">
+  <ion-item>
+    <ion-row>
+      <ion-col col-4>
+        <div>{{item.INSPECT_DATE}}</div>
+      </ion-col>
+      <ion-col col-8>
+        <div>{{item.INSPECTOR}}</div>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col col-4>
+        <div>{{item.DUTY_KIND}}</div>
+      </ion-col>
+      <ion-col col-8>
+        <div>{{item.LOCATION}}</div>
+      </ion-col>
+      <ion-col col-12>
+        <div class="my-label">{{'inspection.ipqa.checklist' | translate}}: {{item.CHECK_LIST_CN}}</div>
+      </ion-col>
+      <ion-col col-12>
+        <div class="my-label">{{'inspection.ipqa.exceptionDesc' | translate}}: {{item.PROBLEM_DESC}}</div>
+      </ion-col>
+    </ion-row>
+  </ion-item>
+</ion-grid>

@@ -35,5 +35,9 @@ export class MenuComponent implements OnInit {
         this.navCtrl.push('ListComponent', { fromPage: 'handler', title: this.translateTexts['inspection.ipqa.handleProblem'] })
     }
 
+    goToAllProblems() {
+        this.navCtrl.push('AllProblemsComponent', { title: this.translateTexts['inspection.ipqa.handleProblem'] });
+    }
+
 
 }
