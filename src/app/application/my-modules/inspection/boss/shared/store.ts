@@ -3,7 +3,7 @@ import * as moment from 'moment'
 
 export interface BossReportState {
     Header:BossReportHeader;
-    Lines:BossReportLine[]
+    Lines:BossReportLineState[]
 }
 
 interface BossReportHeader {
@@ -16,24 +16,28 @@ interface BossReportHeader {
     TYPE: string;
 }
 
-interface BossReportLine {
-    HEADER_ID:string;
-    INSPECT_DATE:string;
-    INSPECT_TIME:string;
-    LOCATION:string;
-    LINE_ID:string;
-    PROBLEM_FLAG:'Y' | 'N' |'';
-    PROBLEM_DESC:string;
-    PROBLEM_PICTURES:string;
-    PROBLEM_STATUS: 'New' | 'Waiting' | 'Done' | 'Close' | 'Highlight';
-    OWNER_EMPNO:string;
-    SCORE:string;
-    COMPANY_NAME:string
+export interface BossReportLineState {
+    HEADER_ID?:string;
+    INSPECT_DATE?:string;
+    INSPECT_TIME?:string;
+    LOCATION?:string;
+    LINE_ID?:string;
+    PROBLEM_FLAG?:'Y' | 'N' |'';
+    PROBLEM_DESC?:string;
+    PROBLEM_PICTURES?:string;
+    PROBLEM_STATUS?: 'New' | 'Waiting' | 'Done' | 'Close' | 'Highlight';
+    OWNER_EMPNO?:string;
+    SCORE?:string;
+    COMPANY_NAME?:string;
+    ACTION_DATE?:string;
+    ACTION_DESC?:string;
+    ACTION_PICTURES?:string;
+    ACTION_STATUS?:string;
 }
 
 export class BossReportModel implements BossReportState {
     Header:BossReportHeader;
-    Lines:BossReportLine[];
+    Lines:BossReportLineState[];
     constructor(data:any) {
         this.Header = {} as BossReportHeader;
         this.Header.HEADER_ID =  data.REPORT_ID;
@@ -44,7 +48,7 @@ export class BossReportModel implements BossReportState {
         this.Header.TYPE = 'boss';
         this.Lines = [];
         data.lists.forEach((el:any) => {
-            let line = {} as BossReportLine;
+            let line = {} as BossReportLineState;
             line.COMPANY_NAME = this.Header.COMPANY_NAME;
             line.HEADER_ID = this.Header.HEADER_ID;
             line.INSPECT_DATE = this.Header.INSPECT_DATE;
@@ -55,7 +59,7 @@ export class BossReportModel implements BossReportState {
             line.LINE_ID = el.LINE_ID?el.LINE_ID:0;
             if(el.hasIssue) {
                 line.PROBLEM_STATUS = data.PROBLEM_STATUS
-                line.PROBLEM_PICTURES = el.imgs.join();
+                line.PROBLEM_PICTURES = el.imgs.map((i:string) => i.replace('data:image/jpeg;base64,','')).join();
                 line.PROBLEM_DESC = el.detail;
                 line.OWNER_EMPNO = el.inCharge.split(',')[0];
             }

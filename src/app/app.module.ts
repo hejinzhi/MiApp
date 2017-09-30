@@ -11,6 +11,8 @@ import { EffectsModule } from "@ngrx/effects";
 import { StoreModule } from "@ngrx/store";
 
 import { userReducer } from "./shared/reducers/user.reducer";
+import { lineReducer } from './application/my-modules/inspection/shared/reducers/line.reducer';
+
 import { MyAppComponent } from './app.component';
 import { ApplicationModule } from './application/application.module';
 import { MessageModule } from './message/message.module';
@@ -41,7 +43,7 @@ export function createTranslateLoader(http: Http) {
         deps: [Http]
       }
     }),
-    StoreModule.provideStore({ userReducer }),
+    StoreModule.provideStore({ userReducer, lineReducer }),
     BrowserModule,
     IonicModule.forRoot(MyAppComponent, {
       tabsHideOnSubPages: true,

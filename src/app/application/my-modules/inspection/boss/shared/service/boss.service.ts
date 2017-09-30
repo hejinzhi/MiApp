@@ -1,11 +1,13 @@
+import { Lines_Check, Lines_Delete } from './../../../shared/actions/line.action';
+import { InspectionService } from './../../../ipqa/shared/service/inspection.service';
 import { InspectionCommonService } from './../../../shared/service/inspectionCommon.service';
 import { Lines } from "./../model/lines";
-import { Slides } from 'ionic-angular';
+import { Slides, Loading } from 'ionic-angular';
 import { UserState } from './../../../../../../shared/models/user.model';
 import { MyStore } from './../../../../../../shared/store';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
-import { BossReportState, BossReportModel, BossReportInsideModel } from './../store';
+import { BossReportState, BossReportModel, BossReportInsideModel, BossReportLineState } from './../store';
 import { PluginService } from './../../../../../../core/services/plugin.service';
 import { MyHttpService } from './../../../../../../core/services/myHttp.service';
 import { Injectable } from '@angular/core';
@@ -23,7 +25,8 @@ export class BossService {
     private plugin: PluginService,
     private translate: TranslateService,
     private $store: Store<MyStore>,
-    private inspectionCommonService: InspectionCommonService
+    private inspectionCommonService: InspectionCommonService,
+    private inspectionService: InspectionService,
   ) {
     this.subscribeTranslateText();
     this.$store.select('userReducer').subscribe((user: UserState) => this.user = user);
@@ -67,24 +70,49 @@ export class BossService {
 
   uploadReport(data: any) {
     let send = this.convertReportData(data);
-    let request:any[] = [];
-    request.push(this.myHttp.post(BossConfig.uploadReport, this.convertReportData(data)))
-    send.Lines.forEach((li) => {
-      if(li.PROBLEM_PICTURES) {
+    let request: any[] = [];
+    send.Lines && send.Lines.forEach((li) => {
+      if (li.PROBLEM_PICTURES) {
         let imgs = li.PROBLEM_PICTURES.split(',');
-        if(imgs && imgs.length>0) {
+        li.PROBLEM_PICTURES = '';
+        if (imgs && imgs.length > 0) {
           imgs.forEach(i => {
-            request.push(this.uploadPicture(+li.LINE_ID,i));
+            if(i.indexOf(EnvConfig.baseUrl) > -1) {
+              i = i.replace(EnvConfig.baseUrl,'');
+              li.PROBLEM_PICTURES = !li.PROBLEM_PICTURES? i:li.PROBLEM_PICTURES+','+i;
+            } else {
+              request.push(this.uploadPicture(i),(url:any) => {
+                li.PROBLEM_PICTURES = !li.PROBLEM_PICTURES? url:li.PROBLEM_PICTURES+','+url.value;
+                console.log('完成上传图片'+request.length);
+              }); 
+            }
           })
         }
       }
     })
-    return Observable.forkJoin(...request).map((res:Response[]) => res.map((r) => r.json()));
+    const upload = (sendOut:any) => Observable.fromPromise(this.myHttp.post(BossConfig.uploadReport, sendOut)).map((res) => res.json());
+    if(request.length > 0) {
+      return Observable.forkJoin(...request).map((l) => {
+        console.log(l);
+        return upload(send)
+      });
+    } else {
+      return upload(send);
+    }
   }
 
-  uploadPicture(line_id:number,img:string) {
+  uploadPicture(img:string,cb?:Function) {
+    if(!img) return;
     img = img.replace('data:image/jpeg;base64,', '');
-    return this.inspectionCommonService.uploadPicture({LINE_ID:line_id,PICTURE:img});
+    return Observable.fromPromise(this.myHttp.post(BossConfig.uploadPicture,{ PICTURE:img })).map((res) => {
+      console.log(res.json());
+      
+      let url = res.json()['PICTURE_URL'];
+      console.log(url);
+      
+      cb && cb(url);
+      return Observable.of(url);
+    });
   }
 
   async getBossReport(id: string) {
@@ -107,23 +135,75 @@ export class BossService {
       .map(res => res.json())
   }
 
-  getOwnUndoneReport() {
+  getOwnUndoneReport(waiting: boolean = false,cb?:Function) {
     let userNo = this.user.empno;
     let status = ['Waiting', 'Highlight'];
     let type = 'boss';
-    return Observable.forkJoin(this.getExcReportData(status[0], userNo, type), this.getExcReportData(status[1], userNo, type)).map((list:any) => {
-      let filterList = list.filter((l:any) => l);
+    let loading: Loading;
+    if (waiting) {
+      loading = this.plugin.createLoading()
+      loading.present();
+    }
+    return Observable.forkJoin(this.getExcReportData(status[0], userNo, type), this.getExcReportData(status[1], userNo, type)).map((list: any) => {
+      let filterList = list.filter((l: any) => l);
       switch (filterList.length) {
         case 0:
-          return null;
+          return [];
         case 1:
           return filterList[0];
         case 2:
           return filterList[0].concat(filterList[1])
         default:
-          return null;
+          return [];
       }
-    })
+    }).subscribe((line: BossReportLineState[]) => {
+      if(waiting && line.length === 0) {
+        this.plugin.showToast('没查到待改善事项')
+      } else {
+        cb && cb();
+      }
+      this.$store.dispatch(new Lines_Check(line));
+    }, (err) => waiting ? this.plugin.errorDeal(err) : '', () => {
+      if (loading) {
+        loading.dismiss();
+      }
+    }
+      )
+  }
+
+  handleIssue(obj: { PROBLEM_STATUS: string, ACTION_DESC: string, ACTION_DATE: string, ACTION_STATUS: string, SCORE: string, LINE_ID: number }) {
+    return Observable.fromPromise(this.inspectionService.handleProblem(obj)).map((res) => res.status);
+  }
+
+  updateReportLines(data:BossReportLineState,cb?:Function,final?:Function) {
+    let request:any[];
+    if(data.ACTION_PICTURES) {
+      request = [];
+      let imgs = data.ACTION_PICTURES.split(',');
+      data.ACTION_PICTURES = '';
+      imgs.forEach((i) => {
+        if(i.indexOf('data:image/jpeg;base64,') < 0) {
+          data.ACTION_PICTURES = data.ACTION_PICTURES?data.ACTION_PICTURES+','+i:i;
+        } else {
+          request.push(this.uploadPicture(i),(url:string) => {
+            data.ACTION_PICTURES += i;
+            console.log('完成上传图片'+request.length+1);
+          } ); 
+        }
+      })
+    }
+    const upload = (sendOut:any) => Observable.fromPromise(this.myHttp.post(BossConfig.updateReportLines,sendOut)).map((res) => res.status).subscribe((s:any) =>{
+      if(s == 200) {
+        cb && cb();
+      }
+    },(err) => this.plugin.errorDeal(err),() => final && final());;
+    
+    if(request && request.length > 0) {
+      return Observable.forkJoin(...request).map((array:string[]) => array.join())
+      .subscribe((imgs:string) => upload(data));
+    } else {
+      return upload(data);
+    }
   }
 
 }

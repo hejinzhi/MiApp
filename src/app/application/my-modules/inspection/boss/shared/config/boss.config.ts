@@ -1,4 +1,4 @@
-import { EnvConfig } from '../../../../../../shared/config/env.config';
+import { EnvConfig } from './../../../../../../shared/config/env.config';
 
 export class BossConfig {
 
@@ -47,5 +47,26 @@ export class BossConfig {
      * @param {string} {company_name} 所属公司
      */
     static getExcReportData = EnvConfig.baseUrl + 'IPQA/GetExcReportData?problemStatus={problemStatus}&empno={empno}&type={type}&company_name={company_name}'
+
+    
+    /**
+     * URL
+     * 更新Lines表的数据
+     * post
+     * 2017-09-30
+     * @static
+     */
+    static updateReportLines = EnvConfig.baseUrl + 'IPQA/UpdateReportLines'
+
+    /**
+     * URL
+     * 上传图片，获得返回的url
+     * post { "PICTURE":"Base64 String..." }
+     * 2017-09-30
+     * @static
+     */
+    static uploadPicture =  EnvConfig.baseUrl + 'IPQA/UploadPicture';
+    
+    
     
 }
