@@ -1,3 +1,4 @@
+import { InspectionCommonService } from './../../service/inspectionCommon.service';
 import { Machine } from './../../../equip/shared/service/equip.service';
 import { Component, OnInit } from '@angular/core';
 import { ViewController, NavController, NavParams, AlertController, IonicPage } from 'ionic-angular';
@@ -15,13 +16,17 @@ export class InspSearchComponent implements OnInit {
     public navParams: NavParams,
     public alertCtrl: AlertController,
     public viewCtrl: ViewController,
-    private translate: TranslateService
+    private translate: TranslateService,
+    private inspectionCommonService: InspectionCommonService,
   ) { }
   translateTexts: any = {};
   type_id: any;
-  location1: string = '';
-  location2: string = '';
-  location3: string = '';
+  location1: any = '';
+  location2: any = '';
+  location3: any = '';
+  location1list: any = '';
+  location2list: any = '';
+  location3list: any = '';
   machine_no: string = '';
 
   /**
@@ -31,8 +36,18 @@ export class InspSearchComponent implements OnInit {
  * 1：EquipSettingComponent
  */
 
-  ngOnInit() {
+  async ngOnInit() {
     this.type_id = this.navParams.data.type;
+
+    if (this.type_id == 1) {
+      let res1: any = await this.inspectionCommonService.getMriLookup('EQUIP_LOCATION1');
+      this.location1list = res1.json();
+      let res2: any = await this.inspectionCommonService.getMriLookup('EQUIP_LOCATION2');
+      this.location2list = res2.json();
+      let res3: any = await this.inspectionCommonService.getMriLookup('EQUIP_LOCATION3');
+      this.location3list = res3.json();
+    }
+
   }
 
   ionViewDidLoad() {

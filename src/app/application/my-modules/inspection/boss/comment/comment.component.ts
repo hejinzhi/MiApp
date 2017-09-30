@@ -16,7 +16,7 @@ export class CommentComponent implements OnInit {
 
     selectMaxYear = +moment(new Date()).format('YYYY') + 1;
 
-    name_id: number = 2;
+    name_id: number = 3;
     mri_type: string = 'boss';
     start_date: string = moment(new Date()).format('YYYY-MM-DD');
     end_date: string = moment(new Date()).format('YYYY-MM-DD');

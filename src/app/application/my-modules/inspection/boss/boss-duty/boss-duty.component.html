@@ -22,11 +22,11 @@
       </ion-segment-button>
     </ion-segment>
   </ion-toolbar>
-  <ion-slides (pan)="panEvent($event)" #mySlider (ionDrag)="onSlideChanged($event)">
+  <ion-slides (pan)="panEvent($event)" #mySlider >
     <ion-slide>
       <div class="fixed-content">
         <ion-list>
-          <ion-item class="list">
+          <ion-item class="list" >
             <div class="content">第1組 2017/07/4 梁盾 17:55~21:05 3H</div>
             <div class="content">第1組 2017/07/4 陳智勇 17:55~21:05 3H</div>
           </ion-item>
@@ -55,9 +55,11 @@
     </ion-slide>
     <ion-slide>
       <ion-scroll scrollY="true" class="fixed-content">
-        <ion-list-header>
-          全部
-        </ion-list-header>
+        <ion-list>
+          <ion-item class="list" *ngFor="let items of allByGroup">
+            <div class="content" *ngFor="let item of items">第{{item.LINE_NUM}}組 {{item.SCHEDULE_DATE}} {{item.NAME}} {{item.ACUTAL_FROM_TIME}}~{{item.ACTUAL_TO_TIME}}   {{item.ACTUAL_HOURS}}H</div>
+          </ion-item>
+        </ion-list>
       </ion-scroll>
     </ion-slide>
 

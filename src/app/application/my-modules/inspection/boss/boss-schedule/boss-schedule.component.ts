@@ -254,7 +254,7 @@ export class BossScheduleComponent implements OnInit {
                 send_line_group.push({
                     "SCHEDULE_HEADER_ID": send_line.schedule_header_id,
                     "SCHEDULE_LINE_ID": send_line.schedule_line_id,
-                    "LINE_NUM": j + 1,
+                    "LINE_NUM": i + 1,
                     "EMPNO": send_line.empno,
                     "AREA": send_line.area
                 });
@@ -294,6 +294,7 @@ export class BossScheduleComponent implements OnInit {
             // this.errTip = res.content;
         } else {
             this.plugin.showToast(this.translateTexts['submit_success']);
+            this.init();
         };
     }
 }
