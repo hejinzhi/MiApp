@@ -26,6 +26,15 @@ export class AllProblemsComponent implements OnInit {
     }
 
     async changeTab() {
+        this.refreshData();
+    }
+
+    ionViewWillEnter() {
+        this.refreshData();
+    }
+
+
+    async refreshData() {
         if (this.status === 'New') {
             this.listData = await this.getNewList();
             this.fromPage = 'teamLeader';

@@ -20,5 +20,8 @@
       </ion-segment-button> -->
     </ion-segment>
   </div>
+  <div class="no-data" *ngIf="!listData">
+    暂无资料
+  </div>
   <sg-ipqa-item *ngFor="let item of listData" [item]="item" (tap)="goToExceptionPage(item)"></sg-ipqa-item>
 </ion-content>

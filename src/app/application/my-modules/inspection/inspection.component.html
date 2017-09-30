@@ -6,7 +6,7 @@
 <ion-content>
   <ion-grid>
     <ion-row center wrap>
-      <ion-col col-4 class="grid-col" (tap)="goToBoss()">
+      <ion-col col-4 class="grid-col" (tap)="goToBoss()" *ngIf="canSeeBoss()">
         <div class="grid-content">
           <a>
             <img src="assets/icon/7s.gif" class="grid-img">
@@ -14,7 +14,7 @@
           </a>
         </div>
       </ion-col>
-      <ion-col col-4 class="grid-col" (tap)="goToIPQA()">
+      <ion-col col-4 class="grid-col" (tap)="goToIPQA()" *ngIf="canSeeIPQA()">
         <div class="grid-content">
           <a>
             <img src="assets/icon/IPQA.gif" class="grid-img">
@@ -22,10 +22,10 @@
           </a>
         </div>
       </ion-col>
-      <ion-col col-4 class="grid-col">
+      <ion-col col-4 class="grid-col" *ngIf="canSeeEquip()" (tap)="goToEuqip()">
         <div class="grid-content">
           <a>
-            <img src="assets/icon/equip2.png" class="grid-img" (tap)="goToEuqip()">
+            <img src="assets/icon/equip2.png" class="grid-img">
             <div class="grid-name">{{'inspection.equip2' | translate}}</div>
           </a>
         </div>

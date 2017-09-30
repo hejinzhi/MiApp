@@ -45,11 +45,9 @@ export class ListComponent implements OnInit {
         }
         else if (this.fromPage === 'handler') {
             let currentUser = JSON.parse(localStorage.getItem('currentUser'));
-            console.log(currentUser);
             let res = await this.inspectionService.getExcReportData('Waiting', currentUser.empno, 'IPQA', EnvConfig.companyID);
             this.formData = res.json();
         }
-        console.log(this.formData);
     }
 
     goToExceptionPage(formData: IpqaModel) {

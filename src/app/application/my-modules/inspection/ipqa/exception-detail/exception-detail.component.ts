@@ -1,3 +1,4 @@
+import { InspectionCommonService } from './../../shared/service/inspectionCommon.service';
 import { EnvConfig } from './../../../../../shared/config/env.config';
 import { CommonService } from './../../../../../core/services/common.service';
 import { LocalStorageService } from './../../../../../core/services/localStorage.service';
@@ -40,7 +41,8 @@ export class ExceptionDetailComponent implements OnInit {
         private inspectionService: InspectionService,
         private translate: TranslateService,
         private localStorage: LocalStorageService,
-        private commonService: CommonService
+        private commonService: CommonService,
+        private inspectionCommonService: InspectionCommonService
     ) {
 
     }
@@ -238,14 +240,26 @@ export class ExceptionDetailComponent implements OnInit {
             await this.inspectionService.handleProblem(obj);
 
             if (this.actionPictures && this.actionPictures.length > 0) {
-                this.actionPictures.forEach(async (value, index) => {
-                    let img = value.replace('data:image/jpeg;base64,', '');
+                let images: string = '';
+
+                for (let i = 0; i < this.actionPictures.length; i++) {
+                    let len = this.actionPictures.length;
+                    let img = this.actionPictures[i].replace('data:image/jpeg;base64,', '');
                     try {
-                        await this.inspectionService.uploadActionPicture(this.formData.LINE_ID, img);
+                        // await this.inspectionService.uploadActionPicture(this.formData.LINE_ID, img);
+                        let imgUrl = await this.inspectionCommonService.uploadPicture({ PICTURE: img })
+                        if (imgUrl) {
+                            if (i < len - 1) {
+                                images += imgUrl + ',';
+                            } else {
+                                images += imgUrl;
+                            }
+                        }
                     } catch (e) {
                         console.log('upload action picture error', e);
                     }
-                });
+                }
+                await this.inspectionService.UpdateReportLines({ LINE_ID: this.formData.LINE_ID, ACTION_PICTURES: images });
             }
             this.commonService.hideLoading();
 
