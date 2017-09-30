@@ -33,7 +33,7 @@ export class MyHttpService {
 
     async initOptions(loginFlag: boolean) {
         let headers = new Headers({ 'Content-Type': 'application/json; charset=utf-8' });
-        if(!loginFlag) {
+        if (!loginFlag) {
             let token = JSON.parse(localStorage.getItem('access_token'));
             if (token && !this.isTokenExpired()) {
                 headers.append('access_token', token);
@@ -48,7 +48,7 @@ export class MyHttpService {
                         });
                         return;
                     }
-    
+
                 }
                 let newToken = res.json().Token;
                 localStorage.setItem('moduleList', JSON.stringify(res.json().Modules));

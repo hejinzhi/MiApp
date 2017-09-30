@@ -196,7 +196,7 @@ export class InspectionService {
         };
     }
 
-    async updateAndPostDate(report: ReportModel, banbie: string, checkList: Checklist[], lineName: string, stationName: string) {
+    async updateAndPostData(report: ReportModel, banbie: string, checkList: Checklist[], lineName: string, stationName: string) {
         let localData = this.combineIpqaReportObj(banbie, checkList, lineName, stationName);
         localData.Header.HEADER_ID = report.Header.HEADER_ID;
         localData.Lines.forEach((line, index) => {
@@ -225,18 +225,30 @@ export class InspectionService {
 
     // 上传问题图片
     findAndUploadPicture(stationId: number, reportData: ReportModel) {
+
         reportData.Lines.forEach(async (line, index) => {
             if (line.PROBLEM_FLAG === 'Y') {
                 let res = this.getExceptionDetail(stationId, line.CHECK_ID);
                 if (res.PROBLEM_PICTURES && res.PROBLEM_PICTURES.length > 0) {
-                    for (let i = 0; i < res.PROBLEM_PICTURES.length; i++) {
+                    let images: string = '';
+                    let len = res.PROBLEM_PICTURES.length;
+                    for (let i = 0; i < len; i++) {
                         let img = res.PROBLEM_PICTURES[i].replace('data:image/jpeg;base64,', '');
                         try {
-                            await this.inspectionCommonService.uploadPicture({ LINE_ID: line.LINE_ID, PICTURE: img });
+                            let imgUrl = await this.inspectionCommonService.uploadPicture({ PICTURE: img });
+                            if (imgUrl) {
+                                if (i < len - 1) {
+                                    images += imgUrl + ',';
+                                } else {
+                                    images += imgUrl;
+                                }
+                            }
                         } catch (e) {
                             console.log('Upload images fail!', e);
                         }
                     }
+                    //inspection.service.ts
+                    await this.UpdateReportLines({ LINE_ID: line.LINE_ID, PROBLEM_PICTURES: images });
                 }
             }
         });
@@ -251,7 +263,6 @@ export class InspectionService {
             let reportData: ReportModel = res.json();
             this.findAndUploadPicture(stationId, reportData);
         }
-
     }
 
     // 上传处理后照片
@@ -278,7 +289,7 @@ export class InspectionService {
                 let res = await this.inspectionCommonService.getReportData(localStation.headerId);
                 let dataFromServer: ReportModel = res.json();
                 if (dataFromServer) {
-                    headerId = await this.updateAndPostDate(dataFromServer, banbie, checkList, lineName, stationName);
+                    headerId = await this.updateAndPostData(dataFromServer, banbie, checkList, lineName, stationName);
                     await this.uploadPictures(stationId, headerId, dataFromServer);
                 } else {
                     headerId = await this.postDataFromLocal(banbie, checkList, lineName, stationName);
@@ -330,6 +341,10 @@ export class InspectionService {
     }
 
     handleProblem(obj: { PROBLEM_STATUS: string, ACTION_DESC: string, ACTION_DATE: string, ACTION_STATUS: string, SCORE: string, LINE_ID: number }) {
+        return this.myHttp.post(InspectionConfig.handleProblemUrl, obj);
+    }
+
+    UpdateReportLines(obj: any) {
         return this.myHttp.post(InspectionConfig.handleProblemUrl, obj);
     }
 

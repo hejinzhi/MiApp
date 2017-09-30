@@ -1,3 +1,4 @@
+import { IpqaItemComponentModule } from './../../shared/component/ipqa-item/ipqa-item.component.module';
 import { ListComponent } from './list.component';
 import { SharedModule } from './../../../../../shared/shared.module';
 import { NgModule } from '@angular/core';
@@ -9,7 +10,8 @@ import { TranslateModule } from '@ngx-translate/core';
     imports: [
         IonicPageModule.forChild(ListComponent),
         TranslateModule.forChild(),
-        SharedModule
+        SharedModule,
+        IpqaItemComponentModule
     ],
     entryComponents: [
         ListComponent
