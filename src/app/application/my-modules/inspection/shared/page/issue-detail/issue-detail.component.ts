@@ -1,3 +1,9 @@
+import { Lines_Delete } from './../../actions/line.action';
+import { MyStore } from './../../../../../../shared/store';
+import { Store } from '@ngrx/store';
+import { PluginService } from './../../../../../../core/services/plugin.service';
+import { BossReportLineState } from './../../../boss/shared/store';
+import { BossService } from './../../../boss/shared/service/boss.service';
 import { FormGroup, FormBuilder } from '@angular/forms';
 import { IonicPage, NavParams, AlertController, NavController } from 'ionic-angular';
 import { Component, OnInit } from '@angular/core';
@@ -14,7 +20,7 @@ import { NgValidatorExtendService } from './../../../../../../core/services/ng-v
 
 export class IssueDetailComponent implements OnInit {
     type:number=0;
-    issue:any;
+    issue:BossReportLineState;
     reportForm: FormGroup
     status:number=2;
     oldStatus:number = 2;
@@ -31,7 +37,10 @@ export class IssueDetailComponent implements OnInit {
         private navCtrl: NavController,
         private alertCtrl: AlertController,
         private fb: FormBuilder,
-        private validExd:NgValidatorExtendService,
+        private validExd: NgValidatorExtendService,
+        private bossService: BossService,
+        private plugin: PluginService,
+        private $store: Store<MyStore>
     ) { }
 
     ngOnInit() {
@@ -56,8 +65,13 @@ export class IssueDetailComponent implements OnInit {
               {
                 text: '确定',
                 handler: () => {
-                    console.log(4);
-                    this.navCtrl.pop();
+                    let loading = this.plugin.createLoading();
+                    loading.present();
+                    let send:BossReportLineState = {LINE_ID:this.issue.LINE_ID,OWNER_EMPNO:'-1',PROBLEM_STATUS:'New'};
+                    this.bossService.updateReportLines(send,() => {
+                        this.navCtrl.pop()
+                        this.$store.dispatch(new Lines_Delete(send));
+                    },() => loading && loading.dismiss());
                 }
               }
             ]
@@ -102,11 +116,20 @@ export class IssueDetailComponent implements OnInit {
     // }
 
     submit() {
-        console.log(this.reportForm.value);
+        let send = Object.assign({},this.reportForm.value);
+        send.PROBLEM_STATUS = 'Done';
+        send.ACTION_PICTURES = send.ACTION_PICTURES?send.ACTION_PICTURES.join():'';
+        send.LINE_ID = this.issue.LINE_ID;
+        let loading = this.plugin.createLoading();
+        loading.present();
+        this.bossService.updateReportLines(send,() => {
+            this.$store.dispatch(new Lines_Delete(send));
+            this.plugin.showToast('提交成功');
+            this.navCtrl.pop();
+        },() => loading && loading.dismiss())
     }
 
     update() {
-        console.log(this.issue.inCharge);
         console.log(this.status);
     }
 }

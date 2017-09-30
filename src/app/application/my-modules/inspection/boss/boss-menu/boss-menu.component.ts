@@ -17,6 +17,7 @@ export class BossMenuComponent implements OnInit {
     ) { }
 
     async ngOnInit() {
+        this.bossService.getOwnUndoneReport();
     }
 
     async goToReportPage() {
@@ -42,7 +43,7 @@ export class BossMenuComponent implements OnInit {
 
 
     goToPageImprove() {
-        this.navCtrl.push('IssueListComponent',{type:1})
+        this.bossService.getOwnUndoneReport(true,() => this.navCtrl.push('IssueListComponent',{type:1}));
     }
 
     goToPageAdminCheck() {

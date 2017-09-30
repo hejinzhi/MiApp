@@ -93,7 +93,8 @@ export class BossReportComponent implements OnInit {
      * 
      */
     async searchNote() {
-        this.selectSchedule = this.schedule.filter((i:any) => i.NAME_ID === this.scheduleType)[0];
+        this.selectSchedule = this.schedule.filter((i:any) => i.NAME_ID == this.scheduleType)[0];
+        if(!this.selectSchedule) return this.init();
         let id  = this.selectSchedule.REPORT_ID;
         let note;
         if(+id !== 0) {
@@ -105,6 +106,8 @@ export class BossReportComponent implements OnInit {
             
             note.people = this.selectSchedule.PERSON;
             this.init(note);
+        } else {
+            this.init();
         }
     }
 
@@ -159,7 +162,7 @@ export class BossReportComponent implements OnInit {
      */
     init(work: any = {}) {
         let date: string = moment(new Date()).format('YYYY-MM-DD');
-        work = work.date ? work : new ReportHead(date, this.plugin.chineseConv(this.schedule.filter((i:any) => i.NAME_ID === this.scheduleType)[0].PERSON))
+        work = work.date ? work : new ReportHead(date, this.plugin.chineseConv(this.selectSchedule.PERSON))
         this.reportForm = this.initForm(work);
         this.reportForm.valueChanges.subscribe((value) => {
             this.cacheService.update(this.className, this.type, value);
@@ -362,8 +365,7 @@ export class BossReportComponent implements OnInit {
         this.bossService.uploadReport(send).subscribe((d) => {
             console.log(d);
             this.clearCache();
-            loading.dismiss();
-        },(err) => {this.plugin.errorDeal(err);console.log(err)});
+        },(err) => {this.plugin.errorDeal(err);console.log(err);loading.dismiss()},() => loading.dismiss());
     }
 }
 

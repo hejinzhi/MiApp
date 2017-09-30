@@ -4,7 +4,7 @@
   </ion-navbar>
 </ion-header>
 <ion-content>
-  <sg-query-date></sg-query-date>
+  <sg-query-date [mri_type] ="'boss'"></sg-query-date>
   <div padding>
     <ion-segment [(ngModel)]="status" (ionChange)="changeShow()">
       <ion-segment-button value="1">
