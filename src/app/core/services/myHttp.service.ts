@@ -33,7 +33,7 @@ export class MyHttpService {
 
     async initOptions(loginFlag: boolean) {
         let headers = new Headers({ 'Content-Type': 'application/json; charset=utf-8' });
-        if(!loginFlag) {
+        if (!loginFlag) {
             let token = JSON.parse(localStorage.getItem('access_token'));
             if (token && !this.isTokenExpired()) {
                 headers.append('access_token', token);
@@ -48,7 +48,7 @@ export class MyHttpService {
                         });
                         return;
                     }
-    
+
                 }
                 let newToken = res.json().Token;
                 localStorage.setItem('moduleList', JSON.stringify(res.json().Modules));
@@ -84,6 +84,11 @@ export class MyHttpService {
     async get(url: string) {
         let options = await this.initOptions(false);
         return this.http.get(url, options).toPromise();
+    }
+
+    async delete(url: string) {
+        let options = await this.initOptions(false);
+        return this.http.delete(url, options).toPromise();
     }
 
     isTokenExpired() {

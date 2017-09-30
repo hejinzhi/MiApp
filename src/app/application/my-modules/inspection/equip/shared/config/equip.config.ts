@@ -5,6 +5,12 @@ import { EnvConfig } from './../../../../../../shared/config/env.config';
 export class EquipConfig {
     // static getNamesUrl = EnvConfig.baseUrl + 'name';
 
-    static UploadMachine = EnvConfig.baseUrl + 'IPQA/UploadMachineHdr';
+    static UploadMachineUrl = EnvConfig.baseUrl + 'IPQA/UploadMachineHdr';
+    
+    static getMachineListUrl = EnvConfig.baseUrl + 'IPQA/GetMachineList';
+     
+    static deleteMachineUrl = EnvConfig.baseUrl + 'IPQA/DeleteMachineHdr';
 
+    
+    
 }

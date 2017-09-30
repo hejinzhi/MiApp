@@ -1,7 +1,7 @@
 import { async } from '@angular/core/testing';
 import { PluginService } from './../../../../../core/services/plugin.service';
 import { InspectionCommonService } from './../../shared/service/inspectionCommon.service';
-import { NavController, IonicPage, AlertController } from 'ionic-angular';
+import { NavController, IonicPage, AlertController, PopoverController, NavParams } from 'ionic-angular';
 import { Observable, Observer } from 'rxjs/Rx';
 import { Component, OnInit } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
@@ -22,6 +22,7 @@ export class EquipSettingComponent implements OnInit {
 
     locations: any[] = [];
     mrinamelist: any[];
+    action: string = 'new';
 
     selectMaxYear = +moment(new Date()).format('YYYY') + 10;
 
@@ -37,41 +38,50 @@ export class EquipSettingComponent implements OnInit {
         private inspectionCommonService: InspectionCommonService,
         private alertCtrl: AlertController,
         private plugin: PluginService,
+        public popoverCtrl: PopoverController,
+        public navParams: NavParams,
     ) {
 
 
     }
 
     async ngOnInit() {
+        console.log(this.navParams.data, 222)
 
+        if (this.navParams.data.machine) {
+            this.machine = this.navParams.data.machine;
+            this.action = this.navParams.data.action;
+        } else {
+            this.machine = new Machine(0, '', '', '', 1, '', '', '', '', moment(new Date()).format('YYYY-MM'), '', '', '', '');
+        }
+        this.init(this.machine);
 
-        this.machine = new Machine(0, '', '', '', 1, '', '', '', '', moment(new Date()).format('YYYY-MM'), '', '', '', '');
-        this.locations = this.equipService.locations;
+        this.locations = await this.equipService.getLocations();
 
         let res = await this.inspectionCommonService.getMriName('equip');
         this.mrinamelist = res.json();
 
-        this.init(this.machine);
+
         this.subscribeTranslateText();
     }
 
     init(work: any = {}) {
         let fb = new FormBuilder();
-
+        let work1 = work ? work : new Machine(0, '', '', '', 1, '', '', '', '', moment(new Date()).format('YYYY-MM'), '', '', '', '');
         this.formModel = fb.group(
             {
-                machine_id: [work.machine_id],
-                machine_no: [work.machine_no, [Validators.required]],
+                machine_id: [work1.machine_id],
+                machine_no: [work1.machine_no, [Validators.required]],
                 company_name: [localStorage.getItem('appCompanyId')],
-                description: [work.description, [Validators.required]],
-                quantity: [work.quantity, [Validators.required]],
-                location1: [work.location1, [Validators.required]],
-                location4: [work.location4, [Validators.required]],
-                production_date: [work.production_date, [Validators.required]],
-                effective_date: [work.effective_date],
-                owner_empno: [work.owner_empno, [Validators.required]],
-                name_id: [work.name_id, [Validators.required]],
-                disable_date: [work.disable_date]
+                description: [work1.description, [Validators.required]],
+                quantity: [work1.quantity, [Validators.required]],
+                location1: [work1.location1 ? work1.location1 + '_' + work1.location2 + '_' + work1.location3 : '', [Validators.required]],
+                location4: [work1.location4, [Validators.required]],
+                production_date: [work1.production_date, [Validators.required]],
+                effective_date: [work1.effective_date],
+                owner_empno: [work1.owner_empno, [Validators.required]],
+                name_id: [work1.name_id, [Validators.required]],
+                disable_date: [work1.disable_date]
             });
 
     }
@@ -91,9 +101,9 @@ export class EquipSettingComponent implements OnInit {
     reSet(machineid: number) {
         let title;
         if (machineid == 0) {
-             title = this.translateTexts['reset_title'];
+            title = this.translateTexts['reset_title'];
         } else {
-             title = this.translateTexts['new_title'];
+            title = this.translateTexts['new_title'];
         }
 
         let confirm = this.alertCtrl.create({
@@ -113,6 +123,17 @@ export class EquipSettingComponent implements OnInit {
             ]
         });
         confirm.present();
+    }
+
+    presentPopover(myEvent: any) {
+        console.log(999);
+        let popover = this.popoverCtrl.create('InspMenuComponent', {
+            this: this,
+            type: '1'
+        });
+        popover.present({
+            ev: myEvent
+        });
     }
 
     async  saveForm() {
@@ -166,6 +187,7 @@ export class EquipSettingComponent implements OnInit {
             // this.errTip = res.content;
         } else {
             this.plugin.showToast(this.translateTexts['submit_success']);
+            this.machine.machine_id = res.content.MACHINE_ID;
             this.formModel.patchValue({
                 machine_id: res.content.MACHINE_ID
             })

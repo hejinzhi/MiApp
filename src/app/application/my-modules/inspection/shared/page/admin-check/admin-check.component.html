@@ -4,9 +4,7 @@
   </ion-navbar>
 </ion-header>
 <ion-content>
-
   <sg-query-date [mri_type] ="'boss'"></sg-query-date>
-
   <div padding>
     <ion-segment [(ngModel)]="status" (ionChange)="changeShow()">
       <ion-segment-button value="1">
@@ -27,9 +25,9 @@
     </ion-segment>
   </div>
   <div class="lists" *ngIf="type === 1">
-      <sg-boss-item *ngFor="let item of testData" (tap)="toDetail(item)" [item]="item"></sg-boss-item>
-    </div>
-    <div class="lists" *ngIf="type === 2">
-      <sg-equip-item *ngFor="let item of testData" (tap)="toDetail(item)" [item]="item"></sg-equip-item>
-    </div>
+    <sg-boss-item *ngFor="let item of testData" (tap)="toDetail(item)" [item]="item"></sg-boss-item>
+  </div>
+  <div class="lists" *ngIf="type === 2">
+    <sg-equip-item *ngFor="let item of testData" (tap)="toDetail(item)" [item]="item"></sg-equip-item>
+  </div>
 </ion-content>

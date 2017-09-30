@@ -9,7 +9,7 @@ import { Component, OnInit } from '@angular/core';
 export class AdminCheckComponent implements OnInit {
   statsList = ['待处理', '已处理', '待分配', 'HighLight']
   type: number = 0;
-  status: string = '5';
+  status: string = '1';
   testData1 = [{
     time: '2017-05-09 17:20', name: '小东', site: '楼递间', detail: '有垃圾', status: '待处理', inCharge: '小天'
   },
@@ -41,27 +41,27 @@ export class AdminCheckComponent implements OnInit {
   }
   initData() {
     if (this.type === 1) {
-      this.testData = this.testData1.slice();
+      this.testData = this.testData1;
     } else if (this.type === 2) {
-      this.testData = this.testData2.slice();
+      this.testData = this.testData2;
     }
   }
 
   changeShow() {
     this.initData();
     console.log(this.status);
-    if(+this.status < 5) {
-      this.testData = this.testData.filter((item) => item.status === this.statsList[+this.status-1])
+    if (+this.status < 5) {
+      this.testData = this.testData.filter((item) => item.status === this.statsList[+this.status - 1])
     }
   }
 
   toDetail(item: any) {
     console.log(item);
     this.navCtrl.push('IssueDetailComponent', {
-        issue: item,
-        type: this.type,
-        admin: true
+      issue: item,
+      type: this.type,
+      admin: true
     })
-}
+  }
 
 }

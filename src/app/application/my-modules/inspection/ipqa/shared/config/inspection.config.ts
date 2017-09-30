@@ -21,8 +21,10 @@ export class InspectionConfig {
 
     static getExcReportDataUrl = EnvConfig.baseUrl + 'IPQA/GetExcReportData';
 
-    static assignOwnerUrl = EnvConfig.baseUrl + 'IPQA/AssignOwner';
+    // static assignOwnerUrl = EnvConfig.baseUrl + 'IPQA/AssignOwner';
+    static assignOwnerUrl = EnvConfig.baseUrl + 'IPQA/UpdateReportLines';
 
-    static handleProblemUrl = EnvConfig.baseUrl + 'IPQA/HandleProblem';
+    // static handleProblemUrl = EnvConfig.baseUrl + 'IPQA/HandleProblem';
+    static handleProblemUrl = EnvConfig.baseUrl + 'IPQA/UpdateReportLines';
 
 }

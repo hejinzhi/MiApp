@@ -11,7 +11,10 @@ export class InspectionCommonService {
         private myHttp: MyHttpService,
     ) { }
 
-
+    // 获取权限
+    getPrivilege(moduleId: number) {
+        return this.myHttp.get(CommonConfig.getPrivilegeUrl + `?moduleID=${moduleId}`);
+    }
 
     insertReportData(report: ReportModel) {
         return this.myHttp.post(CommonConfig.insertReportData, report);
@@ -22,8 +25,13 @@ export class InspectionCommonService {
     }
 
     // 上传问题照片
-    uploadPicture(picture: { LINE_ID: number, PICTURE: string }) {
-        return this.myHttp.post(CommonConfig.uploadPicture, picture);
+    async uploadPicture(picture: { PICTURE: string }): Promise<string> {
+        // return this.myHttp.post(CommonConfig.uploadPicture, picture);
+        let res = await this.myHttp.post(CommonConfig.uploadPicture, picture);
+        if (res.json() && res.json().PICTURE_URL) {
+            return res.json().PICTURE_URL;
+        }
+        return '';
     }
 
     // 上传处理后图片
@@ -37,6 +45,9 @@ export class InspectionCommonService {
     }
 
 
+    getMriLookup(type: string) {
+        return this.myHttp.get(CommonConfig.getMriLookupUrl + '?lookup_type=' + type);
+    }
 
 }
 

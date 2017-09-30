@@ -14,7 +14,7 @@ export class MyRouter {
         navCtrl.push('BookLibraryComponent', { moduleID: 1 });
         break;
       case 21:
-        navCtrl.push('AttendanceComponent');
+        navCtrl.push('AttendanceComponent', { moduleID: 21 });
         break;
       case 22:
         // const browser = this.iab.create('http://oaweb.mic.com.tw/gsc/mobile/');
@@ -23,10 +23,10 @@ export class MyRouter {
         // const browser = this.iab.create('http://oaweb.mic.com.tw/gsc/mobile/');
         break;
       case 41:
-        navCtrl.push('ChartComponent');
+        navCtrl.push('ChartComponent', { moduleID: 41 });
         break;
       case 61:
-        navCtrl.push('InspectionComponent');
+        navCtrl.push('InspectionComponent', { moduleID: 61 });
         break;
       default:
         break;

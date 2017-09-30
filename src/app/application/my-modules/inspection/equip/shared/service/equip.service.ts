@@ -1,3 +1,5 @@
+import { async } from '@angular/core/testing';
+import { InspectionCommonService } from './../../../shared/service/inspectionCommon.service';
 import { PluginService } from './../../../../../../core/services/plugin.service';
 import { MyHttpService } from './../../../../../../core/services/myHttp.service';
 import { Injectable } from '@angular/core';
@@ -9,10 +11,11 @@ export class EquipService {
     constructor(
         private myHttp: MyHttpService,
         private plugin: PluginService,
+        private inspectionCommonService: InspectionCommonService,
     ) { }
 
     saveMachine(data: any) {
-        return this.myHttp.post(EquipConfig.UploadMachine, data).then((res) => {
+        return this.myHttp.post(EquipConfig.UploadMachineUrl, data).then((res) => {
             return Promise.resolve({ content: res.json(), status: true })
         }).catch((err) => {
             console.log(err);
@@ -21,39 +24,48 @@ export class EquipService {
         });
     }
 
-    locations = [
-        {
-            name: 'col1',
-            options: [
-                { text: '廠區', value: '廠區' },
-                { text: '生活區', value: '生活區' },
-                { text: '廣泓', value: '廣泓' }
-            ]
-        }, {
-            name: 'col2',
-            options: [
-                { text: 'S6', value: 'S6', parentVal: '廠區' },
-                { text: 'S7', value: 'S7', parentVal: '廠區' },
-                { text: 'Q1', value: 'Q1', parentVal: '生活區' },
-                { text: 'Q2', value: 'Q2', parentVal: '生活區' },
-                { text: 'K1', value: 'K1', parentVal: '廣泓' }
-            ]
-        }, {
-            name: 'col3',
-            options: [
-                { text: '1F', value: '1F', parentVal: 'S6' },
-                { text: '2F', value: '2F', parentVal: 'S6' },
-                { text: '3F', value: '3F', parentVal: 'S7' },
-                { text: '4F', value: '4F', parentVal: 'S7' },
-                { text: '1F', value: '1F', parentVal: 'Q1' },
-                { text: '4F', value: '4F', parentVal: 'Q1' },
-                { text: '5F', value: '5F', parentVal: 'Q2' },
-                { text: '1F', value: '1F', parentVal: 'K1' },
-                { text: '2F', value: '2F', parentVal: 'K1' },
-                { text: '3F', value: '3F', parentVal: 'K1' }
-            ]
-        }
-    ];
+    getMachineList(location1: string, location2: string, location3: string, machine_no: string) {
+        return this.myHttp.get(EquipConfig.getMachineListUrl + '?loc1=' + location1 + '&loc2=' + location2 + '&loc3=' + location3 + '&machine_no=' + machine_no);
+    }
+
+    deleteMachine(machine_id: number) {
+        return this.myHttp.delete(EquipConfig.deleteMachineUrl + '?machine_id=' + machine_id);
+    }
+
+    async  getLocations() {
+        let res1: any = await this.inspectionCommonService.getMriLookup('EQUIP_LOCATION1');
+        let location1 = res1.json();
+        let res2: any = await this.inspectionCommonService.getMriLookup('EQUIP_LOCATION2');
+        let location2 = res2.json();
+        let res3: any = await this.inspectionCommonService.getMriLookup('EQUIP_LOCATION3');
+        let location3 = res3.json();
+        let location1_data: any[] = [];
+        let location2_data: any[] = [];
+        let location3_data: any[] = [];
+        location1.forEach((location: any) => {
+            location1_data.push({ text: location.LOOKUP_CODE, value: location.LOOKUP_CODE });
+        });
+        location2.forEach((location: any) => {
+            location2_data.push({ text: location.LOOKUP_CODE, value: location.LOOKUP_CODE, parentVal: location.DESCRIPTION });
+        });
+        location3.forEach((location: any) => {
+            location3_data.push({ text: location.LOOKUP_CODE, value: location.LOOKUP_CODE, parentVal: location.DESCRIPTION });
+        });
+
+        let locations: any[] = [
+            {
+                name: 'col1',
+                options: location1_data
+            }, {
+                name: 'col2',
+                options: location2_data
+            }, {
+                name: 'col3',
+                options: location3_data
+            }
+        ];
+        return locations;
+    }
 }
 
 export class Machine {
