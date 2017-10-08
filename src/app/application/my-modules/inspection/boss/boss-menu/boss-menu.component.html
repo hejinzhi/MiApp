@@ -6,7 +6,7 @@
 <ion-content>
   <ion-grid>
     <ion-row center wrap>
-      <ion-col col-4 class="grid-col" (tap)="goToCheckListPage()">
+      <ion-col col-4  class="grid-col" (tap)="goToCheckListPage()">
         <div class="grid-content">
           <a>
             <img src="assets/icon/list.gif" class="grid-img">
@@ -37,6 +37,7 @@
             <div class="grid-name">{{'inspection.gaishan' | translate}}</div>
           </a>
         </div>
+        <div class="badge" *ngIf="(tips.ownImprove | async)>0">{{tips.ownImprove | async}}</div>
       </ion-col>
       <ion-col col-4 class="grid-col" (tap)="goToPageAdminCheck()">
         <div class="grid-content">
@@ -45,6 +46,7 @@
             <div class="grid-name">{{'inspection.problem' | translate}}</div>
           </a>
         </div>
+        <div class="badge" *ngIf="(tips.adminCheck  | async )> 0 ">{{tips.adminCheck | async}}</div>
       </ion-col>
       <ion-col col-4 class="grid-col" (tap)="goToDutyPage()">
         <div class="grid-content">

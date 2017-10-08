@@ -1,3 +1,5 @@
+import { BossService } from './boss/shared/service/boss.service';
+import { Observable } from 'rxjs/Rx';
 import { InspectionCommonService } from './shared/service/inspectionCommon.service';
 import { InspectionService } from './ipqa/shared/service/inspection.service';
 import { IpqaComponent } from './ipqa/ipqa.component';
@@ -12,15 +14,18 @@ import { Component, OnInit } from '@angular/core';
     templateUrl: 'inspection.component.html'
 })
 export class InspectionComponent implements OnInit {
+    bossTips:Observable<number>;
     constructor(
         private navCtrl: NavController,
         private navParams: NavParams,
-        private inspectionCommonService: InspectionCommonService
+        private inspectionCommonService: InspectionCommonService,
+        private bossService: BossService
     ) { }
 
     privilegeList: { USER_ROLE: any[], USER_FUNCTION: any[] };
 
     async ngOnInit() {
+        this.bossTips = this.bossService.ObserveAllTips();
         let moduleID = this.navParams.get('moduleID');
         let res = await this.inspectionCommonService.getPrivilege(moduleID);
         this.privilegeList = res.json();

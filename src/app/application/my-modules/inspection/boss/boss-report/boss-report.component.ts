@@ -102,8 +102,6 @@ export class BossReportComponent implements OnInit {
             loading.present();
             note = await this.bossService.getBossReport(id);
             loading.dismiss();
-            console.log(note);
-            
             note.people = this.selectSchedule.PERSON;
             this.init(note);
         } else {

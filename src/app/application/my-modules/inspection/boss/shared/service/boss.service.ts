@@ -1,3 +1,4 @@
+import { Lines_All_Search } from './../../../shared/actions/lineAll.action';
 import { Lines_Check, Lines_Delete } from './../../../shared/actions/line.action';
 import { InspectionService } from './../../../ipqa/shared/service/inspection.service';
 import { InspectionCommonService } from './../../../shared/service/inspectionCommon.service';
@@ -30,6 +31,8 @@ export class BossService {
   ) {
     this.subscribeTranslateText();
     this.$store.select('userReducer').subscribe((user: UserState) => this.user = user);
+    this.getOwnUndoneReport();
+    this.getALLReport('', '', '');
   }
 
   subscribeTranslateText() {
@@ -81,9 +84,10 @@ export class BossService {
               i = i.replace(EnvConfig.baseUrl,'');
               li.PROBLEM_PICTURES = !li.PROBLEM_PICTURES? i:li.PROBLEM_PICTURES+','+i;
             } else {
+              let l = request.length;
               request.push(this.uploadPicture(i),(url:any) => {
-                li.PROBLEM_PICTURES = !li.PROBLEM_PICTURES? url:li.PROBLEM_PICTURES+','+url.value;
-                console.log('完成上传图片'+request.length);
+                li.PROBLEM_PICTURES = !li.PROBLEM_PICTURES? url.value:li.PROBLEM_PICTURES+','+url.value;
+                console.log('完成上传图片'+(l+1));
               }); 
             }
           })
@@ -105,13 +109,9 @@ export class BossService {
     if(!img) return;
     img = img.replace('data:image/jpeg;base64,', '');
     return Observable.fromPromise(this.myHttp.post(BossConfig.uploadPicture,{ PICTURE:img })).map((res) => {
-      console.log(res.json());
-      
       let url = res.json()['PICTURE_URL'];
-      console.log(url);
-      
       cb && cb(url);
-      return Observable.of(url);
+      return url;
     });
   }
 
@@ -171,6 +171,28 @@ export class BossService {
       )
   }
 
+  getALLReport(from: string, to: string, type: string, waiting:boolean = false,cb?: Function) {
+    let loading: Loading;
+    if (waiting) {
+      loading = this.plugin.createLoading()
+      loading.present();
+    }
+    return this.getExcReportData('', '' , type).map((list: any) => list? list: []
+    ).subscribe((line: BossReportLineState[]) => {
+      if(waiting && line.length === 0) {
+        this.plugin.showToast('没查到记录')
+      } else {
+        cb && cb();
+      }
+      this.$store.dispatch(new Lines_All_Search(line));
+    }, (err) => waiting ? this.plugin.errorDeal(err) : '', () => {
+      if (loading) {
+        loading.dismiss();
+      }
+    }
+      )
+  }
+
   handleIssue(obj: { PROBLEM_STATUS: string, ACTION_DESC: string, ACTION_DATE: string, ACTION_STATUS: string, SCORE: string, LINE_ID: number }) {
     return Observable.fromPromise(this.inspectionService.handleProblem(obj)).map((res) => res.status);
   }
@@ -182,12 +204,13 @@ export class BossService {
       let imgs = data.ACTION_PICTURES.split(',');
       data.ACTION_PICTURES = '';
       imgs.forEach((i) => {
-        if(i.indexOf('data:image/jpeg;base64,') < 0) {
+        if(i.indexOf(EnvConfig.baseUrl) > -1) {
           data.ACTION_PICTURES = data.ACTION_PICTURES?data.ACTION_PICTURES+','+i:i;
         } else {
-          request.push(this.uploadPicture(i),(url:string) => {
-            data.ACTION_PICTURES += i;
-            console.log('完成上传图片'+request.length+1);
+          let l = request.length;
+          request.push(this.uploadPicture(i),(url:any) => {
+            data.ACTION_PICTURES = data.ACTION_PICTURES?data.ACTION_PICTURES+','+url.value:url.value;
+            console.log('完成上传图片'+(l+1));
           } ); 
         }
       })
@@ -199,11 +222,31 @@ export class BossService {
     },(err) => this.plugin.errorDeal(err),() => final && final());;
     
     if(request && request.length > 0) {
-      return Observable.forkJoin(...request).map((array:string[]) => array.join())
-      .subscribe((imgs:string) => upload(data));
+      return Observable.forkJoin(...request).subscribe((imgs) => upload(data),(err) => {this.plugin.errorDeal(err); final && final()});
     } else {
       return upload(data);
     }
+  }
+
+  updateLinesByAdmin(data:BossReportLineState,cb?:Function,final?:Function) {
+    return Observable.fromPromise(this.myHttp.post(BossConfig.updateReportLines,data)).map((res) => res.status).subscribe((s:any) =>{
+      if(s == 200) {
+        cb && cb();
+      }
+    },(err) => this.plugin.errorDeal(err),() => final && final());
+  }
+
+  ObserveOwnLinesCount() {
+    return this.$store.select('lineReducer').map((lines:BossReportLineState[]) => lines.length);
+  }
+
+  ObserveAdminLinesDealCount() {
+    return this.$store.select('lineAllReducer').map((lines:BossReportLineState[]) => lines.map((l) => l.PROBLEM_STATUS === 'New').length);
+  }
+
+  ObserveAllTips() {
+    return Observable.combineLatest(this.ObserveOwnLinesCount(),this.ObserveAdminLinesDealCount())
+    .map(counts => counts[0]+counts[1]); 
   }
 
 }

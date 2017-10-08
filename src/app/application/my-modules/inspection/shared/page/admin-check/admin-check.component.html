@@ -1,6 +1,9 @@
 <ion-header>
   <ion-navbar>
     <ion-title>巡检报告问题追踪</ion-title>
+    <ion-buttons end >
+      <button ion-button>查询</button>
+    </ion-buttons>
   </ion-navbar>
 </ion-header>
 <ion-content>
@@ -24,7 +27,7 @@
       </ion-segment-button>
     </ion-segment>
   </div>
-  <div class="lists" *ngIf="type === 1">
+  <div class="lists" *ngIf="testData && type === 1 ">
     <sg-boss-item *ngFor="let item of testData" (tap)="toDetail(item)" [item]="item"></sg-boss-item>
   </div>
   <div class="lists" *ngIf="type === 2">

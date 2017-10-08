@@ -50,9 +50,10 @@ export class SearchColleagueComponent implements OnInit {
       if (inVal) {
         this.attendanceService.getAgent(inVal.split(',')[0]).subscribe((val) => {
           if (val && val.length === 1) {
+            let name = val[0].AGENT_NAME
             this.tempcolleague = name;
             this.isSelectcolleague = true;
-            this.formCtr.setValue(val[0].AGENT_NAME);
+            this.formCtr.setValue(name);
             this.searchTerms.next('');
           } else {
             this.formCtr.setValue('');

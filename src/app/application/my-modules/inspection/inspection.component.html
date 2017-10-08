@@ -6,13 +6,14 @@
 <ion-content>
   <ion-grid>
     <ion-row center wrap>
-      <ion-col col-4 class="grid-col" (tap)="goToBoss()" *ngIf="canSeeBoss()">
+      <ion-col col-4 class="grid-col" (tap)="goToBoss()" >
         <div class="grid-content">
           <a>
             <img src="assets/icon/7s.gif" class="grid-img">
             <div class="grid-name">{{'inspection.boss' | translate}}</div>
           </a>
         </div>
+        <div class="badge" *ngIf="(bossTips  | async )> 0 ">{{bossTips | async}}</div>
       </ion-col>
       <ion-col col-4 class="grid-col" (tap)="goToIPQA()" *ngIf="canSeeIPQA()">
         <div class="grid-content">

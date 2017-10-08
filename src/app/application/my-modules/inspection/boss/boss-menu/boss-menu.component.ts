@@ -1,3 +1,7 @@
+import { Observable } from 'rxjs';
+import { BossReportLineState } from "./../shared/store";
+import { MyStore } from './../../../../../shared/store';
+import { Store } from '@ngrx/store';
 import { PluginService } from './../../../../../core/services/plugin.service';
 import { IonicPage, NavController, Loading } from 'ionic-angular';
 import { Component, OnInit } from '@angular/core';
@@ -10,14 +14,26 @@ import { BossService } from './../shared/service/boss.service';
 })
 export class BossMenuComponent implements OnInit {
     translateTexts: any;
+    tips:{
+        ownImprove: Observable<number>,
+        adminCheck: Observable<number>,
+        comment: Observable<number>
+    }
     constructor(
         private navCtrl: NavController,
         private bossService: BossService,
-        private plugin: PluginService
+        private plugin: PluginService,
+        private $store: Store<MyStore>
     ) { }
 
     async ngOnInit() {
-        this.bossService.getOwnUndoneReport();
+        this.tips = {
+            ownImprove:Observable.of(0),
+            adminCheck:Observable.of(0),
+            comment:Observable.of(0)
+        }
+        this.tips.ownImprove = this.bossService.ObserveOwnLinesCount();
+        this.tips.adminCheck = this.bossService.ObserveAdminLinesDealCount();
     }
 
     async goToReportPage() {
@@ -47,7 +63,7 @@ export class BossMenuComponent implements OnInit {
     }
 
     goToPageAdminCheck() {
-        this.navCtrl.push('AdminCheckComponent',{type:1})
+        this.bossService.getALLReport('','','',true,() => this.navCtrl.push('AdminCheckComponent',{type:1}));
     }
     goToSchedulePage() {
         this.navCtrl.push('BossScheduleComponent');
