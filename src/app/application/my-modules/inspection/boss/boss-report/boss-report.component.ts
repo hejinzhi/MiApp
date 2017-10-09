@@ -251,7 +251,7 @@ export class BossReportComponent implements OnInit {
         data = data || { detail: '', imgs: [], inCharge: '' };
         sub.addControl('detail', new FormControl(data.detail, [this.validExd.required()]));
         sub.addControl('imgs', new FormControl(data.imgs));
-        sub.addControl('inCharge', new FormControl(data.inCharge, [this.validExd.required()]));
+        sub.addControl('inCharge', new FormControl(data.inCharge));
         return sub;
     }
 
@@ -356,8 +356,6 @@ export class BossReportComponent implements OnInit {
      */
     submit() {
         let send = Object.assign(this.reportForm.value,this.selectSchedule);
-        send.PROBLEM_STATUS = 'Waiting';
-        console.log(send);
         let loading = this.plugin.createLoading();
         loading.present();
         this.bossService.uploadReport(send).subscribe((d) => {

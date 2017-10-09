@@ -3,6 +3,7 @@ sg-boss-menu {
     position: relative;
     text-align: center;
     .grid-content {
+      position: relative;
       .grid-img {
         width: 50%;
       }
@@ -28,9 +29,9 @@ sg-boss-menu {
     line-height: 18px;
     border-radius: 10px;
     top: -87%;
-    right: -60%;
+    right: -70%;
     text-align: center;
-    font-size: 12px;
+    font-size: 1.2rem;
     color: white;
     overflow: hidden;
   }

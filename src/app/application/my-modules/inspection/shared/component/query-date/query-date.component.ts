@@ -1,6 +1,6 @@
+import { Query } from './../../model/common';
 import { InspectionCommonService } from './../../service/inspectionCommon.service';
 import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
-import { IonicPage } from 'ionic-angular';
 import * as moment from 'moment'
 
 @Component({
@@ -21,9 +21,8 @@ export class QueryDateComponent implements OnInit {
   end_date: string;
 
 
-  @Output() name_id_change = new EventEmitter();
-  @Output() start_date_change = new EventEmitter();
-  @Output() end_date_change = new EventEmitter();
+  @Output() 
+  change = new EventEmitter<Query>()
 
   selectMaxYear = +moment(new Date()).format('YYYY') + 1;
 
@@ -38,18 +37,16 @@ export class QueryDateComponent implements OnInit {
     this.end_date = this.end_date || moment(Date.parse(new Date().toString())).format('YYYY-MM-DD');
     let res = await this.commonService.getMriName(this.mri_type);
     this.mrinamelist = res.json();
+    this.name_id = this.mrinamelist[0].NAME_ID;
+    this.changeQuery();
   }
 
-  changeNameId() {
-    this.name_id_change.emit(this.name_id);
-  }
-
-  changeStartDate() {
-    this.start_date_change.emit(this.start_date);
-  }
-
-  changeEndDate() {
-    this.end_date_change.emit(this.end_date);
+  changeQuery() {
+    this.change.emit({
+      nameID: this.name_id,
+      dateFM:this.start_date,
+      dateTO: this.end_date
+    });
   }
 
 }

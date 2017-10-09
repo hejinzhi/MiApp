@@ -1,3 +1,4 @@
+import { Query } from './../../../shared/model/common';
 import { Lines_All_Search } from './../../../shared/actions/lineAll.action';
 import { Lines_Check, Lines_Delete } from './../../../shared/actions/line.action';
 import { InspectionService } from './../../../ipqa/shared/service/inspection.service';
@@ -21,6 +22,7 @@ export class BossService {
 
   translateTexts: any = {};
   user: UserState;
+  moduleID = 61;
   constructor(
     private myHttp: MyHttpService,
     private plugin: PluginService,
@@ -32,7 +34,6 @@ export class BossService {
     this.subscribeTranslateText();
     this.$store.select('userReducer').subscribe((user: UserState) => this.user = user);
     this.getOwnUndoneReport();
-    this.getALLReport('', '', '');
   }
 
   subscribeTranslateText() {
@@ -41,6 +42,15 @@ export class BossService {
     ]).subscribe((res) => {
       this.translateTexts = res;
     })
+  }
+
+  isBossAdmin() {
+    let idx = this.user.privilege.findIndex((p) => p.moduleID === this.moduleID);
+    if (idx > -1) {
+      return this.user.privilege[idx].function.find((l) => l.FUNCTION_NAME === 'BOSS');
+    } else {
+      return false
+    };
   }
 
   getMriName() {
@@ -80,22 +90,22 @@ export class BossService {
         li.PROBLEM_PICTURES = '';
         if (imgs && imgs.length > 0) {
           imgs.forEach(i => {
-            if(i.indexOf(EnvConfig.baseUrl) > -1) {
-              i = i.replace(EnvConfig.baseUrl,'');
-              li.PROBLEM_PICTURES = !li.PROBLEM_PICTURES? i:li.PROBLEM_PICTURES+','+i;
+            if (i.indexOf(EnvConfig.baseUrl) > -1) {
+              i = i.replace(EnvConfig.baseUrl, '');
+              li.PROBLEM_PICTURES = !li.PROBLEM_PICTURES ? i : li.PROBLEM_PICTURES + ',' + i;
             } else {
               let l = request.length;
-              request.push(this.uploadPicture(i),(url:any) => {
-                li.PROBLEM_PICTURES = !li.PROBLEM_PICTURES? url.value:li.PROBLEM_PICTURES+','+url.value;
-                console.log('完成上传图片'+(l+1));
-              }); 
+              request.push(this.uploadPicture(i), (url: any) => {
+                li.PROBLEM_PICTURES = !li.PROBLEM_PICTURES ? url.value : li.PROBLEM_PICTURES + ',' + url.value;
+                console.log('完成上传图片' + (l + 1));
+              });
             }
           })
         }
       }
     })
-    const upload = (sendOut:any) => Observable.fromPromise(this.myHttp.post(BossConfig.uploadReport, sendOut)).map((res) => res.json());
-    if(request.length > 0) {
+    const upload = (sendOut: any) => Observable.fromPromise(this.myHttp.post(BossConfig.uploadReport, sendOut)).map((res) => res.json());
+    if (request.length > 0) {
       return Observable.forkJoin(...request).map((l) => {
         console.log(l);
         return upload(send)
@@ -105,10 +115,10 @@ export class BossService {
     }
   }
 
-  uploadPicture(img:string,cb?:Function) {
-    if(!img) return;
+  uploadPicture(img: string, cb?: Function) {
+    if (!img) return;
     img = img.replace('data:image/jpeg;base64,', '');
-    return Observable.fromPromise(this.myHttp.post(BossConfig.uploadPicture,{ PICTURE:img })).map((res) => {
+    return Observable.fromPromise(this.myHttp.post(BossConfig.uploadPicture, { PICTURE: img })).map((res) => {
       let url = res.json()['PICTURE_URL'];
       cb && cb(url);
       return url;
@@ -135,7 +145,7 @@ export class BossService {
       .map(res => res.json())
   }
 
-  getOwnUndoneReport(waiting: boolean = false,cb?:Function) {
+  getOwnUndoneReport(waiting: boolean = false, cb?: Function) {
     let userNo = this.user.empno;
     let status = ['Waiting', 'Highlight'];
     let type = 'boss';
@@ -157,7 +167,7 @@ export class BossService {
           return [];
       }
     }).subscribe((line: BossReportLineState[]) => {
-      if(waiting && line.length === 0) {
+      if (waiting && line.length === 0) {
         this.plugin.showToast('没查到待改善事项')
       } else {
         cb && cb();
@@ -171,25 +181,30 @@ export class BossService {
       )
   }
 
-  getALLReport(from: string, to: string, type: string, waiting:boolean = false,cb?: Function) {
+  getAdminLinesAll(query: Query, type:string, waiting: boolean = false, cb?: Function) {
     let loading: Loading;
     if (waiting) {
       loading = this.plugin.createLoading()
       loading.present();
     }
-    return this.getExcReportData('', '' , type).map((list: any) => list? list: []
-    ).subscribe((line: BossReportLineState[]) => {
-      if(waiting && line.length === 0) {
-        this.plugin.showToast('没查到记录')
-      } else {
-        cb && cb();
+    return Observable.fromPromise(this.myHttp.get(BossConfig.getAdminLinesAll.replace('{nameID}', query.nameID+'')
+      .replace('{dateFM}', query.dateFM).replace('{dateTO}', query.dateTO).replace('{company_name}', EnvConfig.companyID).replace('{type}','boss'))).map((res) => {
+        console.log(res.json());
+        
+        return res.json()}).
+      map((list: any) => list ? list : []
+      ).subscribe((line: BossReportLineState[]) => {
+        if (waiting && line.length === 0) {
+          this.plugin.showToast('没查到记录')
+        } else {
+          cb && cb();
+        }
+        this.$store.dispatch(new Lines_All_Search(line));
+      }, (err) => waiting ? this.plugin.errorDeal(err) : '', () => {
+        if (loading) {
+          loading.dismiss();
+        }
       }
-      this.$store.dispatch(new Lines_All_Search(line));
-    }, (err) => waiting ? this.plugin.errorDeal(err) : '', () => {
-      if (loading) {
-        loading.dismiss();
-      }
-    }
       )
   }
 
@@ -197,56 +212,56 @@ export class BossService {
     return Observable.fromPromise(this.inspectionService.handleProblem(obj)).map((res) => res.status);
   }
 
-  updateReportLines(data:BossReportLineState,cb?:Function,final?:Function) {
-    let request:any[];
-    if(data.ACTION_PICTURES) {
+  updateReportLines(data: BossReportLineState, cb?: Function, final?: Function) {
+    let request: any[];
+    if (data.ACTION_PICTURES) {
       request = [];
       let imgs = data.ACTION_PICTURES.split(',');
       data.ACTION_PICTURES = '';
       imgs.forEach((i) => {
-        if(i.indexOf(EnvConfig.baseUrl) > -1) {
-          data.ACTION_PICTURES = data.ACTION_PICTURES?data.ACTION_PICTURES+','+i:i;
+        if (i.indexOf(EnvConfig.baseUrl) > -1) {
+          data.ACTION_PICTURES = data.ACTION_PICTURES ? data.ACTION_PICTURES + ',' + i : i;
         } else {
           let l = request.length;
-          request.push(this.uploadPicture(i),(url:any) => {
-            data.ACTION_PICTURES = data.ACTION_PICTURES?data.ACTION_PICTURES+','+url.value:url.value;
-            console.log('完成上传图片'+(l+1));
-          } ); 
+          request.push(this.uploadPicture(i), (url: any) => {
+            data.ACTION_PICTURES = data.ACTION_PICTURES ? data.ACTION_PICTURES + ',' + url.value : url.value;
+            console.log('完成上传图片' + (l + 1));
+          });
         }
       })
     }
-    const upload = (sendOut:any) => Observable.fromPromise(this.myHttp.post(BossConfig.updateReportLines,sendOut)).map((res) => res.status).subscribe((s:any) =>{
-      if(s == 200) {
+    const upload = (sendOut: any) => Observable.fromPromise(this.myHttp.post(BossConfig.updateReportLines, sendOut)).map((res) => res.status).subscribe((s: any) => {
+      if (s == 200) {
         cb && cb();
       }
-    },(err) => this.plugin.errorDeal(err),() => final && final());;
-    
-    if(request && request.length > 0) {
-      return Observable.forkJoin(...request).subscribe((imgs) => upload(data),(err) => {this.plugin.errorDeal(err); final && final()});
+    }, (err) => this.plugin.errorDeal(err), () => final && final());;
+
+    if (request && request.length > 0) {
+      return Observable.forkJoin(...request).subscribe((imgs) => upload(data), (err) => { this.plugin.errorDeal(err); final && final() });
     } else {
       return upload(data);
     }
   }
 
-  updateLinesByAdmin(data:BossReportLineState,cb?:Function,final?:Function) {
-    return Observable.fromPromise(this.myHttp.post(BossConfig.updateReportLines,data)).map((res) => res.status).subscribe((s:any) =>{
-      if(s == 200) {
+  updateLinesByAdmin(data: BossReportLineState, cb?: Function, final?: Function) {
+    return Observable.fromPromise(this.myHttp.post(BossConfig.updateReportLines, data)).map((res) => res.status).subscribe((s: any) => {
+      if (s == 200) {
         cb && cb();
       }
-    },(err) => this.plugin.errorDeal(err),() => final && final());
+    }, (err) => this.plugin.errorDeal(err), () => final && final());
   }
 
   ObserveOwnLinesCount() {
-    return this.$store.select('lineReducer').map((lines:BossReportLineState[]) => lines.length);
+    return this.$store.select('lineReducer').map((lines: BossReportLineState[]) => lines.length);
   }
 
   ObserveAdminLinesDealCount() {
-    return this.$store.select('lineAllReducer').map((lines:BossReportLineState[]) => lines.map((l) => l.PROBLEM_STATUS === 'New').length);
+    return this.$store.select('lineAllReducer').map((lines: BossReportLineState[]) => lines.filter((l) => l.PROBLEM_STATUS === 'New').length);
   }
 
   ObserveAllTips() {
-    return Observable.combineLatest(this.ObserveOwnLinesCount(),this.ObserveAdminLinesDealCount())
-    .map(counts => counts[0]+counts[1]); 
+    return Observable.combineLatest(this.ObserveOwnLinesCount(), this.ObserveAdminLinesDealCount())
+      .map(counts => counts[0] + counts[1]);
   }
 
 }

@@ -1,3 +1,6 @@
+import { User_Update_Privilege } from './../../../shared/actions/user.action';
+import { MyStore } from './../../../shared/store';
+import { Store } from '@ngrx/store';
 import { BossService } from './boss/shared/service/boss.service';
 import { Observable } from 'rxjs/Rx';
 import { InspectionCommonService } from './shared/service/inspectionCommon.service';
@@ -19,7 +22,8 @@ export class InspectionComponent implements OnInit {
         private navCtrl: NavController,
         private navParams: NavParams,
         private inspectionCommonService: InspectionCommonService,
-        private bossService: BossService
+        private bossService: BossService,
+        private $store: Store<MyStore>
     ) { }
 
     privilegeList: { USER_ROLE: any[], USER_FUNCTION: any[] };
@@ -29,6 +33,7 @@ export class InspectionComponent implements OnInit {
         let moduleID = this.navParams.get('moduleID');
         let res = await this.inspectionCommonService.getPrivilege(moduleID);
         this.privilegeList = res.json();
+        this.$store.dispatch(new User_Update_Privilege({moduleID:moduleID,function:this.privilegeList.USER_FUNCTION}));
     }
 
     canSeeIPQA() {

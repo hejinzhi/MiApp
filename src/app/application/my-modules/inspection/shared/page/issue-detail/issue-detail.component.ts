@@ -25,6 +25,8 @@ export class IssueDetailComponent implements OnInit {
     reportForm: FormGroup
     adminReport: FormGroup;
     admin:boolean;
+
+    empRequired:boolean;
     statusList = [
         {type:'New',value:'待分配'},
         {type:'Waiting',value:'待处理'},
@@ -48,7 +50,17 @@ export class IssueDetailComponent implements OnInit {
         this.issue = this.navParams.get('issue') || {};
         this.admin = this.navParams.get('admin') || false;
         this.reportForm = this.initForm(this.issue);
-        this.adminReport = this.initAdminForm(this.issue);
+        if(this.admin) {
+            this.adminReport = this.initAdminForm(this.issue);
+            this.adminReport.get('PROBLEM_STATUS').valueChanges.subscribe((val) => {
+                if(val === 'New') {
+                    this.empRequired = false;
+                    setTimeout(() =>this.adminReport.get('OWNER_EMPNO').setValue(''),10);
+                } else {
+                    this.empRequired = true;
+                }
+            })
+        }
     }
 
     pushBack() {
@@ -80,6 +92,7 @@ export class IssueDetailComponent implements OnInit {
     }
 
     initAdminForm(work:any ={}) {
+        this.empRequired = !(work.PROBLEM_STATUS === 'New');
         return this.fb.group({
             OWNER_EMPNO: [work.OWNER_EMPNO, this.validExd.required()],
             PROBLEM_STATUS: [work.PROBLEM_STATUS, this.validExd.required()]

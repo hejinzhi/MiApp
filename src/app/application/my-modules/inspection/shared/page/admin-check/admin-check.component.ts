@@ -1,3 +1,5 @@
+import { BossService } from './../../../boss/shared/service/boss.service';
+import { Query } from './../../model/common';
 import { PluginService } from './../../../../../../core/services/plugin.service';
 import { MyStore } from './../../../../../../shared/store';
 import { BossReportLineState } from "./../../../boss/shared/store";
@@ -35,11 +37,15 @@ export class AdminCheckComponent implements OnInit {
   }]
   testData: BossReportLineState[];
   dataAll: BossReportLineState[];
+  query: Query;
+  first:boolean = true;
+
   constructor(
     private navParams: NavParams,
     private navCtrl: NavController,
     private $store: Store<MyStore>,
-    private plugin: PluginService
+    private plugin: PluginService,
+    private bossService: BossService
   ) { }
 
   ngOnInit() {
@@ -64,6 +70,20 @@ export class AdminCheckComponent implements OnInit {
     }
   }
 
+  queryChange(query:Query) {
+    this.query = query;
+    if(this.first) {
+      this.search();
+    }
+  }
+
+  search() {
+    this.bossService.getAdminLinesAll(this.query,'boss', !this.first);
+    if(this.first) {
+      this.first = false;
+    }
+  }
+
   toDetail(item: any) {
     console.log(item);
     if (typeof item.PROBLEM_PICTURES === 'string') {
@@ -75,5 +95,7 @@ export class AdminCheckComponent implements OnInit {
       admin: true
     })
   }
+
+
 
 }

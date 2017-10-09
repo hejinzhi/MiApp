@@ -67,6 +67,19 @@ export class BossConfig {
      */
     static uploadPicture =  EnvConfig.baseUrl + 'IPQA/UploadPicture';
     
-    
+    /**
+     * URL
+     * 根据条件查找所有的问题项
+     * get
+     * 2017-10-09
+     * @param {string} {type} 巡检类别
+     * @param {string} {nameID} 巡检类别里的细分的id
+     * @param {string} {dateFM} 开始时间
+     * @param {string} {dateTO} 结束时间
+     * @param {string} {company_name} 所属公司
+     * 
+     * @static
+     */
+    static getAdminLinesAll = EnvConfig.baseUrl + 'IPQA/GetProblemTrack?nameID={nameID}&dateFM={dateFM}&dateTO={dateTO}&company_name={company_name}&type={type}';
     
 }
