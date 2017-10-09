@@ -11,10 +11,12 @@ import { Component, OnInit, Input } from '@angular/core';
 })
 export class SearchColleagueComponent implements OnInit {
   @Input()
-  set opt(opt: { formCtr: FormControl, label: string }) {
+  set opt(opt: { formCtr: FormControl, label: string,required: boolean }) {
     this.formCtr = opt.formCtr;
     this.label = opt.label || this.label;
+    this.required = opt.required;
   }
+  required: boolean;
   colleague: Observable<string[]>;// 搜索得到的候选代理人
   tempcolleague: string;
   isSelectcolleague: boolean = false;
@@ -50,9 +52,10 @@ export class SearchColleagueComponent implements OnInit {
       if (inVal) {
         this.attendanceService.getAgent(inVal.split(',')[0]).subscribe((val) => {
           if (val && val.length === 1) {
+            let name = val[0].AGENT_NAME
             this.tempcolleague = name;
             this.isSelectcolleague = true;
-            this.formCtr.setValue(val[0].AGENT_NAME);
+            this.formCtr.setValue(name);
             this.searchTerms.next('');
           } else {
             this.formCtr.setValue('');
@@ -65,13 +68,17 @@ export class SearchColleagueComponent implements OnInit {
 
       // TODO: 设置验证
       this.formCtr.setValidators(this.validExd.selfDefine(function (ctr: AbstractControl) {
-        if (this.tempcolleague) {
-          this.isSelectcolleague = ctr.value != this.tempcolleague ? false : true;
+        if (!ctr.value && !this.required) {
+          this.isSelectcolleague = true;
+        } else {
+          if (this.tempcolleague) {
+            this.isSelectcolleague = ctr.value != this.tempcolleague ? false : true;
+          }
+          return this.isSelectcolleague ? null : {
+            'notSelect': true
+          }
         }
-        return this.isSelectcolleague ? null : {
-          'notSelect': true
-        }
-      }.bind(this)))
+      }.bind(this)));
     }
   }
 

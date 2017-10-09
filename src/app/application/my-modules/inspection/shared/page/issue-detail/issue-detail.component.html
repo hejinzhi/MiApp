@@ -2,7 +2,7 @@
   <ion-navbar>
     <ion-title>问题及改善措施</ion-title>
     <ion-buttons end *ngIf="admin">
-        <button ion-button  (tap)="update()">更新</button>
+        <button ion-button  (tap)="update()" [disabled] = "adminReport?.invalid">更新</button>
       </ion-buttons>
   </ion-navbar>
 </ion-header>
@@ -70,14 +70,11 @@
       </ion-note>
       <ion-icon name="refresh" item-end (tap)="pushBack()"></ion-icon>
     </ion-item>
-    <div *ngIf="admin">
-      <ion-item>
-        <ion-label>处理人</ion-label>
-        <ion-input type="text" [(ngModel)]="issue.OWNER_EMPNO"></ion-input>
-      </ion-item>
+    <div *ngIf="admin && adminReport" [formGroup]="adminReport">
+      <sg-search-colleague [opt]="{label:'处理人',formCtr:adminReport.get('OWNER_EMPNO'),required:empRequired}" formControlName="OWNER_EMPNO"></sg-search-colleague>
       <ion-item>
         <ion-label>*状态</ion-label>
-        <ion-select [cancelText]="'attendance.cancle' | translate" [okText]="'attendance.confirm' | translate" [(ngModel)]="status">
+        <ion-select formControlName="PROBLEM_STATUS" [cancelText]="'attendance.cancle' | translate" [okText]="'attendance.confirm' | translate">
           <ion-option *ngFor="let item of statusList" [value]="item.type">{{item.value}}</ion-option>
         </ion-select>
       </ion-item>
