@@ -83,7 +83,7 @@
               <sg-photo-view [opts]="admin?{addable:false,removeable:false}:{}" formControlName="imgs"></sg-photo-view>
             </ion-item>
             <sg-search-colleague *ngIf="reportForm.get('lists').get(i+'').controls['inCharge']" [class.disabled-label]="admin" formControlName="inCharge"
-              [opt]="{formCtr:reportForm.get('lists').get(i+'').controls['inCharge']}">
+              [opt]="{formCtr:reportForm.get('lists').get(i+'').controls['inCharge'],required:true}">
             </sg-search-colleague>
             <ion-item *ngIf="reportForm.get('lists').get(i+'').controls['mark']">
               <ion-label>评分</ion-label>

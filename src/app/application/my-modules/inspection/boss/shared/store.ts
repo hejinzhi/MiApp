@@ -55,7 +55,7 @@ export class BossReportModel implements BossReportState {
             line.INSPECT_TIME = el.time;
             line.LOCATION = el.site;
             line.PROBLEM_FLAG = el.hasIssue?'Y':'N';
-            line.PROBLEM_STATUS = el.PROBLEM_STATUS;
+            line.PROBLEM_STATUS = el.hasIssue?'Waiting':'Done';
             line.LINE_ID = el.LINE_ID?el.LINE_ID:0;
             if(el.hasIssue) {
                 line.PROBLEM_STATUS = data.PROBLEM_STATUS

@@ -16,7 +16,8 @@ export interface UserState {
     email: string;
     autoLogin: boolean;
     rememberPWD: boolean;
-    preferLang: string
+    preferLang: string;
+    privilege?: Privilege[];
 }
 export class UserModel implements UserState{
     id: string;
@@ -41,4 +42,9 @@ export class UserModel implements UserState{
         this.username = username;
         this.password = password;
     }
+}
+
+export interface Privilege {
+    moduleID:number;
+    function:{ID:string,FUNCTION_NAME:string}[];
 }

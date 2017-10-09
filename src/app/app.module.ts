@@ -1,3 +1,4 @@
+import { lineAllReducer } from './application/my-modules/inspection/shared/reducers/lineAll.reducer';
 import { NgModule, ErrorHandler } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { IonicApp, IonicModule, IonicErrorHandler } from 'ionic-angular';
@@ -43,7 +44,7 @@ export function createTranslateLoader(http: Http) {
         deps: [Http]
       }
     }),
-    StoreModule.provideStore({ userReducer, lineReducer }),
+    StoreModule.provideStore({ userReducer, lineReducer, lineAllReducer }),
     BrowserModule,
     IonicModule.forRoot(MyAppComponent, {
       tabsHideOnSubPages: true,
