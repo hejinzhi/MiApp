@@ -65,6 +65,10 @@ export class BossService {
     return this.myHttp.get(BossConfig.getMriWeek + '?bweek=' + begin + '&eweek=' + end);
   }
 
+  getScheduleInfo(nameID: number, datefm: string, dateto: string) {
+    return this.myHttp.get(BossConfig.getScheduleInfoUrl + '?nameID=' + nameID + '&dateFM=' + datefm + '&dateTO=' + dateto);
+  }
+
 
   saveSchedule(data: any) {
     return this.myHttp.post(BossConfig.saveSchedule, data).then((res) => {
