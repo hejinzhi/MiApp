@@ -49,6 +49,10 @@ export class BossService {
     return this.myHttp.get(BossConfig.getMriWeek + '?bweek=' + begin + '&eweek=' + end);
   }
 
+  getScheduleInfo(nameID: number, datefm: string, dateto: string) {
+    return this.myHttp.get(BossConfig.getScheduleInfoUrl + '?nameID=' + nameID + '&dateFM=' + datefm + '&dateTO=' + dateto);
+  }
+
 
   saveSchedule(data: any) {
     return this.myHttp.post(BossConfig.saveSchedule, data).then((res) => {
@@ -67,24 +71,24 @@ export class BossService {
 
   uploadReport(data: any) {
     let send = this.convertReportData(data);
-    let request:any[] = [];
+    let request: any[] = [];
     request.push(this.myHttp.post(BossConfig.uploadReport, this.convertReportData(data)))
     send.Lines.forEach((li) => {
-      if(li.PROBLEM_PICTURES) {
+      if (li.PROBLEM_PICTURES) {
         let imgs = li.PROBLEM_PICTURES.split(',');
-        if(imgs && imgs.length>0) {
+        if (imgs && imgs.length > 0) {
           imgs.forEach(i => {
-            request.push(this.uploadPicture(+li.LINE_ID,i));
+            request.push(this.uploadPicture(+li.LINE_ID, i));
           })
         }
       }
     })
-    return Observable.forkJoin(...request).map((res:Response[]) => res.map((r) => r.json()));
+    return Observable.forkJoin(...request).map((res: Response[]) => res.map((r) => r.json()));
   }
 
-  uploadPicture(line_id:number,img:string) {
+  uploadPicture(line_id: number, img: string) {
     img = img.replace('data:image/jpeg;base64,', '');
-    return this.inspectionCommonService.uploadPicture({LINE_ID:line_id,PICTURE:img});
+    return this.inspectionCommonService.uploadPicture({ LINE_ID: line_id, PICTURE: img });
   }
 
   async getBossReport(id: string) {
@@ -111,8 +115,8 @@ export class BossService {
     let userNo = this.user.empno;
     let status = ['Waiting', 'Highlight'];
     let type = 'boss';
-    return Observable.forkJoin(this.getExcReportData(status[0], userNo, type), this.getExcReportData(status[1], userNo, type)).map((list:any) => {
-      let filterList = list.filter((l:any) => l);
+    return Observable.forkJoin(this.getExcReportData(status[0], userNo, type), this.getExcReportData(status[1], userNo, type)).map((list: any) => {
+      let filterList = list.filter((l: any) => l);
       switch (filterList.length) {
         case 0:
           return null;
