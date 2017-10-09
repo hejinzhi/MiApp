@@ -25,7 +25,7 @@ export class BossReportComponent implements OnInit {
     schedule:any[];
     scheduleType:string;
     selectSchedule:any;
-
+    hr:boolean;
     testAdmin: any = {
         date: "2017-09-14",
         issueCount: "1项",
@@ -58,16 +58,25 @@ export class BossReportComponent implements OnInit {
         private bossService: BossService
     ) { }
 
-    ngOnInit() {
+    async ngOnInit() {
         // this.init();
         let schedule = this.navParams.get('schedule');
         this.admin = this.navParams.get('admin') || false;
+        this.hr = this.navParams.get('hr') || false;
+        let id = this.navParams.get('scheduleHeaderId') || '';
+        console.log(id);
+        
         if(!this.admin && schedule) {
             this.bindInit(schedule)
         }
         if (this.admin) {
             this.init(this.testAdmin)
-        } else {
+        } else if(this.hr && id) {
+            let note = await this.getReportFromEnd(id);
+            console.log(note);
+            
+            this.init(note);
+        }else {
             this.checkCache();
         }
     }
@@ -98,15 +107,21 @@ export class BossReportComponent implements OnInit {
         let id  = this.selectSchedule.REPORT_ID;
         let note;
         if(+id !== 0) {
-            let loading = this.plugin.createLoading();
-            loading.present();
-            note = await this.bossService.getBossReport(id);
-            loading.dismiss();
+            note = await this.getReportFromEnd(id);
             note.people = this.selectSchedule.PERSON;
             this.init(note);
         } else {
             this.init();
         }
+    }
+
+    async getReportFromEnd(id:string) {
+        let note;
+        let loading = this.plugin.createLoading();
+        loading.present();
+        note = await this.bossService.getBossReport(id);
+        loading.dismiss();
+        return note;
     }
 
     /**
@@ -166,6 +181,9 @@ export class BossReportComponent implements OnInit {
             this.cacheService.update(this.className, this.type, value);
         })
         this.attchSubForm(work.lists);
+        if(this.hr) {
+            this.reportForm.disable({ onlySelf: false });
+        }
         if (this.admin) {
             this.reportForm.disable({ onlySelf: false })
             let listsForm = this.reportForm.get('lists') as FormArray;
@@ -192,7 +210,9 @@ export class BossReportComponent implements OnInit {
             let listsForm = this.reportForm.get('lists') as FormArray;
             let target = lists[i];
             if (target.hasIssue) {
-                this.changeIssueCount(true);
+                if(!this.admin && !this.hr) {
+                    this.changeIssueCount(true);
+                }
                 listsForm.push(this.addSub2Form(this.initSubForm(target, this.changeIssueCount), target))
             } else {
                 listsForm.push(this.initSubForm(target, this.changeIssueCount));
