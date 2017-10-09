@@ -7,8 +7,8 @@
   </ion-navbar>
 </ion-header>
 <ion-content>
-  <sg-query-date [mri_type]="mri_type" [name_id]="name_id" (name_id_change)="nameIdChange($event)" [(start_date)]="start_date"
-    (start_date_change)="stratDateChange($event)" [(end_date)]="end_date" (end_date_change)="endDateChange($event)"></sg-query-date>
+  <sg-query-date [mri_type]="mri_type" [name_id]="name_id"  [(start_date)]="start_date"
+     [(end_date)]="end_date" (change)="changeQuery($event)"></sg-query-date>
   <ion-toolbar color="light">
     <ion-segment class="top_segment" [(ngModel)]="top_segment">
       <ion-segment-button (click)="select(0)" value="top_0">
@@ -38,7 +38,7 @@
     <ion-slide>
       <ion-scroll scrollY="true" class="fixed-content">
         <ion-list>
-          <ion-item class="list" *ngFor="let items of noRepayByGroup">
+          <ion-item class="list" *ngFor="let items of noRepayByGroup" (tap)="goToCheckReport(items[0].HEADER_ID)">
             <div class="content" *ngFor="let item of items">第{{item.LINE_NUM}}組 {{item.SCHEDULE_DATE}} {{item.NAME}} <span *ngIf="item.ACUTAL_FROM_TIME">{{item.ACUTAL_FROM_TIME}}~{{item.ACTUAL_TO_TIME}}</span> <span *ngIf="item.ACTUAL_HOURS">{{item.ACTUAL_HOURS}}H</span></div>
           </ion-item>
         </ion-list>
@@ -47,7 +47,7 @@
     <ion-slide>
       <ion-scroll scrollY="true" class="fixed-content">
         <ion-list>
-          <ion-item class="list" *ngFor="let items of RepayByGroup">
+          <ion-item class="list" *ngFor="let items of RepayByGroup" (tap)="goToCheckReport(items[0].HEADER_ID)">
             <div class="content" *ngFor="let item of items">第{{item.LINE_NUM}}組 {{item.SCHEDULE_DATE}} {{item.NAME}} <span *ngIf="item.ACUTAL_FROM_TIME">{{item.ACUTAL_FROM_TIME}}~{{item.ACTUAL_TO_TIME}}</span> <span *ngIf="item.ACTUAL_HOURS">{{item.ACTUAL_HOURS}}H</span></div>
           </ion-item>
         </ion-list>
@@ -56,7 +56,7 @@
     <ion-slide>
       <ion-scroll scrollY="true" class="fixed-content">
         <ion-list>
-          <ion-item class="list" *ngFor="let items of allByGroup">
+          <ion-item class="list" *ngFor="let items of allByGroup" (tap)="goToCheckReport(items[0].HEADER_ID)">
             <div class="content" *ngFor="let item of items">第{{item.LINE_NUM}}組 {{item.SCHEDULE_DATE}} {{item.NAME}} <span *ngIf="item.ACUTAL_FROM_TIME">{{item.ACUTAL_FROM_TIME}}~{{item.ACTUAL_TO_TIME}}</span> <span *ngIf="item.ACTUAL_HOURS">{{item.ACTUAL_HOURS}}H</span></div>
           </ion-item>
         </ion-list>
