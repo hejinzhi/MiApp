@@ -16,7 +16,7 @@ export class CommentComponent implements OnInit {
 
     selectMaxYear = +moment(new Date()).format('YYYY') + 1;
 
-    name_id: number = 2;
+    name_id: number = 3;
     mri_type: string = 'boss';
     start_date: string = moment(new Date()).format('YYYY-MM-DD');
     end_date: string = moment(new Date()).format('YYYY-MM-DD');
@@ -54,15 +54,6 @@ export class CommentComponent implements OnInit {
         this.selected_segment = index;
     }
 
-    onSlideChanged($event: any) {
-        if (((($event.touches.startX - $event.touches.currentX) <= 100) || (($event.touches.startX - $event.touches.currentX) > 0)) && (this.slider.isBeginning() || this.slider.isEnd())) {
-            console.log("interdit Direction");
-        }
-        else {
-            console.log("OK Direction");
-        }
-
-    }
 
     panEvent(e: any) {
         setTimeout(() => {
