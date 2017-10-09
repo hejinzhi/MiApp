@@ -30,10 +30,13 @@ export class ApplicationComponent implements OnInit {
 
   refreshData(): void {
     let moduleList = JSON.parse(localStorage.getItem('moduleList'));
-    this.items = moduleList.filter((value: any) => {
-      return value.DISPLAY === 'Y';
-    });
-    this.itemsByGroup = this.selectItems(this.items);
+    if (moduleList && moduleList.length > 0) {
+      this.items = moduleList.filter((value: any) => {
+        return value.DISPLAY === 'Y';
+      });
+      this.itemsByGroup = this.selectItems(this.items);
+    }
+
   }
 
   ionViewWillEnter() {

@@ -2,7 +2,6 @@ import { CommonService } from './../../../../../core/services/common.service';
 
 import { EnvConfig } from './../../../../../shared/config/env.config';
 import { InspectionService } from './../shared/service/inspection.service';
-import { ExceptionDetailComponent } from './../exception-detail/exception-detail.component';
 import { IpqaModel } from './../shared/model/ipqa';
 import { IonicPage, NavParams, NavController } from 'ionic-angular';
 import { Component, OnInit } from '@angular/core';
@@ -46,7 +45,6 @@ export class ListComponent implements OnInit {
         }
         else if (this.fromPage === 'handler') {
             let currentUser = JSON.parse(localStorage.getItem('currentUser'));
-            console.log(currentUser);
             let res = await this.inspectionService.getExcReportData('Waiting', currentUser.empno, 'IPQA', EnvConfig.companyID);
             this.formData = res.json();
         }

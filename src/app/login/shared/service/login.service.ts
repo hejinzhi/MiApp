@@ -85,6 +85,9 @@ export class LoginService {
         }
         let token = res.json().Token;
         if (token) {
+            localStorage.setItem('moduleList', JSON.stringify(res.json().Modules));
+            localStorage.setItem('access_token', JSON.stringify(token));
+            localStorage.setItem('tokenExpires', res.json().Expires);
             let user = res.json().User;
             let companys = res.json().Companys;
             this.currentUser.id = user.ID;
@@ -105,7 +108,9 @@ export class LoginService {
             this.currentUser.telephone = user.TELEPHONE;
             this.store$.dispatch(new User_Login(JSON.parse(this.pluginService.chineseConv(this.currentUser))));
 
-            console.log(this.currentUser);
+            localStorage.setItem('moduleList', JSON.stringify(res.json().Modules));
+            localStorage.setItem('access_token', JSON.stringify(token));
+            localStorage.setItem('tokenExpires', res.json().Expires);
 
             if (localStorage.getItem('appLoginUser')) {
                 if (this.currentUser.username === localStorage.getItem('appLoginUser')) {

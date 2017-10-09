@@ -78,9 +78,11 @@ export class PhotoViewComponent implements OnInit, ControlValueAccessor {
       } else {
         this.outImgs = [value];
       }
-      this.imgs = this.outImgs.slice();
-      this.bindEventForArray(this.imgs)
+    } else{
+      this.outImgs = [];
     }
+    this.imgs = this.outImgs.slice();
+    this.bindEventForArray(this.imgs)
   }
 
   /**
