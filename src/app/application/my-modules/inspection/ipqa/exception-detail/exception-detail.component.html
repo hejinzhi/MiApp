@@ -44,19 +44,8 @@
           <ion-label>*{{'inspection.ipqa.inspector' | translate}}:</ion-label>
         </div>
         <div class="right-col">
-          <sg-search-emp formControlName="INSPECTOR" [opt]="{formCtr:formModel.get('INSPECTOR')}"></sg-search-emp>
-          <!-- <ion-input type="text" formControlName="checkPerson" [class.my-invalid]="formModel.get('checkPerson').invalid && formModel.get('checkPerson').touched"></ion-input> -->
-          <!-- <div formControlName="checkPerson">
-            <div *ngFor="let person of formModel.get('checkPersons').controls;let i=index">
-              <div class="plus">
-                <ion-input type="text" [formControlName]="i"></ion-input>
-                <div class="plus-img">
-                  <span class="iconfontyyy" (tap)="addCheckPerson()" *ngIf="i==0">&#xe649;</span>
-                  <span class="iconfontyyy" (tap)="removeCheckPerson(i)" *ngIf="i>0">&#xe61a;</span>
-                </div>
-              </div>
-            </div>
-          </div> -->
+          <!-- <sg-search-emp formControlName="INSPECTOR" [opt]="{formCtr:formModel.get('INSPECTOR')}"></sg-search-emp> -->
+          <ion-input type="text" formControlName="INSPECTOR" [class.my-invalid]="formModel.get('INSPECTOR').invalid && formModel.get('INSPECTOR').touched"></ion-input>
         </div>
       </div>
       <div class="my-row">

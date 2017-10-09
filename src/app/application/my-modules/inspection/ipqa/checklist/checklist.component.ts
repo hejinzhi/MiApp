@@ -176,14 +176,16 @@ export class ChecklistComponent implements OnInit {
                 headerId = await this.inspectionService.postDataToServer(this.stationId, this.localStorageStationName, this.banbie, this.checkList, this.lineName, this.station.title);
                 this.commonService.hideLoading();
                 this.station.showCheckbox = true;
+                this.station.status = 'posted';
                 this.setStationItem(this.localStorageStationName,
-                    { title: this.station.title, showCheckbox: this.station.showCheckbox, stationID: this.stationId, headerId: headerId });
+                    { title: this.station.title, showCheckbox: this.station.showCheckbox, stationID: this.stationId, headerId: headerId, status: 'posted' });
                 this.navCtrl.pop();
             } else {
                 this.commonService.showConfirm('提示', '当前无可用网络，数据暂存在本地，请连接网络后再提交。', () => {
                     this.station.showCheckbox = true;
+                    this.station.status = 'unpost';
                     this.setStationItem(this.localStorageStationName,
-                        { title: this.station.title, showCheckbox: this.station.showCheckbox, stationID: this.stationId, headerId: headerId });
+                        { title: this.station.title, showCheckbox: this.station.showCheckbox, stationID: this.stationId, headerId: headerId, status: 'unpost' });
                     this.navCtrl.pop();
                 });
             }

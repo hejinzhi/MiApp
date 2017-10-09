@@ -90,7 +90,8 @@
     "inv": "ERP-庫存管理",
     "fin": "ERP-財務管理",
     "sfcs": "SFCS-現場管理",
-    "ims": "IMS-智能物流"
+    "ims": "IMS-智能物流",
+    "ipqa": "IPQA-巡檢異常"
   },
   "notice": {
     "showDetail": "點擊查詢詳情",

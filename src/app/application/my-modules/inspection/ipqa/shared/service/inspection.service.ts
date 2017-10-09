@@ -29,6 +29,10 @@ export class InspectionService {
         return this.pluginService.hasNoNetwork();
     }
 
+    getAllCheckList(companyName: string, inspectName: string) {
+        return this.myHttp.get(InspectionConfig.getLinesUrl + `?company_name=${companyName}&inspect_name=${inspectName}`);
+    }
+
 
     removeOldLocalStorageData() {
         let ipqaStorage: string[] = [];
@@ -207,7 +211,7 @@ export class InspectionService {
                     if ((line.CHECK_RESULT === 'NORMAL') || (line.CHECK_RESULT === 'N/A')) {
                         line.PROBLEM_DESC = '';
                         line.PROBLEM_FLAG = 'N';
-                        line.PROBLEM_PICTURES = [''];
+                        // line.PROBLEM_PICTURES = [''];
                     }
                     break;
                 }
@@ -340,7 +344,7 @@ export class InspectionService {
         return this.myHttp.post(InspectionConfig.assignOwnerUrl, obj);
     }
 
-    handleProblem(obj: { PROBLEM_STATUS: string, ACTION_DESC: string, ACTION_DATE: string, ACTION_STATUS: string, SCORE: string, LINE_ID: number }) {
+    handleProblem(obj: { PROBLEM_STATUS: string, ACTION_DESC: string, ACTION_DATE: string, ACTION_STATUS: string, SCORE: number, LINE_ID: number }) {
         return this.myHttp.post(InspectionConfig.handleProblemUrl, obj);
     }
 

@@ -45,7 +45,8 @@ export class StationsComponent implements OnInit {
                 title: v.title,
                 showCheckbox: false,
                 stationID: v.STATION_ID,
-                headerId: 0
+                headerId: 0,
+                status: ''
             });
         });
         this.localStorageStationName = this.inspectionService.getLocalStorageStationName(this.lineId);
@@ -55,6 +56,7 @@ export class StationsComponent implements OnInit {
                 for (let j = 0; j < this.stations.length; j++) {
                     if (localData[i].stationID === this.stations[j].stationID) {
                         this.stations[j].showCheckbox = localData[i].showCheckbox;
+                        this.stations[j].status = localData[i].status;
                         break;
                     }
                 }
