@@ -1,3 +1,4 @@
+import { Query } from './../../shared/model/common';
 import { async } from '@angular/core/testing';
 import { BossService } from './../shared/service/boss.service';
 import { IonicPage, Platform, NavController, NavParams, Slides } from 'ionic-angular';
@@ -56,7 +57,8 @@ export class BossDutyComponent implements OnInit {
     }
 
     goToCheckReport(scheduleHeaderId: any) {
-        this.navCtrl.push('BossReportComponent', { scheduleHeaderId: scheduleHeaderId });
+        if(scheduleHeaderId == 0) return;
+        this.navCtrl.push('BossReportComponent', { scheduleHeaderId: scheduleHeaderId,hr: true });
     }
 
     select(index: any) {
@@ -123,16 +125,10 @@ export class BossDutyComponent implements OnInit {
         }
     }
 
-    nameIdChange(id: any) {
-        this.name_id = id;
-    }
-
-    stratDateChange(date: string) {
-        this.start_date = date;
-    }
-
-    endDateChange(date: string) {
-        this.end_date = date;
+    changeQuery(query:Query) {
+        this.name_id = query.nameID;
+        this.start_date = query.dateFM;
+        this.end_date = query.dateTO;
     }
 
     // 作用：用于把一维数组的数据按group分成二维数组存储

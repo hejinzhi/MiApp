@@ -134,6 +134,8 @@ export class BossService {
     if (!res) return;
     res = res.json();
     if (res.Header) {
+      console.log(res);
+      
       return new BossReportInsideModel(res);
     }
     return;
