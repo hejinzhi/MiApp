@@ -1,4 +1,7 @@
-<ion-list class="myList">
+<ion-list class="myList" *ngIf='type_id==1'>
   <button ion-item (tap)="toSearch()" *ngIf="that.action!=='update'">查詢記錄</button>
   <button ion-item (tap)="deleteForm()" *ngIf="that.machine.machine_id!=0">刪除記錄</button>
+</ion-list>
+<ion-list class="myList" *ngIf='type_id==2'>
+  <button ion-item (tap)="toSearch()" >查詢記錄</button>
 </ion-list>

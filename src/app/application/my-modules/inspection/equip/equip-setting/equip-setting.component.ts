@@ -48,6 +48,11 @@ export class EquipSettingComponent implements OnInit {
     async ngOnInit() {
         console.log(this.navParams.data, 222)
 
+        this.locations = await this.equipService.getLocations();
+
+        let res = await this.inspectionCommonService.getMriName('equip');
+        this.mrinamelist = res.json();
+
         if (this.navParams.data.machine) {
             this.machine = this.navParams.data.machine;
             this.action = this.navParams.data.action;
@@ -55,11 +60,6 @@ export class EquipSettingComponent implements OnInit {
             this.machine = new Machine(0, '', '', '', 1, '', '', '', '', moment(new Date()).format('YYYY-MM'), '', '', '', '');
         }
         this.init(this.machine);
-
-        this.locations = await this.equipService.getLocations();
-
-        let res = await this.inspectionCommonService.getMriName('equip');
-        this.mrinamelist = res.json();
 
 
         this.subscribeTranslateText();
@@ -75,7 +75,7 @@ export class EquipSettingComponent implements OnInit {
                 company_name: [localStorage.getItem('appCompanyId')],
                 description: [work1.description, [Validators.required]],
                 quantity: [work1.quantity, [Validators.required]],
-                location1: [work1.location1 ? work1.location1 + '_' + work1.location2 + '_' + work1.location3 : '', [Validators.required]],
+                location1: [work1.location1, [Validators.required]],
                 location4: [work1.location4, [Validators.required]],
                 production_date: [work1.production_date, [Validators.required]],
                 effective_date: [work1.effective_date],

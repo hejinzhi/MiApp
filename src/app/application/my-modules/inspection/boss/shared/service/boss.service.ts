@@ -52,6 +52,10 @@ export class BossService {
     return this.myHttp.get(BossConfig.getMriWeek + '?bweek=' + begin + '&eweek=' + end);
   }
 
+  getScheduleInfo(nameID: number, datefm: string, dateto: string) {
+    return this.myHttp.get(BossConfig.getScheduleInfoUrl + '?nameID=' + nameID + '&dateFM=' + datefm + '&dateTO=' + dateto);
+  }
+
 
   saveSchedule(data: any) {
     return this.myHttp.post(BossConfig.saveSchedule, data).then((res) => {
@@ -77,21 +81,21 @@ export class BossService {
         li.PROBLEM_PICTURES = '';
         if (imgs && imgs.length > 0) {
           imgs.forEach(i => {
-            if(i.indexOf(EnvConfig.baseUrl) > -1) {
-              i = i.replace(EnvConfig.baseUrl,'');
-              li.PROBLEM_PICTURES = !li.PROBLEM_PICTURES? i:li.PROBLEM_PICTURES+','+i;
+            if (i.indexOf(EnvConfig.baseUrl) > -1) {
+              i = i.replace(EnvConfig.baseUrl, '');
+              li.PROBLEM_PICTURES = !li.PROBLEM_PICTURES ? i : li.PROBLEM_PICTURES + ',' + i;
             } else {
-              request.push(this.uploadPicture(i),(url:any) => {
-                li.PROBLEM_PICTURES = !li.PROBLEM_PICTURES? url:li.PROBLEM_PICTURES+','+url.value;
-                console.log('完成上传图片'+request.length);
-              }); 
+              request.push(this.uploadPicture(i), (url: any) => {
+                li.PROBLEM_PICTURES = !li.PROBLEM_PICTURES ? url : li.PROBLEM_PICTURES + ',' + url.value;
+                console.log('完成上传图片' + request.length);
+              });
             }
           })
         }
       }
     })
-    const upload = (sendOut:any) => Observable.fromPromise(this.myHttp.post(BossConfig.uploadReport, sendOut)).map((res) => res.json());
-    if(request.length > 0) {
+    const upload = (sendOut: any) => Observable.fromPromise(this.myHttp.post(BossConfig.uploadReport, sendOut)).map((res) => res.json());
+    if (request.length > 0) {
       return Observable.forkJoin(...request).map((l) => {
         console.log(l);
         return upload(send)
@@ -101,15 +105,15 @@ export class BossService {
     }
   }
 
-  uploadPicture(img:string,cb?:Function) {
-    if(!img) return;
+  uploadPicture(img: string, cb?: Function) {
+    if (!img) return;
     img = img.replace('data:image/jpeg;base64,', '');
-    return Observable.fromPromise(this.myHttp.post(BossConfig.uploadPicture,{ PICTURE:img })).map((res) => {
+    return Observable.fromPromise(this.myHttp.post(BossConfig.uploadPicture, { PICTURE: img })).map((res) => {
       console.log(res.json());
-      
+
       let url = res.json()['PICTURE_URL'];
       console.log(url);
-      
+
       cb && cb(url);
       return Observable.of(url);
     });
@@ -135,7 +139,7 @@ export class BossService {
       .map(res => res.json())
   }
 
-  getOwnUndoneReport(waiting: boolean = false,cb?:Function) {
+  getOwnUndoneReport(waiting: boolean = false, cb?: Function) {
     let userNo = this.user.empno;
     let status = ['Waiting', 'Highlight'];
     let type = 'boss';
@@ -157,7 +161,7 @@ export class BossService {
           return [];
       }
     }).subscribe((line: BossReportLineState[]) => {
-      if(waiting && line.length === 0) {
+      if (waiting && line.length === 0) {
         this.plugin.showToast('没查到待改善事项')
       } else {
         cb && cb();
@@ -171,36 +175,37 @@ export class BossService {
       )
   }
 
+
   handleIssue(obj: { PROBLEM_STATUS: string, ACTION_DESC: string, ACTION_DATE: string, ACTION_STATUS: string, SCORE: string, LINE_ID: number }) {
     return Observable.fromPromise(this.inspectionService.handleProblem(obj)).map((res) => res.status);
   }
 
-  updateReportLines(data:BossReportLineState,cb?:Function,final?:Function) {
-    let request:any[];
-    if(data.ACTION_PICTURES) {
+  updateReportLines(data: BossReportLineState, cb?: Function, final?: Function) {
+    let request: any[];
+    if (data.ACTION_PICTURES) {
       request = [];
       let imgs = data.ACTION_PICTURES.split(',');
       data.ACTION_PICTURES = '';
       imgs.forEach((i) => {
-        if(i.indexOf('data:image/jpeg;base64,') < 0) {
-          data.ACTION_PICTURES = data.ACTION_PICTURES?data.ACTION_PICTURES+','+i:i;
+        if (i.indexOf('data:image/jpeg;base64,') < 0) {
+          data.ACTION_PICTURES = data.ACTION_PICTURES ? data.ACTION_PICTURES + ',' + i : i;
         } else {
-          request.push(this.uploadPicture(i),(url:string) => {
+          request.push(this.uploadPicture(i), (url: string) => {
             data.ACTION_PICTURES += i;
-            console.log('完成上传图片'+request.length+1);
-          } ); 
+            console.log('完成上传图片' + request.length + 1);
+          });
         }
       })
     }
-    const upload = (sendOut:any) => Observable.fromPromise(this.myHttp.post(BossConfig.updateReportLines,sendOut)).map((res) => res.status).subscribe((s:any) =>{
-      if(s == 200) {
+    const upload = (sendOut: any) => Observable.fromPromise(this.myHttp.post(BossConfig.updateReportLines, sendOut)).map((res) => res.status).subscribe((s: any) => {
+      if (s == 200) {
         cb && cb();
       }
-    },(err) => this.plugin.errorDeal(err),() => final && final());;
-    
-    if(request && request.length > 0) {
-      return Observable.forkJoin(...request).map((array:string[]) => array.join())
-      .subscribe((imgs:string) => upload(data));
+    }, (err) => this.plugin.errorDeal(err), () => final && final());;
+
+    if (request && request.length > 0) {
+      return Observable.forkJoin(...request).map((array: string[]) => array.join())
+        .subscribe((imgs: string) => upload(data));
     } else {
       return upload(data);
     }

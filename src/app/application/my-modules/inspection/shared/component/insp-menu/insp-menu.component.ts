@@ -29,6 +29,7 @@ export class InspMenuComponent implements OnInit {
  * 
  * @param {*} this.navParams.data.type 
  * 1：EquipSettingComponent
+ * 2：BossScheduleComponent
  */
 
   ngOnInit() {
@@ -54,7 +55,7 @@ export class InspMenuComponent implements OnInit {
   }
 
   toSearch() {
-    if (this.type_id == 1) {
+    if (this.type_id == 1 || this.type_id == 2) {
       this.viewCtrl.dismiss();
       this.lastNavCtr.push('InspSearchComponent', { type: this.type_id });
     }

@@ -10,6 +10,8 @@ export class BossConfig {
 
     static saveSchedule = EnvConfig.baseUrl + 'IPQA/UploadSchedule';
 
+    static getScheduleInfoUrl = EnvConfig.baseUrl + 'IPQA/GetScheduleInfo';
+
     /**
      * URL
      * 更新或添加报告
