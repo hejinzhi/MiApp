@@ -88,7 +88,7 @@ export class AlertComponent implements OnInit {
     return this.list.filter((v: any) => (v.childType === type && v.unread === 'Y')).length;
   }
 
-  getAlertTypeCount(type: string) {
+  getAlertTypeCount(type: string) { 
     return this.list.filter((v: any) => (v.childType === type)).length;
   }
 
