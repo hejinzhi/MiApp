@@ -24,6 +24,7 @@ export class InspectionComponent implements OnInit {
         let moduleID = this.navParams.get('moduleID');
         let res = await this.inspectionCommonService.getPrivilege(moduleID);
         this.privilegeList = res.json();
+        console.log(this.privilegeList,888);
     }
 
     canSeeIPQA() {

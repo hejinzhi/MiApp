@@ -1,3 +1,4 @@
+import { async } from '@angular/core/testing';
 import { BossService } from './../shared/service/boss.service';
 import { IonicPage, Platform, NavController, NavParams, Slides } from 'ionic-angular';
 import { Component, OnInit, ViewChild } from '@angular/core';
@@ -23,12 +24,18 @@ export class BossDutyComponent implements OnInit {
 
     selectMaxYear = +moment(new Date()).format('YYYY') + 1;
     allByGroup: any[][] = [];
+    noCardByGroup: any[][] = [];
+    noRepayByGroup: any[][] = [];
+    RepayByGroup: any[][] = [];
 
     selected_segment = 0;
     top_segment = 'top_0';
     segment = 'sites';
 
-    bossDutyList:any;
+    bossDutyList: any;
+    noCardList: any;
+    noRepayList: any;
+    RepayList: any;
 
     rootNavCtrl: NavController;
 
@@ -42,13 +49,14 @@ export class BossDutyComponent implements OnInit {
 
     ngOnInit() {
 
-        this.allByGroup = this.selectItems(this.bossDutyList);
-        console.log(this.allByGroup, 569);
-
     }
 
-    goToCheckReport() {
-        this.navCtrl.push('BossReportComponent');
+    async  ionViewWillEnter() {
+        await this.getBossDutyList();
+    }
+
+    goToCheckReport(scheduleHeaderId: any) {
+        this.navCtrl.push('BossReportComponent', { scheduleHeaderId: scheduleHeaderId });
     }
 
     select(index: any) {
@@ -69,7 +77,6 @@ export class BossDutyComponent implements OnInit {
     }
 
     panEvent(e: any) {
-        console.log(88);
         setTimeout(() => {
             let currentIndex = this.slider.getActiveIndex();
             if (currentIndex === 3) {
@@ -87,10 +94,33 @@ export class BossDutyComponent implements OnInit {
         }, 0)
     }
 
-    getBossDutyList() {
-      let res:any= this.bossService.getScheduleInfo(this.name_id, this.start_date, this.end_date);
-      if (!res) return;
-      this.bossDutyList = res.json();
+    async getBossDutyList() {
+        let res: any = await this.bossService.getScheduleInfo(this.name_id, this.start_date, this.end_date);
+        if (!res) return;
+        this.bossDutyList = res.json();
+
+        if (this.bossDutyList) {
+            //未刷卡
+            this.noCardList = this.bossDutyList.filter((v: any) => (v.ACUTAL_FROM_TIME === '' || v.ACTUAL_TO_TIME === '' || v.ACUTAL_FROM_TIME == null || v.ACTUAL_TO_TIME == null));
+            if (this.noCardList) {
+                this.noCardByGroup = this.selectItems(this.noCardList);
+            }
+
+            //未产生补休
+            this.noRepayList = this.bossDutyList.filter((v: any) => (v.ACTUAL_HOURS === ''));
+            if (this.noRepayList) {
+                this.noRepayByGroup = this.selectItems(this.noRepayList);
+            }
+
+            //已产生补休   
+            this.RepayList = this.bossDutyList.filter((v: any) => (v.ACTUAL_HOURS !== ''));
+            if (this.RepayList) {
+                this.RepayByGroup = this.selectItems(this.RepayList);
+            }
+
+            this.allByGroup = this.selectItems(this.bossDutyList);
+            console.log(this.allByGroup, 123);
+        }
     }
 
     nameIdChange(id: any) {
@@ -130,13 +160,6 @@ export class BossDutyComponent implements OnInit {
 
         return temp;
     }
-
-    // bossDutyList = [{ "SCHEDULE_HEADER_ID": 35, "SCHEDULE_DATE": '2017/09/30', "NAME": '梁銘輝', "ACUTAL_FROM_TIME": '07:58', "ACTUAL_TO_TIME": '17:33', "ACTUAL_HOURS": '7.88', "LINE_NUM": '1', "HEADER_ID": '104' },
-    // { "SCHEDULE_HEADER_ID": 35, "SCHEDULE_DATE": '2017/09/30', "NAME": '何錦枝', "ACUTAL_FROM_TIME": '07:47', "ACTUAL_TO_TIME": '17:32', "ACTUAL_HOURS": '6.37', "LINE_NUM": '1', "HEADER_ID": '104' },
-    // { "SCHEDULE_HEADER_ID": 36, "SCHEDULE_DATE": '2017/09/30', "NAME": '陳慶垣', "ACUTAL_FROM_TIME": '07:58', "ACTUAL_TO_TIME": '21:30', "ACTUAL_HOURS": '4', "LINE_NUM": '2', "HEADER_ID": '' },
-    // { "SCHEDULE_HEADER_ID": 36, "SCHEDULE_DATE": '2017/09/30', "NAME": '鄧旭', "ACUTAL_FROM_TIME": '07:58', "ACTUAL_TO_TIME": '10:48', "ACTUAL_HOURS": '2.8', "LINE_NUM": '2', "HEADER_ID": '' }
-    // ];
-
 }
 
 class ReportHead {

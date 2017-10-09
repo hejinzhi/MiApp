@@ -1,8 +1,10 @@
+import { BossService } from './../../../boss/shared/service/boss.service';
 import { InspectionCommonService } from './../../service/inspectionCommon.service';
 import { Machine } from './../../../equip/shared/service/equip.service';
 import { Component, OnInit } from '@angular/core';
 import { ViewController, NavController, NavParams, AlertController, IonicPage } from 'ionic-angular';
 import { TranslateService } from '@ngx-translate/core';
+import * as moment from 'moment'
 
 @IonicPage()
 @Component({
@@ -18,6 +20,7 @@ export class InspSearchComponent implements OnInit {
     public viewCtrl: ViewController,
     private translate: TranslateService,
     private inspectionCommonService: InspectionCommonService,
+    private bossService: BossService,
   ) { }
   translateTexts: any = {};
   type_id: any;
@@ -29,11 +32,22 @@ export class InspSearchComponent implements OnInit {
   location3list: any = '';
   machine_no: string = '';
 
+  inspectPeriod: string = 'daily';
+  weeklist: any[];
+  mrinamelist: any[];
+  name_id: any;
+  start_day: any;
+  end_day: any;
+  week_id: any;
+
+  selectMaxYear = +moment(new Date()).format('YYYY') + 1;
+
   /**
  * 記錄那個頁面類型調用
  * 
  * @param {*} this.navParams.data.type 
  * 1：EquipSettingComponent
+ * 2：BossScheduleComponent
  */
 
   async ngOnInit() {
@@ -48,6 +62,13 @@ export class InspSearchComponent implements OnInit {
       this.location3list = res3.json();
     }
 
+    if (this.type_id == 2) {
+      let res = await this.bossService.getMriName();
+      this.mrinamelist = res.json();
+      let res2 = await this.bossService.getMriWeek(1, 8);
+      this.weeklist = res2.json();
+    }
+
   }
 
   ionViewDidLoad() {
@@ -56,6 +77,10 @@ export class InspSearchComponent implements OnInit {
   }
   ionViewWillEnter() {
 
+  }
+
+  changeType() {
+    this.inspectPeriod = this.mrinamelist.filter((v: any) => (v.NAME_ID === this.name_id))[0].INSPECT_PERIOD;
   }
 
   subscribeTranslateText() {

@@ -54,15 +54,6 @@ export class CommentComponent implements OnInit {
         this.selected_segment = index;
     }
 
-    onSlideChanged($event: any) {
-        if (((($event.touches.startX - $event.touches.currentX) <= 100) || (($event.touches.startX - $event.touches.currentX) > 0)) && (this.slider.isBeginning() || this.slider.isEnd())) {
-            console.log("interdit Direction");
-        }
-        else {
-            console.log("OK Direction");
-        }
-
-    }
 
     panEvent(e: any) {
         setTimeout(() => {

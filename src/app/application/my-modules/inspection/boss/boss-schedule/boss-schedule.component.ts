@@ -1,6 +1,6 @@
 import { async } from '@angular/core/testing';
 import { PluginService } from './../../../../../core/services/plugin.service';
-import { IonicPage } from 'ionic-angular';
+import { IonicPage, PopoverController, NavController } from 'ionic-angular';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, FormArray, FormControl, Validators } from '@angular/forms';
 
@@ -36,6 +36,8 @@ export class BossScheduleComponent implements OnInit {
         private bossService: BossService,
         private plugin: PluginService,
         private translate: TranslateService,
+        public popoverCtrl: PopoverController,
+        private navCtrl: NavController,
     ) { }
 
     async  ngOnInit() {
@@ -190,7 +192,7 @@ export class BossScheduleComponent implements OnInit {
     get_empty_array() {
         let temp = [];
         if (this.inspectPeriod === 'daily') {
-            return ['', ''];
+            return [''];
         }
         if (this.inspectPeriod === 'weekly') {
             return ['', '', ''];
@@ -288,7 +290,6 @@ export class BossScheduleComponent implements OnInit {
         loading.present();
         let res: any = await this.bossService.saveSchedule(schedules_data);
         loading.dismiss();
-        console.log(res, 422);
 
         if (!res.status) {
             // this.errTip = res.content;
@@ -296,6 +297,17 @@ export class BossScheduleComponent implements OnInit {
             this.plugin.showToast(this.translateTexts['submit_success']);
             this.init();
         };
+    }
+
+    presentPopover(myEvent: any) {
+        console.log(999);
+        let popover = this.popoverCtrl.create('InspMenuComponent', {
+            this: this,
+            type: '2'
+        });
+        popover.present({
+            ev: myEvent
+        });
     }
 }
 
