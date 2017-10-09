@@ -1,3 +1,4 @@
+import { BossService } from './../shared/service/boss.service';
 import { IonicPage, Platform, NavController, NavParams, Slides } from 'ionic-angular';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, FormArray, FormControl } from '@angular/forms';
@@ -25,9 +26,16 @@ export class CommentComponent implements OnInit {
     top_segment = 'top_0';
     segment = 'sites';
 
+
+    AllList: any;
+    NoCommentList: any;
+    CommentList: any;
+    NoReportList: any;
+
     constructor(
         private navCtrl: NavController,
         private validExd: NgValidatorExtendService,
+        private bossService: BossService,
     ) { }
 
     ngOnInit() {
@@ -35,6 +43,24 @@ export class CommentComponent implements OnInit {
 
     goToCheckReport() {
         this.navCtrl.push('BossReportComponent');
+    }
+
+    async getBossDutyList() {
+        let res: any = await this.bossService.getScheduleInfo(this.name_id, this.start_date, this.end_date);
+        if (!res) return;
+        this.AllList = res.json();
+
+        if (this.AllList) {
+            //未交報告
+            this.NoReportList = this.AllList.filter((v: any) => (v.HEADER_ID === '' || v.HEADER_ID == null));
+
+            //未評分
+            this.NoCommentList = this.AllList.filter((v: any) => (v.SCORE === '' || v.SCORE == null));
+
+            //已評分   
+            this.CommentList = this.AllList.filter((v: any) => (v.SCORE !== ''));
+
+        }
     }
 
     select(index: any) {
