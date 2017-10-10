@@ -1,3 +1,4 @@
+import { ArrayUtilService } from './../../../../../../core/services/arrayUtil.service';
 import { PluginService } from './../../../../../../core/services/plugin.service';
 import { InspectionCommonService } from './../../../shared/service/inspectionCommon.service';
 import { Checklist } from './../../checklist/checklist.component';
@@ -22,7 +23,8 @@ export class InspectionService {
         private commonService: CommonService,
         private localService: LocalStorageService,
         private inspectionCommonService: InspectionCommonService,
-        private pluginService: PluginService
+        private pluginService: PluginService,
+        private arrayUtilService: ArrayUtilService
     ) { }
 
     hasNoNetwork() {
@@ -30,7 +32,7 @@ export class InspectionService {
     }
 
     getAllCheckList(companyName: string, inspectName: string) {
-        return this.myHttp.get(InspectionConfig.getLinesUrl + `?company_name=${companyName}&inspect_name=${inspectName}`);
+        return this.myHttp.get(InspectionConfig.getAllCheckListUrl + `?company_name=${companyName}&inspect_name=${inspectName}`);
     }
 
 
@@ -78,11 +80,22 @@ export class InspectionService {
         return 'IPQA' + this.getToday() + 'STATION' + stationID + 'STEP2';
     }
 
-    // 
+    // 设置本地存储的名字 保存所有的check list
+    getLocalAllCheckListName() {
+        return 'IPQA' + this.getToday() + 'CHECKLIST';
+    }
+
+    // 保存每個站點的檢查信息，以便聯網的時候上傳信息
+    getLocalCheckResultName() {
+        return 'IPQA' + this.getToday() + 'CHECKRESULT';
+    }
+
+    // 保存班別信息
     getLocalStorageDutyKindName() {
         return 'IPQA' + this.getToday() + 'DutyKind';
     }
 
+    // 保存line信息
     getLocalStorageStationName(lineID: number) {
         return 'IPQA' + this.getToday() + 'LINE' + lineID;
     }
@@ -111,25 +124,173 @@ export class InspectionService {
         return this.myHttp.get(InspectionConfig.getEmp + `?emp_name=${emp}`);
     }
 
+    getAllCheckListFromLocal(): LocalCheckList[] {
+        return JSON.parse(localStorage.getItem(this.getLocalAllCheckListName()));
+    }
 
     getLines(companyName: string): Promise<any> {
-        return this.myHttp.get(InspectionConfig.getLinesUrl + `?company_name=${companyName}`);
+        // return this.myHttp.get(InspectionConfig.getLinesUrl + `?company_name=${companyName}`);
+        let list = this.getAllCheckListFromLocal();
+        return new Promise((resolve, reject) => {
+            let temp: string[] = [];
+            let result: { LINE_ID: number, LINE_NAME: string }[] = [];
+            list.forEach((value, index) => {
+                if (!this.arrayUtilService.contains(temp, value.LINE_NAME)) {
+                    temp.push(value.LINE_NAME);
+                    result.push({ LINE_ID: value.LINE_ID, LINE_NAME: value.LINE_NAME });
+                }
+            });
+            result = result.sort((a, b) => {
+                var val1 = a.LINE_NAME;
+                var val2 = b.LINE_NAME;
+                if (val1 < val2) {
+                    return -1;
+                } else if (val1 > val2) {
+                    return 1;
+                } else {
+                    return 0;
+                }
+            });
+            resolve(result);
+        });
     }
 
-    getCategoryByLine(companyName: string, lineId: number) {
-        return this.myHttp.get(InspectionConfig.getCategoryByLineUrl + `?company_name=${companyName}&line_id=${lineId}`);
+    getCategoryByLine(companyName: string, lineId: number): Promise<any> {
+        // return this.myHttp.get(InspectionConfig.getCategoryByLineUrl + `?company_name=${companyName}&line_id=${lineId}`);
+        let list = this.getAllCheckListFromLocal().filter((value, index) => {
+            return value.LINE_ID === lineId;
+        });
+        return new Promise((resolve, reject) => {
+            let temp: string[] = [];
+            let temp2: { CATEGORY_ID: number, CATEGORY_NAME: string, LINE_NUM: number }[] = [];
+            let result: { CATEGORY_ID: number, CATEGORY_NAME: string }[] = [];
+            list.forEach((value, index) => {
+                if (!this.arrayUtilService.contains(temp, value.CATEGORY_NAME)) {
+                    temp.push(value.CATEGORY_NAME);
+                    temp2.push({ CATEGORY_ID: value.CATEGORY_ID, CATEGORY_NAME: value.CATEGORY_NAME, LINE_NUM: value.LINE_NUM });
+                }
+            });
+            temp2 = temp2.sort((a, b) => {
+                var val1 = a.LINE_NUM;
+                var val2 = b.LINE_NUM;
+                if (val1 < val2) {
+                    return -1;
+                } else if (val1 > val2) {
+                    return 1;
+                } else {
+                    return 0;
+                }
+            });
+            temp2.forEach((v, i) => {
+                result.push({
+                    CATEGORY_NAME: v.CATEGORY_NAME,
+                    CATEGORY_ID: v.CATEGORY_ID
+                });
+            });
+            resolve(result);
+        });
     }
 
-    getStationByLine(companyName: string, lineId: number) {
-        return this.myHttp.get(InspectionConfig.getStationByLineUrl + `?company_name=${companyName}&line_id=${lineId}`);
+    getStationByLine(companyName: string, lineId: number): Promise<any> {
+        // return this.myHttp.get(InspectionConfig.getStationByLineUrl + `?company_name=${companyName}&line_id=${lineId}`);
+        let list = this.getAllCheckListFromLocal().filter((value, index) => {
+            return value.LINE_ID === lineId;
+        });
+        return new Promise((resolve, reject) => {
+            let temp: string[] = [];
+            let temp2: { STATION_ID: number, STATION_NAME: string, LINE_NUM: number }[] = [];
+            let result: { STATION_ID: number, STATION_NAME: string }[] = [];
+            list.forEach((value, index) => {
+                if (!this.arrayUtilService.contains(temp, value.STATION_NAME)) {
+                    temp.push(value.STATION_NAME);
+                    temp2.push({ STATION_ID: value.STATION_ID, STATION_NAME: value.STATION_NAME, LINE_NUM: value.LINE_NUM });
+                }
+            });
+            temp2 = temp2.sort((a, b) => {
+                var val1 = a.LINE_NUM;
+                var val2 = b.LINE_NUM;
+                if (val1 < val2) {
+                    return -1;
+                } else if (val1 > val2) {
+                    return 1;
+                } else {
+                    return 0;
+                }
+            });
+            temp2.forEach((v, i) => {
+                result.push({
+                    STATION_NAME: v.STATION_NAME,
+                    STATION_ID: v.STATION_ID
+                });
+            });
+            resolve(result);
+        });
     }
 
-    getStationByCategory(companyName: string, lineId: number, categoryIds: number[]) {
-        return this.myHttp.get(InspectionConfig.getStationByCategoryUrl + `?company_name=${companyName}&line_id=${lineId}&category_ids=${categoryIds}`);
+    getStationByCategory(companyName: string, lineId: number, categoryIds: number[]): Promise<any> {
+        // return this.myHttp.get(InspectionConfig.getStationByCategoryUrl + `?company_name=${companyName}&line_id=${lineId}&category_ids=${categoryIds}`);
+        let listByLine = this.getAllCheckListFromLocal().filter((value, index) => {
+            return value.LINE_ID === lineId;
+        });
+        let list: any[] = [];
+
+        categoryIds.forEach((value, index) => {
+            let caList = [];
+            caList = listByLine.filter((v, i) => {
+                return v.CATEGORY_ID === value;
+            });
+            list = list.concat(caList);
+        });
+        return new Promise((resolve, reject) => {
+            let temp: string[] = [];
+            let temp2: { STATION_ID: number, STATION_NAME: string, LINE_NUM: number }[] = [];
+            let result: { STATION_ID: number, STATION_NAME: string }[] = [];
+            list.forEach((value, index) => {
+                if (!this.arrayUtilService.contains(temp, value.STATION_NAME)) {
+                    temp.push(value.STATION_NAME);
+                    temp2.push({ STATION_ID: value.STATION_ID, STATION_NAME: value.STATION_NAME, LINE_NUM: value.LINE_NUM });
+                }
+            });
+            temp2 = temp2.sort((a, b) => {
+                var val1 = a.LINE_NUM;
+                var val2 = b.LINE_NUM;
+                if (val1 < val2) {
+                    return -1;
+                } else if (val1 > val2) {
+                    return 1;
+                } else {
+                    return 0;
+                }
+            });
+            temp2.forEach((v, i) => {
+                result.push({
+                    STATION_NAME: v.STATION_NAME,
+                    STATION_ID: v.STATION_ID
+                });
+            });
+            resolve(result);
+        });
     }
 
-    getCheckListByLineStation(companyName: string, lineId: number, stationId: number) {
-        return this.myHttp.get(InspectionConfig.getCheckListByLineStationUrl + `?company_name=${companyName}&line_id=${lineId}&station_id=${stationId}`);
+    getCheckListByLineStation(companyName: string, lineId: number, stationId: number): Promise<any> {
+        // return this.myHttp.get(InspectionConfig.getCheckListByLineStationUrl + `?company_name=${companyName}&line_id=${lineId}&station_id=${stationId}`);
+        let list = this.getAllCheckListFromLocal().filter((value, index) => {
+            return (value.LINE_ID === lineId) && (value.STATION_ID === stationId);
+        });
+        return new Promise((resolve, reject) => {
+            list = list.sort((a, b) => {
+                var val1 = a.LINE_NUM;
+                var val2 = b.LINE_NUM;
+                if (val1 < val2) {
+                    return -1;
+                } else if (val1 > val2) {
+                    return 1;
+                } else {
+                    return 0;
+                }
+            });
+            resolve(list);
+        });
     }
 
     getDutyKind() {
@@ -313,8 +474,9 @@ export class InspectionService {
 
     async initCheckList(lineId: number, stationId: number, checkListName: string) {
         let reset: { no: string, reset: boolean }[] = [];
-        let res = await this.getCheckListByLineStation(EnvConfig.companyID, lineId, stationId);
-        let checkList = res.json();
+        // let res = await this.getCheckListByLineStation(EnvConfig.companyID, lineId, stationId);
+        // let checkList = res.json();
+        let checkList = await this.getCheckListByLineStation(EnvConfig.companyID, lineId, stationId);
         checkList.forEach((l: any) => {
             reset.push({ no: l.LINE_NUM, reset: false });
         });
@@ -356,3 +518,21 @@ export class InspectionService {
 
 }
 
+class LocalCheckList {
+    COMPANY_NAME: string;
+    INSPECT_NAME: string;
+    LINE_NAME: string;
+    CATEGORY_NAME: string;
+    STATION_NAME: string;
+    CHECK_ID: number;
+    NAME_ID: number;
+    LINE_ID: number;
+    CATEGORY_ID: number;
+    STATION_ID: number;
+    LINE_NUM: number;
+    CHECK_LIST_CN: string;
+    CHECK_LIST_EN: string;
+    PRIORITY: string;
+    CHECK_TYPE: string;
+    ENABLED: string;
+}

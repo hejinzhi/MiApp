@@ -1,3 +1,4 @@
+import { CommonService } from './../../../../core/services/common.service';
 import { EnvConfig } from './../../../../shared/config/env.config';
 import { GridModel } from './grid/grid.component';
 import { InspectionService } from './shared/service/inspection.service';
@@ -33,36 +34,69 @@ export class IpqaComponent implements OnInit {
     stations: { title: string, showCheckbox: boolean }[] = [];
     translateTexts: any = {
         'inspection.ipqa.stationTitle': '',
-        'inspection.ipqa.module': ''
+        'inspection.ipqa.module': '',
+        'inspection.ipqa.prompt': '',
+        'inspection.ipqa.noNetwork': '',
     }; // 记录转换后的文本(简繁体)
 
     constructor(
         private navCtrl: NavController,
         private inspectionService: InspectionService,
-        private translate: TranslateService
+        private translate: TranslateService,
+        private commonService: CommonService
     ) {
 
     }
 
     async ngOnInit() {
-        let res = await this.inspectionService.getLines(EnvConfig.companyID);
-        this.lines = res.json();
-        this.translateTexts = await this.translate.get(['inspection.ipqa.stationTitle', 'inspection.ipqa.module']).toPromise();
+        // let res = await this.inspectionService.getLines(EnvConfig.companyID);
+        // this.lines = res.json();
+        this.inspectionService.removeOldLocalStorageData();
+        this.lines = await this.inspectionService.getLines(EnvConfig.companyID);
+        this.translateTexts = await this.translate.get(['inspection.ipqa.stationTitle', 'inspection.ipqa.module', 'inspection.ipqa.prompt', 'inspection.ipqa.noNetwork']).toPromise();
+
+        // 无网络
+        if (this.inspectionService.hasNoNetwork()) {
+            let local: any[] = JSON.parse(localStorage.getItem(this.inspectionService.getLocalAllCheckListName()));
+            if (local && local.length > 0) {
+                // 无网络但有本地存储，不需要处理
+            } else {
+                // 且没有本地数据
+                this.commonService.showConfirm(this.translateTexts['inspection.ipqa.prompt'], this.translateTexts['inspection.ipqa.noNetwork'], () => {
+                    this.navCtrl.pop();
+                });
+            }
+        } else {
+            // 有网络。每次进来刷新本地check list
+            this.commonService.showLoading();
+            // 把所有checklist保存在本地
+            let allCheckList = await this.inspectionService.getAllCheckList(EnvConfig.companyID, 'IPQA');
+            localStorage.setItem(this.inspectionService.getLocalAllCheckListName(), JSON.stringify(allCheckList.json()));
+            // 目的是提前把班別查詢保存到本地，後續就可以離線操作了
+            await this.inspectionService.getBanBie();
+            this.commonService.hideLoading();
+        }
+
+
+
     }
 
     async onSelectChange() {
 
         // 获取该线别下的所有模块
-        let res = await this.inspectionService.getCategoryByLine(EnvConfig.companyID, this.selectedLine.LINE_ID);
-        this.allModules = res.json();
-        // this.selectedModules = this.allModules;
+        // let res = await this.inspectionService.getCategoryByLine(EnvConfig.companyID, this.selectedLine.LINE_ID);
+        // this.allModules = res.json();
+
+        this.allModules = await this.inspectionService.getCategoryByLine(EnvConfig.companyID, this.selectedLine.LINE_ID);
+        // console.log(this.allModules);
+
         this.modules = this.addCheckboxAttribute(this.allModules, true);
 
 
         // 获取该线别下的所有站点
-        let result = await this.inspectionService.getStationByLine(EnvConfig.companyID, this.selectedLine.LINE_ID);
-        this.allStations = result.json();
-        // this.selectedStations = this.allStations;
+        // let result = await this.inspectionService.getStationByLine(EnvConfig.companyID, this.selectedLine.LINE_ID);
+        // this.allStations = result.json();
+        this.allStations = await this.inspectionService.getStationByLine(EnvConfig.companyID, this.selectedLine.LINE_ID);
         this.stations = this.addCheckboxAttribute(this.allStations, true);
     }
 
@@ -100,8 +134,9 @@ export class IpqaComponent implements OnInit {
         if (categoryIds.length <= 0) {
             categoryIds.push(-1);
         }
-        let res = await this.inspectionService.getStationByCategory(EnvConfig.companyID, this.selectedLine.LINE_ID, categoryIds);
-        let stationResult = res.json();
+        // let res = await this.inspectionService.getStationByCategory(EnvConfig.companyID, this.selectedLine.LINE_ID, categoryIds);
+        // let stationResult = res.json();
+        let stationResult = await this.inspectionService.getStationByCategory(EnvConfig.companyID, this.selectedLine.LINE_ID, categoryIds);
         this.stations = this.addCheckboxAttribute(stationResult, true);
     }
 

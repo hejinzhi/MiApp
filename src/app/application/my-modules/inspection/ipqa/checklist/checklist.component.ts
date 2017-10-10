@@ -179,6 +179,8 @@ export class ChecklistComponent implements OnInit {
                 this.station.status = 'posted';
                 this.setStationItem(this.localStorageStationName,
                     { title: this.station.title, showCheckbox: this.station.showCheckbox, stationID: this.stationId, headerId: headerId, status: 'posted' });
+                // test
+                this.setLocalCheckResult();
                 this.navCtrl.pop();
             } else {
                 this.commonService.showConfirm('提示', '当前无可用网络，数据暂存在本地，请连接网络后再提交。', () => {
@@ -186,6 +188,9 @@ export class ChecklistComponent implements OnInit {
                     this.station.status = 'unpost';
                     this.setStationItem(this.localStorageStationName,
                         { title: this.station.title, showCheckbox: this.station.showCheckbox, stationID: this.stationId, headerId: headerId, status: 'unpost' });
+
+                    this.setLocalCheckResult();
+
                     this.navCtrl.pop();
                 });
             }
@@ -196,6 +201,34 @@ export class ChecklistComponent implements OnInit {
             // this.navCtrl.pop();
         }
     }
+
+    setLocalCheckResult() {
+        let name = this.inspectionService.getLocalCheckResultName();
+        let obj = {
+            stationId: this.stationId,
+            localName: this.localStorageStationName,
+            banbie: this.banbie,
+            checkList: this.checkList,
+            lineName: this.lineName,
+            title: this.station.title
+        };
+        let data: any[] = JSON.parse(localStorage.getItem(name));
+        if (data && data.length > 0) {
+            for (let i = 0; i < data.length; i++) {
+                if (data[i].stationId === obj.stationId) {
+                    data.splice(i);
+                    break;
+                }
+            }
+            data.push(obj);
+            localStorage.setItem(name, JSON.stringify(data));
+
+        } else {
+            localStorage.setItem(name, JSON.stringify([obj]));
+        }
+
+    }
+
 
 
 

@@ -394,6 +394,8 @@
   "inspection": {
     "title": "日常巡檢",
     "ipqa": {
+      "prompt": "提示",
+      "noNetwork": "檢測不到可用網絡，請聯網后再試試。",
       "chooseLine": "請選擇線別",
       "next": "下一步",
       "stationTitle": "站點",

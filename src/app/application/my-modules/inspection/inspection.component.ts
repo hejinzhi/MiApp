@@ -18,7 +18,7 @@ export class InspectionComponent implements OnInit {
         private inspectionCommonService: InspectionCommonService
     ) { }
 
-    privilegeList: { USER_ROLE: any[], USER_FUNCTION: any[] };
+    privilegeList: { ROLE_ID: number, ROLE_NAME: string, FUNCTION_ID: number, FUNCTION_NAME: string, FUNCTION_URL: string }[] = [];
 
     async ngOnInit() {
         let moduleID = this.navParams.get('moduleID');
@@ -39,9 +39,9 @@ export class InspectionComponent implements OnInit {
     }
 
     hasPrivilege(type: string) {
-        if (this.privilegeList && this.privilegeList.USER_FUNCTION.length > 0) {
-            for (let i = 0; i < this.privilegeList.USER_FUNCTION.length; i++) {
-                if (this.privilegeList.USER_FUNCTION[i].FUNCTION_NAME === type) {
+        if (this.privilegeList) {
+            for (let i = 0; i < this.privilegeList.length; i++) {
+                if (this.privilegeList[i].FUNCTION_NAME === type) {
                     return true;
                 }
             }

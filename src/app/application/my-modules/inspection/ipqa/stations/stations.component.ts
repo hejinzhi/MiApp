@@ -62,7 +62,7 @@ export class StationsComponent implements OnInit {
                 }
             }
         }
-        this.inspectionService.removeOldLocalStorageData();
+        // this.inspectionService.removeOldLocalStorageData();
     }
 
     getItem(key: string) {
