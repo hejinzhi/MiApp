@@ -39,11 +39,11 @@ export class BossReportModel implements BossReportState {
     Header:BossReportHeader;
     Lines:BossReportLineState[];
     constructor(data:any) {
+        let doneMark:boolean = false;
         this.Header = {} as BossReportHeader;
         this.Header.HEADER_ID =  data.REPORT_ID;
         this.Header.INSPECT_DATE = data.date;
         this.Header.SCHEDULE_HEADER_ID = data.SCHEDULE_HEADER_ID;
-        this.Header.SCORE = data.totalMark;
         this.Header.COMPANY_NAME = localStorage.getItem('appCompanyId');
         this.Header.TYPE = 'boss';
         this.Lines = [];
@@ -54,6 +54,8 @@ export class BossReportModel implements BossReportState {
             line.INSPECT_DATE = this.Header.INSPECT_DATE;
             line.INSPECT_TIME = el.time;
             line.LOCATION = el.site;
+            line.SCORE = el.mark || '';
+            doneMark = !!el.mark;
             line.PROBLEM_FLAG = el.hasIssue?'Y':'N';
             line.PROBLEM_STATUS = el.hasIssue?'Waiting':'Done';
             line.LINE_ID = el.LINE_ID?el.LINE_ID:0;
@@ -64,9 +66,11 @@ export class BossReportModel implements BossReportState {
                 line.OWNER_EMPNO = el.inCharge.split(',')[0];
             }
             this.Lines.push(line);
-        }); 
+        });
+        if(doneMark) {
+            this.Header.SCORE = data.totalMark;
+        } 
         console.log(this);
-        
     }
 }
 
@@ -74,10 +78,12 @@ export class BossReportInsideModel {
     date: string;
     people: string;
     issueCount: string;
-    lists: {time:string,site:string,hasIssue:boolean,detail:string,imgs:string[],inCharge:string}[]
+    totalMark?: string;
+    lists: {time:string,site:string,hasIssue:boolean,detail:string,imgs:string[],inCharge:string,mark:string}[]
     constructor(data:BossReportState) {
         this.date = moment(data.Header.INSPECT_DATE).format('YYYY-MM-DD');
         this.people = data.Header.INSPECTOR;
+        this.totalMark = data.Header.SCORE;
         this.lists = [];
         data.Lines.forEach((li) => {
             let list:any = {};
@@ -85,6 +91,7 @@ export class BossReportInsideModel {
             list.hasIssue = li.PROBLEM_FLAG === 'Y'?true:false;
             list.site = li.LOCATION;
             list.LINE_ID = li.LINE_ID;
+            list.mark = li.SCORE
             if(list.hasIssue) {
                 list.detail = li.PROBLEM_DESC;
                 list.imgs = li.PROBLEM_PICTURES?li.PROBLEM_PICTURES.split(',').map((image) => EnvConfig.baseUrl+image):[];

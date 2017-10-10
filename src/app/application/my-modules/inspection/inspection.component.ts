@@ -26,14 +26,14 @@ export class InspectionComponent implements OnInit {
         private $store: Store<MyStore>
     ) { }
 
-    privilegeList: { USER_ROLE: any[], USER_FUNCTION: any[] };
+    privilegeList: {FUNCTION_ID:string,FUNCTION_NAME:string,FUNCTION_URL:string,ROLE_ID:number,ROLE_NAME:string}[];
 
     async ngOnInit() {
         this.bossTips = this.bossService.ObserveAllTips();
         let moduleID = this.navParams.get('moduleID');
         let res = await this.inspectionCommonService.getPrivilege(moduleID);
         this.privilegeList = res.json();
-        this.$store.dispatch(new User_Update_Privilege({moduleID:moduleID,function:this.privilegeList.USER_FUNCTION}));
+        this.$store.dispatch(new User_Update_Privilege({moduleID:moduleID,function:this.privilegeList}));
     }
 
     canSeeIPQA() {
@@ -49,9 +49,9 @@ export class InspectionComponent implements OnInit {
     }
 
     hasPrivilege(type: string) {
-        if (this.privilegeList && this.privilegeList.USER_FUNCTION.length > 0) {
-            for (let i = 0; i < this.privilegeList.USER_FUNCTION.length; i++) {
-                if (this.privilegeList.USER_FUNCTION[i].FUNCTION_NAME === type) {
+        if (this.privilegeList && this.privilegeList.length > 0) {
+            for (let i = 0; i < this.privilegeList.length; i++) {
+                if (this.privilegeList[i].FUNCTION_NAME === type) {
                     return true;
                 }
             }

@@ -26,6 +26,8 @@ export class BossReportComponent implements OnInit {
     scheduleType:string;
     selectSchedule:any;
     hr:boolean;
+    commentable:boolean;
+    savedHeaderID: number;
     testAdmin: any = {
         date: "2017-09-14",
         issueCount: "1项",
@@ -63,18 +65,17 @@ export class BossReportComponent implements OnInit {
         let schedule = this.navParams.get('schedule');
         this.admin = this.navParams.get('admin') || false;
         this.hr = this.navParams.get('hr') || false;
-        let id = this.navParams.get('scheduleHeaderId') || '';
-        console.log(id);
-        
+        this.savedHeaderID = this.navParams.get('scheduleHeaderId') || '';
+        this.commentable = this.navParams.get('allDone');
+        let id = this.savedHeaderID;
         if(!this.admin && schedule) {
             this.bindInit(schedule)
         }
         if (this.admin) {
-            this.init(this.testAdmin)
+            let note = await this.getReportFromEnd(id+'');
+            this.init(note);
         } else if(this.hr && id) {
-            let note = await this.getReportFromEnd(id);
-            console.log(note);
-            
+            let note = await this.getReportFromEnd(id+'');
             this.init(note);
         }else {
             this.checkCache();
@@ -185,7 +186,7 @@ export class BossReportComponent implements OnInit {
             this.reportForm.disable({ onlySelf: false });
         }
         if (this.admin) {
-            this.reportForm.disable({ onlySelf: false })
+            this.reportForm.disable({ onlySelf: false });
             let listsForm = this.reportForm.get('lists') as FormArray;
             Array.prototype.forEach.call(listsForm.controls, (i: FormGroup) => {
                 i.addControl('mark', new FormControl('', this.validExd.required()))
@@ -196,6 +197,9 @@ export class BossReportComponent implements OnInit {
                     })
                 })
             })
+            if(!this.commentable) {
+                this.reportForm.disable({ onlySelf: false });
+            } 
         }
     }
 
@@ -376,6 +380,10 @@ export class BossReportComponent implements OnInit {
      */
     submit() {
         let send = Object.assign(this.reportForm.value,this.selectSchedule);
+        if(this.admin) {
+            send.totalMark = this.totalMark || '';
+            send.REPORT_ID = this.savedHeaderID;
+        }
         let loading = this.plugin.createLoading();
         loading.present();
         this.bossService.uploadReport(send).subscribe((d) => {
