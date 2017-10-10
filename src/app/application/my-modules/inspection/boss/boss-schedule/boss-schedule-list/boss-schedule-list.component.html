@@ -1,0 +1,38 @@
+<ion-header>
+  <ion-navbar>
+    <ion-title>排班清單</ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content>
+  <ion-list >
+    <ion-item *ngFor="let item of equiplist" (tap)="goToDetail(item)">
+      <ion-row>
+        <ion-col col-4>
+          {{item.MACHINE_NO}}
+        </ion-col>
+        <ion-col col-4>
+          {{item.LOCATION1}}_{{item.LOCATION2}}_{{item.LOCATION3}}
+        </ion-col>
+        <ion-col col-4>
+          {{item.LOCATION4}}
+        </ion-col>
+        <ion-col col-4>
+          {{item.PRODUCTION_DATE | date:"yyyy-MM"}}
+        </ion-col>
+        <ion-col col-4>
+          {{item.EFFECTIVE_DATE | date:"yyyy-MM"}}
+        </ion-col>
+        <ion-col col-4>
+          {{item.DISABLE_DATE | date:"yyyy-MM-dd"}}
+        </ion-col>
+        <ion-col col-4>
+          {{item.DESCRIPTION}}
+        </ion-col>
+        <ion-col col-4>
+          {{item.OWNER_EMPNO}}
+        </ion-col>
+      </ion-row>
+    </ion-item>
+  </ion-list>
+</ion-content>

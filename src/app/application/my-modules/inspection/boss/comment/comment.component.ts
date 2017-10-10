@@ -1,3 +1,5 @@
+import { Query } from './../../shared/model/common';
+import { BossService } from './../shared/service/boss.service';
 import { IonicPage, Platform, NavController, NavParams, Slides } from 'ionic-angular';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, FormArray, FormControl } from '@angular/forms';
@@ -25,16 +27,42 @@ export class CommentComponent implements OnInit {
     top_segment = 'top_0';
     segment = 'sites';
 
+
+    AllList: any;
+    NoCommentList: any;
+    CommentList: any;
+    NoReportList: any;
+
     constructor(
         private navCtrl: NavController,
         private validExd: NgValidatorExtendService,
+        private bossService: BossService,
     ) { }
 
     ngOnInit() {
     }
 
-    goToCheckReport() {
-        this.navCtrl.push('BossReportComponent');
+    goToCheckReport(scheduleHeaderId: any, allDone: any) {
+        if (scheduleHeaderId == 0) return;
+        this.navCtrl.push('BossReportComponent', { scheduleHeaderId: scheduleHeaderId, admin: true, allDone: allDone });
+    }
+
+    async getBossDutyList() {
+        let res: any = await this.bossService.getScheduleInfo(this.name_id, this.start_date, this.end_date);
+        if (!res) return;
+        this.AllList = res.json();
+
+        if (this.AllList) {
+            //未交報告
+            this.NoReportList = this.AllList.filter((v: any) => (v.HEADER_ID === '' || v.HEADER_ID == null || v.HEADER_ID == 0));
+
+            //未評分
+            this.NoCommentList = this.AllList.filter((v: any) => (v.HEADER_ID > 0 && (v.SCORE === '' || v.SCORE == null)));
+
+            //已評分   
+            this.CommentList = this.AllList.filter((v: any) => (v.HEADER_ID > 0 && (v.SCORE !== '')));
+
+        }
     }
 
     select(index: any) {
@@ -74,24 +102,15 @@ export class CommentComponent implements OnInit {
     }
 
     showdetail() {
-        console.log(this.name_id);
-        console.log(this.start_date);
-        console.log(this.end_date);
         this.navCtrl.push('BossReportComponent', {
             admin: true
         })
     }
 
-    nameIdChange(id: any) {
-        this.name_id = id;
-    }
-
-    stratDateChange(date: string) {
-        this.start_date = date;
-    }
-
-    endDateChange(date: string) {
-        this.end_date = date;
+    changeQuery(query: Query) {
+        this.name_id = query.nameID;
+        this.start_date = query.dateFM;
+        this.end_date = query.dateTO;
     }
 
 }
