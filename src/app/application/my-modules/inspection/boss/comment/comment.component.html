@@ -28,7 +28,7 @@
     <ion-slide>
       <ion-scroll scrollY="true" class="fixed-content">
         <ion-list>
-          <ion-item class="list" *ngFor="let item of NoReportList" (tap)="goToCheckReport(item.HEADER_ID,itme.ALL_DONE)">
+          <ion-item class="list" *ngFor="let item of NoReportList" (tap)="goToCheckReport(item.HEADER_ID,item.ALL_DONE)">
             <div>第{{item.LINE_NUM}}組 {{item.SCHEDULE_DATE}} {{item.NAME}} <span *ngIf="item.ACUTAL_FROM_TIME">{{item.ACUTAL_FROM_TIME}}~{{item.ACTUAL_TO_TIME}}</span>
               <span *ngIf="item.ACTUAL_HOURS">{{item.ACTUAL_HOURS}}H</span></div>
           </ion-item>
@@ -38,7 +38,7 @@
     <ion-slide>
       <ion-scroll scrollY="true" class="fixed-content">
         <ion-list>
-          <ion-item class="list" *ngFor="let item of NoCommentList" (tap)="goToCheckReport(item.HEADER_ID,itme.ALL_DONE)">
+          <ion-item class="list" *ngFor="let item of NoCommentList" (tap)="goToCheckReport(item.HEADER_ID,item.ALL_DONE)">
             <div>第{{item.LINE_NUM}}組 {{item.SCHEDULE_DATE}} {{item.NAME}} <span *ngIf="item.ACUTAL_FROM_TIME">{{item.ACUTAL_FROM_TIME}}~{{item.ACTUAL_TO_TIME}}</span>              
               <span *ngIf="item.ACTUAL_HOURS">{{item.ACTUAL_HOURS}}H</span></div>
           </ion-item>
@@ -48,7 +48,7 @@
     <ion-slide>
       <ion-scroll scrollY="true" class="fixed-content">
         <ion-list>
-          <ion-item class="list" *ngFor="let item of CommentList" (tap)="goToCheckReport(item.HEADER_ID,itme.ALL_DONE)">
+          <ion-item class="list" *ngFor="let item of CommentList" (tap)="goToCheckReport(item.HEADER_ID,item.ALL_DONE)">
             <div>第{{item.LINE_NUM}}組 {{item.SCHEDULE_DATE}} {{item.NAME}} <span *ngIf="item.ACUTAL_FROM_TIME">{{item.ACUTAL_FROM_TIME}}~{{item.ACTUAL_TO_TIME}}</span>              
               <span *ngIf="item.ACTUAL_HOURS">{{item.ACTUAL_HOURS}}H</span></div>
           </ion-item>
@@ -58,7 +58,7 @@
     <ion-slide>
       <ion-scroll scrollY="true" class="fixed-content">
         <ion-list>
-          <ion-item class="list" *ngFor="let item of AllList" (tap)="goToCheckReport(item.HEADER_ID,itme.ALL_DONE)">
+          <ion-item class="list" *ngFor="let item of AllList" (tap)="goToCheckReport(item.HEADER_ID,item.ALL_DONE)">
             <div>第{{item.LINE_NUM}}組 {{item.SCHEDULE_DATE}} {{item.NAME}} <span *ngIf="item.ACUTAL_FROM_TIME">{{item.ACUTAL_FROM_TIME}}~{{item.ACTUAL_TO_TIME}}</span>              
               <span *ngIf="item.ACTUAL_HOURS">{{item.ACTUAL_HOURS}}H</span></div>
           </ion-item>

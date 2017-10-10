@@ -46,5 +46,5 @@ export class UserModel implements UserState{
 
 export interface Privilege {
     moduleID:number;
-    function:{ID:string,FUNCTION_NAME:string}[];
+    function:{FUNCTION_ID:string,FUNCTION_NAME:string,FUNCTION_URL:string,ROLE_ID:number,ROLE_NAME:string}[];
 }
