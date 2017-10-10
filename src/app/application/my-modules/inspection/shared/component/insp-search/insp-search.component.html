@@ -55,4 +55,5 @@
       <ion-option *ngFor="let item of weeklist" [value]="item.WEEK_ID">{{item.WEEK_DESC}}</ion-option>
     </ion-select>
   </ion-item>
+  <button ion-button full type="button" (tap)="submit()">提交</button>
 </ion-content>

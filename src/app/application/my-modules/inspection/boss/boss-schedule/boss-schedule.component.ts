@@ -65,18 +65,20 @@ export class BossScheduleComponent implements OnInit {
     * @returns {FormGroup} 
     */
     initForm(work: any = {}): FormGroup {
+        console.log(work)
         return this.fb.group({
             schedules: this.fb.array([
-                this.initSubForm()
+                this.initSubForm(work.schedules ? work.schedules : new scheduleLine())
             ])
         });
     };
 
-    initSubForm() {
+    initSubForm(work: any) {
+        console.log(work, 324)
         let sub: any;
         if (this.inspectPeriod === 'daily') {
             sub = this.fb.group({
-                from_time: [this.from_time, Validators.required],
+                from_time: [work.from_time ? work.from_time : this.from_time, Validators.required],
                 to_time: [this.to_time, Validators.required],
                 scheduledate: [moment(new Date()).format('YYYY-MM-DD'), Validators.required],
                 empnos: this.fb.array(this.get_empty_array(), this.checkEmpno)
@@ -163,7 +165,7 @@ export class BossScheduleComponent implements OnInit {
 
 
     addScheduleLine() {
-        this.schedulelines.push(this.initSubForm());
+        this.schedulelines.push(this.initSubForm(new scheduleLine()));
     }
 
     removeScheduleLine(index: any) {

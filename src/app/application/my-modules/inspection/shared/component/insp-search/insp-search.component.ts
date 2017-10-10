@@ -65,8 +65,10 @@ export class InspSearchComponent implements OnInit {
     if (this.type_id == 2) {
       let res = await this.bossService.getMriName();
       this.mrinamelist = res.json();
-      let res2 = await this.bossService.getMriWeek(1, 8);
+      let res2 = await this.bossService.getMriWeek(3, 8);
       this.weeklist = res2.json();
+      this.start_day = this.start_day || moment(Date.parse(new Date().toString()) - 1000 * 60 * 60 * 24 * 30).format('YYYY-MM-DD');
+      this.end_day = this.end_day || moment(Date.parse(new Date().toString())).format('YYYY-MM-DD');
     }
 
   }
@@ -101,6 +103,17 @@ export class InspSearchComponent implements OnInit {
         machine_no: this.machine_no
       });
     }
+
+    if (this.type_id == 2) {
+      this.navCtrl.push('BossScheduleListComponent', {
+        name_id: this.name_id,
+        start_day: this.start_day,
+        end_day: this.end_day,
+        week_id: this.week_id
+      });
+    }
+
+
 
   }
 

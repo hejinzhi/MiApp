@@ -2,13 +2,12 @@
   <ion-navbar>
     <ion-title>巡檢報告評分</ion-title>
     <ion-buttons end>
-      <button ion-button>查詢</button>
+      <button ion-button (tap)="getBossDutyList()">查詢</button>
     </ion-buttons>
   </ion-navbar>
 </ion-header>
 <ion-content>
-  <sg-query-date [mri_type]="mri_type" [name_id]="name_id" (name_id_change)="nameIdChange($event)" [(start_date)]="start_date" (start_date_change)="stratDateChange($event)"
-    [(end_date)]="end_date" (end_date_change)="endDateChange($event)"></sg-query-date>
+  <sg-query-date [mri_type]="mri_type" [name_id]="name_id" [(start_date)]="start_date" [(end_date)]="end_date" (change)="changeQuery($event)"></sg-query-date>
   <ion-toolbar color="light">
     <ion-segment class="top_segment" [(ngModel)]="top_segment">
       <ion-segment-button (click)="select(0)" value="top_0">
@@ -25,42 +24,45 @@
       </ion-segment-button>
     </ion-segment>
   </ion-toolbar>
-  <ion-slides (pan)="panEvent($event)" #mySlider (ionDrag)="onSlideChanged($event)">
+  <ion-slides (pan)="panEvent($event)" #mySlider >
     <ion-slide>
-      <div class="fixed-content">
-        <ion-list >
-          <ion-item class="list">
-              <div class="content">第24組 2017/07/30 江芳雄 7:40~17:08 8H</div>
-            <!-- <button type="button" outline class="check" (tap)="goToCheckReport()">巡檢報告</button> -->
-          </ion-item>
-          <ion-item class="list">
-              <div class="content">第25組 2017/08/06 江芳雄 7:40~17:08 8H</div>
-            <!-- <button type="button" outline class="check">巡檢報告</button> -->
+      <ion-scroll scrollY="true" class="fixed-content">
+        <ion-list>
+          <ion-item class="list" *ngFor="let item of NoReportList" (tap)="goToCheckReport(item.HEADER_ID,itme.ALL_DONE)">
+            <div>第{{item.LINE_NUM}}組 {{item.SCHEDULE_DATE}} {{item.NAME}} <span *ngIf="item.ACUTAL_FROM_TIME">{{item.ACUTAL_FROM_TIME}}~{{item.ACTUAL_TO_TIME}}</span>
+              <span *ngIf="item.ACTUAL_HOURS">{{item.ACTUAL_HOURS}}H</span></div>
           </ion-item>
         </ion-list>
-      </div>
+      </ion-scroll>
     </ion-slide>
     <ion-slide>
       <ion-scroll scrollY="true" class="fixed-content">
         <ion-list>
-          <ion-list-header>
-            未產生補休
-          </ion-list-header>
+          <ion-item class="list" *ngFor="let item of NoCommentList" (tap)="goToCheckReport(item.HEADER_ID,itme.ALL_DONE)">
+            <div>第{{item.LINE_NUM}}組 {{item.SCHEDULE_DATE}} {{item.NAME}} <span *ngIf="item.ACUTAL_FROM_TIME">{{item.ACUTAL_FROM_TIME}}~{{item.ACTUAL_TO_TIME}}</span>              
+              <span *ngIf="item.ACTUAL_HOURS">{{item.ACTUAL_HOURS}}H</span></div>
+          </ion-item>
         </ion-list>
       </ion-scroll>
     </ion-slide>
     <ion-slide>
       <ion-scroll scrollY="true" class="fixed-content">
-        <ion-list-header>
-          已產生補休
-        </ion-list-header>
+        <ion-list>
+          <ion-item class="list" *ngFor="let item of CommentList" (tap)="goToCheckReport(item.HEADER_ID,itme.ALL_DONE)">
+            <div>第{{item.LINE_NUM}}組 {{item.SCHEDULE_DATE}} {{item.NAME}} <span *ngIf="item.ACUTAL_FROM_TIME">{{item.ACUTAL_FROM_TIME}}~{{item.ACTUAL_TO_TIME}}</span>              
+              <span *ngIf="item.ACTUAL_HOURS">{{item.ACTUAL_HOURS}}H</span></div>
+          </ion-item>
+        </ion-list>
       </ion-scroll>
     </ion-slide>
     <ion-slide>
       <ion-scroll scrollY="true" class="fixed-content">
-        <ion-list-header>
-          全部
-        </ion-list-header>
+        <ion-list>
+          <ion-item class="list" *ngFor="let item of AllList" (tap)="goToCheckReport(item.HEADER_ID,itme.ALL_DONE)">
+            <div>第{{item.LINE_NUM}}組 {{item.SCHEDULE_DATE}} {{item.NAME}} <span *ngIf="item.ACUTAL_FROM_TIME">{{item.ACUTAL_FROM_TIME}}~{{item.ACTUAL_TO_TIME}}</span>              
+              <span *ngIf="item.ACTUAL_HOURS">{{item.ACTUAL_HOURS}}H</span></div>
+          </ion-item>
+        </ion-list>
       </ion-scroll>
     </ion-slide>
 
