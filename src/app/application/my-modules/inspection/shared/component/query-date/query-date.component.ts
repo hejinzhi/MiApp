@@ -21,7 +21,7 @@ export class QueryDateComponent implements OnInit {
   end_date: string;
 
 
-  @Output() 
+  @Output()
   change = new EventEmitter<Query>()
 
   selectMaxYear = +moment(new Date()).format('YYYY') + 1;
@@ -37,14 +37,16 @@ export class QueryDateComponent implements OnInit {
     this.end_date = this.end_date || moment(Date.parse(new Date().toString())).format('YYYY-MM-DD');
     let res = await this.commonService.getMriName(this.mri_type);
     this.mrinamelist = res.json();
-    this.name_id = this.mrinamelist[0].NAME_ID;
+    if (!this.name_id) {
+      this.name_id = this.mrinamelist[0].NAME_ID;
+    }
     this.changeQuery();
   }
 
   changeQuery() {
     this.change.emit({
       nameID: this.name_id,
-      dateFM:this.start_date,
+      dateFM: this.start_date,
       dateTO: this.end_date
     });
   }
