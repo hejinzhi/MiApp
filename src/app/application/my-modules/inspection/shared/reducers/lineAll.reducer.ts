@@ -3,7 +3,7 @@ import * as lineAll from "./../actions/lineAll.action";
 
 const initialState: BossReportLineState[] = [];
 
-export const lineAllReducer = (state = initialState, action: lineAll.LineAllActions): BossReportLineState[] => {
+export function lineAllReducer (state = initialState, action: lineAll.LineAllActions): BossReportLineState[] {
     switch (action.type) {
         case lineAll.LINES_ALL_SEARCH:
             return action.payload;

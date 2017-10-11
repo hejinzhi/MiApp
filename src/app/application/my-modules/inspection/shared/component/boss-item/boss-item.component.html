@@ -1,10 +1,10 @@
 <ion-grid *ngIf="item">
     <ion-item>
       <ion-row>
-        <ion-col col-5>
+        <ion-col col-5 *ngIf="item.INSPECT_DATE">
           {{item.INSPECT_DATE.substr(0,10)}} {{item.INSPECT_TIME}}
         </ion-col>
-        <ion-col col-3>
+        <ion-col col-3 *ngIf="expression">
           {{item.OWNER_EMPNO?.split(',')[0]}}
         </ion-col>
         <ion-col col-4>

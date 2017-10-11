@@ -44,7 +44,7 @@ export function createTranslateLoader(http: Http) {
         deps: [Http]
       }
     }),
-    StoreModule.provideStore({ userReducer, lineReducer, lineAllReducer }),
+    StoreModule.provideStore({ userReducer:userReducer, lineReducer:lineReducer, lineAllReducer:lineAllReducer }),
     BrowserModule,
     IonicModule.forRoot(MyAppComponent, {
       tabsHideOnSubPages: true,

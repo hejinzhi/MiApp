@@ -4,7 +4,7 @@ import * as line from "./../actions/line.action";
 
 const initialState: BossReportLineState[] = [];
 
-export const lineReducer = (state = initialState, action: line.LineActions): BossReportLineState[] => {
+export function lineReducer(state = initialState, action: line.LineActions): BossReportLineState[] {
     switch (action.type) {
         case line.LINES_CHECK:
             return action.payload;

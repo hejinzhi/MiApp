@@ -11,6 +11,13 @@ export class EquipConfig {
      
     static deleteMachineUrl = EnvConfig.baseUrl + 'IPQA/DeleteMachineHdr';
 
-    
+    /**
+     * url
+     * get
+     * 2017-10-11
+     * @param {string} {machineNO} 设备编号
+     * @static
+     */
+    static getMachineCheckList = EnvConfig.baseUrl + 'IPQA/GetMachineCheckList?machineNO={machineNO}';
     
 }

@@ -126,7 +126,7 @@ export class MyAppComponent {
         if (!localStorage.getItem('appVersion')) {
             localStorage.setItem('appVersion', EnvConfig.appVersion);
         }
-        if(!this.user.username || !this.user.password) {
+        if(!this.user || this.user.username || !this.user.password) {
             this.rootPage = LoginComponent;
             return;
         };
@@ -154,7 +154,10 @@ export class MyAppComponent {
     }
 
     setDefaultLanguage() {
-        let preferLang = this.user.preferLang;
+        let preferLang;
+        if(this.user) {
+            preferLang = this.user.preferLang;
+        }
         let targetLang:string;
         if(preferLang) {
           targetLang = preferLang;

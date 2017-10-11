@@ -39,7 +39,7 @@
         </div>
         <div class="badge" *ngIf="(tips.ownImprove | async)>0">{{tips.ownImprove | async}}</div>
       </ion-col>
-      <ion-col col-4 class="grid-col" (tap)="goToPageAdminCheck()" *ngIf="bossService.isBossAdmin()">
+      <ion-col col-4 class="grid-col" (tap)="goToPageAdminCheck()" *ngIf="bossService?.isBossAdmin()">
         <div class="grid-content">
           <a>
             <img src="assets/icon/problem.gif" class="grid-img">

@@ -83,5 +83,15 @@ export class BossConfig {
      * @static
      */
     static getAdminLinesAll = EnvConfig.baseUrl + 'IPQA/GetProblemTrack?nameID={nameID}&dateFM={dateFM}&dateTO={dateTO}&company_name={company_name}&type={type}';
+
+    /**
+     * url
+     * 删除问题项
+     * delete
+     * 2017-10-10
+     * @param {string} {line_id} 项目id
+     * @static
+     */
+    static deleteLine = EnvConfig.baseUrl + 'IPQA/DeleteReportLines?line_id={line_id}'
     
 }

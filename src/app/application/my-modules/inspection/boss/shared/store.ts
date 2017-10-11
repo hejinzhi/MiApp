@@ -6,7 +6,7 @@ export interface BossReportState {
     Lines:BossReportLineState[]
 }
 
-interface BossReportHeader {
+export interface BossReportHeader {
     HEADER_ID:string;
     SCHEDULE_HEADER_ID:string;
     COMPANY_NAME:string;
@@ -14,6 +14,9 @@ interface BossReportHeader {
     INSPECT_DATE:string;
     SCORE:string;
     TYPE: string;
+    INSPECTOR_NAME?:string;
+    MACHINE_ID?:string;
+    MACHINE_NAME?:string
 }
 
 export interface BossReportLineState {
@@ -33,6 +36,9 @@ export interface BossReportLineState {
     ACTION_DESC?:string;
     ACTION_PICTURES?:string;
     ACTION_STATUS?:string;
+    CHECK_ID?:string;
+    CHECK_LIST_CN?:string;
+    CHECK_LIST_EN?:string;
 }
 
 export class BossReportModel implements BossReportState {
@@ -46,6 +52,7 @@ export class BossReportModel implements BossReportState {
         this.Header.SCHEDULE_HEADER_ID = data.SCHEDULE_HEADER_ID;
         this.Header.COMPANY_NAME = localStorage.getItem('appCompanyId');
         this.Header.TYPE = 'boss';
+        this.Header.INSPECTOR_NAME = data.people;
         this.Lines = [];
         data.lists.forEach((el:any) => {
             let line = {} as BossReportLineState;
@@ -60,7 +67,6 @@ export class BossReportModel implements BossReportState {
             line.PROBLEM_STATUS = el.hasIssue?'Waiting':'Done';
             line.LINE_ID = el.LINE_ID?el.LINE_ID:0;
             if(el.hasIssue) {
-                line.PROBLEM_STATUS = data.PROBLEM_STATUS
                 line.PROBLEM_PICTURES = el.imgs.map((i:string) => i.replace('data:image/jpeg;base64,','')).join();
                 line.PROBLEM_DESC = el.detail;
                 line.OWNER_EMPNO = el.inCharge.split(',')[0];
@@ -82,7 +88,7 @@ export class BossReportInsideModel {
     lists: {time:string,site:string,hasIssue:boolean,detail:string,imgs:string[],inCharge:string,mark:string}[]
     constructor(data:BossReportState) {
         this.date = moment(data.Header.INSPECT_DATE).format('YYYY-MM-DD');
-        this.people = data.Header.INSPECTOR;
+        this.people = data.Header.INSPECTOR_NAME;
         this.totalMark = data.Header.SCORE;
         this.lists = [];
         data.Lines.forEach((li) => {

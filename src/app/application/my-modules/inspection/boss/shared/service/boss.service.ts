@@ -1,3 +1,5 @@
+import { BossConfig } from './../config/boss.config';
+import { Observable } from 'rxjs/Observable';
 import { Query } from './../../../shared/model/common';
 import { Lines_All_Search } from './../../../shared/actions/lineAll.action';
 import { Lines_Check, Lines_Delete } from './../../../shared/actions/line.action';
@@ -8,12 +10,10 @@ import { Slides, Loading } from 'ionic-angular';
 import { UserState } from './../../../../../../shared/models/user.model';
 import { MyStore } from './../../../../../../shared/store';
 import { Store } from '@ngrx/store';
-import { Observable } from 'rxjs';
 import { BossReportState, BossReportModel, BossReportInsideModel, BossReportLineState } from './../store';
 import { PluginService } from './../../../../../../core/services/plugin.service';
 import { MyHttpService } from './../../../../../../core/services/myHttp.service';
 import { Injectable } from '@angular/core';
-import { BossConfig } from '../config/boss.config';
 import { EnvConfig } from '../../../../../../shared/config/env.config';
 import { TranslateService } from '@ngx-translate/core';
 
@@ -100,7 +100,7 @@ export class BossService {
             } else {
               let l = request.length;
               request.push(this.uploadPicture(i), (url: any) => {
-                li.PROBLEM_PICTURES = !li.PROBLEM_PICTURES ? url.value : li.PROBLEM_PICTURES + ',' + url.value;
+                li.PROBLEM_PICTURES = !li.PROBLEM_PICTURES ? url : li.PROBLEM_PICTURES + ',' + url;
                 console.log('完成上传图片' + (l + 1));
               });
             }
@@ -195,8 +195,6 @@ export class BossService {
     }
     return Observable.fromPromise(this.myHttp.get(BossConfig.getAdminLinesAll.replace('{nameID}', query.nameID+'')
       .replace('{dateFM}', query.dateFM).replace('{dateTO}', query.dateTO).replace('{company_name}', EnvConfig.companyID).replace('{type}','boss'))).map((res) => {
-        console.log(res.json());
-        
         return res.json()}).
       map((list: any) => list ? list : []
       ).subscribe((line: BossReportLineState[]) => {
@@ -226,11 +224,14 @@ export class BossService {
       data.ACTION_PICTURES = '';
       imgs.forEach((i) => {
         if (i.indexOf(EnvConfig.baseUrl) > -1) {
+          i = i.replace(EnvConfig.baseUrl, '');
           data.ACTION_PICTURES = data.ACTION_PICTURES ? data.ACTION_PICTURES + ',' + i : i;
         } else {
           let l = request.length;
           request.push(this.uploadPicture(i), (url: any) => {
-            data.ACTION_PICTURES = data.ACTION_PICTURES ? data.ACTION_PICTURES + ',' + url.value : url.value;
+            data.ACTION_PICTURES = data.ACTION_PICTURES ? data.ACTION_PICTURES + ',' + url : url;
+            console.log(data);
+            
             console.log('完成上传图片' + (l + 1));
           });
         }
@@ -243,10 +244,15 @@ export class BossService {
     }, (err) => this.plugin.errorDeal(err), () => final && final());;
 
     if (request && request.length > 0) {
+      console.log(data);
       return Observable.forkJoin(...request).subscribe((imgs) => upload(data), (err) => { this.plugin.errorDeal(err); final && final() });
     } else {
       return upload(data);
     }
+  }
+
+  deleteLine(id:number) {
+    return Observable.fromPromise(this.myHttp.delete(BossConfig.deleteLine.replace('{line_id}',id+'')));
   }
 
   updateLinesByAdmin(data: BossReportLineState, cb?: Function, final?: Function) {
