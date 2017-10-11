@@ -52,7 +52,6 @@ export class IpqaComponent implements OnInit {
         // let res = await this.inspectionService.getLines(EnvConfig.companyID);
         // this.lines = res.json();
         this.inspectionService.removeOldLocalStorageData();
-        this.lines = await this.inspectionService.getLines(EnvConfig.companyID);
         this.translateTexts = await this.translate.get(['inspection.ipqa.stationTitle', 'inspection.ipqa.module', 'inspection.ipqa.prompt', 'inspection.ipqa.noNetwork']).toPromise();
 
         // 无网络
@@ -60,6 +59,7 @@ export class IpqaComponent implements OnInit {
             let local: any[] = JSON.parse(localStorage.getItem(this.inspectionService.getLocalAllCheckListName()));
             if (local && local.length > 0) {
                 // 无网络但有本地存储，不需要处理
+                this.lines = await this.inspectionService.getLines(EnvConfig.companyID);
             } else {
                 // 且没有本地数据
                 this.commonService.showConfirm(this.translateTexts['inspection.ipqa.prompt'], this.translateTexts['inspection.ipqa.noNetwork'], () => {
@@ -74,6 +74,7 @@ export class IpqaComponent implements OnInit {
             localStorage.setItem(this.inspectionService.getLocalAllCheckListName(), JSON.stringify(allCheckList.json()));
             // 目的是提前把班別查詢保存到本地，後續就可以離線操作了
             await this.inspectionService.getBanBie();
+            this.lines = await this.inspectionService.getLines(EnvConfig.companyID);
             this.commonService.hideLoading();
         }
 
