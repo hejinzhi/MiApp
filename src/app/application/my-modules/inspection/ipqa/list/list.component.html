@@ -4,37 +4,8 @@
   </ion-navbar>
 </ion-header>
 <ion-content no-padding>
-  <!-- <ion-list>
-    <ion-item *ngFor="let l of formData" (tap)="goToExceptionPage(l)">
-      <div class="main-wrapper">
-        <ion-row>
-          <ion-col col-4>
-            <div>{{l.INSPECT_DATE}}</div>
-          </ion-col>
-          <ion-col col-8>
-            <div>{{l.INSPECTOR}}</div>
-          </ion-col>
-        </ion-row>
-        <ion-row>
-          <ion-col col-4>
-            <div>{{l.DUTY_KIND}}</div>
-          </ion-col>
-          <ion-col col-8>
-            <div>{{l.LOCATION}}</div>
-          </ion-col>
-        </ion-row>
-        <ion-row>
-          <ion-col>
-            <div class="check-list">{{'inspection.ipqa.checklist' | translate}}: {{l.CHECK_LIST_CN}}</div>
-          </ion-col>
-        </ion-row>
-        <ion-row>
-          <ion-col>
-            <div class="check-list">{{'inspection.ipqa.exceptionDesc' | translate}}: {{l.PROBLEM_DESC}}</div>
-          </ion-col>
-        </ion-row>
-      </div>
-    </ion-item>
-  </ion-list> -->
+  <div class="no-data" *ngIf="!formData">
+    暂无资料
+  </div>
   <sg-ipqa-item *ngFor="let item of formData" [item]="item" (tap)="goToExceptionPage(item)"></sg-ipqa-item>
 </ion-content>

@@ -25,6 +25,8 @@ export class AlertComponent implements OnInit {
   fin_unread: number;
   sfcs_unread: number;
   ims_unread: number;
+  ipqa_unread: number;
+
   att_length: number;
   pro_length: number;
   sal_length: number;
@@ -33,6 +35,7 @@ export class AlertComponent implements OnInit {
   fin_length: number;
   sfcs_length: number;
   ims_length: number;
+  ipqa_length: number;
 
   constructor(public navCtrl: NavController,
     public params: NavParams,
@@ -66,6 +69,7 @@ export class AlertComponent implements OnInit {
 
   async loadMessage() {
     this.list = await this.messageService.getMessagesByUsername(this.userinfo.username, this.userName, this.userinfo.username);
+
     this.att_unread = this.getUnreadCount('att');
     this.pro_unread = this.getUnreadCount('pro');
     this.sal_unread = this.getUnreadCount('sal');
@@ -74,6 +78,8 @@ export class AlertComponent implements OnInit {
     this.fin_unread = this.getUnreadCount('fin');
     this.sfcs_unread = this.getUnreadCount('sfcs');
     this.ims_unread = this.getUnreadCount('ims');
+    this.ipqa_unread = this.getUnreadCount('ipqa');
+
     this.att_length = this.getAlertTypeCount('att');
     this.pro_length = this.getAlertTypeCount('pro');
     this.sal_length = this.getAlertTypeCount('sal');
@@ -82,6 +88,7 @@ export class AlertComponent implements OnInit {
     this.fin_length = this.getAlertTypeCount('fin');
     this.sfcs_length = this.getAlertTypeCount('sfcs');
     this.ims_length = this.getAlertTypeCount('ims');
+    this.ipqa_length = this.getAlertTypeCount('ipqa');
   };
 
   getUnreadCount(type: string) {

@@ -135,7 +135,7 @@ export class BossService {
     res = res.json();
     if (res.Header) {
       console.log(res);
-      
+
       return new BossReportInsideModel(res);
     }
     return;
@@ -187,17 +187,18 @@ export class BossService {
       )
   }
 
-  getAdminLinesAll(query: Query, type:string, waiting: boolean = false, cb?: Function) {
+  getAdminLinesAll(query: Query, type: string, waiting: boolean = false, cb?: Function) {
     let loading: Loading;
     if (waiting) {
       loading = this.plugin.createLoading()
       loading.present();
     }
-    return Observable.fromPromise(this.myHttp.get(BossConfig.getAdminLinesAll.replace('{nameID}', query.nameID+'')
-      .replace('{dateFM}', query.dateFM).replace('{dateTO}', query.dateTO).replace('{company_name}', EnvConfig.companyID).replace('{type}','boss'))).map((res) => {
+    return Observable.fromPromise(this.myHttp.get(BossConfig.getAdminLinesAll.replace('{nameID}', query.nameID + '')
+      .replace('{dateFM}', query.dateFM).replace('{dateTO}', query.dateTO).replace('{company_name}', EnvConfig.companyID).replace('{type}', 'boss'))).map((res) => {
         console.log(res.json());
-        
-        return res.json()}).
+
+        return res.json()
+      }).
       map((list: any) => list ? list : []
       ).subscribe((line: BossReportLineState[]) => {
         if (waiting && line.length === 0) {
@@ -214,7 +215,7 @@ export class BossService {
       )
   }
 
-  handleIssue(obj: { PROBLEM_STATUS: string, ACTION_DESC: string, ACTION_DATE: string, ACTION_STATUS: string, SCORE: string, LINE_ID: number }) {
+  handleIssue(obj: { PROBLEM_STATUS: string, ACTION_DESC: string, ACTION_DATE: string, ACTION_STATUS: string, SCORE: number, LINE_ID: number }) {
     return Observable.fromPromise(this.inspectionService.handleProblem(obj)).map((res) => res.status);
   }
 

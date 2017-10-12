@@ -40,14 +40,20 @@ export class GridComponent implements OnInit {
 export class GridModel {
     title: string;
     showCheckbox: boolean;
+    status: string;
 }
 
-export class StationModel {
-    title: string;
-    showCheckbox: boolean;
+export class StationModel extends GridModel {
     stationID: number;
     headerId: number;
 }
+
+// export class StationModel {
+//     title: string;
+//     showCheckbox: boolean;
+//     stationID: number;
+//     headerId: number;
+// }
 
 export enum Mode {
     MODULE_STATION,

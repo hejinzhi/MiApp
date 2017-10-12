@@ -14,7 +14,7 @@
           </a>
         </div>
       </ion-col> -->
-      <ion-col col-4 class="grid-col" (tap)="goToReportPage()">
+      <ion-col col-4 class="grid-col" (tap)="goToReportPage()" *ngIf="hasPrivilege('AddRecords')">
         <div class="grid-content">
           <a>
             <img src="assets/icon/report.gif" class="grid-img">
@@ -22,7 +22,7 @@
           </a>
         </div>
       </ion-col>
-      <ion-col col-4 class="grid-col" (tap)="goToTeamLeader()">
+      <ion-col col-4 class="grid-col" (tap)="goToTeamLeader()" *ngIf="hasPrivilege('AssignOwner')">
         <div class="grid-content">
           <a>
             <img src="assets/icon/assign.png" class="grid-img">
@@ -30,7 +30,7 @@
           </a>
         </div>
       </ion-col>
-      <ion-col col-4 class="grid-col" (tap)="goToTeamHandler()">
+      <ion-col col-4 class="grid-col" (tap)="goToTeamHandler()" *ngIf="hasPrivilege('HandleProblem')">
         <div class="grid-content">
           <a>
             <img src="assets/icon/gaishan.gif" class="grid-img">
@@ -38,7 +38,7 @@
           </a>
         </div>
       </ion-col>
-      <ion-col col-4 class="grid-col" (tap)="goToAllProblems()">
+      <ion-col col-4 class="grid-col" (tap)="goToAllProblems()" *ngIf="hasPrivilege('CheckProblem')">
         <div class="grid-content">
           <a>
             <img src="assets/icon/problem.gif" class="grid-img">

@@ -12,7 +12,8 @@ export class MenuComponent implements OnInit {
         'inspection.ipqa.assignOwner': '',
         'inspection.ipqa.handleProblem': ''
     }; // 记录转换后的文本(简繁体)
-    privilegeList: { USER_ROLE: any[], USER_FUNCTION: any[] };
+    privilegeList: { FUNCTION_ID: string, FUNCTION_NAME: string, FUNCTION_URL: string, ROLE_ID: number, ROLE_NAME: string }[];
+    role: { ROLE_ID: number, ROLE_NAME: string };
     constructor(
         private navCtrl: NavController,
         private navParams: NavParams,
@@ -21,6 +22,11 @@ export class MenuComponent implements OnInit {
 
     async ngOnInit() {
         this.privilegeList = this.navParams.get('privilege');
+        this.role = this.navParams.get('role');
+
+        this.privilegeList = this.privilegeList.filter((value, index) => {
+            return value.ROLE_ID === this.role.ROLE_ID;
+        });
 
         this.translateTexts = await this.translate.get(['inspection.ipqa.assignOwner', 'inspection.ipqa.handleProblem']).toPromise();
     }
@@ -34,11 +40,24 @@ export class MenuComponent implements OnInit {
     }
 
     goToTeamHandler() {
-        this.navCtrl.push('ListComponent', { fromPage: 'handler', title: this.translateTexts['inspection.ipqa.handleProblem'] })
+        this.navCtrl.push('ListComponent', { fromPage: 'handler', title: this.translateTexts['inspection.ipqa.handleProblem'], roleName: this.role.ROLE_NAME })
     }
 
     goToAllProblems() {
         this.navCtrl.push('AllProblemsComponent', { title: this.translateTexts['inspection.ipqa.handleProblem'] });
+    }
+
+    hasPrivilege(type: string) {
+        let result: boolean = false;
+        if (this.privilegeList && this.privilegeList.length > 0 && this.role.ROLE_ID > 0) {
+            for (let i = 0; i < this.privilegeList.length; i++) {
+                if (this.privilegeList[i].FUNCTION_URL === type) {
+                    result = true;
+                    break;
+                }
+            }
+        }
+        return result;
     }
 
 
