@@ -27,4 +27,6 @@ export class InspectionConfig {
     // static handleProblemUrl = EnvConfig.baseUrl + 'IPQA/HandleProblem';
     static handleProblemUrl = EnvConfig.baseUrl + 'IPQA/UpdateReportLines';
 
+    static getAllCheckListUrl = EnvConfig.baseUrl + 'IPQA/GetAllCheckList';
+
 }

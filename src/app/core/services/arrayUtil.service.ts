@@ -16,4 +16,15 @@ export class ArrayUtilService {
         }
         return result;
     }
+
+    // 判断obj是否存在于数组中
+    contains(arr: string[], obj: string) {
+        var i = arr.length;
+        while (i--) {
+            if (arr[i] === obj) {
+                return true;
+            }
+        }
+        return false;
+    }
 }

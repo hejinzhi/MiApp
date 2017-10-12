@@ -229,7 +229,7 @@ export class BossService {
       )
   }
 
-  handleIssue(obj: { PROBLEM_STATUS: string, ACTION_DESC: string, ACTION_DATE: string, ACTION_STATUS: string, SCORE: string, LINE_ID: number }) {
+  handleIssue(obj: { PROBLEM_STATUS: string, ACTION_DESC: string, ACTION_DATE: string, ACTION_STATUS: string, SCORE: number, LINE_ID: number }) {
     return Observable.fromPromise(this.inspectionService.handleProblem(obj)).map((res) => res.status);
   }
 

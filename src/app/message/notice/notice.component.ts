@@ -1,3 +1,4 @@
+import { TranslateService } from '@ngx-translate/core';
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { NavParams, Events, NavController } from 'ionic-angular';
 import { MessageService } from '../shared/service/message.service';
@@ -23,6 +24,10 @@ export class NoticeComponent implements OnInit {
   alertType: string;
   showChartFlag: boolean = false;
   first: boolean = true;
+  translateTexts: any = {
+    'inspection.ipqa.assignOwner': '',
+    'inspection.ipqa.handleProblem': ''
+  }; // 记录转换后的文本(简繁体)
 
   constructor(
     public navCtrl: NavController,
@@ -30,7 +35,9 @@ export class NoticeComponent implements OnInit {
     public messageService: MessageService,
     public jmessageService: JMessageService,
     private ref: ChangeDetectorRef,
-    private events: Events) {
+    private events: Events,
+    private translate: TranslateService
+  ) {
 
     this.fromUserName = params.get('fromUserName');
     this.fromUserNickName = params.get('fromUserNickName');
@@ -63,10 +70,10 @@ export class NoticeComponent implements OnInit {
     this.events.publish('msg.onChangeTabBadge');
   }
 
-  ngOnInit() {
+  async ngOnInit() {
     this.userInfo = JSON.parse(localStorage.getItem('currentUser'));
     this.loadMessage();
-
+    this.translateTexts = await this.translate.get(['inspection.ipqa.assignOwner', 'inspection.ipqa.handleProblem']).toPromise();
   }
 
   toggleChart(item: any) {
@@ -102,7 +109,14 @@ export class NoticeComponent implements OnInit {
 
     this.listlength = this.listtotal.length;
     this.list = this.listtotal.slice(-this.listpagenum);
+    console.log(this.list);
   };
+
+  goToDetailPage(item: LocalMessage) {
+    if (item.extra.type === 'ipqa') {
+      this.navCtrl.push('ListComponent', { title: this.translateTexts['inspection.ipqa.assignOwner'], fromPage: 'teamLeader' });
+    }
+  }
 
   doscroll(event: any) {
     if (event.srcElement.scrollTop <= 0) {
@@ -131,5 +145,30 @@ export class NoticeComponent implements OnInit {
 
   }
 
+}
+
+class LocalMessage {
+  childType: string; // ipqa
+  content: string; // "IPQA巡檢異常"
+  contentType: string; // "text"
+  duration: number; // 0
+  fromUserName: string; //"alert"
+  id: number;
+  imageHeight: number;
+  imageWidth: number;
+  msgID: number;
+  time: number;
+  toUserName: string;
+  type: string; // "notice"
+  unread: string;
+  vounread: string;
+  extra: {
+    content: string; // "尊敬的....
+    content_type: string; // "text"
+    params: string;
+    table_content: string;
+    title: string; // "IPQA巡檢異常"
+    type: string; // "ipqa"
+  }
 }
 

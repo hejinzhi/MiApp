@@ -30,6 +30,18 @@ sg-grid {
     .green {
       background-color: #bdecfe;
     }
+    .status {
+      font-size: 10px;
+      position: absolute;
+      right: 10px;
+      bottom: 0;
+    }
+    .post {
+      color: green;
+    }
+    .unpost {
+      color: red;
+    }
   }
   .my-header {
     display: block;
