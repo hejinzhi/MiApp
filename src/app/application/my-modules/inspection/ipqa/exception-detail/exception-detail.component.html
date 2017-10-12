@@ -75,7 +75,7 @@
                 </li>
               </ul>
               <button ion-button (tap)="addPictures()">addPictures</button> -->
-          <sg-photo-view (imgsChange)="getImages($event)" [imgs]="images" [opts]="photoViewOptions"></sg-photo-view>
+          <sg-photo-view (imgsChange)="getImages($event)" [imgs]="images" [opts]="photoViewOptions" destinationType=1></sg-photo-view>
         </div>
       </div>
       <div class="my-row" *ngIf="(fromPage === 'teamLeader')||(fromPage === 'handler')">
@@ -113,7 +113,7 @@
           <ion-label>{{'inspection.ipqa.actionPictures' | translate}}:</ion-label>
         </div>
         <div class="right-col">
-          <sg-photo-view [imgs]="actionPictures" (imgsChange)="getActionPicture($event)" [opts]="photoViewAdminOptions"></sg-photo-view>
+          <sg-photo-view [imgs]="actionPictures" (imgsChange)="getActionPicture($event)" [opts]="photoViewAdminOptions" destinationType=1></sg-photo-view>
         </div>
       </div>
       <div class="my-row" *ngIf="(fromPage === 'handler')||(fromPage === 'admin')">

@@ -245,7 +245,7 @@ export class ExceptionDetailComponent implements OnInit {
                     let len = this.actionPictures.length;
                     let img = this.actionPictures[i].replace('data:image/jpeg;base64,', '');
                     try {
-                        let imgUrl = await this.inspectionCommonService.uploadPicture({ PICTURE: img })
+                        let imgUrl = await this.inspectionCommonService.uploadPicture({ PICTURE: img }, true)
                         if (imgUrl) {
                             if (i < len - 1) {
                                 images += imgUrl + ',';
@@ -308,6 +308,7 @@ export class ExceptionDetailComponent implements OnInit {
     // 获取用户选择的照片
     getImages(images: string[]) {
         this.images = images;
+        console.log(this.images);
     }
 
     // 获取整改后图片

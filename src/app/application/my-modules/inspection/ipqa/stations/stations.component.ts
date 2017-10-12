@@ -112,7 +112,7 @@ export class StationsComponent implements OnInit {
                                     stationData[j].status = 'posted';
                                     stationData[j].headerId = headerId;
                                     //????
-                                    //为什么post后再post数据会重复？？？
+                                    // 为什么post后再post数据会重复？？？
                                 }
 
                             }

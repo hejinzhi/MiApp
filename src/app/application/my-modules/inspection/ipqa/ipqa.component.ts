@@ -67,15 +67,22 @@ export class IpqaComponent implements OnInit {
                 });
             }
         } else {
-            // 有网络。每次进来刷新本地check list
-            this.commonService.showLoading();
+
             // 把所有checklist保存在本地
-            let allCheckList = await this.inspectionService.getAllCheckList(EnvConfig.companyID, 'IPQA');
-            localStorage.setItem(this.inspectionService.getLocalAllCheckListName(), JSON.stringify(allCheckList.json()));
+            let localData = JSON.parse(localStorage.getItem(this.inspectionService.getLocalAllCheckListName()));
+            if (localData && localData.length > 0) { }
+            else {
+                // 有网络。本地没有数据的话刷新本地check list
+                this.commonService.showLoading();
+                let allCheckList = await this.inspectionService.getAllCheckList(EnvConfig.companyID, 'IPQA');
+                localStorage.setItem(this.inspectionService.getLocalAllCheckListName(), JSON.stringify(allCheckList.json()));
+                this.commonService.hideLoading();
+            }
+
             // 目的是提前把班別查詢保存到本地，後續就可以離線操作了
             await this.inspectionService.getBanBie();
             this.lines = await this.inspectionService.getLines(EnvConfig.companyID);
-            this.commonService.hideLoading();
+
         }
 
 

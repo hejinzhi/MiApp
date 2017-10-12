@@ -361,10 +361,10 @@ export class InspectionService {
         };
     }
 
-    async updateAndPostData(report: ReportModel, banbie: string, checkList: Checklist[], lineName: string, stationName: string) {
+    async updateAndPostData(report: ReportModel, banbie: string, checkList: Checklist[], lineName: string, stationName: string, stationId: number, headerId: number) {
         let localData = this.combineIpqaReportObj(banbie, checkList, lineName, stationName);
         localData.Header.HEADER_ID = report.Header.HEADER_ID;
-        localData.Lines.forEach((line, index) => {
+        localData.Lines.forEach(async (line, index) => {
             for (let i = 0; i < report.Lines.length; i++) {
                 if (line.CHECK_ID === report.Lines[i].CHECK_ID) {
                     line.HEADER_ID = report.Header.HEADER_ID;
@@ -377,6 +377,7 @@ export class InspectionService {
                     break;
                 }
             }
+            await this.uploadPictures(stationId, headerId, localData);
         });
         try {
             let res = await this.inspectionCommonService.insertReportData(localData);
@@ -390,7 +391,6 @@ export class InspectionService {
 
     // 上传问题图片
     findAndUploadPicture(stationId: number, reportData: ReportModel) {
-
         reportData.Lines.forEach(async (line, index) => {
             if (line.PROBLEM_FLAG === 'Y') {
                 let res = this.getExceptionDetail(stationId, line.CHECK_ID);
@@ -400,7 +400,7 @@ export class InspectionService {
                     for (let i = 0; i < len; i++) {
                         let img = res.PROBLEM_PICTURES[i].replace('data:image/jpeg;base64,', '');
                         try {
-                            let imgUrl = await this.inspectionCommonService.uploadPicture({ PICTURE: img });
+                            let imgUrl = await this.inspectionCommonService.uploadPicture({ PICTURE: img }, true);
                             if (imgUrl) {
                                 if (i < len - 1) {
                                     images += imgUrl + ',';
@@ -454,8 +454,10 @@ export class InspectionService {
                 let res = await this.inspectionCommonService.getReportData(localStation.headerId);
                 let dataFromServer: ReportModel = res.json();
                 if (dataFromServer) {
-                    headerId = await this.updateAndPostData(dataFromServer, banbie, checkList, lineName, stationName);
-                    await this.uploadPictures(stationId, headerId, dataFromServer);
+                    // headerId = await this.updateAndPostData(dataFromServer, banbie, checkList, lineName, stationName);
+                    headerId = await this.updateAndPostData(dataFromServer, banbie, checkList, lineName, stationName, stationId, headerId);
+                    // console.log(1); // ??
+                    // await this.uploadPictures(stationId, headerId, dataFromServer);
                 } else {
                     headerId = await this.postDataFromLocal(banbie, checkList, lineName, stationName);
                     await this.uploadPictures(stationId, headerId);
