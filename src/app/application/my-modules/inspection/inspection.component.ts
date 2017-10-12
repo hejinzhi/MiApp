@@ -49,11 +49,7 @@ export class InspectionComponent implements OnInit {
     }
 
     hasPrivilege(type: string) {
-<<<<<<< HEAD
-        if (this.privilegeList) {
-=======
         if (this.privilegeList && this.privilegeList.length > 0) {
->>>>>>> 0edb516af1664bd98a60dbc7d869d3bf1c1c60fb
             for (let i = 0; i < this.privilegeList.length; i++) {
                 if (this.privilegeList[i].FUNCTION_NAME === type) {
                     return true;
@@ -63,8 +59,31 @@ export class InspectionComponent implements OnInit {
         return false;
     }
 
+    getPrivilegeRoleId(type: string) {
+        let target: { ROLE_ID: number, ROLE_NAME: string } = { ROLE_ID: 0, ROLE_NAME: '' };
+        if (this.privilegeList && this.privilegeList.length > 0) {
+            let pri = ['INSPECT_IPQA_ADMIN', 'INSPECT_IPQA_LEADER', 'INSPECT_IPQA_COMMON'];
+            let index: number = -1;
+            let done: boolean = false;
+            for (let i = 0; i < pri.length; i++) {
+                for (let j = 0; j < this.privilegeList.length; j++) {
+                    if (this.privilegeList[j].ROLE_NAME === pri[i]) {
+                        target.ROLE_ID = this.privilegeList[j].ROLE_ID;
+                        target.ROLE_NAME = this.privilegeList[j].ROLE_NAME;
+                        done = true;
+                        break;
+                    }
+                }
+                if (done) {
+                    break;
+                }
+            }
+        }
+        return target;
+    }
+
     goToIPQA() {
-        this.navCtrl.push('MenuComponent', { privilege: this.privilegeList });
+        this.navCtrl.push('MenuComponent', { privilege: this.privilegeList, role: this.getPrivilegeRoleId('IPQA') });
     }
     goToEuqip() {
         this.navCtrl.push('EquipComponent');
@@ -74,3 +93,5 @@ export class InspectionComponent implements OnInit {
         this.navCtrl.push('BossMenuComponent')
     }
 }
+
+

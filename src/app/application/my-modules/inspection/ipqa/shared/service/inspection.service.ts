@@ -1,3 +1,4 @@
+import { UserState } from './../../../../../../shared/models/user.model';
 import { ArrayUtilService } from './../../../../../../core/services/arrayUtil.service';
 import { PluginService } from './../../../../../../core/services/plugin.service';
 import { InspectionCommonService } from './../../../shared/service/inspectionCommon.service';
@@ -25,7 +26,11 @@ export class InspectionService {
         private inspectionCommonService: InspectionCommonService,
         private pluginService: PluginService,
         private arrayUtilService: ArrayUtilService
-    ) { }
+    ) {
+        this.user = JSON.parse(localStorage.getItem('currentUser'));
+    }
+
+    user: UserState;
 
     hasNoNetwork() {
         return this.pluginService.hasNoNetwork();
@@ -515,6 +520,15 @@ export class InspectionService {
     UpdateReportLines(obj: any) {
         return this.myHttp.post(InspectionConfig.handleProblemUrl, obj);
     }
+
+    // isIpqaAdmin() {
+    //     let idx = this.user.privilege.findIndex((p) => p.moduleID === this.moduleID);
+    //     if (idx > -1) {
+    //       return this.user.privilege[idx].function.find((l) => l.FUNCTION_NAME === 'BOSS');
+    //     } else {
+    //       return false
+    //     };
+    //   }
 
 
 
