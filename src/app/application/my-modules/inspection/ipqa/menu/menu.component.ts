@@ -47,6 +47,7 @@ export class MenuComponent implements OnInit {
         this.navCtrl.push('AllProblemsComponent', { title: this.translateTexts['inspection.ipqa.handleProblem'] });
     }
 
+    // 判断是否有权限
     hasPrivilege(type: string) {
         let result: boolean = false;
         if (this.privilegeList && this.privilegeList.length > 0 && this.role.ROLE_ID > 0) {
