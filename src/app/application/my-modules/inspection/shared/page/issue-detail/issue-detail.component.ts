@@ -1,3 +1,10 @@
+import { Lines_Delete } from './../../actions/line.action';
+import { Lines_All_Update } from "./../../actions/lineAll.action";
+import { MyStore } from './../../../../../../shared/store';
+import { Store } from '@ngrx/store';
+import { PluginService } from './../../../../../../core/services/plugin.service';
+import { BossReportLineState } from './../../../boss/shared/store';
+import { BossService } from './../../../boss/shared/service/boss.service';
 import { FormGroup, FormBuilder } from '@angular/forms';
 import { IonicPage, NavParams, AlertController, NavController } from 'ionic-angular';
 import { Component, OnInit } from '@angular/core';
@@ -14,24 +21,27 @@ import { NgValidatorExtendService } from './../../../../../../core/services/ng-v
 
 export class IssueDetailComponent implements OnInit {
     type:number=0;
-    issue:any;
+    issue:BossReportLineState;
     reportForm: FormGroup
-    status:number=2;
-    oldStatus:number = 2;
-
+    adminReport: FormGroup;
     admin:boolean;
+
+    empRequired:boolean;
     statusList = [
-        {type:1,value:'待分配'},
-        {type:2,value:'待处理'},
-        {type:3,value:'已处理'},
-        {type:4,value:'HighLight'}
+        {type:'New',value:'待分配'},
+        {type:'Waiting',value:'待处理'},
+        {type:'Done',value:'已处理'},
+        {type:'Highlight',value:'Highlight'}
     ]
     constructor(
         private navParams: NavParams,
         private navCtrl: NavController,
         private alertCtrl: AlertController,
         private fb: FormBuilder,
-        private validExd:NgValidatorExtendService,
+        private validExd: NgValidatorExtendService,
+        private bossService: BossService,
+        private plugin: PluginService,
+        private $store: Store<MyStore>
     ) { }
 
     ngOnInit() {
@@ -39,7 +49,18 @@ export class IssueDetailComponent implements OnInit {
         // this.type =0;
         this.issue = this.navParams.get('issue') || {};
         this.admin = this.navParams.get('admin') || false;
-        this.reportForm = this.initForm();
+        this.reportForm = this.initForm(this.issue);
+        if(this.admin) {
+            this.adminReport = this.initAdminForm(this.issue);
+            this.adminReport.get('PROBLEM_STATUS').valueChanges.subscribe((val) => {
+                if(val === 'New') {
+                    this.empRequired = false;
+                    setTimeout(() =>this.adminReport.get('OWNER_EMPNO').setValue(''),10);
+                } else {
+                    this.empRequired = true;
+                }
+            })
+        }
     }
 
     pushBack() {
@@ -56,8 +77,13 @@ export class IssueDetailComponent implements OnInit {
               {
                 text: '确定',
                 handler: () => {
-                    console.log(4);
-                    this.navCtrl.pop();
+                    let loading = this.plugin.createLoading();
+                    loading.present();
+                    let send:BossReportLineState = {LINE_ID:this.issue.LINE_ID,OWNER_EMPNO:'',PROBLEM_STATUS:'New'};
+                    this.bossService.updateReportLines(send,() => {
+                        this.navCtrl.pop()
+                        this.$store.dispatch(new Lines_Delete(send));
+                    },() => loading && loading.dismiss());
                 }
               }
             ]
@@ -65,12 +91,23 @@ export class IssueDetailComponent implements OnInit {
           confirm.present();
     }
 
+    initAdminForm(work:any ={}) {
+        this.empRequired = !(work.PROBLEM_STATUS === 'New');
+        return this.fb.group({
+            OWNER_EMPNO: [work.OWNER_EMPNO, this.validExd.required()],
+            PROBLEM_STATUS: [work.PROBLEM_STATUS, this.validExd.required()]
+        })
+    }
+
     initForm(work:any={}) {
+        if(typeof work.ACTION_PICTURES === 'string') {
+            work.ACTION_PICTURES =this.plugin.getPictureUrlArray(work.ACTION_PICTURES)
+        }
         let group = this.fb.group({
-            ACTION_DESC: [work.action,this.validExd.required()],
-            ACTION_STATUS: [work.improvement],
-            ACTION_PICTURES:[work.imgs],
-            ACTION_DATE: [work.import_date || moment(new Date()).format('YYYY-MM-DD')]
+            ACTION_DESC: [work.ACTION_DESC,this.validExd.required()],
+            ACTION_STATUS: [work.ACTION_STATUS],
+            ACTION_PICTURES:[work.ACTION_PICTURES],
+            ACTION_DATE: [work.ACTION_DATE || moment(new Date()).format('YYYY-MM-DD')]
         })
         if (this.admin) {
             group.disable({onlySelf:true});
@@ -102,11 +139,30 @@ export class IssueDetailComponent implements OnInit {
     // }
 
     submit() {
-        console.log(this.reportForm.value);
+        let send = Object.assign({},this.reportForm.value);
+        send.PROBLEM_STATUS = 'Done';
+        send.ACTION_PICTURES = send.ACTION_PICTURES?send.ACTION_PICTURES.map((i:string) => 
+        i.replace('data:image/jpeg;base64,', '')).join():'';
+        send.LINE_ID = this.issue.LINE_ID;
+        let loading = this.plugin.createLoading();
+        loading.present();
+        this.bossService.updateReportLines(send,() => {
+            this.$store.dispatch(new Lines_Delete(send));
+            this.plugin.showToast('提交成功');
+            this.navCtrl.pop();
+        },() => loading && loading.dismiss())
     }
 
     update() {
-        console.log(this.issue.inCharge);
-        console.log(this.status);
+        let send = Object.assign({}, this.adminReport.value);
+        send.LINE_ID = this.issue.LINE_ID;
+        send.OWNER_EMPNO = send.OWNER_EMPNO.split(',')[0];
+        let loading = this.plugin.createLoading();
+        loading.present();
+        this.bossService.updateLinesByAdmin(send,() => {
+            this.plugin.showToast('更新成功')
+            setTimeout(() => this.navCtrl.pop(),300);
+            this.$store.dispatch(new Lines_All_Update(send));
+        },() => loading && loading.dismiss())
     }
 }

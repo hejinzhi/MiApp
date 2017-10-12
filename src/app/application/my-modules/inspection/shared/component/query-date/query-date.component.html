@@ -1,6 +1,6 @@
 <ion-item>
   <ion-label col-4>*巡检名稱</ion-label>
-  <ion-select [(ngModel)]="name_id" [cancelText]="'attendance.cancle' | translate" [okText]="'attendance.confirm' | translate" (ionChange)="changeNameId()">
+  <ion-select [(ngModel)]="name_id" [cancelText]="'attendance.cancle' | translate" [okText]="'attendance.confirm' | translate" (ionChange)="changeQuery()">
     <ion-option *ngFor="let item of mrinamelist" [value]="item.NAME_ID">{{item.INSPECT_NAME}}</ion-option>
   </ion-select>
 </ion-item>
@@ -10,14 +10,14 @@
       <ion-item>
         <ion-label col-auto>*值班日期</ion-label>
         <ion-datetime  [(ngModel)]="start_date" displayFormat="MM/DD" pickerFormat="YYYY MM DD" [cancelText]="'attendance.cancle' | translate" [doneText]="'attendance.confirm' | translate"
-          min="2017" [max]="selectMaxYear" (ionChange)="changeStartDate()"></ion-datetime>
+          min="2017" [max]="selectMaxYear" (ionChange)="changeQuery()"></ion-datetime>
       </ion-item>
     </ion-col>
     <ion-col col-5 no-padding class="end_date">
       <ion-item>
         <ion-label col-auto class="lab">-</ion-label>
         <ion-datetime [(ngModel)]="end_date" displayFormat="MM/DD" pickerFormat="YYYY MM DD" [cancelText]="'attendance.cancle' | translate" [doneText]="'attendance.confirm' | translate"
-          min="2017" [max]="selectMaxYear" (ionChange)="changeEndDate()"></ion-datetime>
+          min="2017" [max]="selectMaxYear" (ionChange)="changeQuery()"></ion-datetime>
       </ion-item>
     </ion-col>
   </ion-row>

@@ -1,4 +1,4 @@
-import { EnvConfig } from '../../../../../../shared/config/env.config';
+import { EnvConfig } from './../../../../../../shared/config/env.config';
 
 export class BossConfig {
 
@@ -9,6 +9,8 @@ export class BossConfig {
     static getMriWeek = EnvConfig.baseUrl + 'IPQA/GetMRIWeek';
 
     static saveSchedule = EnvConfig.baseUrl + 'IPQA/UploadSchedule';
+
+    static getScheduleInfoUrl = EnvConfig.baseUrl + 'IPQA/GetScheduleInfo';
 
     /**
      * URL
@@ -47,5 +49,39 @@ export class BossConfig {
      * @param {string} {company_name} 所属公司
      */
     static getExcReportData = EnvConfig.baseUrl + 'IPQA/GetExcReportData?problemStatus={problemStatus}&empno={empno}&type={type}&company_name={company_name}'
+
+    
+    /**
+     * URL
+     * 更新Lines表的数据
+     * post
+     * 2017-09-30
+     * @static
+     */
+    static updateReportLines = EnvConfig.baseUrl + 'IPQA/UpdateReportLines'
+
+    /**
+     * URL
+     * 上传图片，获得返回的url
+     * post { "PICTURE":"Base64 String..." }
+     * 2017-09-30
+     * @static
+     */
+    static uploadPicture =  EnvConfig.baseUrl + 'IPQA/UploadPicture';
+    
+    /**
+     * URL
+     * 根据条件查找所有的问题项
+     * get
+     * 2017-10-09
+     * @param {string} {type} 巡检类别
+     * @param {string} {nameID} 巡检类别里的细分的id
+     * @param {string} {dateFM} 开始时间
+     * @param {string} {dateTO} 结束时间
+     * @param {string} {company_name} 所属公司
+     * 
+     * @static
+     */
+    static getAdminLinesAll = EnvConfig.baseUrl + 'IPQA/GetProblemTrack?nameID={nameID}&dateFM={dateFM}&dateTO={dateTO}&company_name={company_name}&type={type}';
     
 }

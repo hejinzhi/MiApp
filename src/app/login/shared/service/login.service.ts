@@ -85,6 +85,9 @@ export class LoginService {
         }
         let token = res.json().Token;
         if (token) {
+            localStorage.setItem('moduleList', JSON.stringify(res.json().Modules));
+            localStorage.setItem('access_token', JSON.stringify(token));
+            localStorage.setItem('tokenExpires', res.json().Expires);
             let user = res.json().User;
             let companys = res.json().Companys;
             this.currentUser.id = user.ID;

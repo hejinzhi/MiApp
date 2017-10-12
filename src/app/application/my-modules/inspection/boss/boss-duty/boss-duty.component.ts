@@ -1,3 +1,6 @@
+import { Query } from './../../shared/model/common';
+import { async } from '@angular/core/testing';
+import { BossService } from './../shared/service/boss.service';
 import { IonicPage, Platform, NavController, NavParams, Slides } from 'ionic-angular';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, FormArray, FormControl } from '@angular/forms';
@@ -21,11 +24,19 @@ export class BossDutyComponent implements OnInit {
     end_date: string = moment(new Date()).format('YYYY-MM-DD');
 
     selectMaxYear = +moment(new Date()).format('YYYY') + 1;
-
+    allByGroup: any[][] = [];
+    noCardByGroup: any[][] = [];
+    noRepayByGroup: any[][] = [];
+    RepayByGroup: any[][] = [];
 
     selected_segment = 0;
     top_segment = 'top_0';
     segment = 'sites';
+
+    bossDutyList: any;
+    noCardList: any;
+    noRepayList: any;
+    RepayList: any;
 
     rootNavCtrl: NavController;
 
@@ -33,6 +44,7 @@ export class BossDutyComponent implements OnInit {
         private fb: FormBuilder,
         private navCtrl: NavController,
         private validExd: NgValidatorExtendService,
+        private bossService: BossService,
     ) {
     }
 
@@ -40,8 +52,13 @@ export class BossDutyComponent implements OnInit {
 
     }
 
-    goToCheckReport() {
-        this.navCtrl.push('BossReportComponent');
+    async  ionViewWillEnter() {
+        await this.getBossDutyList();
+    }
+
+    goToCheckReport(scheduleHeaderId: any) {
+        if(scheduleHeaderId == 0) return;
+        this.navCtrl.push('BossReportComponent', { scheduleHeaderId: scheduleHeaderId,hr: true });
     }
 
     select(index: any) {
@@ -59,16 +76,6 @@ export class BossDutyComponent implements OnInit {
 
     select_segment(index: any) {
         this.selected_segment = index;
-    }
-
-    onSlideChanged($event: any) {
-        if (((($event.touches.startX - $event.touches.currentX) <= 100) || (($event.touches.startX - $event.touches.currentX) > 0)) && (this.slider.isBeginning() || this.slider.isEnd())) {
-            console.log("interdit Direction");
-        }
-        else {
-            console.log("OK Direction");
-        }
-
     }
 
     panEvent(e: any) {
@@ -89,18 +96,66 @@ export class BossDutyComponent implements OnInit {
         }, 0)
     }
 
-    nameIdChange(id: any) {
-        this.name_id = id;
+    async getBossDutyList() {
+        let res: any = await this.bossService.getScheduleInfo(this.name_id, this.start_date, this.end_date);
+        if (!res) return;
+        this.bossDutyList = res.json();
+
+        if (this.bossDutyList) {
+            //未刷卡
+            this.noCardList = this.bossDutyList.filter((v: any) => (v.ACUTAL_FROM_TIME === '' || v.ACTUAL_TO_TIME === '' || v.ACUTAL_FROM_TIME == null || v.ACTUAL_TO_TIME == null));
+            if (this.noCardList) {
+                this.noCardByGroup = this.selectItems(this.noCardList);
+            }
+
+            //未产生补休
+            this.noRepayList = this.bossDutyList.filter((v: any) => (v.ACTUAL_HOURS === ''));
+            if (this.noRepayList) {
+                this.noRepayByGroup = this.selectItems(this.noRepayList);
+            }
+
+            //已产生补休   
+            this.RepayList = this.bossDutyList.filter((v: any) => (v.ACTUAL_HOURS !== ''));
+            if (this.RepayList) {
+                this.RepayByGroup = this.selectItems(this.RepayList);
+            }
+
+            this.allByGroup = this.selectItems(this.bossDutyList);
+            console.log(this.allByGroup, 123);
+        }
     }
 
-    stratDateChange(date: string) {
-        this.start_date = date;
+    changeQuery(query:Query) {
+        this.name_id = query.nameID;
+        this.start_date = query.dateFM;
+        this.end_date = query.dateTO;
     }
 
-    endDateChange(date: string) {
-        this.end_date = date;
-    }
+    // 作用：用于把一维数组的数据按group分成二维数组存储
+    selectItems(data: any[]): any[][] {
+        let temp: any[][] = [];
+        let groupTypes: string[] = [];
+        for (let i = 0; i < data.length; i++) {
+            if ((groupTypes.indexOf(data[i].SCHEDULE_HEADER_ID) === -1)) {
+                groupTypes.push(data[i].SCHEDULE_HEADER_ID);
+            }
+        }
 
+        // 数组初始化
+        for (let i = 0; i < groupTypes.length; i++) {
+            temp[i] = [];
+        }
+
+        for (let i = 0; i < groupTypes.length; i++) {
+            for (let j = 0; j < data.length; j++) {
+                if (data[j].SCHEDULE_HEADER_ID === groupTypes[i]) {
+                    temp[i].push(data[j]);
+                }
+            }
+        }
+
+        return temp;
+    }
 }
 
 class ReportHead {

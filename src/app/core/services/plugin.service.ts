@@ -290,8 +290,9 @@ export class PluginService {
         try {
           errMes = err.json().ExceptionMessage;
         } catch (e) {
-          console.log(e)
+          console.log(err)
           errMes = err._body;
+          this.showToast(errMes);
         }
         errTip = this.chineseConv(errMes);
         break;

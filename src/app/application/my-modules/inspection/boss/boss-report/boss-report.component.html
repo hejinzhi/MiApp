@@ -7,7 +7,7 @@
   </ion-navbar>
 </ion-header>
 <ion-content>
-  <ion-list>
+  <ion-list *ngIf="!admin && !hr">
     <ion-item>
       <ion-label>*检查类型</ion-label>
       <ion-select [cancelText]="'attendance.cancle' | translate" [okText]="'attendance.confirm' | translate" [(ngModel)]="scheduleType" (ionChange)="changeSchedule()">
@@ -48,15 +48,15 @@
         <div *ngFor="let ctrl of reportForm.controls['lists'].controls; let i = index;">
           <ion-grid>
             <ion-row>
-              <ion-col col-11 [class.full]="admin">
+              <ion-col col-11 [class.full]="admin || hr">
                 <ion-item-divider (click)="toggle(i)">
-                  <ion-icon name="information-circle" color="danger" *ngIf="reportForm.get('lists').get(i+'').invalid"></ion-icon>
-                  <ion-icon name="checkmark-circle" *ngIf="!reportForm.get('lists').get(i+'').invalid"></ion-icon>
+                  <ion-icon name="information-circle" color="danger" *ngIf="reportForm.get('lists').get(i+'').invalid && !admin && !hr"></ion-icon>
+                  <ion-icon name="checkmark-circle" *ngIf="!reportForm.get('lists').get(i+'').invalid && !admin && !hr"></ion-icon>
                   巡检位置{{i+1}}: {{reportForm.get('lists').get(i+'').controls['site'].value}}
                   <ion-icon name="arrow-down"></ion-icon>
                 </ion-item-divider>
               </ion-col>
-              <ion-col col-1 class="minus" *ngIf="!admin">
+              <ion-col col-1 class="minus" *ngIf="!admin && !hr">
                 <span col-1 class="iconfontyyy" (tap)="removeSubFrom(i)">&#xe6bb;</span>
               </ion-col>
             </ion-row>
@@ -66,7 +66,7 @@
               <ion-label>*时间</ion-label>
               <ion-datetime displayFormat="HH:mm" formControlName="time" [cancelText]="'attendance.cancle' | translate" [doneText]="'attendance.confirm' | translate"></ion-datetime>
             </ion-item>
-            <ion-item [class.disabled-label]="admin">
+            <ion-item [class.disabled-label]="admin || hr">
               <ion-label>*地点</ion-label>
               <ion-input type="text" formControlName="site"></ion-input>
             </ion-item>
@@ -74,16 +74,16 @@
               <ion-label>*存在问题</ion-label>
               <ion-toggle formControlName="hasIssue"></ion-toggle>
             </ion-item>
-            <ion-item *ngIf="reportForm.get('lists').get(i+'').controls['detail']" [class.disabled-label]="admin">
+            <ion-item *ngIf="reportForm.get('lists').get(i+'').controls['detail']" [class.disabled-label]="admin || hr">
               <ion-label>*问题详述</ion-label>
               <ion-input type="text" formControlName="detail"></ion-input>
             </ion-item>
-            <ion-item *ngIf="reportForm.get('lists').get(i+'').controls['detail']" [class.disabled]="admin">
+            <ion-item *ngIf="reportForm.get('lists').get(i+'').controls['detail']" [class.disabled]="admin || hr">
               <div>附图</div>
               <sg-photo-view [opts]="admin?{addable:false,removeable:false}:{}" formControlName="imgs"></sg-photo-view>
             </ion-item>
             <sg-search-colleague *ngIf="reportForm.get('lists').get(i+'').controls['inCharge']" [class.disabled-label]="admin" formControlName="inCharge"
-              [opt]="{formCtr:reportForm.get('lists').get(i+'').controls['inCharge']}">
+              [opt]="{formCtr:reportForm.get('lists').get(i+'').controls['inCharge'],required:true}">
             </sg-search-colleague>
             <ion-item *ngIf="reportForm.get('lists').get(i+'').controls['mark']">
               <ion-label>评分</ion-label>
@@ -94,8 +94,8 @@
           </div>
         </div>
       </div>
-      <ion-item-divider class="add" (click)="addCheckSite()" *ngIf="!admin">+添加巡检位置</ion-item-divider>
+      <ion-item-divider class="add" (click)="addCheckSite()" *ngIf="!admin && !hr">+添加巡检位置</ion-item-divider>
     </ion-list>
-    <button ion-button full type="button" (tap)="submit()" [disabled]="reportForm.invalid">提交</button>
+    <button ion-button full type="button" (tap)="submit()" [disabled]="reportForm.invalid" *ngIf="!hr">提交</button>
   </form>
 </ion-content>

@@ -284,7 +284,7 @@ export class NgValidatorExtendService {
    * @param  {any}      opt 自定义参数
    * @return {ValidatorFn}     验证器
    */
-  selfDefine(fn:ValidatorFn,opt?:any): ValidatorFn  {
+  selfDefine(fn:ValidatorFn,opt?:any): ValidatorFn | any {
     return (ctrl: AbstractControl) => {
       return fn.call(this,ctrl,opt);
     }

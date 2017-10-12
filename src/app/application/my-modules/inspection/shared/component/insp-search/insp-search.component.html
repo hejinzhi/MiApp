@@ -4,32 +4,56 @@
   </ion-navbar>
 </ion-header>
 
-<ion-content>
+<ion-content *ngIf='type_id==1'>
   <ion-item>
     <ion-label col-4>存放區域1:</ion-label>
-    <ion-select col-8 [(ngModel)]="location1"  [cancelText]="'attendance.cancle' | translate" [okText]="'attendance.confirm' | translate">
-      <!-- <ion-option *ngFor="let item of mrinamelist" [value]="item.NAME_ID">{{item.INSPECT_NAME}}</ion-option> -->
-      <ion-option value="廠區">廠區</ion-option>
+    <ion-select col-8 [(ngModel)]="location1" [cancelText]="'attendance.cancle' | translate" [okText]="'attendance.confirm' | translate">
+      <ion-option *ngFor="let item of location1list" [value]="item.LOOKUP_CODE">{{item.LOOKUP_CODE}}</ion-option>
     </ion-select>
   </ion-item>
   <ion-item>
     <ion-label col-4>存放區域2:</ion-label>
     <ion-select col-8 [(ngModel)]="location2" [cancelText]="'attendance.cancle' | translate" [okText]="'attendance.confirm' | translate">
-      <!-- <ion-option *ngFor="let item of mrinamelist" [value]="item.NAME_ID">{{item.INSPECT_NAME}}</ion-option> -->
-      <ion-option value="S6">S6</ion-option>
+      <ion-option *ngFor="let item of location2list" [value]="item.LOOKUP_CODE">{{item.LOOKUP_CODE}}</ion-option>
     </ion-select>
   </ion-item>
   <ion-item>
     <ion-label col-4>存放區域3:</ion-label>
-    <ion-select col-8 [(ngModel)]="location3" [cancelText]="'attendance.cancle' | translate" [okText]="'attendance.confirm' | translate">
-      <!-- <ion-option *ngFor="let item of mrinamelist" [value]="item.NAME_ID">{{item.INSPECT_NAME}}</ion-option> -->
-      <ion-option value="1F">1F</ion-option>
-      <ion-option value="2F">2F</ion-option>
-    </ion-select>
+    <ion-input [(ngModel)]="location3" col-8></ion-input>
+    <!-- <ion-select col-8 [(ngModel)]="location3" [cancelText]="'attendance.cancle' | translate" [okText]="'attendance.confirm' | translate">
+      <ion-option *ngFor="let item of location3list" [value]="item.LOOKUP_CODE">{{item.LOOKUP_CODE}}</ion-option>
+    </ion-select> -->
   </ion-item>
   <ion-item>
     <ion-label col-4>*設備編號：</ion-label>
     <ion-input col-8 [(ngModel)]="machine_no"></ion-input>
+  </ion-item>
+  <button ion-button full type="button" (tap)="submit()">提交</button>
+</ion-content>
+
+<ion-content *ngIf='type_id==2'>
+  <ion-item>
+    <ion-label col-4>*巡检名稱</ion-label>
+    <ion-select [(ngModel)]="name_id" [cancelText]="'attendance.cancle' | translate" [okText]="'attendance.confirm' | translate"
+      (ionChange)="changeType()">
+      <ion-option *ngFor="let item of mrinamelist" [value]="item.NAME_ID">{{item.INSPECT_NAME}}</ion-option>
+    </ion-select>
+  </ion-item>
+  <ion-item *ngIf="this.inspectPeriod==='daily'">
+    <ion-label col-4>開始日期</ion-label>
+    <ion-datetime [(ngModel)]="start_day" displayFormat="YYYY年MM月DD日" pickerFormat="YYYY MM DD" [cancelText]="'attendance.cancle' | translate"
+      [doneText]="'attendance.confirm' | translate" min="2017" [max]="selectMaxYear"></ion-datetime>
+  </ion-item>
+  <ion-item *ngIf="this.inspectPeriod==='daily'">
+    <ion-label   col-4>結束日期</ion-label>
+    <ion-datetime [(ngModel)]="end_day"  displayFormat="YYYY年MM月DD日" pickerFormat="YYYY MM DD" [cancelText]="'attendance.cancle' | translate"
+      [doneText]="'attendance.confirm' | translate" min="2017" [max]="selectMaxYear"></ion-datetime>
+  </ion-item>
+  <ion-item *ngIf="this.inspectPeriod==='weekly'">
+    <ion-label col-4>*巡檢周次</ion-label>
+    <ion-select [(ngModel)]="week_id" col-8 [cancelText]="'attendance.cancle' | translate" [okText]="'attendance.confirm' | translate" >
+      <ion-option *ngFor="let item of weeklist" [value]="item.WEEK_ID">{{item.WEEK_DESC}}</ion-option>
+    </ion-select>
   </ion-item>
   <button ion-button full type="button" (tap)="submit()">提交</button>
 </ion-content>
