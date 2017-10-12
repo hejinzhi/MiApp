@@ -45,7 +45,6 @@ export class BossService {
   }
 
   isBossAdmin() {
-    console.log(this.user.privilege);
     let idx = this.user.privilege.findIndex((p) => p.moduleID === this.moduleID);
     if (idx > -1) {
       return this.user.privilege[idx].function.find((l) => l.FUNCTION_NAME === 'BOSS');

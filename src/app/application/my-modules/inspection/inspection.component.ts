@@ -1,3 +1,8 @@
+import { User_Update_Privilege } from './../../../shared/actions/user.action';
+import { MyStore } from './../../../shared/store';
+import { Store } from '@ngrx/store';
+import { BossService } from './boss/shared/service/boss.service';
+import { Observable } from 'rxjs/Rx';
 import { InspectionCommonService } from './shared/service/inspectionCommon.service';
 import { InspectionService } from './ipqa/shared/service/inspection.service';
 import { IpqaComponent } from './ipqa/ipqa.component';
@@ -12,18 +17,23 @@ import { Component, OnInit } from '@angular/core';
     templateUrl: 'inspection.component.html'
 })
 export class InspectionComponent implements OnInit {
+    bossTips: Observable<number>;
     constructor(
         private navCtrl: NavController,
         private navParams: NavParams,
-        private inspectionCommonService: InspectionCommonService
+        private inspectionCommonService: InspectionCommonService,
+        private bossService: BossService,
+        private $store: Store<MyStore>
     ) { }
 
-    privilegeList: { ROLE_ID: number, ROLE_NAME: string, FUNCTION_ID: number, FUNCTION_NAME: string, FUNCTION_URL: string }[] = [];
+    privilegeList: { FUNCTION_ID: string, FUNCTION_NAME: string, FUNCTION_URL: string, ROLE_ID: number, ROLE_NAME: string }[];
 
     async ngOnInit() {
+        this.bossTips = this.bossService.ObserveAllTips();
         let moduleID = this.navParams.get('moduleID');
         let res = await this.inspectionCommonService.getPrivilege(moduleID);
         this.privilegeList = res.json();
+        this.$store.dispatch(new User_Update_Privilege({ moduleID: moduleID, function: this.privilegeList }));
     }
 
     canSeeIPQA() {
@@ -39,7 +49,11 @@ export class InspectionComponent implements OnInit {
     }
 
     hasPrivilege(type: string) {
+<<<<<<< HEAD
         if (this.privilegeList) {
+=======
+        if (this.privilegeList && this.privilegeList.length > 0) {
+>>>>>>> 0edb516af1664bd98a60dbc7d869d3bf1c1c60fb
             for (let i = 0; i < this.privilegeList.length; i++) {
                 if (this.privilegeList[i].FUNCTION_NAME === type) {
                     return true;
