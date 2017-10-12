@@ -30,6 +30,7 @@
             <div class="grid-name">{{'inspection.equip2' | translate}}</div>
           </a>
         </div>
+        <div class="badge" *ngIf="(equipTips  | async )> 0 ">{{equipTips | async}}</div>
       </ion-col>
     </ion-row>
   </ion-grid>

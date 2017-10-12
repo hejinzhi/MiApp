@@ -1,3 +1,6 @@
+import { Lines_All_Equip_Search } from './../../../shared/actions/lines-all-equip.action';
+import { EquipConfig } from './../../../equip/shared/config/equip.config';
+import { Lines_Equip_Check } from './../../../shared/actions/lines-equip.action';
 import { BossConfig } from './../config/boss.config';
 import { Observable } from 'rxjs/Observable';
 import { Query } from './../../../shared/model/common';
@@ -33,7 +36,7 @@ export class BossService {
   ) {
     this.subscribeTranslateText();
     this.$store.select('userReducer').subscribe((user: UserState) => this.user = user);
-    this.getOwnUndoneReport();
+    this.getOwnUndoneReport(false, BossConfig.type);
   }
 
   subscribeTranslateText() {
@@ -135,7 +138,7 @@ export class BossService {
     res = res.json();
     if (res.Header) {
       console.log(res);
-      
+
       return new BossReportInsideModel(res);
     }
     return;
@@ -151,10 +154,9 @@ export class BossService {
       .map(res => res.json())
   }
 
-  getOwnUndoneReport(waiting: boolean = false, cb?: Function) {
+  getOwnUndoneReport(waiting: boolean = false, type: string, cb?: Function, ) {
     let userNo = this.user.empno;
     let status = ['Waiting', 'Highlight'];
-    let type = 'boss';
     let loading: Loading;
     if (waiting) {
       loading = this.plugin.createLoading()
@@ -178,7 +180,15 @@ export class BossService {
       } else {
         cb && cb();
       }
-      this.$store.dispatch(new Lines_Check(line));
+      switch (type) {
+        case 'boss':
+          this.$store.dispatch(new Lines_Check(line));
+          break;
+        case 'equip':
+          this.$store.dispatch(new Lines_Equip_Check(line));
+          break;
+      }
+
     }, (err) => waiting ? this.plugin.errorDeal(err) : '', () => {
       if (loading) {
         loading.dismiss();
@@ -187,15 +197,16 @@ export class BossService {
       )
   }
 
-  getAdminLinesAll(query: Query, type:string, waiting: boolean = false, cb?: Function) {
+  getAdminLinesAll(query: Query, type: string, waiting: boolean = false, cb?: Function) {
     let loading: Loading;
     if (waiting) {
       loading = this.plugin.createLoading()
       loading.present();
     }
-    return Observable.fromPromise(this.myHttp.get(BossConfig.getAdminLinesAll.replace('{nameID}', query.nameID+'')
-      .replace('{dateFM}', query.dateFM).replace('{dateTO}', query.dateTO).replace('{company_name}', EnvConfig.companyID).replace('{type}','boss'))).map((res) => {
-        return res.json()}).
+    return Observable.fromPromise(this.myHttp.get(BossConfig.getAdminLinesAll.replace('{nameID}', query.nameID + '')
+      .replace('{dateFM}', query.dateFM).replace('{dateTO}', query.dateTO).replace('{company_name}', EnvConfig.companyID).replace('{type}', type))).map((res) => {
+        return res.json()
+      }).
       map((list: any) => list ? list : []
       ).subscribe((line: BossReportLineState[]) => {
         if (waiting && line.length === 0) {
@@ -203,7 +214,13 @@ export class BossService {
         } else {
           cb && cb();
         }
-        this.$store.dispatch(new Lines_All_Search(line));
+        switch (type) {
+          case BossConfig.type:
+            this.$store.dispatch(new Lines_All_Search(line));
+            break;
+          case EquipConfig.type:
+            this.$store.dispatch(new Lines_All_Equip_Search(line))
+        }
       }, (err) => waiting ? this.plugin.errorDeal(err) : '', () => {
         if (loading) {
           loading.dismiss();
@@ -231,7 +248,7 @@ export class BossService {
           request.push(this.uploadPicture(i), (url: any) => {
             data.ACTION_PICTURES = data.ACTION_PICTURES ? data.ACTION_PICTURES + ',' + url : url;
             console.log(data);
-            
+
             console.log('完成上传图片' + (l + 1));
           });
         }
@@ -251,8 +268,8 @@ export class BossService {
     }
   }
 
-  deleteLine(id:number) {
-    return Observable.fromPromise(this.myHttp.delete(BossConfig.deleteLine.replace('{line_id}',id+'')));
+  deleteLine(id: number) {
+    return Observable.fromPromise(this.myHttp.delete(BossConfig.deleteLine.replace('{line_id}', id + '')));
   }
 
   updateLinesByAdmin(data: BossReportLineState, cb?: Function, final?: Function) {

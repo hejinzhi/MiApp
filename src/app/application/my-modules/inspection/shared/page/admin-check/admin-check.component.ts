@@ -1,3 +1,5 @@
+import { EquipConfig } from './../../../equip/shared/config/equip.config';
+import { BossConfig } from './../../../boss/shared/config/boss.config';
 import { BossService } from './../../../boss/shared/service/boss.service';
 import { Query } from './../../model/common';
 import { PluginService } from './../../../../../../core/services/plugin.service';
@@ -16,29 +18,11 @@ export class AdminCheckComponent implements OnInit {
   statsList = ['New', 'Waiting', 'Done', 'Highlight']
   type: number = 0;
   status: string = '5';
-  testData1 = [{
-    time: '2017-05-09 17:20', name: '小东', site: '楼递间', detail: '有垃圾', status: '待处理', inCharge: '小天'
-  },
-  {
-    time: '2017-05-09 17:22', name: '小东', site: '楼递间', detail: '有垃圾', status: '已处理', inCharge: '小天1'
-  },
-  {
-    time: '2017-05-09 17:23', name: '小东', site: '楼递间', detail: '有垃圾', status: '待分配', inCharge: '小天2'
-  },
-  {
-    time: '2017-05-09 17:24', name: '小东', site: '楼递间', detail: '有垃圾', status: 'HighLight', inCharge: '小天3'
-  }
-  ]
-  testData2 = [{
-    time: '2017-05-09 17:25', name: '小东', site: '楼递间', detail: '过期', equip_num: '123456', issue: '是否过期', status: '已处理', inCharge: '小天'
-  },
-  {
-    time: '2017-05-09 17:26', name: '小东', site: '楼递间', detail: '过期', equip_num: '123456', issue: '是否过期', status: '待处理', inCharge: '小天'
-  }]
+
   testData: BossReportLineState[];
   dataAll: BossReportLineState[];
   query: Query;
-  first:boolean = true;
+  first: boolean = true;
 
   constructor(
     private navParams: NavParams,
@@ -57,29 +41,44 @@ export class AdminCheckComponent implements OnInit {
       this.$store.select('lineAllReducer').subscribe((list: BossReportLineState[]) => {
         this.testData = list;
         this.dataAll = this.testData.slice();
+        this.changeShow();
       });
     } else if (this.type === 2) {
-
+      this.$store.select('linesAllEquipReducer').subscribe((list: BossReportLineState[]) => {
+        this.testData = list;
+        this.dataAll = this.testData.slice();
+        this.changeShow();
+      });
     }
   }
 
   changeShow() {
+    if (!this.dataAll) return;
     this.testData = this.dataAll.slice();
     if (+this.status < 5) {
       this.testData = this.testData.filter((item) => item.PROBLEM_STATUS === this.statsList[+this.status - 1])
     }
   }
 
-  queryChange(query:Query) {
+  queryChange(query: Query) {
     this.query = query;
-    if(this.first) {
+    if (this.first) {
       this.search();
     }
   }
 
   search() {
-    this.bossService.getAdminLinesAll(this.query,'boss', !this.first);
-    if(this.first) {
+    let type: string = '';
+    switch (+this.type) {
+      case 1:
+        type = BossConfig.type;
+        break;
+      case 2:
+        type = EquipConfig.type;
+        break;
+    }
+    this.bossService.getAdminLinesAll(this.query, type, !this.first);
+    if (this.first) {
       this.first = false;
     }
   }

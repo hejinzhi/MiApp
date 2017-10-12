@@ -126,7 +126,7 @@ export class MyAppComponent {
         if (!localStorage.getItem('appVersion')) {
             localStorage.setItem('appVersion', EnvConfig.appVersion);
         }
-        if(!this.user || this.user.username || !this.user.password) {
+        if(!this.user || !this.user.username || !this.user.password) {
             this.rootPage = LoginComponent;
             return;
         };

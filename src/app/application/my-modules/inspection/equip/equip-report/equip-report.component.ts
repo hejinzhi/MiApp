@@ -1,7 +1,11 @@
+import { Subscription } from 'rxjs/Rx';
+import { UserState } from './../../../../../shared/models/user.model';
+import { Store } from '@ngrx/store';
+import { MyStore } from './../../../../../shared/store';
 import { PluginService } from './../../../../../core/services/plugin.service';
 import { EquipService } from './../shared/service/equip.service';
 import { IonicPage, AlertController, NavParams, NavController } from 'ionic-angular';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormBuilder, FormGroup, FormArray, FormControl } from '@angular/forms';
 
 import * as moment from 'moment'
@@ -15,13 +19,15 @@ import { NgValidatorExtendService } from './../../../../../core/services/ng-vali
     templateUrl: 'equip-report.component.html'
 })
 
-export class EquipReportComponent implements OnInit {
+export class EquipReportComponent implements OnInit, OnDestroy {
 
     reportForm: FormGroup;
     className: string = this.constructor.name;
     type: string = 'all';
     machineId:string;
     checkLs: CheckLists
+    user:UserState;
+    mySub:Subscription
     testData = [
         { name: '是否在指定位置', code: 'a' },
         { name: '是否有电', code: 'b' },
@@ -34,11 +40,17 @@ export class EquipReportComponent implements OnInit {
         private cacheService: CacheService,
         private equipService: EquipService,
         private plugin: PluginService,
-        private navCtr: NavController
+        private navCtr: NavController,
+        private $store: Store<MyStore>
     ) { }
 
     ngOnInit() {
         this.checkCache();
+        this.mySub = this.$store.select('userReducer').subscribe((user:UserState) => this.user = user);
+    }
+
+    ngOnDestroy() {
+        this.mySub.unsubscribe();
     }
 
     /**
@@ -104,6 +116,7 @@ export class EquipReportComponent implements OnInit {
             INSPECT_DATE: [work.INSPECT_DATE || moment(new Date()).format('YYYY-MM-DD HH:mm')],
             MACHINE_NO: [work.MACHINE_NO || 'S 6 -- 1F -- 01(1)'],
             MACHINE_ID: [work.MACHINE_ID || ''],
+            DESCRIPTION: [work.DESCRIPTION],
             lists: array
         });
     }
@@ -183,9 +196,17 @@ export class EquipReportComponent implements OnInit {
         let loading = this.plugin.createLoading();
         loading.present();
         this.equipService.getMachineCheckList(id).subscribe((d) => {
-            this.checkLs = d;
-            let detail = {MACHINE_NO:id,MACHINE_ID:this.checkLs.MACHINE_ID};
-            this.init(detail, d);
+            if(d) {
+                if(d.REPORT_HEADER_ID) {
+                    this.plugin.showToast('此设备已检查')
+                } else {
+                    this.checkLs = d;
+                    let detail = {MACHINE_NO:id,MACHINE_ID:this.checkLs.MACHINE_ID,DESCRIPTION:this.checkLs.DESCRIPTION};
+                    this.init(detail, d);
+                }
+            } else {
+                this.plugin.showToast('没找到此设备的排程');
+            }
             loading && loading.dismiss()
         }, (err) => { this.plugin.errorDeal(err); loading && loading.dismiss()});
     }
@@ -193,10 +214,13 @@ export class EquipReportComponent implements OnInit {
     submit() {
         let send = this.reportForm.value;
         console.log(send);
-        
+        send.LOCATION= this.checkLs.LOCATION;
+        send.INSPECTOR_NAME = this.user.nickname;
+        send.SCHEDULE_HEADER_ID = this.checkLs.SCHEDULE_HEADER_ID;
         let loading = this.plugin.createLoading();
         loading.present();
         this.equipService.updateQquipReport(send).subscribe((d) => {
+            console.log(d);
             this.plugin.showToast('提交成功');
             this.clearCache();
             this.navCtr.pop()
@@ -207,5 +231,9 @@ export class EquipReportComponent implements OnInit {
 interface CheckLists {
     MACHINE_ID: string;
     MACHINE_NO: string;
+    DESCRIPTION:string;
+    LOCATION?:string;
+    SCHEDULE_HEADER_ID?:string;
+    REPORT_HEADER_ID?:string;
     CHECK_LIST: { CHECK_ID: number, CN: string, EN: string }[];
 }

@@ -7,7 +7,7 @@
   </ion-navbar>
 </ion-header>
 <ion-content>
-  <sg-query-date [mri_type] ="'boss'" (change)="queryChange($event)"></sg-query-date>
+  <sg-query-date [mri_type] ="type === 1?'boss':'equip'" (change)="queryChange($event)" *ngIf="type"></sg-query-date>
   <div padding>
     <ion-segment [(ngModel)]="status" (ionChange)="changeShow()">
       <ion-segment-button value="1">

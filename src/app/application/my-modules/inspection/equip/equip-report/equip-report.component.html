@@ -31,7 +31,7 @@
         </ion-row>
       </ion-grid>
       <ion-item-divider>
-        XXXX灭火器
+        {{reportForm.get('DESCRIPTION').value}}
       </ion-item-divider>
       <div formArrayName="lists" class="subForm">
         <div *ngFor="let ctrl of reportForm.controls['lists'].controls; let i = index;" class="list" [class.last]="i === reportForm.get('lists').length-1">

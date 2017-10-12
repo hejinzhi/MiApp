@@ -1,26 +1,26 @@
 <ion-grid *ngIf="item">
     <ion-item>
       <ion-row>
+        <ion-col col-5 *ngIf="item.INSPECT_DATE">
+          {{item.INSPECT_DATE.substr(0,10)}} {{item.INSPECT_TIME}}
+        </ion-col>
+        <ion-col col-2>
+          {{item.OWNER_EMPNO?.split(',')[0]}}
+        </ion-col>
+        <ion-col col-5 *ngIf="item.LOCATION">
+          {{item.LOCATION.length>10?item.LOCATION.substr(0,10)+'..':item.LOCATION}}
+        </ion-col>
         <ion-col col-5>
-          {{item.time}}
+          {{item.MACHINE_NAME}}
         </ion-col>
-        <ion-col col-3>
-          {{item.name}}
+        <ion-col col-5 *ngIf="item.CHECK_LIST_CN">
+          {{item.CHECK_LIST_CN.length>6?item.CHECK_LIST_CN.substr(0,6)+'..':item.CHECK_LIST_CN}}
         </ion-col>
-        <ion-col col-4>
-          {{item.site}}
-        </ion-col>
-        <ion-col col-5>
-          {{item.equip_num}}
-        </ion-col>
-        <ion-col col-3>
-          {{item.issue}}
-        </ion-col>
-        <ion-col col-4>
-          {{item.status}}
+        <ion-col col-2>
+          {{item.PROBLEM_STATUS}}
         </ion-col>
         <ion-col col-12>
-          {{item.detail}}
+          {{item.PROBLEM_DESC}}
         </ion-col>
       </ion-row>
     </ion-item>

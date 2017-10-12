@@ -1,3 +1,4 @@
+import { Lines_Equip_Delete } from './../../actions/lines-equip.action';
 import { Lines_Delete } from './../../actions/line.action';
 import { Lines_All_Update } from "./../../actions/lineAll.action";
 import { MyStore } from './../../../../../../shared/store';
@@ -20,18 +21,18 @@ import { NgValidatorExtendService } from './../../../../../../core/services/ng-v
 })
 
 export class IssueDetailComponent implements OnInit {
-    type:number=0;
-    issue:BossReportLineState;
+    type: number = 0;
+    issue: BossReportLineState;
     reportForm: FormGroup
     adminReport: FormGroup;
-    admin:boolean;
+    admin: boolean;
 
-    empRequired:boolean;
+    empRequired: boolean;
     statusList = [
-        {type:'New',value:'待分配'},
-        {type:'Waiting',value:'待处理'},
-        {type:'Done',value:'已处理'},
-        {type:'Highlight',value:'Highlight'}
+        { type: 'New', value: '待分配' },
+        { type: 'Waiting', value: '待处理' },
+        { type: 'Done', value: '已处理' },
+        { type: 'Highlight', value: 'Highlight' }
     ]
     constructor(
         private navParams: NavParams,
@@ -50,12 +51,12 @@ export class IssueDetailComponent implements OnInit {
         this.issue = this.navParams.get('issue') || {};
         this.admin = this.navParams.get('admin') || false;
         this.reportForm = this.initForm(this.issue);
-        if(this.admin) {
+        if (this.admin) {
             this.adminReport = this.initAdminForm(this.issue);
             this.adminReport.get('PROBLEM_STATUS').valueChanges.subscribe((val) => {
-                if(val === 'New') {
+                if (val === 'New') {
                     this.empRequired = false;
-                    setTimeout(() =>this.adminReport.get('OWNER_EMPNO').setValue(''),10);
+                    setTimeout(() => this.adminReport.get('OWNER_EMPNO').setValue(''), 10);
                 } else {
                     this.empRequired = true;
                 }
@@ -68,30 +69,30 @@ export class IssueDetailComponent implements OnInit {
             title: `提示`,
             message: `确定此事项不是本人负责的吗?`,
             buttons: [
-              {
-                text: '取消',
-                handler: () => {
+                {
+                    text: '取消',
+                    handler: () => {
 
+                    }
+                },
+                {
+                    text: '确定',
+                    handler: () => {
+                        let loading = this.plugin.createLoading();
+                        loading.present();
+                        let send: BossReportLineState = { LINE_ID: this.issue.LINE_ID, OWNER_EMPNO: '', PROBLEM_STATUS: 'New' };
+                        this.bossService.updateReportLines(send, () => {
+                            this.navCtrl.pop()
+                            this.$store.dispatch(new Lines_Delete(send));
+                        }, () => loading && loading.dismiss());
+                    }
                 }
-              },
-              {
-                text: '确定',
-                handler: () => {
-                    let loading = this.plugin.createLoading();
-                    loading.present();
-                    let send:BossReportLineState = {LINE_ID:this.issue.LINE_ID,OWNER_EMPNO:'',PROBLEM_STATUS:'New'};
-                    this.bossService.updateReportLines(send,() => {
-                        this.navCtrl.pop()
-                        this.$store.dispatch(new Lines_Delete(send));
-                    },() => loading && loading.dismiss());
-                }
-              }
             ]
-          });
-          confirm.present();
+        });
+        confirm.present();
     }
 
-    initAdminForm(work:any ={}) {
+    initAdminForm(work: any = {}) {
         this.empRequired = !(work.PROBLEM_STATUS === 'New');
         return this.fb.group({
             OWNER_EMPNO: [work.OWNER_EMPNO, this.validExd.required()],
@@ -99,18 +100,18 @@ export class IssueDetailComponent implements OnInit {
         })
     }
 
-    initForm(work:any={}) {
-        if(typeof work.ACTION_PICTURES === 'string') {
-            work.ACTION_PICTURES =this.plugin.getPictureUrlArray(work.ACTION_PICTURES)
+    initForm(work: any = {}) {
+        if (typeof work.ACTION_PICTURES === 'string') {
+            work.ACTION_PICTURES = this.plugin.getPictureUrlArray(work.ACTION_PICTURES)
         }
         let group = this.fb.group({
-            ACTION_DESC: [work.ACTION_DESC,this.validExd.required()],
+            ACTION_DESC: [work.ACTION_DESC, this.validExd.required()],
             ACTION_STATUS: [work.ACTION_STATUS],
-            ACTION_PICTURES:[work.ACTION_PICTURES],
+            ACTION_PICTURES: [work.ACTION_PICTURES],
             ACTION_DATE: [work.ACTION_DATE || moment(new Date()).format('YYYY-MM-DD')]
         })
         if (this.admin) {
-            group.disable({onlySelf:true});
+            group.disable({ onlySelf: true });
         }
         return group
     }
@@ -139,18 +140,25 @@ export class IssueDetailComponent implements OnInit {
     // }
 
     submit() {
-        let send = Object.assign({},this.reportForm.value);
+        let send = Object.assign({}, this.reportForm.value);
         send.PROBLEM_STATUS = 'Done';
-        send.ACTION_PICTURES = send.ACTION_PICTURES?send.ACTION_PICTURES.map((i:string) => 
-        i.replace('data:image/jpeg;base64,', '')).join():'';
+        send.ACTION_PICTURES = send.ACTION_PICTURES ? send.ACTION_PICTURES.map((i: string) =>
+            i.replace('data:image/jpeg;base64,', '')).join() : '';
         send.LINE_ID = this.issue.LINE_ID;
         let loading = this.plugin.createLoading();
         loading.present();
-        this.bossService.updateReportLines(send,() => {
-            this.$store.dispatch(new Lines_Delete(send));
+        this.bossService.updateReportLines(send, () => {
+            switch (+this.type) {
+                case 1:
+                    this.$store.dispatch(new Lines_Delete(send));
+                    break;
+                case 2:
+                    this.$store.dispatch(new Lines_Equip_Delete(send));
+                    break;
+            }
             this.plugin.showToast('提交成功');
             this.navCtrl.pop();
-        },() => loading && loading.dismiss())
+        }, () => loading && loading.dismiss())
     }
 
     update() {
@@ -159,10 +167,10 @@ export class IssueDetailComponent implements OnInit {
         send.OWNER_EMPNO = send.OWNER_EMPNO.split(',')[0];
         let loading = this.plugin.createLoading();
         loading.present();
-        this.bossService.updateLinesByAdmin(send,() => {
+        this.bossService.updateLinesByAdmin(send, () => {
             this.plugin.showToast('更新成功')
-            setTimeout(() => this.navCtrl.pop(),300);
+            setTimeout(() => this.navCtrl.pop(), 300);
             this.$store.dispatch(new Lines_All_Update(send));
-        },() => loading && loading.dismiss())
+        }, () => loading && loading.dismiss())
     }
 }

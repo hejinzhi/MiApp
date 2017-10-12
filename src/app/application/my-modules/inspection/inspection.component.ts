@@ -1,3 +1,4 @@
+import { EquipService } from './equip/shared/service/equip.service';
 import { User_Update_Privilege } from './../../../shared/actions/user.action';
 import { MyStore } from './../../../shared/store';
 import { Store } from '@ngrx/store';
@@ -18,11 +19,13 @@ import { Component, OnInit } from '@angular/core';
 })
 export class InspectionComponent implements OnInit {
     bossTips:Observable<number>;
+    equipTips:Observable<number>;
     constructor(
         private navCtrl: NavController,
         private navParams: NavParams,
         private inspectionCommonService: InspectionCommonService,
         private bossService: BossService,
+        private equipService: EquipService,
         private $store: Store<MyStore>
     ) { }
 
@@ -30,6 +33,7 @@ export class InspectionComponent implements OnInit {
 
     async ngOnInit() {
         this.bossTips = this.bossService.ObserveAllTips();
+        this.equipTips = this.equipService.ObserveAllTips();
         let moduleID = this.navParams.get('moduleID');
         let res = await this.inspectionCommonService.getPrivilege(moduleID);
         this.privilegeList = res.json();

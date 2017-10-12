@@ -39,6 +39,8 @@ export interface BossReportLineState {
     CHECK_ID?:string;
     CHECK_LIST_CN?:string;
     CHECK_LIST_EN?:string;
+    MACHINE_ID?:string;
+    MACHINE_NAME?:string
 }
 
 export class BossReportModel implements BossReportState {
