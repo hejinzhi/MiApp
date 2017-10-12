@@ -4,4 +4,6 @@ export interface MyStore {
     userReducer:UserState;
     lineReducer: BossReportLineState[];
     lineAllReducer: BossReportLineState[];
+    linesEquipReducer:  BossReportLineState[];
+    linesAllEquipReducer: BossReportLineState[];
 }

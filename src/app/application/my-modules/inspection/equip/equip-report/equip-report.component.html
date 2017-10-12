@@ -1,6 +1,9 @@
 <ion-header>
   <ion-navbar>
     <ion-title>巡检报告</ion-title>
+    <ion-buttons end>
+      <button ion-button (tap)="checkID()" [disabled]="!reportForm?.get('MACHINE_NO').value">查找</button>
+    </ion-buttons>
   </ion-navbar>
 </ion-header>
 <ion-content>
@@ -9,7 +12,7 @@
       <ion-item class="disabled">
         <ion-label>*巡检时间</ion-label>
         <ion-note item-right>
-          {{reportForm.get('time').value}}
+          {{reportForm.get('INSPECT_DATE').value}}
         </ion-note>
       </ion-item>
       <ion-grid no-padding>
@@ -17,7 +20,7 @@
           <ion-col col-10 class="fix-height">
             <ion-item>
               <ion-label>*设备编号</ion-label>
-              <ion-input type="text" formControlName="number"></ion-input>>
+              <ion-input type="text" formControlName="MACHINE_NO"></ion-input>>
             </ion-item>
           </ion-col>
           <ion-col col-2 class="block-none">
@@ -28,7 +31,7 @@
         </ion-row>
       </ion-grid>
       <ion-item-divider>
-        XXXX灭火器
+        {{reportForm.get('DESCRIPTION').value}}
       </ion-item-divider>
       <div formArrayName="lists" class="subForm">
         <div *ngFor="let ctrl of reportForm.controls['lists'].controls; let i = index;" class="list" [class.last]="i === reportForm.get('lists').length-1">
@@ -39,7 +42,7 @@
                   <ion-item>
                     <ion-label *ngIf="testData">
                       <ion-icon name="information-circle" color="danger" *ngIf="reportForm.get('lists').get(i+'').invalid"></ion-icon>
-                      <ion-icon name="checkmark-circle" *ngIf="!reportForm.get('lists').get(i+'').invalid"></ion-icon>*{{testData[i].name}}</ion-label>
+                      <ion-icon name="checkmark-circle" *ngIf="!reportForm.get('lists').get(i+'').invalid"></ion-icon>*{{ctrl.get('CHECK_LIST_CN').value}}</ion-label>
                   </ion-item>
                 </ion-col>
                 <ion-col col-3 class="block-none">
@@ -57,18 +60,17 @@
               <ion-checkbox color="#3773F7" item-end formControlName="check"></ion-checkbox>
             </ion-item> -->
             <div class="detail">
-              <ion-item *ngIf="reportForm.get('lists').get(i+'').controls['detail']">
+              <ion-item *ngIf="reportForm.get('lists').get(i+'').controls['PROBLEM_DESC']">
                 <ion-label>*问题详述</ion-label>
-                <ion-input type="text" formControlName="detail"></ion-input>
+                <ion-input type="text" formControlName="PROBLEM_DESC"></ion-input>
               </ion-item>
-              <ion-item *ngIf="reportForm.get('lists').get(i+'').controls['detail']">
+              <ion-item *ngIf="reportForm.get('lists').get(i+'').controls['PROBLEM_DESC']">
                 <div>添加图片</div>
-                <sg-photo-view [imgs]="reportForm.get('lists').get(i+'').controls['imgs'].value" (imgsChange)="updateImgs($event,reportForm.get('lists').get(i+'').controls['imgs'])"></sg-photo-view>
+                <sg-photo-view formControlName="imgs"></sg-photo-view>
               </ion-item>
-              <ion-item *ngIf="reportForm.get('lists').get(i+'').controls['inCharge']">
-                <ion-label>*责任人</ion-label>
-                <ion-input type="text" formControlName="inCharge"></ion-input>
-              </ion-item>
+              <sg-search-colleague *ngIf="reportForm.get('lists').get(i+'').controls['OWNER_EMPNO']"  formControlName="OWNER_EMPNO"
+              [opt]="{formCtr:reportForm.get('lists').get(i+'').controls['OWNER_EMPNO'],required:true}">
+            </sg-search-colleague>
             </div>
           </div>
         </div>

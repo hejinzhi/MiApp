@@ -1,3 +1,4 @@
+import { BossConfig } from './../shared/config/boss.config';
 import { Observable } from 'rxjs';
 import { BossReportLineState } from "./../shared/store";
 import { MyStore } from './../../../../../shared/store';
@@ -59,7 +60,7 @@ export class BossMenuComponent implements OnInit {
 
 
     goToPageImprove() {
-        this.bossService.getOwnUndoneReport(true,() => this.navCtrl.push('IssueListComponent',{type:1}));
+        this.bossService.getOwnUndoneReport(true,BossConfig.type,() => this.navCtrl.push('IssueListComponent',{type:1}));
     }
 
     goToPageAdminCheck() {

@@ -1,4 +1,7 @@
+import { LinesEquipEffects } from './application/my-modules/inspection/shared/effects/lines-equip.effect';
+import { linesAllEquipReducer } from "./application/my-modules/inspection/shared/reducers/lines-all-equip.reducer";
 import { lineAllReducer } from './application/my-modules/inspection/shared/reducers/lineAll.reducer';
+import { linesEquipReducer } from "./application/my-modules/inspection/shared/reducers/lines-equip.reducer";
 import { NgModule, ErrorHandler } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { IonicApp, IonicModule, IonicErrorHandler } from 'ionic-angular';
@@ -44,7 +47,10 @@ export function createTranslateLoader(http: Http) {
         deps: [Http]
       }
     }),
-    StoreModule.provideStore({ userReducer, lineReducer, lineAllReducer }),
+    StoreModule.provideStore({ userReducer:userReducer, lineReducer:lineReducer, lineAllReducer:lineAllReducer, linesEquipReducer:linesEquipReducer, 
+      linesAllEquipReducer:linesAllEquipReducer
+     }),
+    EffectsModule.run(LinesEquipEffects),
     BrowserModule,
     IonicModule.forRoot(MyAppComponent, {
       tabsHideOnSubPages: true,
