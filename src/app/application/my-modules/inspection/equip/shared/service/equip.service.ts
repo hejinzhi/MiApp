@@ -32,6 +32,17 @@ export class EquipService {
         return this.myHttp.delete(EquipConfig.deleteMachineUrl + '?machine_id=' + machine_id);
     }
 
+    getMachineSchedule(year: string, month: string, nameID: number) {
+        let company = localStorage.getItem('appCompanyId');
+        return this.myHttp.get(EquipConfig.getMachineScheduleUrl + '?companyName=' + company + '&year=' + year + '&month=' + month + '&nameID=' + nameID);
+    }
+
+    setMachineSchedule(year: string, month: string, nameID: number) {
+        let company = localStorage.getItem('appCompanyId');
+        let send = { COMPANY_NAME: company, YEAR: year, MONTH: month, NAME_ID: nameID };
+        return this.myHttp.post(EquipConfig.setMachineScheduleUrl, send);
+    }
+
     async  getLocations() {
         let res1: any = await this.inspectionCommonService.getMriLookup('EQUIP_LOCATION1');
         let location1 = res1.json();

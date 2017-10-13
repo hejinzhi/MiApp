@@ -11,6 +11,7 @@ export class EquipConfig {
      
     static deleteMachineUrl = EnvConfig.baseUrl + 'IPQA/DeleteMachineHdr';
 
-    
-    
+    static getMachineScheduleUrl = EnvConfig.baseUrl + 'IPQA/GetMachineSchedule';
+
+    static setMachineScheduleUrl = EnvConfig.baseUrl + 'IPQA/SetMachineSchedule';
 }

@@ -1,8 +1,8 @@
 <ion-header>
   <ion-navbar>
-    <ion-title>巡檢刷卡記錄</ion-title>
+    <ion-title>{{'inspection.bosscom.bossDutyTitle' | translate}}</ion-title>
     <ion-buttons end>
-      <button ion-button (tap)="getBossDutyList()">查詢</button>
+      <button ion-button (tap)="getBossDutyList()">{{'attendance.search' | translate}}</button>
     </ion-buttons>
   </ion-navbar>
 </ion-header>
@@ -12,16 +12,16 @@
   <ion-toolbar color="light">
     <ion-segment class="top_segment" [(ngModel)]="top_segment">
       <ion-segment-button (click)="select(0)" value="top_0">
-        未刷卡
+        {{'inspection.bosscom.noCard' | translate}}
       </ion-segment-button>
       <ion-segment-button (click)="select(1)" value="top_1">
-        未產生補休
+        {{'inspection.bosscom.noRepay' | translate}}
       </ion-segment-button>
       <ion-segment-button (click)="select(2)" value="top_2">
-        已產生補休
+        {{'inspection.bosscom.repay' | translate}}
       </ion-segment-button>
       <ion-segment-button (click)="select(3)" value="top_3">
-        全部
+        {{'inspection.all' | translate}}
       </ion-segment-button>
     </ion-segment>
   </ion-toolbar>
@@ -30,7 +30,7 @@
       <ion-scroll scrollY="true" class="fixed-content">
         <ion-list>
           <ion-item class="list" *ngFor="let items of noCardByGroup" (tap)="goToCheckReport(items[0].HEADER_ID)">
-            <div class="content" *ngFor="let item of items">第{{item.LINE_NUM}}組 {{item.SCHEDULE_DATE}} {{item.NAME}} <span *ngIf="item.ACUTAL_FROM_TIME">{{item.ACUTAL_FROM_TIME}}~{{item.ACTUAL_TO_TIME}}</span> <span *ngIf="item.ACTUAL_HOURS">{{item.ACTUAL_HOURS}}H</span></div>
+            <div class="content" *ngFor="let item of items">{{'inspection.ipqa.the' | translate}}{{item.LINE_NUM}}{{'inspection.bosscom.group' | translate}} {{item.SCHEDULE_DATE}} {{item.NAME | sgChineseConv}} <span *ngIf="item.ACUTAL_FROM_TIME">{{item.ACUTAL_FROM_TIME}}~{{item.ACTUAL_TO_TIME}}</span> <span *ngIf="item.ACTUAL_HOURS">{{item.ACTUAL_HOURS}}H</span></div>
           </ion-item>
         </ion-list>
       </ion-scroll>
@@ -39,7 +39,7 @@
       <ion-scroll scrollY="true" class="fixed-content">
         <ion-list>
           <ion-item class="list" *ngFor="let items of noRepayByGroup" (tap)="goToCheckReport(items[0].HEADER_ID)">
-            <div class="content" *ngFor="let item of items">第{{item.LINE_NUM}}組 {{item.SCHEDULE_DATE}} {{item.NAME}} <span *ngIf="item.ACUTAL_FROM_TIME">{{item.ACUTAL_FROM_TIME}}~{{item.ACTUAL_TO_TIME}}</span> <span *ngIf="item.ACTUAL_HOURS">{{item.ACTUAL_HOURS}}H</span></div>
+            <div class="content" *ngFor="let item of items">{{'inspection.ipqa.the' | translate}}{{item.LINE_NUM}}{{'inspection.bosscom.group' | translate}} {{item.SCHEDULE_DATE}} {{item.NAME | sgChineseConv}} <span *ngIf="item.ACUTAL_FROM_TIME">{{item.ACUTAL_FROM_TIME}}~{{item.ACTUAL_TO_TIME}}</span> <span *ngIf="item.ACTUAL_HOURS">{{item.ACTUAL_HOURS}}H</span></div>
           </ion-item>
         </ion-list>
       </ion-scroll>
@@ -48,7 +48,7 @@
       <ion-scroll scrollY="true" class="fixed-content">
         <ion-list>
           <ion-item class="list" *ngFor="let items of RepayByGroup" (tap)="goToCheckReport(items[0].HEADER_ID)">
-            <div class="content" *ngFor="let item of items">第{{item.LINE_NUM}}組 {{item.SCHEDULE_DATE}} {{item.NAME}} <span *ngIf="item.ACUTAL_FROM_TIME">{{item.ACUTAL_FROM_TIME}}~{{item.ACTUAL_TO_TIME}}</span> <span *ngIf="item.ACTUAL_HOURS">{{item.ACTUAL_HOURS}}H</span></div>
+            <div class="content" *ngFor="let item of items">{{'inspection.ipqa.the' | translate}}{{item.LINE_NUM}}{{'inspection.bosscom.group' | translate}} {{item.SCHEDULE_DATE}} {{item.NAME | sgChineseConv}} <span *ngIf="item.ACUTAL_FROM_TIME">{{item.ACUTAL_FROM_TIME}}~{{item.ACTUAL_TO_TIME}}</span> <span *ngIf="item.ACTUAL_HOURS">{{item.ACTUAL_HOURS}}H</span></div>
           </ion-item>
         </ion-list>
       </ion-scroll>
@@ -57,7 +57,7 @@
       <ion-scroll scrollY="true" class="fixed-content">
         <ion-list>
           <ion-item class="list" *ngFor="let items of allByGroup" (tap)="goToCheckReport(items[0].HEADER_ID)">
-            <div class="content" *ngFor="let item of items">第{{item.LINE_NUM}}組 {{item.SCHEDULE_DATE}} {{item.NAME}} <span *ngIf="item.ACUTAL_FROM_TIME">{{item.ACUTAL_FROM_TIME}}~{{item.ACTUAL_TO_TIME}}</span> <span *ngIf="item.ACTUAL_HOURS">{{item.ACTUAL_HOURS}}H</span></div>
+            <div class="content" *ngFor="let item of items">{{'inspection.ipqa.the' | translate}}{{item.LINE_NUM}}{{'inspection.bosscom.group' | translate}} {{item.SCHEDULE_DATE}} {{item.NAME | sgChineseConv}} <span *ngIf="item.ACUTAL_FROM_TIME">{{item.ACUTAL_FROM_TIME}}~{{item.ACTUAL_TO_TIME}}</span> <span *ngIf="item.ACTUAL_HOURS">{{item.ACTUAL_HOURS}}H</span></div>
           </ion-item>
         </ion-list>
       </ion-scroll>

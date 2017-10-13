@@ -6,31 +6,28 @@
 
 <ion-content>
   <ion-list >
-    <ion-item *ngFor="let item of equiplist" (tap)="goToDetail(item)">
+    <ion-item *ngFor="let item of schedulelist" (tap)="goToDetail(item)">
       <ion-row>
-        <ion-col col-4>
-          {{item.MACHINE_NO}}
+        <ion-col col-6 *ngIf='item.SCHEDULE_DATE'>
+          {{item.SCHEDULE_DATE | date:"yyyy-MM-dd"}}
         </ion-col>
-        <ion-col col-4>
-          {{item.LOCATION1}}_{{item.LOCATION2}}_{{item.LOCATION3}}
+        <ion-col col-6 *ngIf='item.SCHEDULE_NAME'>
+          {{item.SCHEDULE_NAME}}
         </ion-col>
-        <ion-col col-4>
-          {{item.LOCATION4}}
+        <ion-col col-3>
+          {{item.FROM_TIME}}
         </ion-col>
-        <ion-col col-4>
-          {{item.PRODUCTION_DATE | date:"yyyy-MM"}}
+        <ion-col col-3>
+          {{item.TO_TIME}}
         </ion-col>
-        <ion-col col-4>
-          {{item.EFFECTIVE_DATE | date:"yyyy-MM"}}
+        <ion-col col-3>
+          {{item.EMPNO}}
         </ion-col>
-        <ion-col col-4>
-          {{item.DISABLE_DATE | date:"yyyy-MM-dd"}}
+        <ion-col col-3>
+          {{item.NAME}}
         </ion-col>
-        <ion-col col-4>
-          {{item.DESCRIPTION}}
-        </ion-col>
-        <ion-col col-4>
-          {{item.OWNER_EMPNO}}
+        <ion-col col-6>
+          {{item.AREA}}
         </ion-col>
       </ion-row>
     </ion-item>

@@ -1,3 +1,4 @@
+import { BossService } from './../../shared/service/boss.service';
 import { Component, OnInit } from '@angular/core';
 import { ViewController, NavController, NavParams, AlertController, IonicPage } from 'ionic-angular';
 import { TranslateService } from '@ngx-translate/core';
@@ -12,14 +13,17 @@ export class BossScheduleListComponent implements OnInit {
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
-    private translate: TranslateService
+    private translate: TranslateService,
+    private bossService: BossService,
   ) { }
   translateTexts: any = {};
 
   name_id: any;
-  start_day: any;
-  end_day: any;
+  start_date: any;
+  end_date: any;
   week_id: any;
+  schedulelist: any;
+  inspectPeriod: any;
 
   /**
  * 記錄那個頁面類型調用
@@ -30,14 +34,10 @@ export class BossScheduleListComponent implements OnInit {
 
   async ngOnInit() {
     this.name_id = this.navParams.data.name_id;
-    this.start_day = this.navParams.data.start_day;
-    this.end_day = this.navParams.data.end_day;
+    this.start_date = this.navParams.data.start_date;
+    this.end_date = this.navParams.data.end_date;
     this.week_id = this.navParams.data.week_id;
-
-    console.log(this.name_id);
-    console.log(this.start_day);
-    console.log(this.end_day);
-    console.log(this.week_id);
+    this.inspectPeriod = this.navParams.data.inspectPeriod;
 
   }
 
@@ -46,7 +46,9 @@ export class BossScheduleListComponent implements OnInit {
     this.subscribeTranslateText();
   }
   async ionViewWillEnter() {
-
+    let res: any = await this.bossService.getScheduleList(this.name_id, this.start_date, this.end_date, this.week_id);
+    this.schedulelist = res.json();
+    console.log(this.schedulelist);
   }
 
   subscribeTranslateText() {
@@ -59,7 +61,11 @@ export class BossScheduleListComponent implements OnInit {
   }
 
   goToDetail(item: any) {
-
+    console.log(item);
+    this.navCtrl.push('BossScheduleDetailComponent', {
+      item: item,
+      inspectPeriod:this.inspectPeriod
+    });
 
   }
 

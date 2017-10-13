@@ -20,19 +20,19 @@
 
   <div [ngSwitch]="type">
     <ion-list *ngSwitchCase="'1'">
-      <ion-item class="card">
-        <div>
+      <ion-item class="card" [ngClass]="'Y' === 'Y' ? 'done' : ' undone'">
+        <div class="content">
           <div>廠區S6 電話機房 S6--1F--01 滅火器兩台</div>
           <div>巡檢日期 09-01-17~09-30-17 王書利</div>
         </div>
-        <button ion-button type="button" outline class="check" color="secondary">完成</button>
+        <!-- <button ion-button type="button" outline class="check" color="secondary">完成</button> -->
       </ion-item>
-      <ion-item class="card">
+      <ion-item class="card" [ngClass]="'Y' === 'N' ? 'done' : ' undone'">
         <div>
           <div>廠區S6 電話機房 S6--1F--01 滅火器兩台</div>
           <div>巡檢日期 09-01-17~09-30-17 王書利</div>
         </div>
-        <button ion-button type="button" outline class="check" color="danger">未完成</button>
+        <!-- <button ion-button type="button" outline class="check" color="danger">未完成</button> -->
       </ion-item>
     </ion-list>
 

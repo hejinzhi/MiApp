@@ -69,6 +69,14 @@ export class BossService {
     return this.myHttp.get(BossConfig.getScheduleInfoUrl + '?nameID=' + nameID + '&dateFM=' + datefm + '&dateTO=' + dateto);
   }
 
+  getScheduleList(nameID: number, start_date: string, end_date: string, week_id: string) {
+    return this.myHttp.get(BossConfig.getScheduleListUrl + '?nameID=' + nameID + '&dateFM=' + start_date + '&dateTO=' + end_date + '&week=' + week_id);
+  }
+
+  deleteScheduleLines(secheduleLineId: number) {
+    return this.myHttp.delete(BossConfig.deleteScheduleLinesUrl + '?sechedule_line_id=' + secheduleLineId);
+  }
+
 
   saveSchedule(data: any) {
     return this.myHttp.post(BossConfig.saveSchedule, data).then((res) => {
@@ -135,7 +143,7 @@ export class BossService {
     res = res.json();
     if (res.Header) {
       console.log(res);
-      
+
       return new BossReportInsideModel(res);
     }
     return;
@@ -187,17 +195,18 @@ export class BossService {
       )
   }
 
-  getAdminLinesAll(query: Query, type:string, waiting: boolean = false, cb?: Function) {
+  getAdminLinesAll(query: Query, type: string, waiting: boolean = false, cb?: Function) {
     let loading: Loading;
     if (waiting) {
       loading = this.plugin.createLoading()
       loading.present();
     }
-    return Observable.fromPromise(this.myHttp.get(BossConfig.getAdminLinesAll.replace('{nameID}', query.nameID+'')
-      .replace('{dateFM}', query.dateFM).replace('{dateTO}', query.dateTO).replace('{company_name}', EnvConfig.companyID).replace('{type}','boss'))).map((res) => {
+    return Observable.fromPromise(this.myHttp.get(BossConfig.getAdminLinesAll.replace('{nameID}', query.nameID + '')
+      .replace('{dateFM}', query.dateFM).replace('{dateTO}', query.dateTO).replace('{company_name}', EnvConfig.companyID).replace('{type}', 'boss'))).map((res) => {
         console.log(res.json());
-        
-        return res.json()}).
+
+        return res.json()
+      }).
       map((list: any) => list ? list : []
       ).subscribe((line: BossReportLineState[]) => {
         if (waiting && line.length === 0) {
