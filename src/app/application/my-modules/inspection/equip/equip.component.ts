@@ -59,4 +59,8 @@ export class EquipComponent implements OnInit {
             type:3
         });
     }
+
+    goToPageCheckNotes(){
+        this.navCtrl.push('CheckNotesComponent');
+    }
 }

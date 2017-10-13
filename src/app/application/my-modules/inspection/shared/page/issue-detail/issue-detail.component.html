@@ -1,8 +1,8 @@
 <ion-header>
   <ion-navbar>
-    <ion-title>问题及改善措施</ion-title>
+    <ion-title>{{ 'inspection.issueAndImprovement' | translate }}</ion-title>
     <ion-buttons end *ngIf="admin">
-        <button ion-button  (tap)="update()" [disabled] = "adminReport?.invalid">更新</button>
+        <button ion-button  (tap)="update()" [disabled] = "adminReport?.invalid">{{ 'inspection.update' | translate }}</button>
       </ion-buttons>
   </ion-navbar>
 </ion-header>
@@ -11,13 +11,13 @@
 
   <ion-list>
     <ion-item class="disabled">
-      <ion-label>值班日期</ion-label>
+      <ion-label>{{ 'inspection.ipqa.inspectDate' | translate }}</ion-label>
       <ion-note item-right>
         {{issue.INSPECT_DATE}}
       </ion-note>
     </ion-item>
     <ion-item class="disabled">
-      <ion-label>巡检人员</ion-label>
+      <ion-label>{{ 'inspection.ipqa.inspector' | translate }}</ion-label>
       <ion-note item-right>
         {{issue.INSPECT_PERSON}}
       </ion-note>
@@ -25,7 +25,7 @@
 
     <div *ngIf="type === 1">
       <ion-item class="disabled">
-        <ion-label>地点</ion-label>
+        <ion-label>{{ 'inspection.bossCom.location' | translate }}</ion-label>
         <ion-note item-right>
           {{issue.LOCATION}}
         </ion-note>
@@ -34,19 +34,19 @@
 
     <div *ngIf="type === 2">
       <ion-item class="disabled">
-        <ion-label>设备编号</ion-label>
+        <ion-label>{{ 'inspection.equipcom.machine_no' | translate }}</ion-label>
         <ion-note item-right>
           {{issue.MACHINE_NAME}}
         </ion-note>
       </ion-item>
       <ion-item class="disabled">
-        <ion-label>存放位置</ion-label>
+        <ion-label>{{ 'inspection.equipcom.location4' | translate }}</ion-label>
         <ion-note item-right>
           {{issue.LOCATION}}
         </ion-note>
       </ion-item>
       <ion-item class="disabled">
-        <ion-label>发现问题</ion-label>
+        <ion-label>{{ 'inspection.equipcom.issueDes' | translate }}</ion-label>
         <ion-note item-right>
           {{issue.CHECK_LIST_CN}}
         </ion-note>
@@ -54,26 +54,26 @@
     </div>
 
     <ion-item class="disabled">
-      <ion-label>问题详述</ion-label>
+      <ion-label>{{ 'inspection.bossCom.issueDetail' | translate }}</ion-label>
       <ion-note item-right>
         {{issue.PROBLEM_DESC}}
       </ion-note>
     </ion-item>
     <ion-item class="disabled">
-      附图
+      {{ 'inspection.bossCom.figure' | translate }}
       <sg-photo-view [opts]="{addable:false,removeable:false}" [imgs] = "issue.PROBLEM_PICTURES"></sg-photo-view>
     </ion-item>
     <ion-item class="disabled" *ngIf="!admin">
-      <ion-label>处理人</ion-label>
+      <ion-label>{{ 'inspection.bossCom.dealPerson' | translate }}</ion-label>
       <ion-note item-right>
         {{issue.OWNER_EMPNO}}
       </ion-note>
       <ion-icon name="refresh" item-end (tap)="pushBack()"></ion-icon>
     </ion-item>
     <div *ngIf="admin && adminReport" [formGroup]="adminReport">
-      <sg-search-colleague [opt]="{label:'处理人',formCtr:adminReport.get('OWNER_EMPNO'),required:empRequired}" formControlName="OWNER_EMPNO"></sg-search-colleague>
+      <sg-search-colleague [opt]="{label:'inspection.bossCom.dealPerson' | translate ,formCtr:adminReport.get('OWNER_EMPNO'),required:empRequired}" formControlName="OWNER_EMPNO"></sg-search-colleague>
       <ion-item>
-        <ion-label>*状态</ion-label>
+        <ion-label>*{{ 'inspection.status' | translate }}</ion-label>
         <ion-select formControlName="PROBLEM_STATUS" [cancelText]="'attendance.cancle' | translate" [okText]="'attendance.confirm' | translate">
           <ion-option *ngFor="let item of statusList" [value]="item.type">{{item.value}}</ion-option>
         </ion-select>
@@ -83,23 +83,23 @@
   <form [formGroup]="reportForm" *ngIf="reportForm">
     <ion-list>
       <ion-item [class.disabled]="admin">
-        <ion-label>*整改措施</ion-label>
+        <ion-label>*{{ 'inspection.ipqa.actionDesc' | translate }}</ion-label>
         <ion-textarea rows="2" cols="20" formControlName="ACTION_DESC"></ion-textarea>
       </ion-item>
       <ion-item [class.disabled]="admin">
-        <ion-label>改善状况</ion-label>
+        <ion-label>{{ 'inspection.ipqa.actionStatus' | translate }}</ion-label>
         <ion-input type="text" formControlName="ACTION_STATUS"></ion-input>
       </ion-item>
       <ion-item>
-        <span [class.disabled]="admin">附图</span>
+        <span [class.disabled]="admin">{{ 'inspection.bossCom.figure' | translate }}</span>
         <sg-photo-view [opts]="admin?{addable:false,removeable:false}:{}" formControlName="ACTION_PICTURES"></sg-photo-view>
       </ion-item>
       <ion-item>
-        <ion-label>导入日期</ion-label>
+        <ion-label>{{ 'inspection.ipqa.actionDate' | translate }}</ion-label>
         <ion-datetime displayFormat="YYYY/MM/DD" [cancelText]="'attendance.cancle' | translate" [doneText]="'attendance.confirm' | translate"
           formControlName="ACTION_DATE"></ion-datetime>
       </ion-item>
     </ion-list>
-    <button ion-button full type="button" (tap)="submit()" [disabled]="!reportForm.dirty || reportForm.invalid" *ngIf="!admin">提交</button>    
+    <button ion-button full type="button" (tap)="submit()" [disabled]="!reportForm.dirty || reportForm.invalid" *ngIf="!admin">{{'inspection.ipqa.submit' | translate}}</button>    
   </form>
 </ion-content>

@@ -8,10 +8,10 @@
           {{item.OWNER_EMPNO?.split(',')[0]}}
         </ion-col>
         <ion-col col-4>
-          {{item.LOCATION}}
+          {{item.LOCATION | sgChineseConv}}
         </ion-col>
         <ion-col col-10>
-          {{item.PROBLEM_DESC}}
+          {{item.PROBLEM_DESC | sgChineseConv}}
         </ion-col>
         <ion-col col-10>
           {{item.PROBLEM_STATUS}}

@@ -17,21 +17,6 @@ import { Component, OnInit } from '@angular/core';
 export class IssueListComponent implements OnInit {
 
     type: number = 1;
-
-    testData1 = [{
-        time: '2017-05-09 17:20', name: '小东', site: '楼递间', detail: '有垃圾', status: '待处理', inCharge: '小天'
-    },
-    {
-        time: '2017-05-09 17:20', name: '小东', site: '楼递间', detail: '有垃圾', status: '待处理', inCharge: '小天'
-    }
-    ]
-    testData2 = [{
-        time: '2017-05-09 17:20', name: '小东', site: '楼递间', detail: '过期', equip_num: '123456', issue: '是否过期', status: '待处理', inCharge: '小天'
-    },
-    {
-        time: '2017-05-09 17:20', name: '小东', site: '楼递间', detail: '过期', equip_num: '123456', issue: '是否过期', status: '待处理', inCharge: '小天'
-    }]
-
     list: Observable<BossReportLineState[]>;
     user_name: Observable<string>;
     list_length: Observable<number>;
