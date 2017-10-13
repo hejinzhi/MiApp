@@ -72,6 +72,14 @@ export class BossService {
     return this.myHttp.get(BossConfig.getScheduleInfoUrl + '?nameID=' + nameID + '&dateFM=' + datefm + '&dateTO=' + dateto);
   }
 
+  getScheduleList(nameID: number, start_date: string, end_date: string, week_id: string) {
+    return this.myHttp.get(BossConfig.getScheduleListUrl + '?nameID=' + nameID + '&dateFM=' + start_date + '&dateTO=' + end_date + '&week=' + week_id);
+  }
+
+  deleteScheduleLines(secheduleLineId: number) {
+    return this.myHttp.delete(BossConfig.deleteScheduleLinesUrl + '?sechedule_line_id=' + secheduleLineId);
+  }
+
 
   saveSchedule(data: any) {
     return this.myHttp.post(BossConfig.saveSchedule, data).then((res) => {

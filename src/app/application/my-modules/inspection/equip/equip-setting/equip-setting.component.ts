@@ -46,7 +46,6 @@ export class EquipSettingComponent implements OnInit {
     }
 
     async ngOnInit() {
-        console.log(this.navParams.data, 222)
 
         this.locations = await this.equipService.getLocations();
 

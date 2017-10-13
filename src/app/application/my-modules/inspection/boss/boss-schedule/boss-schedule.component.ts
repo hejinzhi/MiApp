@@ -65,7 +65,6 @@ export class BossScheduleComponent implements OnInit {
     * @returns {FormGroup} 
     */
     initForm(work: any = {}): FormGroup {
-        console.log(work)
         return this.fb.group({
             schedules: this.fb.array([
                 this.initSubForm(work.schedules ? work.schedules : new scheduleLine())
@@ -74,7 +73,6 @@ export class BossScheduleComponent implements OnInit {
     };
 
     initSubForm(work: any) {
-        console.log(work, 324)
         let sub: any;
         if (this.inspectPeriod === 'daily') {
             sub = this.fb.group({
@@ -210,6 +208,7 @@ export class BossScheduleComponent implements OnInit {
             name_id: this.name_id,
             schedule_name: '',
             schedule_date: '',
+            year: '',
             week: '',
             from_date: '',
             to_date: '',
@@ -232,7 +231,7 @@ export class BossScheduleComponent implements OnInit {
         send_header.company_name = localStorage.getItem('appCompanyId');
         send_header.name_id = this.name_id;
         if (this.inspectPeriod === 'weekly') {
-
+            send_header.year = this.scheduleForm.value.schedules[0].scheduledate.substring(0, 4);
             send_header.week = this.scheduleForm.value.schedules[0].scheduledate.substring(4, 6);
             send_header.from_date = this.weeklist.filter((v: any) => (v.WEEK_ID === this.scheduleForm.value.schedules[0].scheduledate))[0].WEEK_START_DAY;
             send_header.to_date = this.weeklist.filter((v: any) => (v.WEEK_ID === this.scheduleForm.value.schedules[0].scheduledate))[0].WEEK_END_DAY;
@@ -244,6 +243,7 @@ export class BossScheduleComponent implements OnInit {
             send_header.from_date = this.scheduleForm.value.schedules[0].scheduledate;
             send_header.to_date = this.scheduleForm.value.schedules[0].scheduledate;
             send_header.week = '';
+            send_header.year = '';
         }
         send_header.from_time = this.from_time;
         send_header.to_time = this.to_time;
@@ -270,6 +270,7 @@ export class BossScheduleComponent implements OnInit {
                     "NAME_ID": send_header.name_id,
                     "SCHEDULE_NAME": send_header.schedule_name,
                     "SCHEDULE_DATE": send_header.schedule_date,
+                    "YEAR": send_header.year,
                     "WEEK": send_header.week,
                     "FROM_DATE": send_header.from_date,
                     "TO_DATE": send_header.to_date,

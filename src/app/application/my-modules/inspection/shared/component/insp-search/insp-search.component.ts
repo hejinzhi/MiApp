@@ -35,10 +35,10 @@ export class InspSearchComponent implements OnInit {
   inspectPeriod: string = 'daily';
   weeklist: any[];
   mrinamelist: any[];
-  name_id: any;
-  start_day: any;
-  end_day: any;
-  week_id: any;
+  name_id: any = 3;
+  start_date: any = '';
+  end_date: any = '';
+  week_id: any = '';
 
   selectMaxYear = +moment(new Date()).format('YYYY') + 1;
 
@@ -67,8 +67,8 @@ export class InspSearchComponent implements OnInit {
       this.mrinamelist = res.json();
       let res2 = await this.bossService.getMriWeek(3, 8);
       this.weeklist = res2.json();
-      this.start_day = this.start_day || moment(Date.parse(new Date().toString()) - 1000 * 60 * 60 * 24 * 30).format('YYYY-MM-DD');
-      this.end_day = this.end_day || moment(Date.parse(new Date().toString())).format('YYYY-MM-DD');
+      this.start_date = this.start_date || moment(Date.parse(new Date().toString()) - 1000 * 60 * 60 * 24 * 30).format('YYYY-MM-DD');
+      this.end_date = this.end_date || moment(Date.parse(new Date().toString())).format('YYYY-MM-DD');
     }
 
   }
@@ -107,9 +107,10 @@ export class InspSearchComponent implements OnInit {
     if (this.type_id == 2) {
       this.navCtrl.push('BossScheduleListComponent', {
         name_id: this.name_id,
-        start_day: this.start_day,
-        end_day: this.end_day,
-        week_id: this.week_id
+        start_date: this.start_date,
+        end_date: this.end_date,
+        week_id: this.week_id,
+        inspectPeriod:this.inspectPeriod
       });
     }
 

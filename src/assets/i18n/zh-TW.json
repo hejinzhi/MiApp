@@ -437,6 +437,13 @@
       "assignOwner": "指派處理人",
       "handleProblem": "改善措施"
     },
+    "bosscom":{
+      "bossDutyTitle":"巡檢刷卡記錄",
+      "noCard":"未刷卡",
+      "noRepay":"未產生補休",
+      "repay":"已產生補休",
+      "group":"組"
+    },
     "equipcom": {
       "equip_title": "設備登記",
       "machine_no": "設備編號",
@@ -449,6 +456,7 @@
       "owner_empno": "負責人",
       "name_id": "巡檢名稱",
       "disable_date": "停用日期",
+      "setschedulealert":"日程已經產生，是否需要重新產生?",
       "issueDes":"發現問題",
       "find":"查找",
       "checkTime": "巡檢時間",
@@ -492,7 +500,8 @@
     "inspectionHandler": "指派處理人",
     "boss": "主管巡查",
     "duty": "考勤記錄",
-    "equip2": "设备巡检"
+    "equip2": "设备巡检",
+    "all":"全部"
   },
   "change_to": "已更改為",
   "submit_success": "提交成功",
@@ -500,5 +509,6 @@
   "new_title": "確定要新建嗎?",
   "delete_alert": "確定要刪除此記錄嗎?",
   "delete_succ": "刪除成功",
+  "produce_succ": "產生成功",
   "help": "幫助"
 }

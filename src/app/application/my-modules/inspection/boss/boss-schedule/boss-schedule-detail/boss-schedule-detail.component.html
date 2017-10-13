@@ -1,0 +1,46 @@
+<ion-header>
+  <ion-navbar>
+    <ion-title>排班明細</ion-title>
+    <ion-buttons end>
+        <button ion-button icon-only (tap)="presentPopover($event)" >
+            <ion-icon name="add" ></ion-icon>
+          </button>
+      </ion-buttons>
+  </ion-navbar>
+</ion-header>
+
+<ion-content>
+  <form [formGroup]="scheduleForm" *ngIf="scheduleForm">
+    <ion-list>
+      <ion-item>
+        <ion-label col-4>*開始時段</ion-label>
+        <ion-datetime formControlName="from_time" displayFormat="HH:mm" [cancelText]="'attendance.cancle' | translate" [doneText]="'attendance.confirm' | translate"></ion-datetime>
+      </ion-item>
+      <ion-item>
+        <ion-label col-4>*結束時段</ion-label>
+        <ion-datetime formControlName="to_time" displayFormat="HH:mm" [cancelText]="'attendance.cancle' | translate" [doneText]="'attendance.confirm' | translate"></ion-datetime>
+      </ion-item>
+
+      <ion-item *ngIf="inspectPeriod==='daily'">
+        <ion-label col-4>*值班日期</ion-label>
+        <ion-datetime formControlName="scheduledate" displayFormat="YYYY年MM月DD日" pickerFormat="YYYY MM DD" [cancelText]="'attendance.cancle' | translate"
+          [doneText]="'attendance.confirm' | translate" min="2017" [max]="selectMaxYear"></ion-datetime>
+      </ion-item>
+      <ion-item *ngIf="inspectPeriod==='weekly'">
+        <ion-label col-4>*巡檢周次</ion-label>
+        <ion-select col-8 [cancelText]="'attendance.cancle' | translate" [okText]="'attendance.confirm' | translate" formControlName="scheduledate">
+          <ion-option *ngFor="let item of weeklist" [value]="item.WEEK_ID">{{item.WEEK_DESC}}</ion-option>
+        </ion-select>
+      </ion-item>
+      <ion-item *ngIf="inspectPeriod==='weekly'">
+        <ion-label col-4>*巡檢區域</ion-label>
+        <ion-select col-8 [cancelText]="'attendance.cancle' | translate" [okText]="'attendance.confirm' | translate" formControlName="area">
+          <ion-option *ngFor="let location of locationlist" [value]="location.LOOKUP_CODE">{{location.LOOKUP_CODE}}</ion-option>
+        </ion-select>
+      </ion-item>
+      <sg-search-colleague [opt]="{ formCtr:scheduleForm.get('empno'), label:'*值班人員',required:true}" formControlName="empno"></sg-search-colleague>
+    </ion-list>
+  </form>
+  <button ion-button full type="button" (tap)="submit()" [disabled]="scheduleForm.invalid">{{'correct' | translate }}</button>
+  <!-- <button ion-button (tap)="showdetail()">查看VALUE</button> -->
+</ion-content>

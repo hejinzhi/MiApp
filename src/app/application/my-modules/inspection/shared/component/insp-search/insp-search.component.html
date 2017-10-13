@@ -41,12 +41,12 @@
   </ion-item>
   <ion-item *ngIf="this.inspectPeriod==='daily'">
     <ion-label col-4>開始日期</ion-label>
-    <ion-datetime [(ngModel)]="start_day" displayFormat="YYYY年MM月DD日" pickerFormat="YYYY MM DD" [cancelText]="'attendance.cancle' | translate"
+    <ion-datetime [(ngModel)]="start_date" displayFormat="YYYY年MM月DD日" pickerFormat="YYYY MM DD" [cancelText]="'attendance.cancle' | translate"
       [doneText]="'attendance.confirm' | translate" min="2017" [max]="selectMaxYear"></ion-datetime>
   </ion-item>
   <ion-item *ngIf="this.inspectPeriod==='daily'">
     <ion-label   col-4>結束日期</ion-label>
-    <ion-datetime [(ngModel)]="end_day"  displayFormat="YYYY年MM月DD日" pickerFormat="YYYY MM DD" [cancelText]="'attendance.cancle' | translate"
+    <ion-datetime [(ngModel)]="end_date"  displayFormat="YYYY年MM月DD日" pickerFormat="YYYY MM DD" [cancelText]="'attendance.cancle' | translate"
       [doneText]="'attendance.confirm' | translate" min="2017" [max]="selectMaxYear"></ion-datetime>
   </ion-item>
   <ion-item *ngIf="this.inspectPeriod==='weekly'">

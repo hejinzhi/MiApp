@@ -20,8 +20,10 @@ export class CommentComponent implements OnInit {
 
     name_id: number = 3;
     mri_type: string = 'boss';
-    start_date: string = moment(new Date()).format('YYYY-MM-DD');
-    end_date: string = moment(new Date()).format('YYYY-MM-DD');
+
+
+    start_date: string;
+    end_date: string;
 
     selected_segment = 0;
     top_segment = 'top_0';
@@ -40,6 +42,23 @@ export class CommentComponent implements OnInit {
     ) { }
 
     ngOnInit() {
+        let date = new Date();
+        let today = date.toISOString();
+        let month = date.getMonth();
+        let year = date.getFullYear();
+        let startTime = '';
+        if (month === 0) {
+            startTime = year - 1 + '-' + '12' + '-' + '26';
+        } else {
+            let monthString = month < 10 ? '0' + month : month;
+            startTime = year + '-' + monthString + '-' + '26';
+        }
+        today = today.substr(0, today.indexOf('T'));
+
+        this.start_date = startTime;
+        this.end_date = today;
+
+        this.getBossDutyList();
     }
 
     goToCheckReport(scheduleHeaderId: any, allDone: any) {

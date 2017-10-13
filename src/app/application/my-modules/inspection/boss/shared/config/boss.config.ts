@@ -13,6 +13,10 @@ export class BossConfig {
 
     static getScheduleInfoUrl = EnvConfig.baseUrl + 'IPQA/GetScheduleInfo';
 
+    static getScheduleListUrl = EnvConfig.baseUrl + 'IPQA/GetScheduleList';  
+
+    static deleteScheduleLinesUrl = EnvConfig.baseUrl + 'IPQA/DeleteScheduleLines';  
+
     /**
      * URL
      * 更新或添加报告

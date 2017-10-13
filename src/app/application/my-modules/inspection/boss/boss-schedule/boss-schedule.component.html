@@ -34,7 +34,7 @@
           <div class="array_icon"><span class="iconfontyyy remove" (tap)="removeScheduleLine(i)" *ngIf="i>0">&#xe61a;</span><span class="content">第{{i+1}}組</span>
             <span class="iconfontyyy add" (tap)="addScheduleLine()">&#xe649;</span>
           </div>
-          <ion-item *ngIf="this.inspectPeriod==='daily'">
+          <ion-item *ngIf="inspectPeriod==='daily'">
             <ion-label col-4>*值班日期</ion-label>
             <ion-datetime formControlName="scheduledate" displayFormat="YYYY年MM月DD日" pickerFormat="YYYY MM DD" [cancelText]="'attendance.cancle' | translate"
               [doneText]="'attendance.confirm' | translate" min="2017" [max]="selectMaxYear"></ion-datetime>
@@ -45,7 +45,7 @@
               <ion-option *ngFor="let item of weeklist" [value]="item.WEEK_ID">{{item.WEEK_DESC}}</ion-option>
             </ion-select>
           </ion-item>
-          <ion-item *ngIf="this.inspectPeriod==='weekly'">
+          <ion-item *ngIf="inspectPeriod==='weekly'">
             <ion-label col-4>*巡檢區域</ion-label>
             <ion-select col-8 [cancelText]="'attendance.cancle' | translate" [okText]="'attendance.confirm' | translate" formControlName="area">
               <ion-option *ngFor="let location of locationlist" [value]="location.LOOKUP_CODE">{{location.LOOKUP_CODE}}</ion-option>
@@ -56,7 +56,7 @@
               <ion-grid class="grid" >
                 <ion-row class="row">
                   <ion-col col-11 class="col">
-                    <sg-search-colleague  [opt]="{ formCtr:scheduleForm.get('schedules').get(i+'').get('empnos').get(j+''), label:'*值班人員'+(j+1)}" [formControlName]="j"></sg-search-colleague> 
+                    <sg-search-colleague  [opt]="{ formCtr:scheduleForm.get('schedules').get(i+'').get('empnos').get(j+''), label:'*值班人員'+(j+1) , required:true}" [formControlName]="j"></sg-search-colleague> 
                   </ion-col>
                   <ion-col col-1>
                     <div item-rignt class="person_icon">

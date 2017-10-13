@@ -437,6 +437,13 @@
       "assignOwner": "指派处理人",
       "handleProblem": "改善措施"
     },
+    "bosscom":{
+      "bossDutyTitle":"巡检刷卡记录",
+      "noCard":"未刷卡",
+      "noRepay":"未产生补休",
+      "repay":"已产生补休",
+      "group":"组"
+    },
     "equipcom": {
       "equip_title": "设备登记",
       "machine_no": "设备编号",
@@ -449,6 +456,7 @@
       "owner_empno": "负责人",
       "name_id": "巡检名称",
       "disable_date": "停用日期",
+      "setschedulealert":"日程已经产生，是否需要重新产生?",
       "issueDes":"发现问题",
       "find":"查找",
       "checkTime": "巡检时间",
@@ -492,7 +500,8 @@
     "inspectionHandler": "指派处理人",
     "boss": "主管巡查",
     "duty": "考勤记录",
-    "equip2": "设备巡检"
+    "equip2": "设备巡检",
+    "all":"全部"
   },
   "change_to": "已更改为",
   "submit_success": "提交成功",
@@ -500,5 +509,6 @@
   "new_title": "确定要新建吗?",
   "delete_alert": "确认要删除此记录吗?",
   "delete_succ": "删除成功",
+  "produce_succ": "产生成功",
   "help": "帮助"
 }

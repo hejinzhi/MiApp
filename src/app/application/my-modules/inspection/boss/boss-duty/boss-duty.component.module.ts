@@ -1,3 +1,4 @@
+import { SharedModule } from './../../../../../shared/shared.module';
 import { QueryDateComponentModule } from '../../shared/component/query-date/query-date.component.module';
 import { PhotoViewComponentModule } from './../../../../../shared/components/photo-view/photo-view.component.module';
 import { BossDutyComponent } from './boss-duty.component';
@@ -10,7 +11,8 @@ import { TranslateModule } from '@ngx-translate/core';
         IonicPageModule.forChild(BossDutyComponent),
         TranslateModule.forChild(),
         PhotoViewComponentModule,
-        QueryDateComponentModule
+        QueryDateComponentModule,
+        SharedModule
     ],
     exports: [],
     declarations: [BossDutyComponent],

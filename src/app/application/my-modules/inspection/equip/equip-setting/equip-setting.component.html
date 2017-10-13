@@ -43,7 +43,7 @@
         <ion-datetime formControlName="effective_date" displayFormat="YYYY年MM月" pickerFormat="YYYY MM" [cancelText]="'attendance.cancle' | translate"
           [doneText]="'attendance.confirm' | translate" min="2000" [max]="selectMaxYear"></ion-datetime>
       </ion-item>
-      <sg-search-colleague *ngIf="formModel.controls['owner_empno']" [opt]="{formCtr:formModel.controls['owner_empno'], label:'inspection.equipcom.owner_empno'}"
+      <sg-search-colleague *ngIf="formModel.controls['owner_empno']" [opt]="{formCtr:formModel.controls['owner_empno'], label:'inspection.equipcom.owner_empno' , required:true }"
         formControlName="owner_empno"></sg-search-colleague>
       <ion-item>
         <ion-label col-4>*{{'inspection.equipcom.name_id' | translate }}:</ion-label>

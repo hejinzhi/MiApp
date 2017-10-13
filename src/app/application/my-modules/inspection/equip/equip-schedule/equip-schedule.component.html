@@ -7,29 +7,39 @@
   <ion-list>
     <ion-item>
       <ion-label col-4>*年度:</ion-label>
-      <ion-datetime  [(ngModel)]="year"  displayFormat="YYYY" pickerFormat="YYYY" [cancelText]="'attendance.cancle' | translate"
+      <ion-datetime [(ngModel)]="year" displayFormat="YYYY" pickerFormat="YYYY" [cancelText]="'attendance.cancle' | translate"
         [doneText]="'attendance.confirm' | translate" min="2017" [max]="selectMaxYear"></ion-datetime>
     </ion-item>
     <ion-item>
       <ion-label col-4>*月份:</ion-label>
-      <ion-datetime [(ngModel)]="month" displayFormat="MM" pickerFormat="MM" [cancelText]="'attendance.cancle' | translate"
-       [doneText]="'attendance.confirm' | translate" min="2017" [max]="2017"></ion-datetime>
+      <ion-datetime [(ngModel)]="month" displayFormat="MM" pickerFormat="MM" [cancelText]="'attendance.cancle' | translate" [doneText]="'attendance.confirm' | translate"
+        min="2017" [max]="2017"></ion-datetime>
     </ion-item>
     <ion-item>
-      <ion-label col-4>負責單位:</ion-label>
-      <ion-input></ion-input>
+      <ion-label col-4>*{{'inspection.equipcom.name_id' | translate }}:</ion-label>
+      <ion-select col-8 [(ngModel)]="name_id" [cancelText]="'attendance.cancle' | translate" [okText]="'attendance.confirm' | translate">
+        <ion-option *ngFor="let item of mrinamelist" [value]="item.NAME_ID">{{item.INSPECT_NAME}}</ion-option>
+      </ion-select>
     </ion-item>
     <ion-item>
-        <ion-label col-4>存放區域:</ion-label>
-        <ion-input></ion-input>
-      </ion-item>
+      <ion-label col-4>存放區域1:</ion-label>
+      <ion-select col-8 [(ngModel)]="location1" [cancelText]="'attendance.cancle' | translate" [okText]="'attendance.confirm' | translate">
+        <ion-option *ngFor="let item of location1list" [value]="item.LOOKUP_CODE">{{item.LOOKUP_CODE}}</ion-option>
+      </ion-select>
+    </ion-item>
     <ion-item>
-      <ion-label col-4>{{'inspection.equipcom.name_id' | translate }}:</ion-label>
-      <ion-input></ion-input>
+      <ion-label col-4>存放區域2:</ion-label>
+      <ion-select col-8 [(ngModel)]="location2" [cancelText]="'attendance.cancle' | translate" [okText]="'attendance.confirm' | translate">
+        <ion-option *ngFor="let item of location2list" [value]="item.LOOKUP_CODE">{{item.LOOKUP_CODE}}</ion-option>
+      </ion-select>
+    </ion-item>
+    <ion-item>
+      <ion-label col-4>存放區域3:</ion-label>
+      <ion-input [(ngModel)]="location3"></ion-input>
     </ion-item>
     <ion-item>
       <ion-label col-4>{{'inspection.equipcom.machine_no' | translate }}:</ion-label>
-      <ion-input></ion-input>
+      <ion-input [(ngModel)]="machine_no"></ion-input>
     </ion-item>
   </ion-list>
 
@@ -37,7 +47,7 @@
     <ion-row>
       <ion-col width-50>
         <ion-buttons left>
-          <button ion-button type="button">產生日程</button>
+          <button ion-button type="button" (tap)="setSchedule()">產生日程</button>
         </ion-buttons>
       </ion-col>
       <ion-col width-50>
@@ -47,5 +57,5 @@
       </ion-col>
     </ion-row>
   </ion-grid>
-    <button ion-button (tap)="showdetail()">查看VALUE</button>
+  <!-- <button ion-button (tap)="showdetail()">查看VALUE</button> -->
 </ion-content>
