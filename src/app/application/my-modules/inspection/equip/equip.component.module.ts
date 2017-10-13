@@ -13,7 +13,8 @@ import { TranslateModule } from '@ngx-translate/core';
         SharedModule
     ],
     exports: [],
-    declarations: [EquipComponent],
+    declarations: [EquipComponent,
+],
     providers: [],
     entryComponents: [
         EquipComponent

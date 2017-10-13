@@ -1,15 +1,15 @@
 <ion-header>
   <ion-navbar>
-    <ion-title>巡检报告</ion-title>
+    <ion-title>{{'inspection.report' | translate}}</ion-title>
     <ion-buttons end *ngIf="admin || hr">
-      <button ion-button (tap)="hideAll()">全部折叠</button>
+      <button ion-button (tap)="hideAll()">{{'inspection.bossCom.foldAll' | translate }}</button>
     </ion-buttons>
   </ion-navbar>
 </ion-header>
 <ion-content>
   <ion-list *ngIf="!admin && !hr">
     <ion-item>
-      <ion-label>*检查类型</ion-label>
+      <ion-label>*{{'inspection.bossCom.checkType' | translate }}</ion-label>
       <ion-select [cancelText]="'attendance.cancle' | translate" [okText]="'attendance.confirm' | translate" [(ngModel)]="scheduleType" (ionChange)="changeSchedule()">
         <ion-option value="{{item.NAME_ID}}" *ngFor="let item of schedule">{{item.INSPECT_NAME}}</ion-option>
       </ion-select>
@@ -18,27 +18,27 @@
   <form [formGroup]="reportForm" *ngIf="reportForm">
     <ion-list>
       <ion-item class="disabled">
-        <ion-label>巡检日期</ion-label>
+        <ion-label>{{'inspection.bossCom.checkDate' | translate}}</ion-label>
         <ion-note item-right>
           {{reportForm.get('date').value}}
         </ion-note>
         <!-- <ion-datetime class ="displayNone" displayFormat="YYYY/MM/DD" formControlName="date" [cancelText]="'attendance.cancle' | translate" [doneText]="'attendance.confirm' | translate"></ion-datetime> -->
       </ion-item>
       <ion-item class="disabled">
-        <ion-label>巡检人员</ion-label>
+        <ion-label>{{'inspection.bossCom.checkPeople' | translate}}</ion-label>
         <!-- <ion-input type="text" formControlName="people" class ="displayNone"></ion-input> -->
         <ion-note item-right>
           {{reportForm.get('people').value}}
         </ion-note>
       </ion-item>
       <ion-item class="disabled" *ngIf="admin">
-        <ion-label>总分</ion-label>
+        <ion-label>{{'inspection.bossCom.totalMark' | translate}}</ion-label>
         <ion-note item-right>
           {{totalMark}}
         </ion-note>
       </ion-item>
       <ion-item class="disabled">
-        <ion-label>发现事项</ion-label>
+        <ion-label>{{'inspection.bossCom.issueCount' | translate}}</ion-label>
         <!-- <ion-input type="text" formControlName="issueCount" class ="displayNone"></ion-input> -->
         <ion-note item-right>
           {{reportForm.get('issueCount').value}}
@@ -52,7 +52,7 @@
                 <ion-item-divider (click)="toggle(i)">
                   <ion-icon name="information-circle" color="danger" *ngIf="reportForm.get('lists').get(i+'').invalid && !admin && !hr"></ion-icon>
                   <ion-icon name="checkmark-circle" *ngIf="!reportForm.get('lists').get(i+'').invalid && !admin && !hr"></ion-icon>
-                  巡检位置{{i+1}}: {{reportForm.get('lists').get(i+'').controls['site'].value}}
+                  {{'inspection.bossCom.checkSite' | translate}}{{i+1}}: {{reportForm.get('lists').get(i+'').controls['site'].value}}
                   <ion-icon name="arrow-down"></ion-icon>
                 </ion-item-divider>
               </ion-col>
@@ -63,30 +63,30 @@
           </ion-grid>
           <div [formGroupName]="i" [class.displayNone]="reportForm.get('lists').get(i+'')['displayNone']" class="subDetail">
             <ion-item>
-              <ion-label>*时间</ion-label>
+              <ion-label>*{{'inspection.bossCom.checkTime' | translate}}</ion-label>
               <ion-datetime displayFormat="HH:mm" formControlName="time" [cancelText]="'attendance.cancle' | translate" [doneText]="'attendance.confirm' | translate"></ion-datetime>
             </ion-item>
             <ion-item [class.disabled-label]="admin || hr">
-              <ion-label>*地点</ion-label>
+              <ion-label>*{{'inspection.bossCom.location' | translate}}</ion-label>
               <ion-input type="text" formControlName="site"></ion-input>
             </ion-item>
             <ion-item>
-              <ion-label>*存在问题</ion-label>
+              <ion-label>*{{'inspection.bossCom.hasIssue' | translate}}</ion-label>
               <ion-toggle formControlName="hasIssue"></ion-toggle>
             </ion-item>
             <ion-item *ngIf="reportForm.get('lists').get(i+'').controls['detail']" [class.disabled-label]="admin || hr">
-              <ion-label>*问题详述</ion-label>
+              <ion-label>*{{'inspection.bossCom.issueDetail' | translate}}</ion-label>
               <ion-input type="text" formControlName="detail"></ion-input>
             </ion-item>
             <ion-item *ngIf="reportForm.get('lists').get(i+'').controls['detail']" [class.disabled]="admin || hr">
-              <div>附图</div>
+              <div>{{'inspection.bossCom.figure' | translate}}</div>
               <sg-photo-view [opts]="admin?{addable:false,removeable:false}:{}" formControlName="imgs"></sg-photo-view>
             </ion-item>
             <sg-search-colleague *ngIf="reportForm.get('lists').get(i+'').controls['inCharge']" [class.disabled-label]="admin" formControlName="inCharge"
               [opt]="{formCtr:reportForm.get('lists').get(i+'').controls['inCharge'],required:true}">
             </sg-search-colleague>
             <ion-item *ngIf="reportForm.get('lists').get(i+'').controls['mark']">
-              <ion-label>评分</ion-label>
+              <ion-label>{{'inspection.bossCom.comment' | translate}}</ion-label>
               <ion-select [cancelText]="'attendance.cancle' | translate" [okText]="'attendance.confirm' | translate" formControlName="mark">
                 <ion-option [value]="item" *ngFor="let item of mark">{{item}}</ion-option>
               </ion-select>
@@ -94,8 +94,8 @@
           </div>
         </div>
       </div>
-      <ion-item-divider class="add" (click)="addCheckSite()" *ngIf="!admin && !hr">+添加巡检位置</ion-item-divider>
+      <ion-item-divider class="add" (click)="addCheckSite()" *ngIf="!admin && !hr">+{{'inspection.bossCom.addCheckSite' | translate}}</ion-item-divider>
     </ion-list>
-    <button ion-button full type="button" (tap)="submit()" [disabled]="reportForm.invalid" *ngIf="!hr&&!admin || (admin && commentable)">提交</button>
+    <button ion-button full type="button" (tap)="submit()" [disabled]="reportForm.invalid" *ngIf="!hr&&!admin || (admin && commentable)">{{'inspection.ipqa.submit' | translate}}</button>
   </form>
 </ion-content>

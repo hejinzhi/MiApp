@@ -393,6 +393,15 @@
   "autologin_err": "本地账号名或密码已失效,账号验证失败,请重新验证",
   "inspection": {
     "title": "日常巡检",
+    "issueAndImprovement": "问题及改善措施",
+    "update":"更新",
+    "status":"状态",
+    "confirmChangeOwner": "确定此事项不是本人负责的吗?",
+    "statusNew":"待分配",
+    "statusWaiting":"待处理",
+    "statusDone": "已处理",
+    "issuesTrack": "巡检报告问题追踪",
+    "all":"全部", 
     "ipqa": {
       "prompt": "提示",
       "noNetwork": "检测不到可用网络，请联网后再试试",
@@ -439,7 +448,37 @@
       "effective_date": "有效期",
       "owner_empno": "负责人",
       "name_id": "巡检名称",
-      "disable_date": "停用日期"
+      "disable_date": "停用日期",
+      "issueDes":"发现问题",
+      "find":"查找",
+      "checkTime": "巡检时间",
+      "hadChecked": "此设备已检查",
+      "noSchedule":"没找到此设备的排程"
+    },
+    "bossCom":{
+      "foldAll":"全部折叠",
+      "checkType":"检查类型",
+      "checkDate":"巡检日期",
+      "checkPeople":"巡检人员",
+      "totalMark":"总分",
+      "issueCount":"发现事项",
+      "checkSite":"巡检位置",
+      "checkTime":"时间",
+      "location":"地点",
+      "hasIssue": "存在问题",
+      "issueDetail": "问题详述",
+      "figure": "附图",
+      "comment":"评分",
+      "addCheckSite":"添加巡检位置",
+      "hasUnsubmitData": "发现之前有未提交的数据, 是否恢复?",
+      "tip":"提示",
+      "confirmDelete":"要删除第n个检查地点吗?",
+      "reportComment": "巡检报告评分",
+      "issueLists": "改善项目",
+      "ownIssues": "需改善项目",
+      "dealPerson": "处理人",
+      "noOwnIssues": "没查到待改善事项",
+      "noNote": "没查到记录"
     },
     "inspectionName": "巡检名称",
     "equip": "设备登记",
@@ -460,5 +499,6 @@
   "reset_title": "确定要重置吗?",
   "new_title": "确定要新建吗?",
   "delete_alert": "确认要删除此记录吗?",
-  "delete_succ": "删除成功"
+  "delete_succ": "删除成功",
+  "help": "帮助"
 }

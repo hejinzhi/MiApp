@@ -1,6 +1,6 @@
 <ion-header>
   <ion-navbar>
-    <ion-title>主管巡查</ion-title>
+    <ion-title>{{'inspection.boss' | translate}}</ion-title>
   </ion-navbar>
 </ion-header>
 <ion-content>
@@ -39,7 +39,7 @@
         </div>
         <div class="badge" *ngIf="(tips.ownImprove | async)>0">{{tips.ownImprove | async}}</div>
       </ion-col>
-      <ion-col col-4 class="grid-col" (tap)="goToPageAdminCheck()" *ngIf="bossService?.isBossAdmin()">
+      <ion-col col-4 class="grid-col" (tap)="goToPageAdminCheck()" *ngIf="isAdmin()">
         <div class="grid-content">
           <a>
             <img src="assets/icon/problem.gif" class="grid-img">
@@ -60,7 +60,7 @@
         <div class="grid-content">
           <a>
             <img src="assets/icon/7s.gif" class="grid-img">
-            <div class="grid-name">巡檢報告評分</div>
+            <div class="grid-name">{{'inspection.bossCom.reportComment' | translate}}</div>
           </a>
         </div>
       </ion-col>

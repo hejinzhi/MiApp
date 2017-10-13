@@ -1,18 +1,18 @@
 <ion-header>
   <ion-navbar>
-    <ion-title>改善项目</ion-title>
+    <ion-title>{{'inspection.bossCom.issueLists' | translate}}</ion-title>
   </ion-navbar>
 </ion-header>
 <ion-content>
   <ion-list>
     <ion-item class="disabled">
-      <ion-label>负责人</ion-label>
+      <ion-label>{{'inspection.equipcom.owner_empno' | translate}}</ion-label>
       <ion-note item-right>
         {{ user_name| async }}
       </ion-note>
     </ion-item>
     <ion-item class="disabled">
-      <ion-label>需改善项目</ion-label>
+      <ion-label>{{'inspection.bossCom.ownIssues' | translate}}</ion-label>
       <ion-note item-right *ngIf="list | async">
         {{ list_length | async }}
       </ion-note>

@@ -1,3 +1,4 @@
+import { TranslateService } from '@ngx-translate/core';
 import { IonicPage, AlertController, NavParams, NavController } from 'ionic-angular';
 import { Component, OnInit, NgZone } from '@angular/core';
 import { FormBuilder, FormGroup, FormArray, FormControl } from '@angular/forms';
@@ -22,12 +23,13 @@ export class BossReportComponent implements OnInit {
     reportForm: FormGroup;
     className: string = this.constructor.name;
     type: string = 'all';
-    schedule:any[];
-    scheduleType:string;
-    selectSchedule:any;
-    hr:boolean;
-    commentable:boolean;
+    schedule: any[];
+    scheduleType: string;
+    selectSchedule: any;
+    hr: boolean;
+    commentable: boolean;
     savedHeaderID: number;
+    translateTexts: any = {};
 
     constructor(
         private navParams: NavParams,
@@ -38,29 +40,40 @@ export class BossReportComponent implements OnInit {
         private _ngZone: NgZone,
         private plugin: PluginService,
         private bossService: BossService,
-        private navCtr: NavController
+        private navCtr: NavController,
+        private translate: TranslateService
     ) { }
 
     async ngOnInit() {
         // this.init();
+        this.subscribeTranslateText();
         let schedule = this.navParams.get('schedule');
         this.admin = this.navParams.get('admin');
         this.hr = this.navParams.get('hr');
         this.savedHeaderID = this.navParams.get('scheduleHeaderId') || '';
-        this.commentable = this.navParams.get('allDone') && this.navParams.get('allDone') === 'Y'? true:false;
+        this.commentable = this.navParams.get('allDone') && this.navParams.get('allDone') === 'Y' ? true : false;
         let id = this.savedHeaderID;
-        if(!this.admin && schedule) {
+        if (!this.admin && schedule) {
             this.bindInit(schedule)
         }
         if (this.admin) {
-            let note = await this.getReportFromEnd(id+'');
+            let note = await this.getReportFromEnd(id + '');
             this.init(note);
-        } else if(this.hr && id) {
-            let note = await this.getReportFromEnd(id+'');
+        } else if (this.hr && id) {
+            let note = await this.getReportFromEnd(id + '');
             this.init(note);
-        }else {
+        } else {
             this.checkCache();
         }
+    }
+
+    subscribeTranslateText() {
+        this.translate.get(['help', 'cancel',
+            'confirm', 'inspection.bossCom.hasUnsubmitData', 'inspection.bossCom.tip',
+            'inspection.bossCom.confirmDelete', 'submit_success'
+        ]).subscribe((res) => {
+            this.translateTexts = res;
+        })
     }
 
     changeSchedule() {
@@ -73,7 +86,7 @@ export class BossReportComponent implements OnInit {
      * 
      * @param {*} data 
      */
-    bindInit(data:any) {
+    bindInit(data: any) {
         this.schedule = data;
         this.scheduleType = this.schedule[0].NAME_ID;
         this.searchNote();
@@ -84,11 +97,11 @@ export class BossReportComponent implements OnInit {
      * 
      */
     async searchNote() {
-        this.selectSchedule = this.schedule.filter((i:any) => i.NAME_ID == this.scheduleType)[0];
-        if(!this.selectSchedule) return this.init();
-        let id  = this.selectSchedule.REPORT_ID;
+        this.selectSchedule = this.schedule.filter((i: any) => i.NAME_ID == this.scheduleType)[0];
+        if (!this.selectSchedule) return this.init();
+        let id = this.selectSchedule.REPORT_ID;
         let note;
-        if(+id !== 0) {
+        if (+id !== 0) {
             note = await this.getReportFromEnd(id);
             note.people = this.selectSchedule.PERSON;
             this.init(note);
@@ -97,7 +110,7 @@ export class BossReportComponent implements OnInit {
         }
     }
 
-    async getReportFromEnd(id:string) {
+    async getReportFromEnd(id: string) {
         let note;
         let loading = this.plugin.createLoading();
         loading.present();
@@ -122,17 +135,17 @@ export class BossReportComponent implements OnInit {
         let data: any;
         if (data = this.cacheService.get(this.className, this.type + '')) {
             let confirm = this.alertCtrl.create({
-                title: `帮助`,
-                message: `发现之前有未提交的数据, 是否恢复?`,
+                title: this.translateTexts['help'],
+                message: this.translateTexts['inspection.bossCom.hasUnsubmitData'],
                 buttons: [
                     {
-                        text: '取消',
+                        text: this.translateTexts['cancel'],
                         handler: () => {
                             this.clearCache();
                         }
                     },
                     {
-                        text: '确定',
+                        text: this.translateTexts['confirm'],
                         handler: () => {
                             this.init(data)
                         }
@@ -164,15 +177,15 @@ export class BossReportComponent implements OnInit {
             this.cacheService.update(this.className, this.type, value);
         })
         this.attchSubForm(work.lists);
-        if(this.hr) {
+        if (this.hr) {
             this.reportForm.disable({ onlySelf: false });
         }
         if (this.admin) {
             this.reportForm.disable({ onlySelf: false });
             let listsForm = this.reportForm.get('lists') as FormArray;
             Array.prototype.forEach.call(listsForm.controls, (i: FormGroup) => {
-                let li = work.lists.find((l:any) => l.LINE_ID == i.get('LINE_ID').value);
-                let mark:any = li? li.mark: '';
+                let li = work.lists.find((l: any) => l.LINE_ID == i.get('LINE_ID').value);
+                let mark: any = li ? li.mark : '';
                 i.addControl('mark', new FormControl(mark, this.validExd.required()))
                 i.get('mark').valueChanges.subscribe(() => {
                     this.totalMark = 0
@@ -181,9 +194,9 @@ export class BossReportComponent implements OnInit {
                     })
                 })
             })
-            if(!this.commentable) {
+            if (!this.commentable) {
                 this.reportForm.disable({ onlySelf: false });
-            } 
+            }
         }
     }
 
@@ -199,17 +212,17 @@ export class BossReportComponent implements OnInit {
             let target = lists[i];
             if (target.hasIssue) {
                 this.changeIssueCount(true);
-                if(this.admin || this.hr) {
+                if (this.admin || this.hr) {
                     listsForm.push(this.addSub2Form(this.initSubForm(target), target))
                 } else {
                     listsForm.push(this.addSub2Form(this.initSubForm(target, this.changeIssueCount), target))
                 }
             } else {
-                if(this.admin || this.hr) {
+                if (this.admin || this.hr) {
                     listsForm.push(this.initSubForm(target));
                 } else {
                     listsForm.push(this.initSubForm(target, this.changeIssueCount));
-                }  
+                }
             }
         }
     }
@@ -237,7 +250,7 @@ export class BossReportComponent implements OnInit {
      */
     initSubForm(work: any = {}, cb?: Function) {
         let sub = this.fb.group({
-            LINE_ID:[work.LINE_ID],
+            LINE_ID: [work.LINE_ID],
             time: [work.time || moment(new Date()).format('HH:mm'), this.validExd.required()],
             site: [work.site, this.validExd.required()],
             hasIssue: [work.hasIssue],
@@ -279,7 +292,7 @@ export class BossReportComponent implements OnInit {
         let value: string = target.value;
         let count = value ? +value.substr(0, value.length - 1) : 0;
         count = add ? ++count : --count;
-        this.reportForm.controls['issueCount'].setValue(Math.max(count,0) + '项')
+        this.reportForm.controls['issueCount'].setValue(Math.max(count, 0) + '项')
     }
 
     addCheckSite() {
@@ -342,28 +355,28 @@ export class BossReportComponent implements OnInit {
      */
     removeSubFrom(i: number) {
         let confirm = this.alertCtrl.create({
-            title: `提示`,
-            message: `要删除第${i + 1}个检查地点吗?`,
+            title: this.translateTexts['inspection.bossCom.tip'],
+            message: this.translateTexts['inspection.bossCom.confirmDelete'].replace('n', (i + 1) + ''),
             buttons: [
                 {
-                    text: '取消',
+                    text: this.translateTexts['cancel'],
                     handler: () => {
 
                     }
                 },
                 {
-                    text: '确定',
+                    text: this.translateTexts['confirm'],
                     handler: () => {
                         let lists = this.reportForm.get('lists') as FormArray;
-                        let id = lists.get(i+'').value.LINE_ID;
+                        let id = lists.get(i + '').value.LINE_ID;
                         let loading = this.plugin.createLoading();
-                        if(id) {
+                        if (id) {
                             loading.present();
                             this.bossService.deleteLine(id).map((res) => res.status).subscribe((s) => {
                                 lists.removeAt(i);
-                            },(err) => this.plugin.errorDeal(err),() => loading && loading.dismiss())
+                            }, (err) => this.plugin.errorDeal(err), () => loading && loading.dismiss())
                         }
-                        
+
                     }
                 }
             ]
@@ -377,18 +390,18 @@ export class BossReportComponent implements OnInit {
      * 
      */
     submit() {
-        let send = Object.assign(this.reportForm.value,this.selectSchedule);
-        if(this.admin) {
+        let send = Object.assign(this.reportForm.value, this.selectSchedule);
+        if (this.admin) {
             send.totalMark = this.totalMark || '';
             send.REPORT_ID = this.savedHeaderID;
         }
         let loading = this.plugin.createLoading();
         loading.present();
         this.bossService.uploadReport(send).subscribe((d) => {
-            this.plugin.showToast('提交成功');
+            this.plugin.showToast(this.translateTexts['submit_success']);
             this.clearCache();
             this.navCtr.pop()
-        },(err) => {this.plugin.errorDeal(err);console.log(err);loading.dismiss()},() => loading.dismiss());
+        }, (err) => { this.plugin.errorDeal(err); console.log(err); loading.dismiss() }, () => loading.dismiss());
     }
 }
 

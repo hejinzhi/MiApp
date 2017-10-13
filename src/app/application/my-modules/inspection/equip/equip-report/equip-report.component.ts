@@ -1,3 +1,4 @@
+import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs/Rx';
 import { UserState } from './../../../../../shared/models/user.model';
 import { Store } from '@ngrx/store';
@@ -28,12 +29,8 @@ export class EquipReportComponent implements OnInit, OnDestroy {
     machineId: string;
     checkLs: CheckLists
     user: UserState;
-    mySub: Subscription
-    testData = [
-        { name: '是否在指定位置', code: 'a' },
-        { name: '是否有电', code: 'b' },
-        { name: '是否有水', code: 'c' }
-    ]
+    mySub: Subscription;
+    translateTexts: any = {};
     constructor(
         private fb: FormBuilder,
         private validExd: NgValidatorExtendService,
@@ -43,12 +40,23 @@ export class EquipReportComponent implements OnInit, OnDestroy {
         private plugin: PluginService,
         private navCtr: NavController,
         private $store: Store<MyStore>,
-        private barcodeScanner: BarcodeScanner
+        private barcodeScanner: BarcodeScanner,
+        private translate: TranslateService
     ) { }
 
     ngOnInit() {
+        this.subscribeTranslateText();
         this.checkCache();
         this.mySub = this.$store.select('userReducer').subscribe((user: UserState) => this.user = user);
+    }
+
+    subscribeTranslateText() {
+        this.translate.get(['help', 'cancel',
+            'confirm', 'inspection.bossCom.hasUnsubmitData', 'inspection.equipcom.hadChecked',
+            'inspection.equipcom.noSchedule', 'submit_success'
+        ]).subscribe((res) => {
+            this.translateTexts = res;
+        })
     }
 
     ngOnDestroy() {
@@ -63,18 +71,18 @@ export class EquipReportComponent implements OnInit, OnDestroy {
         let data: any;
         if (data = this.cacheService.get(this.className, this.type + '')) {
             let confirm = this.alertCtrl.create({
-                title: `帮助`,
-                message: `发现之前有未提交的数据, 是否恢复?`,
+                title: this.translateTexts['help'],
+                message: this.translateTexts['inspection.bossCom.hasUnsubmitData'],
                 buttons: [
                     {
-                        text: '取消',
+                        text: this.translateTexts['cancel'],
                         handler: () => {
                             this.init({});
                             this.clearCache();
                         }
                     },
                     {
-                        text: '确定',
+                        text: this.translateTexts['confirm'],
                         handler: () => {
                             this.init(data, data.checkLists)
                         }
@@ -205,14 +213,14 @@ export class EquipReportComponent implements OnInit, OnDestroy {
         this.equipService.getMachineCheckList(id).subscribe((d) => {
             if (d) {
                 if (d.REPORT_HEADER_ID) {
-                    this.plugin.showToast('此设备已检查')
+                    this.plugin.showToast(this.translateTexts['inspection.equipcom.hadChecked']);
                 } else {
                     this.checkLs = d;
                     let detail = { MACHINE_NO: id, MACHINE_ID: this.checkLs.MACHINE_ID, DESCRIPTION: this.checkLs.DESCRIPTION };
                     this.init(detail, d);
                 }
             } else {
-                this.plugin.showToast('没找到此设备的排程');
+                this.plugin.showToast(this.translateTexts['inspection.equipcom.noSchedule']);
             }
             loading && loading.dismiss()
         }, (err) => { this.plugin.errorDeal(err); loading && loading.dismiss() });
@@ -228,7 +236,7 @@ export class EquipReportComponent implements OnInit, OnDestroy {
         loading.present();
         this.equipService.updateQquipReport(send).subscribe((d) => {
             console.log(d);
-            this.plugin.showToast('提交成功');
+            this.plugin.showToast(this.translateTexts['submit_success']);
             this.clearCache();
             this.navCtr.pop()
         }, (err) => { this.plugin.errorDeal(err); console.log(err); loading.dismiss() }, () => loading.dismiss());
