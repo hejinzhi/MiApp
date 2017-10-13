@@ -41,7 +41,7 @@ export class BossService {
 
   subscribeTranslateText() {
     this.translate.stream(['not_found',
-      'http_error1', 'http_error2', 'http_error3'
+      'http_error1', 'http_error2', 'http_error3', 'inspection.bossCom.noOwnIssues', 'inspection.bossCom.noNote'
     ]).subscribe((res) => {
       this.translateTexts = res;
     })
@@ -184,7 +184,7 @@ export class BossService {
       }
     }).subscribe((line: BossReportLineState[]) => {
       if (waiting && line.length === 0) {
-        this.plugin.showToast('没查到待改善事项')
+        this.plugin.showToast(this.translateTexts['inspection.bossCom.noOwnIssues'])
       } else {
         cb && cb();
       }
@@ -218,7 +218,7 @@ export class BossService {
       map((list: any) => list ? list : []
       ).subscribe((line: BossReportLineState[]) => {
         if (waiting && line.length === 0) {
-          this.plugin.showToast('没查到记录')
+          this.plugin.showToast(this.translateTexts['inspection.bossCom.noNote'])
         } else {
           cb && cb();
         }
@@ -228,6 +228,7 @@ export class BossService {
             break;
           case EquipConfig.type:
             this.$store.dispatch(new Lines_All_Equip_Search(line))
+            break;
         }
       }, (err) => waiting ? this.plugin.errorDeal(err) : '', () => {
         if (loading) {

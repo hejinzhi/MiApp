@@ -1,3 +1,4 @@
+import { PipesModule } from './../../../../../../shared/pipe/pipes.module';
 import { NgModule } from '@angular/core';
 import { IonicModule } from 'ionic-angular';
 import { EquipItemComponent } from './equip-item.component';
@@ -7,7 +8,7 @@ import { TranslateModule } from '@ngx-translate/core';
 
 @NgModule({
   declarations: [EquipItemComponent],
-  imports: [IonicPageModule.forChild(EquipItemComponent), TranslateModule.forChild()],
+  imports: [PipesModule, IonicPageModule.forChild(EquipItemComponent), TranslateModule.forChild()],
   entryComponents: [
     EquipItemComponent
   ],

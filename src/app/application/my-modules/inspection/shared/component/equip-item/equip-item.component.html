@@ -7,20 +7,20 @@
         <ion-col col-2>
           {{item.OWNER_EMPNO?.split(',')[0]}}
         </ion-col>
-        <ion-col col-5 *ngIf="item.LOCATION">
-          {{item.LOCATION.length>10?item.LOCATION.substr(0,10)+'..':item.LOCATION}}
+        <ion-col col-5 *ngIf="item.LOCATION" class="text-right">
+          {{(item.LOCATION.length>10?item.LOCATION.substr(0,10)+'..':item.LOCATION) | sgChineseConv}}
         </ion-col>
         <ion-col col-5>
           {{item.MACHINE_NAME}}
         </ion-col>
         <ion-col col-5 *ngIf="item.CHECK_LIST_CN">
-          {{item.CHECK_LIST_CN.length>6?item.CHECK_LIST_CN.substr(0,6)+'..':item.CHECK_LIST_CN}}
+          {{(item.CHECK_LIST_CN.length>6?item.CHECK_LIST_CN.substr(0,6)+'..':item.CHECK_LIST_CN) | sgChineseConv}}
         </ion-col>
         <ion-col col-2>
           {{item.PROBLEM_STATUS}}
         </ion-col>
         <ion-col col-12>
-          {{item.PROBLEM_DESC}}
+          {{item.PROBLEM_DESC | sgChineseConv}}
         </ion-col>
       </ion-row>
     </ion-item>

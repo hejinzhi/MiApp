@@ -56,7 +56,7 @@
         </div>
         <div class="badge" *ngIf="(tips.adminCheck  | async )> 0 ">{{tips.adminCheck | async}}</div>
       </ion-col>
-      <ion-col col-4 class="grid-col">
+      <ion-col col-4 class="grid-col" (tap)="goToPageCheckNotes()">
         <div class="grid-content">
           <a>
             <img src="assets/icon/card.gif" class="grid-img">

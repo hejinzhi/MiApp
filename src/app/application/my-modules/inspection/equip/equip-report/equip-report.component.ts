@@ -1,3 +1,4 @@
+import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs/Rx';
 import { UserState } from './../../../../../shared/models/user.model';
 import { Store } from '@ngrx/store';
@@ -7,6 +8,7 @@ import { EquipService } from './../shared/service/equip.service';
 import { IonicPage, AlertController, NavParams, NavController } from 'ionic-angular';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormBuilder, FormGroup, FormArray, FormControl } from '@angular/forms';
+import { BarcodeScanner } from '@ionic-native/barcode-scanner';
 
 import * as moment from 'moment'
 
@@ -24,15 +26,11 @@ export class EquipReportComponent implements OnInit, OnDestroy {
     reportForm: FormGroup;
     className: string = this.constructor.name;
     type: string = 'all';
-    machineId:string;
+    machineId: string;
     checkLs: CheckLists
-    user:UserState;
-    mySub:Subscription
-    testData = [
-        { name: '是否在指定位置', code: 'a' },
-        { name: '是否有电', code: 'b' },
-        { name: '是否有水', code: 'c' }
-    ]
+    user: UserState;
+    mySub: Subscription;
+    translateTexts: any = {};
     constructor(
         private fb: FormBuilder,
         private validExd: NgValidatorExtendService,
@@ -41,12 +39,24 @@ export class EquipReportComponent implements OnInit, OnDestroy {
         private equipService: EquipService,
         private plugin: PluginService,
         private navCtr: NavController,
-        private $store: Store<MyStore>
+        private $store: Store<MyStore>,
+        private barcodeScanner: BarcodeScanner,
+        private translate: TranslateService
     ) { }
 
     ngOnInit() {
+        this.subscribeTranslateText();
         this.checkCache();
-        this.mySub = this.$store.select('userReducer').subscribe((user:UserState) => this.user = user);
+        this.mySub = this.$store.select('userReducer').subscribe((user: UserState) => this.user = user);
+    }
+
+    subscribeTranslateText() {
+        this.translate.get(['help', 'cancel',
+            'confirm', 'inspection.bossCom.hasUnsubmitData', 'inspection.equipcom.hadChecked',
+            'inspection.equipcom.noSchedule', 'submit_success'
+        ]).subscribe((res) => {
+            this.translateTexts = res;
+        })
     }
 
     ngOnDestroy() {
@@ -61,18 +71,18 @@ export class EquipReportComponent implements OnInit, OnDestroy {
         let data: any;
         if (data = this.cacheService.get(this.className, this.type + '')) {
             let confirm = this.alertCtrl.create({
-                title: `帮助`,
-                message: `发现之前有未提交的数据, 是否恢复?`,
+                title: this.translateTexts['help'],
+                message: this.translateTexts['inspection.bossCom.hasUnsubmitData'],
                 buttons: [
                     {
-                        text: '取消',
+                        text: this.translateTexts['cancel'],
                         handler: () => {
                             this.init({});
                             this.clearCache();
                         }
                     },
                     {
-                        text: '确定',
+                        text: this.translateTexts['confirm'],
                         handler: () => {
                             this.init(data, data.checkLists)
                         }
@@ -111,7 +121,7 @@ export class EquipReportComponent implements OnInit, OnDestroy {
     */
     initForm(work: any = {}, checkLists?: CheckLists): FormGroup {
         let array = this.fb.array([]);
-        this.initLists(work,array,checkLists);
+        this.initLists(work, array, checkLists);
         return this.fb.group({
             INSPECT_DATE: [work.INSPECT_DATE || moment(new Date()).format('YYYY-MM-DD HH:mm')],
             MACHINE_NO: [work.MACHINE_NO || 'S 6 -- 1F -- 01(1)'],
@@ -122,7 +132,7 @@ export class EquipReportComponent implements OnInit, OnDestroy {
     }
 
     initLists(work: any, lists: FormArray, checkLists?: CheckLists) {
-        if(checkLists) {
+        if (checkLists) {
             checkLists.CHECK_LIST.forEach((val, num) => {
                 let check = work.lists && work.lists.length > 0 ? work.lists[num].check : false;
                 let group = this.fb.group({
@@ -144,8 +154,8 @@ export class EquipReportComponent implements OnInit, OnDestroy {
                 lists.push(group)
             })
         } else {
-            if(work.lists && work.lists.length > 0) {
-                work.lists.forEach((el:any) => {
+            if (work.lists && work.lists.length > 0) {
+                work.lists.forEach((el: any) => {
                     let check = el.check
                     let group = this.fb.group({
                         check: [el.check],
@@ -164,7 +174,7 @@ export class EquipReportComponent implements OnInit, OnDestroy {
                     })
                     lists.push(group)
                 });
-                
+
             }
         }
     }
@@ -186,8 +196,13 @@ export class EquipReportComponent implements OnInit, OnDestroy {
     }
 
     scan() {
-        console.log('scanning');
-        this.reportForm.get('MACHINE_NO').setValue('scan后得到的编号')
+        this.barcodeScanner.scan().then((barcodeData) => {
+            console.log(barcodeData)
+            this.reportForm.get('MACHINE_NO').setValue(barcodeData);
+            this.checkID();
+        }, (err) => {
+            console.log(err)
+        });
     }
 
     checkID() {
@@ -196,44 +211,44 @@ export class EquipReportComponent implements OnInit, OnDestroy {
         let loading = this.plugin.createLoading();
         loading.present();
         this.equipService.getMachineCheckList(id).subscribe((d) => {
-            if(d) {
-                if(d.REPORT_HEADER_ID) {
-                    this.plugin.showToast('此设备已检查')
+            if (d) {
+                if (d.REPORT_HEADER_ID) {
+                    this.plugin.showToast(this.translateTexts['inspection.equipcom.hadChecked']);
                 } else {
                     this.checkLs = d;
-                    let detail = {MACHINE_NO:id,MACHINE_ID:this.checkLs.MACHINE_ID,DESCRIPTION:this.checkLs.DESCRIPTION};
+                    let detail = { MACHINE_NO: id, MACHINE_ID: this.checkLs.MACHINE_ID, DESCRIPTION: this.checkLs.DESCRIPTION };
                     this.init(detail, d);
                 }
             } else {
-                this.plugin.showToast('没找到此设备的排程');
+                this.plugin.showToast(this.translateTexts['inspection.equipcom.noSchedule']);
             }
             loading && loading.dismiss()
-        }, (err) => { this.plugin.errorDeal(err); loading && loading.dismiss()});
+        }, (err) => { this.plugin.errorDeal(err); loading && loading.dismiss() });
     }
 
     submit() {
         let send = this.reportForm.value;
         console.log(send);
-        send.LOCATION= this.checkLs.LOCATION;
+        send.LOCATION = this.checkLs.LOCATION;
         send.INSPECTOR_NAME = this.user.nickname;
         send.SCHEDULE_HEADER_ID = this.checkLs.SCHEDULE_HEADER_ID;
         let loading = this.plugin.createLoading();
         loading.present();
         this.equipService.updateQquipReport(send).subscribe((d) => {
             console.log(d);
-            this.plugin.showToast('提交成功');
+            this.plugin.showToast(this.translateTexts['submit_success']);
             this.clearCache();
             this.navCtr.pop()
-        },(err) => {this.plugin.errorDeal(err);console.log(err);loading.dismiss()},() => loading.dismiss());
+        }, (err) => { this.plugin.errorDeal(err); console.log(err); loading.dismiss() }, () => loading.dismiss());
     }
 }
 
 interface CheckLists {
     MACHINE_ID: string;
     MACHINE_NO: string;
-    DESCRIPTION:string;
-    LOCATION?:string;
-    SCHEDULE_HEADER_ID?:string;
-    REPORT_HEADER_ID?:string;
+    DESCRIPTION: string;
+    LOCATION?: string;
+    SCHEDULE_HEADER_ID?: string;
+    REPORT_HEADER_ID?: string;
     CHECK_LIST: { CHECK_ID: number, CN: string, EN: string }[];
 }

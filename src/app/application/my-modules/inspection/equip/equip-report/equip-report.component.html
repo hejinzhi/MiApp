@@ -1,8 +1,8 @@
 <ion-header>
   <ion-navbar>
-    <ion-title>巡检报告</ion-title>
+    <ion-title>{{'inspection.report' | translate}}</ion-title>
     <ion-buttons end>
-      <button ion-button (tap)="checkID()" [disabled]="!reportForm?.get('MACHINE_NO').value">查找</button>
+      <button ion-button (tap)="checkID()" [disabled]="!reportForm?.get('MACHINE_NO').value">{{'inspection.equipcom.find' | translate}}</button>
     </ion-buttons>
   </ion-navbar>
 </ion-header>
@@ -10,7 +10,7 @@
   <form [formGroup]="reportForm" *ngIf="reportForm">
     <ion-list>
       <ion-item class="disabled">
-        <ion-label>*巡检时间</ion-label>
+        <ion-label>*{{'inspection.equipcom.checkTime' | translate}}</ion-label>
         <ion-note item-right>
           {{reportForm.get('INSPECT_DATE').value}}
         </ion-note>
@@ -19,7 +19,7 @@
         <ion-row>
           <ion-col col-10 class="fix-height">
             <ion-item>
-              <ion-label>*设备编号</ion-label>
+              <ion-label>*{{'inspection.equipcom.machine_no' | translate}}</ion-label>
               <ion-input type="text" formControlName="MACHINE_NO"></ion-input>>
             </ion-item>
           </ion-col>
@@ -47,7 +47,7 @@
                 </ion-col>
                 <ion-col col-3 class="block-none">
                   <ion-item>
-                    <ion-label><span class="float-righ1t">异常</span></ion-label>
+                    <ion-label><span class="float-righ1t">{{'inspection.ipqa.exception' | translate}}</span></ion-label>
                     <ion-checkbox color="#3773F7" item-end formControlName="check"></ion-checkbox>
                   </ion-item>
                 </ion-col>
@@ -61,11 +61,11 @@
             </ion-item> -->
             <div class="detail">
               <ion-item *ngIf="reportForm.get('lists').get(i+'').controls['PROBLEM_DESC']">
-                <ion-label>*问题详述</ion-label>
+                <ion-label>*{{'inspection.bossCom.issueDetail' | translate}}</ion-label>
                 <ion-input type="text" formControlName="PROBLEM_DESC"></ion-input>
               </ion-item>
               <ion-item *ngIf="reportForm.get('lists').get(i+'').controls['PROBLEM_DESC']">
-                <div>添加图片</div>
+                <div>{{'inspection.bossCom.figure' | translate}}</div>
                 <sg-photo-view formControlName="imgs"></sg-photo-view>
               </ion-item>
               <sg-search-colleague *ngIf="reportForm.get('lists').get(i+'').controls['OWNER_EMPNO']"  formControlName="OWNER_EMPNO"
@@ -76,6 +76,6 @@
         </div>
       </div>
     </ion-list>
-    <button ion-button full type="button" (tap)="submit()" [disabled]="reportForm.invalid">提交</button>
+    <button ion-button full type="button" (tap)="submit()" [disabled]="reportForm.invalid">{{'inspection.ipqa.submit' | translate}}</button>
   </form>
 </ion-content>

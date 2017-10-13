@@ -54,6 +54,10 @@ export class BossMenuComponent implements OnInit {
         
     }
 
+    isAdmin() {
+        return this.bossService.isBossAdmin()
+    }
+
     goToCheckListPage() {
         this.navCtrl.push('CheckListComponent');
     }

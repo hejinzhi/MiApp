@@ -1,3 +1,4 @@
+import { TranslateService } from '@ngx-translate/core';
 import { Lines_Equip_Delete } from './../../actions/lines-equip.action';
 import { Lines_Delete } from './../../actions/line.action';
 import { Lines_All_Update } from "./../../actions/lineAll.action";
@@ -26,14 +27,9 @@ export class IssueDetailComponent implements OnInit {
     reportForm: FormGroup
     adminReport: FormGroup;
     admin: boolean;
-
     empRequired: boolean;
-    statusList = [
-        { type: 'New', value: '待分配' },
-        { type: 'Waiting', value: '待处理' },
-        { type: 'Done', value: '已处理' },
-        { type: 'Highlight', value: 'Highlight' }
-    ]
+    translateTexts: any = {};
+    statusList: any[];
     constructor(
         private navParams: NavParams,
         private navCtrl: NavController,
@@ -42,10 +38,12 @@ export class IssueDetailComponent implements OnInit {
         private validExd: NgValidatorExtendService,
         private bossService: BossService,
         private plugin: PluginService,
-        private $store: Store<MyStore>
+        private $store: Store<MyStore>,
+        private translate: TranslateService
     ) { }
 
     ngOnInit() {
+        this.subscribeTranslateText();
         this.type = this.navParams.get('type') || 0;
         // this.type =0;
         this.issue = this.navParams.get('issue') || {};
@@ -64,19 +62,34 @@ export class IssueDetailComponent implements OnInit {
         }
     }
 
+    subscribeTranslateText() {
+        this.translate.get(['cancel',
+            'confirm', 'inspection.confirmChangeOwner', 'inspection.bossCom.tip', 'submit_success',
+            'inspection.statusNew', 'inspection.statusWaiting', 'inspection.statusDone' 
+        ]).subscribe((res) => {
+            this.translateTexts = res;
+            this.statusList = [
+                { type: 'New', value: this.translateTexts['inspection.statusNew'] },
+                { type: 'Waiting', value: this.translateTexts['inspection.statusWaiting'] },
+                { type: 'Done', value: this.translateTexts['inspection.statusDone'] },
+                { type: 'Highlight', value: 'Highlight' }
+            ]
+        })
+    }
+
     pushBack() {
         let confirm = this.alertCtrl.create({
-            title: `提示`,
-            message: `确定此事项不是本人负责的吗?`,
+            title: this.translateTexts['inspection.bossCom.tip'],
+            message: this.translateTexts['inspection.confirmChangeOwner'],
             buttons: [
                 {
-                    text: '取消',
+                    text: this.translateTexts['cancel'],
                     handler: () => {
 
                     }
                 },
                 {
-                    text: '确定',
+                    text: this.translateTexts['confirm'],
                     handler: () => {
                         let loading = this.plugin.createLoading();
                         loading.present();
@@ -116,29 +129,6 @@ export class IssueDetailComponent implements OnInit {
         return group
     }
 
-    // changeStatus() {
-    //     if(this.status === this.oldStatus) return;
-    //     let confirm = this.alertCtrl.create({
-    //         title: `提示`,
-    //         message: `确定要更改报告状态吗?`,
-    //         buttons: [
-    //           {
-    //             text: '取消',
-    //             handler: () => {
-    //                 this.status = this.oldStatus;
-    //             }
-    //           },
-    //           {
-    //             text: '确定',
-    //             handler: () => {
-    //                 this.navCtrl.pop();
-    //             }
-    //           }
-    //         ]
-    //       });
-    //       confirm.present();
-    // }
-
     submit() {
         let send = Object.assign({}, this.reportForm.value);
         send.PROBLEM_STATUS = 'Done';
@@ -156,7 +146,7 @@ export class IssueDetailComponent implements OnInit {
                     this.$store.dispatch(new Lines_Equip_Delete(send));
                     break;
             }
-            this.plugin.showToast('提交成功');
+            this.plugin.showToast(this.translateTexts['submit_success']);
             this.navCtrl.pop();
         }, () => loading && loading.dismiss())
     }
@@ -168,7 +158,7 @@ export class IssueDetailComponent implements OnInit {
         let loading = this.plugin.createLoading();
         loading.present();
         this.bossService.updateLinesByAdmin(send, () => {
-            this.plugin.showToast('更新成功')
+            this.plugin.showToast(this.translateTexts['submit_success'])
             setTimeout(() => this.navCtrl.pop(), 300);
             this.$store.dispatch(new Lines_All_Update(send));
         }, () => loading && loading.dismiss())
