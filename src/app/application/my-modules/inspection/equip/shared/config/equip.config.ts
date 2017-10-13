@@ -5,6 +5,7 @@ import { EnvConfig } from './../../../../../../shared/config/env.config';
 export class EquipConfig {
     // static getNamesUrl = EnvConfig.baseUrl + 'name';
 
+    static type:string = 'equip';
     static UploadMachineUrl = EnvConfig.baseUrl + 'IPQA/UploadMachineHdr';
     
     static getMachineListUrl = EnvConfig.baseUrl + 'IPQA/GetMachineList';
@@ -14,4 +15,14 @@ export class EquipConfig {
     static getMachineScheduleUrl = EnvConfig.baseUrl + 'IPQA/GetMachineSchedule';
 
     static setMachineScheduleUrl = EnvConfig.baseUrl + 'IPQA/SetMachineSchedule';
+
+    /**
+     * url
+     * get
+     * 2017-10-11
+     * @param {string} {machineNO} 设备编号
+     * @static
+     */
+    static getMachineCheckList = EnvConfig.baseUrl + 'IPQA/GetMachineCheckList?machineNO={machineNO}';
+    
 }

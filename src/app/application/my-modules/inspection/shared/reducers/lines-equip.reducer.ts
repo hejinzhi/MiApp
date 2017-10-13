@@ -1,16 +1,16 @@
 import { BossReportLineState } from './../../boss/shared/store';
-import * as line from "./../actions/line.action";
+import * as line from "./../actions/lines-equip.action";
 
 
 const initialState: BossReportLineState[] = [];
 
-export function lineReducer(state = initialState, action: line.LineActions): BossReportLineState[] {
+export function linesEquipReducer(state = initialState, action: line.LineActions): BossReportLineState[] {
     switch (action.type) {
-        case line.LINES_CHECK:
+        case line.LINES_EQUIP_CHECK:
             return action.payload;
-        case line.LINES_DELETE:
+        case line.LINES_EQUIP_DELETE:
             return state.filter((s) => s.LINE_ID !== action.payload.LINE_ID)
-        case line.LINES_UPDATE:
+        case line.LINES_EQUIP_UPDATE:
             return state.map((s) => {
                 let update = action.payload
                 if(s.LINE_ID === update.LINE_ID){

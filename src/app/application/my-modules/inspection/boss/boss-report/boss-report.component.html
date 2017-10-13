@@ -1,7 +1,7 @@
 <ion-header>
   <ion-navbar>
     <ion-title>巡检报告</ion-title>
-    <ion-buttons end *ngIf="admin">
+    <ion-buttons end *ngIf="admin || hr">
       <button ion-button (tap)="hideAll()">全部折叠</button>
     </ion-buttons>
   </ion-navbar>
@@ -96,6 +96,6 @@
       </div>
       <ion-item-divider class="add" (click)="addCheckSite()" *ngIf="!admin && !hr">+添加巡检位置</ion-item-divider>
     </ion-list>
-    <button ion-button full type="button" (tap)="submit()" [disabled]="reportForm.invalid" *ngIf="!hr">提交</button>
+    <button ion-button full type="button" (tap)="submit()" [disabled]="reportForm.invalid" *ngIf="!hr&&!admin || (admin && commentable)">提交</button>
   </form>
 </ion-content>

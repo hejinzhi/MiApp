@@ -1,3 +1,8 @@
+import { Lines_All_Equip_Search } from './../../../shared/actions/lines-all-equip.action';
+import { EquipConfig } from './../../../equip/shared/config/equip.config';
+import { Lines_Equip_Check } from './../../../shared/actions/lines-equip.action';
+import { BossConfig } from './../config/boss.config';
+import { Observable } from 'rxjs/Observable';
 import { Query } from './../../../shared/model/common';
 import { Lines_All_Search } from './../../../shared/actions/lineAll.action';
 import { Lines_Check, Lines_Delete } from './../../../shared/actions/line.action';
@@ -8,12 +13,10 @@ import { Slides, Loading } from 'ionic-angular';
 import { UserState } from './../../../../../../shared/models/user.model';
 import { MyStore } from './../../../../../../shared/store';
 import { Store } from '@ngrx/store';
-import { Observable } from 'rxjs';
 import { BossReportState, BossReportModel, BossReportInsideModel, BossReportLineState } from './../store';
 import { PluginService } from './../../../../../../core/services/plugin.service';
 import { MyHttpService } from './../../../../../../core/services/myHttp.service';
 import { Injectable } from '@angular/core';
-import { BossConfig } from '../config/boss.config';
 import { EnvConfig } from '../../../../../../shared/config/env.config';
 import { TranslateService } from '@ngx-translate/core';
 
@@ -33,7 +36,7 @@ export class BossService {
   ) {
     this.subscribeTranslateText();
     this.$store.select('userReducer').subscribe((user: UserState) => this.user = user);
-    this.getOwnUndoneReport();
+    this.getOwnUndoneReport(false, BossConfig.type);
   }
 
   subscribeTranslateText() {
@@ -108,7 +111,7 @@ export class BossService {
             } else {
               let l = request.length;
               request.push(this.uploadPicture(i), (url: any) => {
-                li.PROBLEM_PICTURES = !li.PROBLEM_PICTURES ? url.value : li.PROBLEM_PICTURES + ',' + url.value;
+                li.PROBLEM_PICTURES = !li.PROBLEM_PICTURES ? url : li.PROBLEM_PICTURES + ',' + url;
                 console.log('完成上传图片' + (l + 1));
               });
             }
@@ -159,10 +162,9 @@ export class BossService {
       .map(res => res.json())
   }
 
-  getOwnUndoneReport(waiting: boolean = false, cb?: Function) {
+  getOwnUndoneReport(waiting: boolean = false, type: string, cb?: Function, ) {
     let userNo = this.user.empno;
     let status = ['Waiting', 'Highlight'];
-    let type = 'boss';
     let loading: Loading;
     if (waiting) {
       loading = this.plugin.createLoading()
@@ -186,7 +188,15 @@ export class BossService {
       } else {
         cb && cb();
       }
-      this.$store.dispatch(new Lines_Check(line));
+      switch (type) {
+        case 'boss':
+          this.$store.dispatch(new Lines_Check(line));
+          break;
+        case 'equip':
+          this.$store.dispatch(new Lines_Equip_Check(line));
+          break;
+      }
+
     }, (err) => waiting ? this.plugin.errorDeal(err) : '', () => {
       if (loading) {
         loading.dismiss();
@@ -202,9 +212,7 @@ export class BossService {
       loading.present();
     }
     return Observable.fromPromise(this.myHttp.get(BossConfig.getAdminLinesAll.replace('{nameID}', query.nameID + '')
-      .replace('{dateFM}', query.dateFM).replace('{dateTO}', query.dateTO).replace('{company_name}', EnvConfig.companyID).replace('{type}', 'boss'))).map((res) => {
-        console.log(res.json());
-
+      .replace('{dateFM}', query.dateFM).replace('{dateTO}', query.dateTO).replace('{company_name}', EnvConfig.companyID).replace('{type}', type))).map((res) => {
         return res.json()
       }).
       map((list: any) => list ? list : []
@@ -214,7 +222,13 @@ export class BossService {
         } else {
           cb && cb();
         }
-        this.$store.dispatch(new Lines_All_Search(line));
+        switch (type) {
+          case BossConfig.type:
+            this.$store.dispatch(new Lines_All_Search(line));
+            break;
+          case EquipConfig.type:
+            this.$store.dispatch(new Lines_All_Equip_Search(line))
+        }
       }, (err) => waiting ? this.plugin.errorDeal(err) : '', () => {
         if (loading) {
           loading.dismiss();
@@ -223,7 +237,7 @@ export class BossService {
       )
   }
 
-  handleIssue(obj: { PROBLEM_STATUS: string, ACTION_DESC: string, ACTION_DATE: string, ACTION_STATUS: string, SCORE: string, LINE_ID: number }) {
+  handleIssue(obj: { PROBLEM_STATUS: string, ACTION_DESC: string, ACTION_DATE: string, ACTION_STATUS: string, SCORE: number, LINE_ID: number }) {
     return Observable.fromPromise(this.inspectionService.handleProblem(obj)).map((res) => res.status);
   }
 
@@ -235,11 +249,14 @@ export class BossService {
       data.ACTION_PICTURES = '';
       imgs.forEach((i) => {
         if (i.indexOf(EnvConfig.baseUrl) > -1) {
+          i = i.replace(EnvConfig.baseUrl, '');
           data.ACTION_PICTURES = data.ACTION_PICTURES ? data.ACTION_PICTURES + ',' + i : i;
         } else {
           let l = request.length;
           request.push(this.uploadPicture(i), (url: any) => {
-            data.ACTION_PICTURES = data.ACTION_PICTURES ? data.ACTION_PICTURES + ',' + url.value : url.value;
+            data.ACTION_PICTURES = data.ACTION_PICTURES ? data.ACTION_PICTURES + ',' + url : url;
+            console.log(data);
+
             console.log('完成上传图片' + (l + 1));
           });
         }
@@ -252,10 +269,15 @@ export class BossService {
     }, (err) => this.plugin.errorDeal(err), () => final && final());;
 
     if (request && request.length > 0) {
+      console.log(data);
       return Observable.forkJoin(...request).subscribe((imgs) => upload(data), (err) => { this.plugin.errorDeal(err); final && final() });
     } else {
       return upload(data);
     }
+  }
+
+  deleteLine(id: number) {
+    return Observable.fromPromise(this.myHttp.delete(BossConfig.deleteLine.replace('{line_id}', id + '')));
   }
 
   updateLinesByAdmin(data: BossReportLineState, cb?: Function, final?: Function) {

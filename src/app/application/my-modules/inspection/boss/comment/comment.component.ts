@@ -70,7 +70,8 @@ export class CommentComponent implements OnInit {
         let res: any = await this.bossService.getScheduleInfo(this.name_id, this.start_date, this.end_date);
         if (!res) return;
         this.AllList = res.json();
-
+        console.log(this.AllList);
+        
         if (this.AllList) {
             //未交報告
             this.NoReportList = this.AllList.filter((v: any) => (v.HEADER_ID === '' || v.HEADER_ID == null || v.HEADER_ID == 0));
@@ -79,7 +80,7 @@ export class CommentComponent implements OnInit {
             this.NoCommentList = this.AllList.filter((v: any) => (v.HEADER_ID > 0 && (v.SCORE === '' || v.SCORE == null)));
 
             //已評分   
-            this.CommentList = this.AllList.filter((v: any) => (v.HEADER_ID > 0 && (v.SCORE !== '')));
+            this.CommentList = this.AllList.filter((v: any) => (+v.HEADER_ID > 0 && v.SCORE));
 
         }
     }

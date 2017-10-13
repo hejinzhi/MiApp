@@ -1,7 +1,7 @@
 <ion-grid *ngIf="item">
     <ion-item>
       <ion-row>
-        <ion-col col-5>
+        <ion-col col-5 *ngIf="item.INSPECT_DATE">
           {{item.INSPECT_DATE.substr(0,10)}} {{item.INSPECT_TIME}}
         </ion-col>
         <ion-col col-3>

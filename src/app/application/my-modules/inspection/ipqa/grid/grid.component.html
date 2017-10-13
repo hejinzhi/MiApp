@@ -7,6 +7,8 @@
         <div [ngClass]="m.showCheckbox ? 'grid-content green' :'grid-content' ">
           <div class="grid-name">{{m.title |sgChineseConv}}</div>
           <div class="gou" *ngIf="m.showCheckbox"></div>
+          <div class="status post" *ngIf="m.status === 'posted'">已提交</div>
+          <div class="status unpost" *ngIf="m.status === 'unpost'">未提交</div>
         </div>
       </ion-col>
     </ion-row>

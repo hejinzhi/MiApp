@@ -5,7 +5,7 @@
 </ion-header>
 <ion-content class="page-content">
   <div class='msg-content' (scroll)="doscroll($event)">
-    <ion-list *ngFor="let item of list;let i=index " class="page-list">
+    <ion-list *ngFor="let item of list;let i=index " class="page-list" (tap)="goToDetailPage(item)">
       <div class="list-time">
         <div class="list-time-content">{{item.time | sgTimeDesc | sgChineseConv}}</div>
       </div>

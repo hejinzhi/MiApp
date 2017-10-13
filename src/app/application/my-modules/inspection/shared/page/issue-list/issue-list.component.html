@@ -21,7 +21,7 @@
       <sg-boss-item *ngFor="let item of list | async" (tap)="toDetail(item)" [item]="item"></sg-boss-item>
     </div>
     <div class="lists" *ngIf="type === 2">
-      <sg-equip-item *ngFor="let item of testData2" (tap)="toDetail(item)" [item]="item"></sg-equip-item>
+      <sg-equip-item *ngFor="let item of list | async" (tap)="toDetail(item)" [item]="item"></sg-equip-item>
     </div>
   </ion-list>
 </ion-content>

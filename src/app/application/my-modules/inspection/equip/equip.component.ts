@@ -1,3 +1,4 @@
+import { EquipService } from './shared/service/equip.service';
 import { NavController, IonicPage } from 'ionic-angular';
 import { Observable, Observer } from 'rxjs/Rx';
 import { Component, OnInit } from '@angular/core';
@@ -10,6 +11,10 @@ import { TranslateService } from '@ngx-translate/core';
 })
 export class EquipComponent implements OnInit {
 
+    tips:{
+        ownImprove: Observable<number>,
+        adminCheck: Observable<number>,
+    }
     translateTexts: any = {
         'inspection.ipqa.stationTitle': '',
         'inspection.ipqa.module': ''
@@ -17,12 +22,19 @@ export class EquipComponent implements OnInit {
 
     constructor(
         private navCtrl: NavController,
-        private translate: TranslateService
+        private translate: TranslateService,
+        private equipService: EquipService
     ) {
 
     }
 
     async ngOnInit() {
+        this.tips = {
+            ownImprove:Observable.of(0),
+            adminCheck:Observable.of(0),
+        }
+        this.tips.ownImprove = this.equipService.ObserveOwnLinesCount();
+        this.tips.adminCheck = this.equipService.ObserveAdminLinesDealCount();
     }
 
     goToPage(page: string) {
@@ -35,7 +47,7 @@ export class EquipComponent implements OnInit {
     }
 
     goToPageImprove() {
-        this.navCtrl.push('IssueListComponent',{type:2})
+        this.equipService.getOwnUndoneReport(true,() => this.navCtrl.push('IssueListComponent',{type:2}));
     }
 
     goToPageAdminCheck() {

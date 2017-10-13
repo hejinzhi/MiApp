@@ -45,6 +45,7 @@
             <div class="grid-name">{{'inspection.gaishan' | translate}}</div>
           </a>
         </div>
+        <div class="badge" *ngIf="(tips.ownImprove | async)>0">{{tips.ownImprove | async}}</div>
       </ion-col>
       <ion-col col-4 class="grid-col" (tap)="goToPageAdminCheck()">
         <div class="grid-content">
@@ -53,6 +54,7 @@
             <div class="grid-name">{{'inspection.problem' | translate}}</div>
           </a>
         </div>
+        <div class="badge" *ngIf="(tips.adminCheck  | async )> 0 ">{{tips.adminCheck | async}}</div>
       </ion-col>
       <ion-col col-4 class="grid-col">
         <div class="grid-content">

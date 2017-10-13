@@ -22,11 +22,13 @@ export class ListComponent implements OnInit {
     fromPage: string; //记录从哪个页面进来 
     formData: IpqaModel[];
     title: string;
+    roleName: string;
 
 
     async ngOnInit() {
         this.title = this.navParams.get('title');
         this.fromPage = this.navParams.get('fromPage');
+        this.roleName = this.navParams.get('roleName');
 
     }
 
@@ -45,7 +47,12 @@ export class ListComponent implements OnInit {
         }
         else if (this.fromPage === 'handler') {
             let currentUser = JSON.parse(localStorage.getItem('currentUser'));
-            let res = await this.inspectionService.getExcReportData('Waiting', currentUser.empno, 'IPQA', EnvConfig.companyID);
+            let res;
+            if (this.roleName === 'INSPECT_IPQA_ADMIN') {
+                res = await this.inspectionService.getExcReportData('Waiting', '', 'IPQA', EnvConfig.companyID);
+            } else {
+                res = await this.inspectionService.getExcReportData('Waiting', currentUser.empno, 'IPQA', EnvConfig.companyID);
+            }
             this.formData = res.json();
         }
     }

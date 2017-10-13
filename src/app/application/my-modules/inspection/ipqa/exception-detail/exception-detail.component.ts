@@ -69,7 +69,6 @@ export class ExceptionDetailComponent implements OnInit {
     }
 
     async createFormMode() {
-        console.log(this.fromPage);
         if (this.fromPage === 'checklist') {
             this.localStorageName = this.inspectionService.getLocalStorageExceptionName(this.station.STATION_ID);
             let localData: ExceptionModel = this.getItem(this.localStorageName, this.checklist.CHECK_ID);
@@ -89,7 +88,6 @@ export class ExceptionDetailComponent implements OnInit {
                 LOCATION: [this.formData.LOCATION, Validators.required],
                 CHECK_LIST_CN: [this.formData.CHECK_LIST_CN, Validators.required],
                 PROBLEM_DESC: [this.formData.PROBLEM_DESC, Validators.required],
-                // pictures: this.fb.array([]),
                 OWNER_EMPNO: ['', Validators.required],
             });
             let images: string[] = this.getLongImageUrl(this.formData.PROBLEM_PICTURES);
@@ -168,7 +166,7 @@ export class ExceptionDetailComponent implements OnInit {
         let user = this.localUser.empno + ',' + this.localUser.nickname + ',' + this.localUser.username.toUpperCase();
         this.formModel = this.fb.group({
             INSPECT_DATE: [this.inspectionService.getToday(), Validators.required],
-            INSPECTOR: [user, Validators.required],
+            INSPECTOR: [{ value: user, disabled: true }, Validators.required],
             DUTY_KIND: ['白班', Validators.required],
             LOCATION: ['', Validators.required],
             CHECK_LIST_CN: ['', Validators.required],
@@ -210,6 +208,7 @@ export class ExceptionDetailComponent implements OnInit {
         if (this.fromPage === 'checklist') {
             let formValue = this.formModel.value;
             formValue.PROBLEM_PICTURES = this.images;
+            formValue.INSPECTOR = this.localUser.empno + ',' + this.localUser.nickname + ',' + this.localUser.username.toUpperCase();
             this.setItem(this.localStorageName, formValue);
             this.dismiss();
         } else if (this.fromPage === 'teamLeader') {
@@ -225,7 +224,7 @@ export class ExceptionDetailComponent implements OnInit {
 
             let formValue = this.formModel.value;
             formValue.PROBLEM_PICTURES = this.images;
-            this.setItem(this.localStorageName, formValue);
+            // this.setItem(this.localStorageName, formValue);
             this.dismiss();
         } else if (this.fromPage === 'handler') {
             this.commonService.showLoading();
@@ -234,7 +233,7 @@ export class ExceptionDetailComponent implements OnInit {
                 ACTION_DESC: this.formModel.value.ACTION_DESC,
                 ACTION_DATE: this.formModel.value.ACTION_DATE,
                 ACTION_STATUS: this.formModel.value.ACTION_STATUS,
-                SCORE: '',
+                SCORE: 0,
                 LINE_ID: this.formData.LINE_ID
             };
             await this.inspectionService.handleProblem(obj);
@@ -246,8 +245,7 @@ export class ExceptionDetailComponent implements OnInit {
                     let len = this.actionPictures.length;
                     let img = this.actionPictures[i].replace('data:image/jpeg;base64,', '');
                     try {
-                        // await this.inspectionService.uploadActionPicture(this.formData.LINE_ID, img);
-                        let imgUrl = await this.inspectionCommonService.uploadPicture({ PICTURE: img })
+                        let imgUrl = await this.inspectionCommonService.uploadPicture({ PICTURE: img }, true)
                         if (imgUrl) {
                             if (i < len - 1) {
                                 images += imgUrl + ',';
@@ -265,7 +263,7 @@ export class ExceptionDetailComponent implements OnInit {
 
             let formValue = this.formModel.value;
             formValue.ACTION_PICTURES = this.actionPictures;
-            this.setItem(this.localStorageName, formValue);
+            // this.setItem(this.localStorageName, formValue);
             this.dismiss();
         }
 
@@ -310,6 +308,7 @@ export class ExceptionDetailComponent implements OnInit {
     // 获取用户选择的照片
     getImages(images: string[]) {
         this.images = images;
+        console.log(this.images);
     }
 
     // 获取整改后图片

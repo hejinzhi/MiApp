@@ -1,4 +1,4 @@
-import { IonicPage, AlertController, NavParams } from 'ionic-angular';
+import { IonicPage, AlertController, NavParams, NavController } from 'ionic-angular';
 import { Component, OnInit, NgZone } from '@angular/core';
 import { FormBuilder, FormGroup, FormArray, FormControl } from '@angular/forms';
 
@@ -28,26 +28,6 @@ export class BossReportComponent implements OnInit {
     hr:boolean;
     commentable:boolean;
     savedHeaderID: number;
-    testAdmin: any = {
-        date: "2017-09-14",
-        issueCount: "1项",
-        lists: [
-            {
-                hasIssue: false,
-                site: "dfgdfgfdg",
-                time: "14:26",
-            },
-            {
-                detail: "ghjhg",
-                hasIssue: true,
-                imgs: [],
-                inCharge: "fghfgh",
-                site: "fghfgh",
-                time: "14:30"
-            }
-        ],
-        people: "小明",
-    }
 
     constructor(
         private navParams: NavParams,
@@ -57,16 +37,17 @@ export class BossReportComponent implements OnInit {
         private cacheService: CacheService,
         private _ngZone: NgZone,
         private plugin: PluginService,
-        private bossService: BossService
+        private bossService: BossService,
+        private navCtr: NavController
     ) { }
 
     async ngOnInit() {
         // this.init();
         let schedule = this.navParams.get('schedule');
-        this.admin = this.navParams.get('admin') || false;
-        this.hr = this.navParams.get('hr') || false;
+        this.admin = this.navParams.get('admin');
+        this.hr = this.navParams.get('hr');
         this.savedHeaderID = this.navParams.get('scheduleHeaderId') || '';
-        this.commentable = this.navParams.get('allDone');
+        this.commentable = this.navParams.get('allDone') && this.navParams.get('allDone') === 'Y'? true:false;
         let id = this.savedHeaderID;
         if(!this.admin && schedule) {
             this.bindInit(schedule)
@@ -175,6 +156,7 @@ export class BossReportComponent implements OnInit {
      * @param {*} [work={}] 
      */
     init(work: any = {}) {
+        this.totalMark = work.totalMark;
         let date: string = moment(new Date()).format('YYYY-MM-DD');
         work = work.date ? work : new ReportHead(date, this.plugin.chineseConv(this.selectSchedule.PERSON))
         this.reportForm = this.initForm(work);
@@ -189,7 +171,9 @@ export class BossReportComponent implements OnInit {
             this.reportForm.disable({ onlySelf: false });
             let listsForm = this.reportForm.get('lists') as FormArray;
             Array.prototype.forEach.call(listsForm.controls, (i: FormGroup) => {
-                i.addControl('mark', new FormControl('', this.validExd.required()))
+                let li = work.lists.find((l:any) => l.LINE_ID == i.get('LINE_ID').value);
+                let mark:any = li? li.mark: '';
+                i.addControl('mark', new FormControl(mark, this.validExd.required()))
                 i.get('mark').valueChanges.subscribe(() => {
                     this.totalMark = 0
                     Array.prototype.forEach.call(listsForm.controls, (sub: FormGroup) => {
@@ -214,12 +198,18 @@ export class BossReportComponent implements OnInit {
             let listsForm = this.reportForm.get('lists') as FormArray;
             let target = lists[i];
             if (target.hasIssue) {
-                if(!this.admin && !this.hr) {
-                    this.changeIssueCount(true);
+                this.changeIssueCount(true);
+                if(this.admin || this.hr) {
+                    listsForm.push(this.addSub2Form(this.initSubForm(target), target))
+                } else {
+                    listsForm.push(this.addSub2Form(this.initSubForm(target, this.changeIssueCount), target))
                 }
-                listsForm.push(this.addSub2Form(this.initSubForm(target, this.changeIssueCount), target))
             } else {
-                listsForm.push(this.initSubForm(target, this.changeIssueCount));
+                if(this.admin || this.hr) {
+                    listsForm.push(this.initSubForm(target));
+                } else {
+                    listsForm.push(this.initSubForm(target, this.changeIssueCount));
+                }  
             }
         }
     }
@@ -259,7 +249,7 @@ export class BossReportComponent implements OnInit {
             } else {
                 ['detail', 'imgs', 'inCharge'].forEach((val) => sub.removeControl(val));
             }
-            cb.call(this, value);
+            cb && cb.call(this, value);
         }
         )
         return sub
@@ -289,7 +279,7 @@ export class BossReportComponent implements OnInit {
         let value: string = target.value;
         let count = value ? +value.substr(0, value.length - 1) : 0;
         count = add ? ++count : --count;
-        this.reportForm.controls['issueCount'].setValue(count + '项')
+        this.reportForm.controls['issueCount'].setValue(Math.max(count,0) + '项')
     }
 
     addCheckSite() {
@@ -365,7 +355,15 @@ export class BossReportComponent implements OnInit {
                     text: '确定',
                     handler: () => {
                         let lists = this.reportForm.get('lists') as FormArray;
-                        lists.removeAt(i);
+                        let id = lists.get(i+'').value.LINE_ID;
+                        let loading = this.plugin.createLoading();
+                        if(id) {
+                            loading.present();
+                            this.bossService.deleteLine(id).map((res) => res.status).subscribe((s) => {
+                                lists.removeAt(i);
+                            },(err) => this.plugin.errorDeal(err),() => loading && loading.dismiss())
+                        }
+                        
                     }
                 }
             ]
@@ -387,8 +385,9 @@ export class BossReportComponent implements OnInit {
         let loading = this.plugin.createLoading();
         loading.present();
         this.bossService.uploadReport(send).subscribe((d) => {
-            console.log(d);
+            this.plugin.showToast('提交成功');
             this.clearCache();
+            this.navCtr.pop()
         },(err) => {this.plugin.errorDeal(err);console.log(err);loading.dismiss()},() => loading.dismiss());
     }
 }
